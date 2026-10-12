@@ -681,7 +681,7 @@ func HandleCFApiError(err error, d *schema.ResourceData, httpResp *http.Response
 	if ok {
 		cfError, ok := erro.Model().(nextgen.CfError)
 		if ok {
-			return diag.Errorf(cfError.Message)
+			return diag.Errorf("%s", cfError.Message)
 		}
 	}
 	return helpers.HandleApiError(err, d, httpResp)
