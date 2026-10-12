@@ -1,4 +1,4 @@
-```release-note:fix
+```release-note:bug
   resource: platform_gitops_applicationset: Fix list generator serialization. Elements are now properly included (base64-encoded) in create/update requests instead of sending an empty list.
   Added missing fields for helm source in schema used for applicationset, this prevented creating applicaitonset with helm source configured.
   Fixed issue with perpetual diff for cluster generator.

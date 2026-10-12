@@ -1,4 +1,4 @@
-```release-note: enhancement
+```release-note:enhancement
 platform_connector_github.md - Added documentation for custom health connector
 resource.tf - Example of github_app in credentials for github connector
 go.mod - upgraded harness-go-sdk version to v0.3.52

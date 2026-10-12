@@ -1,4 +1,4 @@
-```release-note:feat
+```release-note:feature
 For gitops applications, clusters and argoprojects (appprojects) newly added important options to the API are added as part of the
 corresponding terraform resources and data sources. The following options are added:
 gitops_application: 4 new helm options 'ignore_missing_value_files', 'skip_crds', 'skip_tests' and 'skip_schema_validation'.

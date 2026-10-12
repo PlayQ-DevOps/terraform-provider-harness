@@ -1,4 +1,4 @@
-```release-note:fix
+```release-note:bug
 harness_platform_gitops_cluster: removed irrelevant fields during diff detection between state and real object.
 harness_platform_gitops_cluster: fixed update method which was completely dependent on updated_fields now will work normally as well.
 

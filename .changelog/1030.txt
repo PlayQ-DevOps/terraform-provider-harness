@@ -1,4 +1,4 @@
-```release-note:fix
+```release-note:bug
 modified:   internal/service/platform/gitops/agent/resource_gitops_agent.go
         modified:   internal/service/platform/gitops/applications/resource_gitops_applications.go
         modified:   internal/service/platform/gitops/repository_certificates/resource_gitops_repo_certs.go

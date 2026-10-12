@@ -1,4 +1,4 @@
-```release-note:fix
+```release-note:bug
 harness_chaos_experiment_template: fixed import for account-scoped (`hub_identity/identity`) and org-scoped (`org_id/hub_identity/identity`) templates, which previously failed by requiring the 4-part `org_id/project_id/hub_identity/identity` form.
 harness_chaos_experiment_template: fixed a perpetual "update in-place" plan by persisting `spec.probes[].enable_data_collection` and a concrete `spec.infra_id` in the template manifest.
 harness_chaos_experiment_template: added `conditions_v2` (operator + values, supports `<+input>`) to probes, faults, and actions to match the backend `conditionsV2` schema, and deprecated the non-functional `conditions` (execute_upon) field.

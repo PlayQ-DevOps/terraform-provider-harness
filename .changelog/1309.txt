@@ -1,4 +1,4 @@
-```release-note:fix
+```release-note:bug
   resource: platform_gitops_applicationset: 
 	✅ Added matrix generator support (write & read)
 	✅ Added SCM provider generators (GitHub, GitLab with ca_ref, Gitea) - write & read

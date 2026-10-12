@@ -330,6 +330,11 @@ changelog: ## Generate changelog from .changelog entries
 	$(call log_header,Generating Changelog)
 	@./scripts/generate-changelog.sh
 
+.PHONY: changelog-check
+changelog-check: ## Validate .changelog entries changed since BASE (default origin/main); use BASE=--all for every entry
+	$(call log_header,Checking Changelog Entries)
+	@./scripts/check-changelog.sh "$(or $(BASE),origin/main)"
+
 .PHONY: changelog-entry
 changelog-entry: ## Scaffold a .changelog entry for the current branch/ticket/PR (override with ENTRY=, TYPE=)
 	$(call log_header,Scaffolding Changelog Entry)
