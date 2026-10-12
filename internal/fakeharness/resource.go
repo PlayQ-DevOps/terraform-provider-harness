@@ -57,6 +57,9 @@ type Resource struct {
 	Decorate func(obj map[string]any)
 	// Validate rejects a create/update.
 	Validate func(obj map[string]any) *APIError
+	// Routes adds service-specific endpoints beside the generic CRUD ones, keyed by ServeMux
+	// pattern relative to the stripped /gateway prefix; "{fakeid}" is the object identifier.
+	Routes map[string]func(s *Server, res Resource, w http.ResponseWriter, r *http.Request)
 }
 
 // Organizations is /ng/api/organizations.
@@ -92,6 +95,33 @@ func PipelinesV1() Resource {
 			if _, ok := obj["created"]; !ok {
 				obj["created"] = 1700000000000
 			}
+			// The real API keeps no git details for inline pipelines.
+			if gd, _ := obj["git_details"].(map[string]any); gd != nil && str(gd["store_type"]) == "INLINE" {
+				delete(obj, "git_details")
+			}
+		},
+		Routes: map[string]func(s *Server, res Resource, w http.ResponseWriter, r *http.Request){
+			"PUT /v1/orgs/{org}/projects/{project}/pipelines/{fakeid}/git-metadata": func(s *Server, res Resource, w http.ResponseWriter, r *http.Request) {
+				key := res.scopeOf(r, nil)
+				key.ID = r.PathValue("fakeid")
+				if !s.store.Has(res.Kind, key) {
+					s.writeNotFound(res, w, key.ID)
+					return
+				}
+				var body map[string]any
+				_ = json.NewDecoder(r.Body).Decode(&body)
+				s.store.Mutate(res.Kind, key, func(obj map[string]any) {
+					gd, _ := obj["git_details"].(map[string]any)
+					if gd == nil {
+						gd = map[string]any{}
+					}
+					for k, v := range body {
+						gd[k] = v
+					}
+					obj["git_details"] = gd
+				})
+				writeJSON(w, http.StatusOK, map[string]any{"identifier": key.ID})
+			},
 		}}
 }
 
@@ -121,6 +151,10 @@ func (s *Server) Mount(res Resource) {
 		s.mux.HandleFunc("PUT "+base, func(w http.ResponseWriter, r *http.Request) { s.handleUpdate(res, w, r) })
 	}
 	s.mux.HandleFunc("DELETE "+base+"/{fakeid}", func(w http.ResponseWriter, r *http.Request) { s.handleDelete(res, w, r) })
+	for pattern, h := range res.Routes {
+		h := h
+		s.mux.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) { h(s, res, w, r) })
+	}
 }
 
 func str(v any) string {
