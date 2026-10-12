@@ -6,7 +6,7 @@ Terraform provider for Harness that enables infrastructure-as-code management of
 
 ## Build System
 
-- **Language**: Go 1.24
+- **Language**: Go; the version is pinned by the `go` and `toolchain` directives in `go.mod` (single source of truth; `.tool-versions` mirrors it and a test keeps them in sync)
 - **Build tool**: Make
 - **Build command**: `make build`
 - **Install locally**: `make install`
@@ -14,7 +14,14 @@ Terraform provider for Harness that enables infrastructure-as-code management of
 
 ## Testing
 
-- **Run all unit tests**: `make test`
+Three tiers, all driven by `go test`:
+
+- **`make test-unit`**: offline unit, contract and lint-ratchet tests (`go test -short ./...`); needs no Terraform CLI and no credentials.
+- **`make test`**: everything offline, including lifecycle tests that drive real Terraform core against the in-process fake Harness API (`internal/fakeharness`); needs a Terraform CLI (`make tools` installs the pinned version) but no credentials. This is what CI runs.
+- **`make testacc`**: acceptance tests against a live Harness account (`TF_ACC=1`, requires HARNESS_* environment variables). Acceptance tests use `resource.Test`, which skips when `TF_ACC` is unset; never use `resource.UnitTest` for tests that reach the real API.
+
+Other targets:
+
 - **Run acceptance tests**: `make testacc` (requires HARNESS_* environment variables)
 - **Run FME (Split) acceptance tests only**: `make testacc-fme` or `TF_ACC=1 go test -v ./internal/service/split/... -timeout=120m` (faster than full `testacc`)
 - **Run tests with coverage**: `make test-coverage`

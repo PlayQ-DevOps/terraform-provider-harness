@@ -33,16 +33,8 @@ __parent="$(dirname "$__dir")"
 CHANGELOG_FILE_NAME="CHANGELOG.md"
 CHANGELOG_TMP_FILE_NAME="CHANGELOG.tmp"
 
-# Check if changelog-build is installed
-CHANGELOG_BUILD_PATH="$(go env GOPATH)/bin/changelog-build"
-if [ ! -f "$CHANGELOG_BUILD_PATH" ]; then
-    error "changelog-build not found at $CHANGELOG_BUILD_PATH"
-    echo ""
-    info "Install it with:"
-    echo "  go install github.com/hashicorp/go-changelog/cmd/changelog-build@latest"
-    echo ""
-    exit 1
-fi
+# changelog-build is a `tool` dependency in go.mod, so `go tool` runs the pinned version.
+CHANGELOG_BUILD="go tool changelog-build"
 
 # Fetch latest tags from remote
 info "Fetching latest tags from remote..."
@@ -88,7 +80,7 @@ ERROR_FILE=$(mktemp)
 trap "rm -f $ERROR_FILE" EXIT
 
 # Run changelog-build, capturing stdout and stderr separately
-CHANGELOG=$("$CHANGELOG_BUILD_PATH" -this-release "$TARGET_SHA" \
+CHANGELOG=$($CHANGELOG_BUILD -this-release "$TARGET_SHA" \
                       -last-release "$LATEST_TAG_SHA" \
                       -git-dir "$__parent" \
                       -entries-dir .changelog \
