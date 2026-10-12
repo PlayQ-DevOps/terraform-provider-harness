@@ -11,7 +11,7 @@ import (
 	_ "github.com/harness/terraform-provider-harness/internal/service/cd/secrets"
 	_ "github.com/harness/terraform-provider-harness/internal/service/split"
 	"github.com/harness/terraform-provider-harness/internal/sweep"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 // sweepRequested reports whether this test binary was invoked to run sweepers

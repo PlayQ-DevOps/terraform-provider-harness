@@ -12,7 +12,7 @@ import (
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -683,16 +683,16 @@ func resourceProjectDelete(ctx context.Context, d *schema.ResourceData, meta int
 	var lastHTTPResp *http.Response
 	var lastErr error
 
-	err := resource.RetryContext(ctx, d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
+	err := retry.RetryContext(ctx, d.Timeout(schema.TimeoutDelete), func() *retry.RetryError {
 		_, lastHTTPResp, lastErr = c.ProjectGitOpsApi.AgentProjectServiceDelete(ctx, agentIdentifier, query_name, accountIdentifier, orgIdentifier, &nextgen.ProjectsApiAgentProjectServiceDeleteOpts{
 			ProjectIdentifier: optional.NewString(projectIdentifier),
 		})
 
 		if lastErr != nil {
 			if isGitopsProjectReferencedByApplicationsError(lastErr) {
-				return resource.RetryableError(lastErr)
+				return retry.RetryableError(lastErr)
 			}
-			return resource.NonRetryableError(lastErr)
+			return retry.NonRetryableError(lastErr)
 		}
 
 		return nil

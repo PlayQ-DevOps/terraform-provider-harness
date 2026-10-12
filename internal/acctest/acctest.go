@@ -20,9 +20,10 @@ import (
 	openapi_client_nextgen "github.com/harness/harness-openapi-go-client/nextgen"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/provider"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	sdkterraform "github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 const (
@@ -45,7 +46,7 @@ func TestAccConfigureProvider() {
 			"platform_api_key": helpers.EnvVars.PlatformApiKey.Get(),
 		}
 
-		TestAccProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(config))
+		TestAccProvider.Configure(context.Background(), sdkterraform.NewResourceConfigRaw(config))
 	})
 }
 

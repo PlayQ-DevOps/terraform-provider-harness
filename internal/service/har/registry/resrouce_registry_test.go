@@ -11,8 +11,8 @@ import (
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
 	"github.com/harness/terraform-provider-harness/internal/service/har/registry"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 // randAlphanumeric generates a random alphanumeric string of specified length

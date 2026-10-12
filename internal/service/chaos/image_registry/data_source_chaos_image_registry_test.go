@@ -6,7 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 // TestAccDataSourceChaosImageRegistry verifies the basic data source functionality for Chaos Image Registry at the account level.
