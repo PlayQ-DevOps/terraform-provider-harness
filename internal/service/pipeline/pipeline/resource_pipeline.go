@@ -398,7 +398,7 @@ func buildCreatePipeline(d *schema.ResourceData) (nextgen.PipelineCreateRequestB
 		Identifier:   d.Get("identifier").(string),
 		Name:         d.Get("name").(string),
 		Description:  d.Get("description").(string),
-		Tags:         helpers.ExpandPipelineTags(d.Get("tags").(*schema.Set).List()),
+		Tags:         helpers.ExpandTags(d.Get("tags").(*schema.Set).List()),
 		PipelineYaml: d.Get("yaml").(string),
 	}
 
@@ -451,7 +451,7 @@ func buildUpdatePipeline(d *schema.ResourceData) nextgen.PipelineUpdateRequestBo
 		Identifier:   d.Get("identifier").(string),
 		Name:         d.Get("name").(string),
 		Description:  d.Get("description").(string),
-		Tags:         helpers.ExpandPipelineTags(d.Get("tags").(*schema.Set).List()),
+		Tags:         helpers.ExpandTags(d.Get("tags").(*schema.Set).List()),
 		PipelineYaml: d.Get("yaml").(string),
 	}
 

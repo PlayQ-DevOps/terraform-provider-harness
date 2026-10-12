@@ -35,7 +35,7 @@ func buildTagsJson(tags *schema.Set) string {
 	for i := 0; i < tags.Len(); i++ {
 		tag := fmt.Sprintf("%v", tags.List()[i])
 		if strings.Contains(tag, ":") {
-			splitTag := strings.Split(tag, ":")
+			splitTag := strings.SplitN(tag, ":", 2)
 			key := splitTag[0]
 			value := splitTag[1]
 			tagMap[key] = value
