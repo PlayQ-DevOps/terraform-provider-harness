@@ -12,7 +12,7 @@ func DatasourceConnectorPagerDuty() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"api_token_ref": {
-				Description: "Reference to the Harness secret containing the api token." + secret_ref_text,
+				Description: "Reference to the Harness secret containing the api token." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Computed:    true,
 			},

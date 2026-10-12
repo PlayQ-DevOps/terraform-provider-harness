@@ -6,6 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,7 +19,7 @@ func ResourceConnectorServiceNow() *schema.Resource {
 		ReadContext:   resourceConnectorServiceNowRead,
 		CreateContext: resourceConnectorServiceNowCreateOrUpdate,
 		UpdateContext: resourceConnectorServiceNowCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -39,13 +40,13 @@ func ResourceConnectorServiceNow() *schema.Resource {
 				Computed:    true,
 			},
 			"username_ref": {
-				Description: "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+				Description: "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
 			},
 			"password_ref": {
-				Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+				Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
@@ -93,7 +94,7 @@ func ResourceConnectorServiceNow() *schema.Resource {
 										},
 									},
 									"username_ref": {
-										Description:   "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+										Description:   "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:          schema.TypeString,
 										Optional:      true,
 										ConflictsWith: []string{"auth.0.username_password.0.username"},
@@ -103,7 +104,7 @@ func ResourceConnectorServiceNow() *schema.Resource {
 										},
 									},
 									"password_ref": {
-										Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
@@ -124,22 +125,22 @@ func ResourceConnectorServiceNow() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"certificate_ref": {
-										Description: "Reference to a secret containing the certificate to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the certificate to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
 									"private_key_ref": {
-										Description: "Reference to a secret containing the privateKeyRef to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the privateKeyRef to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
 									"client_id_ref": {
-										Description: "Reference to a secret containing the clientIdRef to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the clientIdRef to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
 									"resource_id_ref": {
-										Description: "Reference to a secret containing the resourceIdRef to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the resourceIdRef to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
@@ -170,22 +171,22 @@ func ResourceConnectorServiceNow() *schema.Resource {
 										Required:    true,
 									},
 									"refresh_token_ref": {
-										Description: "Reference to a secret containing the refresh token to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the refresh token to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
 									"client_id_ref": {
-										Description: "Reference to a secret containing the client id to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the client id to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
 									"client_secret_ref": {
-										Description: "Reference to a secret containing the client secret to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the client secret to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Optional:    true,
 									},
 									"scope": {
-										Description: "Scope string to use for authentication." + secret_ref_text,
+										Description: "Scope string to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Optional:    true,
 									},
@@ -204,7 +205,7 @@ func ResourceConnectorServiceNow() *schema.Resource {
 }
 
 func resourceConnectorServiceNowRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.ServiceNow)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.ServiceNow)
 	if err != nil {
 		return err
 	}
@@ -223,7 +224,7 @@ func resourceConnectorServiceNowRead(ctx context.Context, d *schema.ResourceData
 func resourceConnectorServiceNowCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorServiceNow(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

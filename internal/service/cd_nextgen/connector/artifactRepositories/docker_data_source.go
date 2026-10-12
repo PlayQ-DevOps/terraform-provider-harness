@@ -43,12 +43,12 @@ func DatasourceConnectorDocker() *schema.Resource {
 							Computed:    true,
 						},
 						"username_ref": {
-							Description: "The reference to the Harness secret containing the username to use for the docker registry." + secret_ref_text,
+							Description: "The reference to the Harness secret containing the username to use for the docker registry." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},
 						"password_ref": {
-							Description: "The reference to the Harness secret containing the password to use for the docker registry." + secret_ref_text,
+							Description: "The reference to the Harness secret containing the password to use for the docker registry." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},

@@ -49,7 +49,7 @@ func DatasourceConnectorCustomHealthSource() *schema.Resource {
 							Computed:    true,
 						},
 						"encrypted_value_ref": {
-							Description: "Reference to the Harness secret containing the encrypted value." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the encrypted value." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},
@@ -77,7 +77,7 @@ func DatasourceConnectorCustomHealthSource() *schema.Resource {
 							Computed:    true,
 						},
 						"encrypted_value_ref": {
-							Description: "Reference to the Harness secret containing the encrypted value." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the encrypted value." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},

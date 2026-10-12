@@ -23,12 +23,12 @@ func DatasourceConnectorSpot() *schema.Resource {
 							Computed:    true,
 						},
 						"spot_account_id_ref": {
-							Description: "Reference to the Harness secret containing the spot account id." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the spot account id." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},
 						"api_token_ref": {
-							Description: "Reference to the Harness secret containing the permanent api token." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the permanent api token." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},

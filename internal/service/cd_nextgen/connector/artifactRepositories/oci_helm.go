@@ -6,6 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -17,7 +18,7 @@ func ResourceConnectorOciHelm() *schema.Resource {
 		ReadContext:   resourceConnectorOciHelmRead,
 		CreateContext: resourceConnectorOciHelmCreateOrUpdate,
 		UpdateContext: resourceConnectorOciHelmCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -47,14 +48,14 @@ func ResourceConnectorOciHelm() *schema.Resource {
 							ExactlyOneOf:  []string{"credentials.0.username", "credentials.0.username_ref"},
 						},
 						"username_ref": {
-							Description:   "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+							Description:   "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 							Type:          schema.TypeString,
 							Optional:      true,
 							ConflictsWith: []string{"credentials.0.username"},
 							ExactlyOneOf:  []string{"credentials.0.username", "credentials.0.username_ref"},
 						},
 						"password_ref": {
-							Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+							Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Required:    true,
 						},
@@ -76,7 +77,7 @@ func ResourceConnectorOciHelm() *schema.Resource {
 }
 
 func resourceConnectorOciHelmRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.OciHelmRepo)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.OciHelmRepo)
 	if err != nil {
 		return err
 	}
@@ -95,7 +96,7 @@ func resourceConnectorOciHelmRead(ctx context.Context, d *schema.ResourceData, m
 func resourceConnectorOciHelmCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorOciHelm(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

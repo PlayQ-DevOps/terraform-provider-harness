@@ -39,12 +39,12 @@ func DatasourceConnectorJDBC() *schema.Resource {
 							Computed:    true,
 						},
 						"username_ref": {
-							Description: "The reference to the Harness secret containing the username to use for the database server." + secret_ref_text,
+							Description: "The reference to the Harness secret containing the username to use for the database server." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},
 						"password_ref": {
-							Description: "The reference to the Harness secret containing the password to use for the database server." + secret_ref_text,
+							Description: "The reference to the Harness secret containing the password to use for the database server." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},
@@ -60,12 +60,12 @@ func DatasourceConnectorJDBC() *schema.Resource {
 										Computed:    true,
 									},
 									"username_ref": {
-										Description: "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
 									"password_ref": {
-										Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
@@ -79,7 +79,7 @@ func DatasourceConnectorJDBC() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"token_ref": {
-										Description: "Reference to a secret containing the token to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the token to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
@@ -98,17 +98,17 @@ func DatasourceConnectorJDBC() *schema.Resource {
 										Computed:    true,
 									},
 									"username_ref": {
-										Description: "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
 									"private_key_file_ref": {
-										Description: "Reference to a secret containing the private key file to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the private key file to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
 									"private_key_passphrase_ref": {
-										Description: "Reference to a secret containing the passphrase for the private key file." + secret_ref_text,
+										Description: "Reference to a secret containing the passphrase for the private key file." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
@@ -127,7 +127,7 @@ func DatasourceConnectorJDBC() *schema.Resource {
 										Computed:    true,
 									},
 									"username_ref": {
-										Description: "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},

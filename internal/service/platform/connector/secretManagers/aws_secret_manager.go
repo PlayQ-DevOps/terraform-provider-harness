@@ -6,6 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -17,7 +18,7 @@ func ResourceConnectorAwsSM() *schema.Resource {
 		ReadContext:   resourceConnectorAwsSMRead,
 		CreateContext: resourceConnectorAwsSMCreateOrUpdate,
 		UpdateContext: resourceConnectorAwsSMCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -83,12 +84,12 @@ func ResourceConnectorAwsSM() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"access_key_ref": {
-										Description: "The reference to the Harness secret containing the AWS access key." + secret_ref_text,
+										Description: "The reference to the Harness secret containing the AWS access key." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Optional:    true,
 									},
 									"secret_key_ref": {
-										Description: "The reference to the Harness secret containing the AWS secret key." + secret_ref_text,
+										Description: "The reference to the Harness secret containing the AWS secret key." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
@@ -181,7 +182,7 @@ func ResourceConnectorAwsSM() *schema.Resource {
 }
 
 func resourceConnectorAwsSMRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.AwsSecretManager)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.AwsSecretManager)
 	if err != nil {
 		return err
 	}
@@ -200,7 +201,7 @@ func resourceConnectorAwsSMRead(ctx context.Context, d *schema.ResourceData, met
 func resourceConnectorAwsSMCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorAwsSM(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

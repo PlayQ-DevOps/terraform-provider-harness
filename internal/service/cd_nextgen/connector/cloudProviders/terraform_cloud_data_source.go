@@ -35,7 +35,7 @@ func DatasourceConnectorTerraformCloud() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"api_token_ref": {
-										Description: "Reference to a secret containing the API token to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the API token to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},

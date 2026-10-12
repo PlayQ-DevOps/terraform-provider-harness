@@ -5,6 +5,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -17,7 +18,7 @@ func ResourceConnectorAzureCloudProvider() *schema.Resource {
 		ReadContext:   resourceConnectorAzureCloudProviderRead,
 		CreateContext: resourceConnectorAzureCloudProviderCreateOrUpdate,
 		UpdateContext: resourceConnectorAzureCloudProviderCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -74,7 +75,7 @@ func ResourceConnectorAzureCloudProvider() *schema.Resource {
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"certificate_ref": {
-																Description: "Reference of the secret for the certificate." + secret_ref_text,
+																Description: "Reference of the secret for the certificate." + helpers.Descriptions.SecretRefText.String(),
 																Type:        schema.TypeString,
 																Optional:    true,
 															},
@@ -89,7 +90,7 @@ func ResourceConnectorAzureCloudProvider() *schema.Resource {
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"secret_ref": {
-																Description: "Reference of the secret for the secret key." + secret_ref_text,
+																Description: "Reference of the secret for the secret key." + helpers.Descriptions.SecretRefText.String(),
 																Type:        schema.TypeString,
 																Optional:    true,
 															},
@@ -208,7 +209,7 @@ func ResourceConnectorAzureCloudProvider() *schema.Resource {
 }
 
 func resourceConnectorAzureCloudProviderRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.Azure)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.Azure)
 	if err != nil {
 		return err
 	}
@@ -227,7 +228,7 @@ func resourceConnectorAzureCloudProviderRead(ctx context.Context, d *schema.Reso
 func resourceConnectorAzureCloudProviderCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorAzureCloudProvider(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

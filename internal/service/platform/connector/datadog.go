@@ -5,6 +5,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -16,7 +17,7 @@ func ResourceConnectorDatadog() *schema.Resource {
 		ReadContext:   resourceConnectorDatadogRead,
 		CreateContext: resourceConnectorDatadogCreateOrUpdate,
 		UpdateContext: resourceConnectorDatadogCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -26,12 +27,12 @@ func ResourceConnectorDatadog() *schema.Resource {
 				Required:    true,
 			},
 			"application_key_ref": {
-				Description: "Reference to the Harness secret containing the application key." + secret_ref_text,
+				Description: "Reference to the Harness secret containing the application key." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Required:    true,
 			},
 			"api_key_ref": {
-				Description: "Reference to the Harness secret containing the api key." + secret_ref_text,
+				Description: "Reference to the Harness secret containing the api key." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Required:    true,
 			},
@@ -50,7 +51,7 @@ func ResourceConnectorDatadog() *schema.Resource {
 }
 
 func resourceConnectorDatadogRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.Datadog)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.Datadog)
 	if err != nil {
 		return err
 	}
@@ -69,7 +70,7 @@ func resourceConnectorDatadogRead(ctx context.Context, d *schema.ResourceData, m
 func resourceConnectorDatadogCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorDatadog(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

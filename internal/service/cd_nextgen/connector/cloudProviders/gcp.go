@@ -6,6 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -17,7 +18,7 @@ func ResourceConnectorGcp() *schema.Resource {
 		ReadContext:   resourceConnectorGcpRead,
 		CreateContext: resourceConnectorGcpCreateOrUpdate,
 		UpdateContext: resourceConnectorGcpCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -43,7 +44,7 @@ func ResourceConnectorGcp() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"secret_key_ref": {
-							Description: "Reference to the Harness secret containing the secret key." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the secret key." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Required:    true,
 						},
@@ -150,7 +151,7 @@ func ResourceConnectorGcp() *schema.Resource {
 }
 
 func resourceConnectorGcpRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.Gcp)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.Gcp)
 	if err != nil {
 		return err
 	}
@@ -169,7 +170,7 @@ func resourceConnectorGcpRead(ctx context.Context, d *schema.ResourceData, meta 
 func resourceConnectorGcpCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorGcp(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

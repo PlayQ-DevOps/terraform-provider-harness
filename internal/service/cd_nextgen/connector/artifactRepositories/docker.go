@@ -7,6 +7,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,7 +19,7 @@ func ResourceConnectorDocker() *schema.Resource {
 		ReadContext:   resourceConnectorDockerRead,
 		CreateContext: resourceConnectorDockerCreateOrUpdate,
 		UpdateContext: resourceConnectorDockerCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -62,7 +63,7 @@ func ResourceConnectorDocker() *schema.Resource {
 							},
 						},
 						"username_ref": {
-							Description:   "The reference to the Harness secret containing the username to use for the docker registry." + secret_ref_text,
+							Description:   "The reference to the Harness secret containing the username to use for the docker registry." + helpers.Descriptions.SecretRefText.String(),
 							Type:          schema.TypeString,
 							Optional:      true,
 							ConflictsWith: []string{"credentials.0.username"},
@@ -72,7 +73,7 @@ func ResourceConnectorDocker() *schema.Resource {
 							},
 						},
 						"password_ref": {
-							Description: "The reference to the Harness secret containing the password to use for the docker registry." + secret_ref_text,
+							Description: "The reference to the Harness secret containing the password to use for the docker registry." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Required:    true,
 						},
@@ -88,7 +89,7 @@ func ResourceConnectorDocker() *schema.Resource {
 }
 
 func resourceConnectorDockerRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.DockerRegistry)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.DockerRegistry)
 	if err != nil {
 		return err
 	}
@@ -107,7 +108,7 @@ func resourceConnectorDockerRead(ctx context.Context, d *schema.ResourceData, me
 func resourceConnectorDockerCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorDocker(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

@@ -17,7 +17,7 @@ func DatasourceConnectorDynatrace() *schema.Resource {
 				Computed:    true,
 			},
 			"api_token_ref": {
-				Description: "The reference to the Harness secret containing the api token." + secret_ref_text,
+				Description: "The reference to the Harness secret containing the api token." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Computed:    true,
 			},

@@ -5,6 +5,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -16,7 +17,7 @@ func ResourceConnectorCSM() *schema.Resource {
 		ReadContext:   resourceConnectorCustomSMRead,
 		CreateContext: resourceConnectorCustomSMCreateOrUpdate,
 		UpdateContext: resourceConnectorCustomSMCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -122,7 +123,7 @@ func ResourceConnectorCSM() *schema.Resource {
 }
 
 func resourceConnectorCustomSMRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.CustomSecretManager)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.CustomSecretManager)
 	if err != nil {
 		return err
 	}
@@ -176,7 +177,7 @@ func resourceConnectorCustomSMCreateOrUpdate(ctx context.Context, d *schema.Reso
 	conn := buildConnectorCustomSM(d)
 
 	// Use the base function to create or update the connector
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

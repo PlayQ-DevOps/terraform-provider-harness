@@ -6,6 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -17,7 +18,7 @@ func ResourceConnectorTerraformCloud() *schema.Resource {
 		ReadContext:   resourceConnectorTerraformCloudRead,
 		CreateContext: resourceConnectorTerraformCloudCreateOrUpdate,
 		UpdateContext: resourceConnectorTerraformCloudCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 		Schema: map[string]*schema.Schema{
 			"url": {
@@ -40,7 +41,7 @@ func ResourceConnectorTerraformCloud() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"api_token_ref": {
-										Description: "Reference to a secret containing the API token to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the API token to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
@@ -71,7 +72,7 @@ func ResourceConnectorTerraformCloud() *schema.Resource {
 }
 
 func resourceConnectorTerraformCloudRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.TerraformCloud)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.TerraformCloud)
 	if err != nil {
 		return err
 	}
@@ -90,7 +91,7 @@ func resourceConnectorTerraformCloudRead(ctx context.Context, d *schema.Resource
 func resourceConnectorTerraformCloudCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorTerraformCloud(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

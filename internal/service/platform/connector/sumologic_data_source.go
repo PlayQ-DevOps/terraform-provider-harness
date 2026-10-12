@@ -17,12 +17,12 @@ func DatasourceConnectorSumologic() *schema.Resource {
 				Computed:    true,
 			},
 			"access_id_ref": {
-				Description: "Reference to the Harness secret containing the access id." + secret_ref_text,
+				Description: "Reference to the Harness secret containing the access id." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
 			"access_key_ref": {
-				Description: "Reference to the Harness secret containing the access key." + secret_ref_text,
+				Description: "Reference to the Harness secret containing the access key." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Computed:    true,
 			},

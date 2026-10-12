@@ -5,6 +5,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -16,7 +17,7 @@ func ResourceConnectorNewRelic() *schema.Resource {
 		ReadContext:   resourceConnectorNewRelicRead,
 		CreateContext: resourceConnectorNewRelicCreateOrUpdate,
 		UpdateContext: resourceConnectorNewRelicCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -31,7 +32,7 @@ func ResourceConnectorNewRelic() *schema.Resource {
 				Required:    true,
 			},
 			"api_key_ref": {
-				Description: "Reference to the Harness secret containing the api key." + secret_ref_text,
+				Description: "Reference to the Harness secret containing the api key." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Required:    true,
 			},
@@ -50,7 +51,7 @@ func ResourceConnectorNewRelic() *schema.Resource {
 }
 
 func resourceConnectorNewRelicRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.NewRelic)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.NewRelic)
 	if err != nil {
 		return err
 	}
@@ -69,7 +70,7 @@ func resourceConnectorNewRelicRead(ctx context.Context, d *schema.ResourceData, 
 func resourceConnectorNewRelicCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorNewRelic(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

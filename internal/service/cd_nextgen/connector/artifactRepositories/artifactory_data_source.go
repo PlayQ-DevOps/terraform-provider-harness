@@ -34,12 +34,12 @@ func DatasourceConnectorArtifactory() *schema.Resource {
 							Computed:    true,
 						},
 						"username_ref": {
-							Description: "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+							Description: "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},
 						"password_ref": {
-							Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+							Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},

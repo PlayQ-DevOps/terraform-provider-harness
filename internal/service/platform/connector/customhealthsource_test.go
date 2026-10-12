@@ -2,10 +2,11 @@ package connector_test
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"testing"
 )
 
 func TestAccResourceConnector_customhealthsource(t *testing.T) {

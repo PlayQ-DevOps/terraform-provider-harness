@@ -5,6 +5,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -17,7 +18,7 @@ func ResourceConnectorVault() *schema.Resource {
 		ReadContext:   resourceConnectorVaultRead,
 		CreateContext: resourceConnectorVaultCreateOrUpdate,
 		UpdateContext: resourceConnectorVaultCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -189,7 +190,7 @@ func ResourceConnectorVault() *schema.Resource {
 }
 
 func resourceConnectorVaultRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.Vault)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.Vault)
 	if err != nil {
 		return err
 	}
@@ -208,7 +209,7 @@ func resourceConnectorVaultRead(ctx context.Context, d *schema.ResourceData, met
 func resourceConnectorVaultCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorVault(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

@@ -7,6 +7,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -19,7 +20,7 @@ func ResourceConnectorBitbucket() *schema.Resource {
 		ReadContext:   resourceConnectorBitbucketRead,
 		CreateContext: resourceConnectorBitbucketCreateOrUpdate,
 		UpdateContext: resourceConnectorBitbucketCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 		CustomizeDiff: validateBitbucketApiAuthentication,
 
@@ -159,7 +160,7 @@ func ResourceConnectorBitbucket() *schema.Resource {
 }
 
 func resourceConnectorBitbucketRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.Bitbucket)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.Bitbucket)
 	if err != nil {
 		return err
 	}
@@ -178,7 +179,7 @@ func resourceConnectorBitbucketRead(ctx context.Context, d *schema.ResourceData,
 func resourceConnectorBitbucketCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorBitbucket(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

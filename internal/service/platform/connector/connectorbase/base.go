@@ -1,4 +1,7 @@
-package codeRepositories
+// Package connectorbase holds the CRUD logic shared by every connector resource and data
+// source: scope-aware read, create-or-update, delete and the common attribute mapping.
+// Each connector type adds only its schema, its build function and its read function.
+package connectorbase
 
 import (
 	"context"
@@ -13,9 +16,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type ReadConnectorData func(*schema.ResourceData, *nextgen.ConnectorInfo) error
-
-func resourceConnectorReadBase(ctx context.Context, d *schema.ResourceData, meta interface{}, connType nextgen.ConnectorType) (*nextgen.ConnectorInfo, diag.Diagnostics) {
+// Read fetches the connector for a resource. It returns (nil, nil) when the connector no
+// longer exists and has removed it from state, so callers must check for a nil connector.
+func Read(ctx context.Context, d *schema.ResourceData, meta interface{}, connType nextgen.ConnectorType) (*nextgen.ConnectorInfo, diag.Diagnostics) {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 
 	id := d.Id()
@@ -23,7 +26,7 @@ func resourceConnectorReadBase(ctx context.Context, d *schema.ResourceData, meta
 		id = d.Get("identifier").(string)
 	}
 
-	resp, httpResp, err := c.ConnectorsApi.GetConnector(ctx, c.AccountId, id, getReadConnectorOpts(d))
+	resp, httpResp, err := c.ConnectorsApi.GetConnector(ctx, c.AccountId, id, readOpts(d))
 	if err != nil {
 		return nil, helpers.HandleReadApiError(err, d, httpResp)
 	}
@@ -32,12 +35,13 @@ func resourceConnectorReadBase(ctx context.Context, d *schema.ResourceData, meta
 		return nil, diag.FromErr(fmt.Errorf("expected connector to be of type %s, but got %s", connType, resp.Data.Connector.Type_))
 	}
 
-	readCommonConnectorData(d, resp.Data.Connector)
+	ReadCommon(d, resp.Data.Connector)
 
 	return resp.Data.Connector, nil
 }
 
-func dataConnectorReadBase(ctx context.Context, d *schema.ResourceData, meta interface{}, connType nextgen.ConnectorType) (*nextgen.ConnectorInfo, diag.Diagnostics) {
+// DataRead fetches the connector for a data source; a missing connector is an error.
+func DataRead(ctx context.Context, d *schema.ResourceData, meta interface{}, connType nextgen.ConnectorType) (*nextgen.ConnectorInfo, diag.Diagnostics) {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 
 	id := d.Id()
@@ -45,7 +49,7 @@ func dataConnectorReadBase(ctx context.Context, d *schema.ResourceData, meta int
 		id = d.Get("identifier").(string)
 	}
 
-	resp, httpResp, err := c.ConnectorsApi.GetConnector(ctx, c.AccountId, id, getReadConnectorOpts(d))
+	resp, httpResp, err := c.ConnectorsApi.GetConnector(ctx, c.AccountId, id, readOpts(d))
 	if err != nil {
 		return nil, helpers.HandleApiError(err, d, httpResp)
 	}
@@ -54,12 +58,12 @@ func dataConnectorReadBase(ctx context.Context, d *schema.ResourceData, meta int
 		return nil, diag.FromErr(fmt.Errorf("expected connector to be of type %s, but got %s", connType, resp.Data.Connector.Type_))
 	}
 
-	readCommonConnectorData(d, resp.Data.Connector)
+	ReadCommon(d, resp.Data.Connector)
 
 	return resp.Data.Connector, nil
 }
 
-func getReadConnectorOpts(d *schema.ResourceData) *nextgen.ConnectorsApiGetConnectorOpts {
+func readOpts(d *schema.ResourceData) *nextgen.ConnectorsApiGetConnectorOpts {
 	connOpts := &nextgen.ConnectorsApiGetConnectorOpts{}
 
 	if attr, ok := d.GetOk("org_id"); ok {
@@ -79,11 +83,13 @@ func getReadConnectorOpts(d *schema.ResourceData) *nextgen.ConnectorsApiGetConne
 	return connOpts
 }
 
-func resourceConnectorCreateOrUpdateBase(ctx context.Context, d *schema.ResourceData, meta interface{}, connector *nextgen.ConnectorInfo) (*nextgen.ConnectorInfo, diag.Diagnostics) {
+// CreateOrUpdate creates the connector when the resource has no ID yet, else updates it, and
+// maps the common attributes back into state.
+func CreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}, connector *nextgen.ConnectorInfo) (*nextgen.ConnectorInfo, diag.Diagnostics) {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 
 	id := d.Id()
-	buildConnector(d, connector)
+	BuildCommon(d, connector)
 
 	var err error
 	var resp nextgen.ResponseDtoConnectorResponse
@@ -107,12 +113,13 @@ func resourceConnectorCreateOrUpdateBase(ctx context.Context, d *schema.Resource
 		return nil, helpers.HandleEmptyCreateUpdateResponse(governance, "connector")
 	}
 
-	readCommonConnectorData(d, resp.Data.Connector)
+	ReadCommon(d, resp.Data.Connector)
 
 	return resp.Data.Connector, nil
 }
 
-func resourceConnectorDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+// Delete deletes the connector.
+func Delete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 
 	_, httpResp, err := c.ConnectorsApi.DeleteConnector(ctx, c.AccountId, d.Id(), &nextgen.ConnectorsApiDeleteConnectorOpts{
@@ -127,7 +134,9 @@ func resourceConnectorDelete(ctx context.Context, d *schema.ResourceData, meta i
 	return nil
 }
 
-func buildConnector(d *schema.ResourceData, connector *nextgen.ConnectorInfo) {
+// BuildCommon copies the common attributes (identifier, name, description, scope, tags) from
+// state into the connector.
+func BuildCommon(d *schema.ResourceData, connector *nextgen.ConnectorInfo) {
 	if attr := d.Get("name").(string); attr != "" {
 		connector.Name = attr
 	}
@@ -153,7 +162,8 @@ func buildConnector(d *schema.ResourceData, connector *nextgen.ConnectorInfo) {
 	}
 }
 
-func readCommonConnectorData(d *schema.ResourceData, connector *nextgen.ConnectorInfo) {
+// ReadCommon writes the common attributes of the connector into state.
+func ReadCommon(d *schema.ResourceData, connector *nextgen.ConnectorInfo) {
 	d.SetId(connector.Identifier)
 	d.Set("identifier", connector.Identifier)
 	d.Set("description", connector.Description)

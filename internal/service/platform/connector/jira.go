@@ -6,6 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,7 +19,7 @@ func ResourceConnectorJira() *schema.Resource {
 		ReadContext:   resourceConnectorJiraRead,
 		CreateContext: resourceConnectorJiraCreateOrUpdate,
 		UpdateContext: resourceConnectorJiraCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -34,13 +35,13 @@ func ResourceConnectorJira() *schema.Resource {
 				Computed:    true,
 			},
 			"username_ref": {
-				Description: "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+				Description: "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
 			},
 			"password_ref": {
-				Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+				Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
@@ -87,7 +88,7 @@ func ResourceConnectorJira() *schema.Resource {
 										},
 									},
 									"username_ref": {
-										Description:   "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+										Description:   "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:          schema.TypeString,
 										Optional:      true,
 										ConflictsWith: []string{"auth.0.username_password.0.username"},
@@ -97,7 +98,7 @@ func ResourceConnectorJira() *schema.Resource {
 										},
 									},
 									"password_ref": {
-										Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
@@ -117,7 +118,7 @@ func ResourceConnectorJira() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"pat_ref": {
-										Description: "Reference to a secret containing the personal access token to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the personal access token to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
@@ -136,7 +137,7 @@ func ResourceConnectorJira() *schema.Resource {
 }
 
 func resourceConnectorJiraRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.Jira)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.Jira)
 	if err != nil {
 		return err
 	}
@@ -155,7 +156,7 @@ func resourceConnectorJiraRead(ctx context.Context, d *schema.ResourceData, meta
 func resourceConnectorJiraCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorJira(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

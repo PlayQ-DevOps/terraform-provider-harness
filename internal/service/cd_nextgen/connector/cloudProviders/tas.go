@@ -5,6 +5,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -17,7 +18,7 @@ func ResourceConnectorTas() *schema.Resource {
 		ReadContext:   resourceConnectorTasRead,
 		CreateContext: resourceConnectorTasCreateOrUpdate,
 		UpdateContext: resourceConnectorTasCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -54,14 +55,14 @@ func ResourceConnectorTas() *schema.Resource {
 										ExactlyOneOf:  []string{"credentials.0.tas_manual_details.0.username", "credentials.0.tas_manual_details.0.username_ref"},
 									},
 									"username_ref": {
-										Description:   "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+										Description:   "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:          schema.TypeString,
 										Optional:      true,
 										ConflictsWith: []string{"credentials.0.tas_manual_details.0.username"},
 										ExactlyOneOf:  []string{"credentials.0.tas_manual_details.0.username", "credentials.0.tas_manual_details.0.username_ref"},
 									},
 									"password_ref": {
-										Description: "Reference of the secret for the password." + secret_ref_text,
+										Description: "Reference of the secret for the password." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
@@ -96,7 +97,7 @@ func ResourceConnectorTas() *schema.Resource {
 }
 
 func resourceConnectorTasRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.Tas)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.Tas)
 	if err != nil {
 		return err
 	}
@@ -115,7 +116,7 @@ func resourceConnectorTasRead(ctx context.Context, d *schema.ResourceData, meta 
 func resourceConnectorTasCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorTas(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

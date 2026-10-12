@@ -6,6 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
@@ -19,7 +20,7 @@ func ResourceConnectorAzureKeyVault() *schema.Resource {
 		ReadContext:   resourceConnectorAzureKeyVaultRead,
 		CreateContext: resourceConnectorAzureKeyVaultCreateOrUpdate,
 		UpdateContext: resourceConnectorAzureKeyVaultCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 		CustomizeDiff: customdiff.All(
 			func(ctx context.Context, d *schema.ResourceDiff, meta interface{}) error {
@@ -125,7 +126,7 @@ func ResourceConnectorAzureKeyVault() *schema.Resource {
 }
 
 func resourceConnectorAzureKeyVaultRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.AzureKeyVault)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.AzureKeyVault)
 	if err != nil {
 		return err
 	}
@@ -144,7 +145,7 @@ func resourceConnectorAzureKeyVaultRead(ctx context.Context, d *schema.ResourceD
 func resourceConnectorAzureKeyVaultCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorAzureKeyVault(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

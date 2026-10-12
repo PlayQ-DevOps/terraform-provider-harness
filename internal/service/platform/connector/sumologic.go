@@ -5,6 +5,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -16,7 +17,7 @@ func ResourceConnectorSumologic() *schema.Resource {
 		ReadContext:   resourceConnectorSumologicRead,
 		CreateContext: resourceConnectorSumologicCreateOrUpdate,
 		UpdateContext: resourceConnectorSumologicCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -26,12 +27,12 @@ func ResourceConnectorSumologic() *schema.Resource {
 				Required:    true,
 			},
 			"access_id_ref": {
-				Description: "Reference to the Harness secret containing the access id." + secret_ref_text,
+				Description: "Reference to the Harness secret containing the access id." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Required:    true,
 			},
 			"access_key_ref": {
-				Description: "Reference to the Harness secret containing the access key." + secret_ref_text,
+				Description: "Reference to the Harness secret containing the access key." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Required:    true,
 			},
@@ -50,7 +51,7 @@ func ResourceConnectorSumologic() *schema.Resource {
 }
 
 func resourceConnectorSumologicRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.SumoLogic)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.SumoLogic)
 	if err != nil {
 		return err
 	}
@@ -69,7 +70,7 @@ func resourceConnectorSumologicRead(ctx context.Context, d *schema.ResourceData,
 func resourceConnectorSumologicCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorSumologic(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

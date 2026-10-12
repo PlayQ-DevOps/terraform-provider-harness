@@ -8,9 +8,9 @@ This package implements Terraform resources and data sources for Harness connect
 
 ```
 connector/
-├── connector.go              # Base functions shared by all connectors
-├── data_source_connector.go  # Generic connector data source
-├── secret_ref_util.go        # Secret reference utilities
+├── connectorbase/base.go     # CRUD logic shared by every connector (also used by cd_nextgen/connector/*)
+├── (connector data sources live next to their resources as *_data_source.go)
+├── (secret reference description text: helpers.Descriptions.SecretRefText)
 ├── secretManagers/           # Secret manager connector implementations
 │   ├── aws_kms.go
 │   ├── aws_secrets_manager.go
@@ -38,22 +38,22 @@ connector/
 └── *_test.go                 # Test files for each connector
 ```
 
-## Base Functions (connector.go)
+## Base Functions (connectorbase package)
 
-All connector resources should use these base functions:
+All connector resources, in this package and in internal/service/cd_nextgen/connector/*, use the single shared base package `connectorbase` (never copy it):
 
 ```go
 // For resource Read operations
-resourceConnectorReadBase(ctx, d, meta, connType)
+connectorbase.Read(ctx, d, meta, connType)   // returns (nil, nil) when the connector is gone and state was cleared
 
 // For data source Read operations
-dataConnectorReadBase(ctx, d, meta, connType)
+connectorbase.DataRead(ctx, d, meta, connType)
 
 // For Create/Update operations
-resourceConnectorCreateOrUpdateBase(ctx, d, meta, connector)
+connectorbase.CreateOrUpdate(ctx, d, meta, connector)
 
 // For Delete operations
-resourceConnectorDelete(ctx, d, meta)
+connectorbase.Delete(ctx, d, meta)
 ```
 
 ## Creating a New Connector Resource
@@ -81,7 +81,7 @@ func Resource<ConnectorType>() *schema.Resource {
         ReadContext:   resource<ConnectorType>Read,
         CreateContext: resource<ConnectorType>CreateOrUpdate,
         UpdateContext: resource<ConnectorType>CreateOrUpdate,
-        DeleteContext: resourceConnectorDelete,  // Uses shared delete
+        DeleteContext: connectorbase.Delete,  // Uses shared delete
         Importer:      helpers.MultiLevelResourceImporter,
         Schema: helpers.MergeSchemas(
             commonConnectorSchema(),       // Common fields
@@ -93,9 +93,9 @@ func Resource<ConnectorType>() *schema.Resource {
 ```
 
 ### Secret References
-Use `secret_ref_text` constant for secret reference fields:
+Use `helpers.Descriptions.SecretRefText.String()` for secret reference field descriptions:
 ```go
-const secret_ref_text = "Reference to a secret for the key. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}."
+Description: "Reference to the Harness secret containing the token." + helpers.Descriptions.SecretRefText.String(),
 ```
 
 ## Testing
@@ -125,15 +125,15 @@ Connector API calls:
 
 ## DOs
 
-- Use base functions from `connector.go` for CRUD operations
+- Use the `connectorbase` package for CRUD operations
 - Use `helpers.MergeSchemas` to combine common and specific schemas
-- Use `secret_ref_text` constant for secret reference field descriptions
+- Use `helpers.Descriptions.SecretRefText` for secret reference field descriptions
 - Add both resource and data source implementations
 - Add comprehensive acceptance tests
 
 ## DON'Ts
 
-- Don't duplicate common connector logic - use base functions
+- Never copy connectorbase into another package; import it
 - Don't hardcode account/org/project IDs - use schema values
 - Don't forget to register new connectors in provider.go
 - Don't add local .terraform or terraform.tfstate files to git

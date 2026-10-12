@@ -7,6 +7,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -19,7 +20,7 @@ func ResourceConnectorAzureRepo() *schema.Resource {
 		ReadContext:   resourceConnectorAzureRepoRead,
 		CreateContext: resourceConnectorAzureRepoCreateOrUpdate,
 		UpdateContext: resourceConnectorAzureRepoCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -132,7 +133,7 @@ func ResourceConnectorAzureRepo() *schema.Resource {
 }
 
 func resourceConnectorAzureRepoRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.AzureRepo)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.AzureRepo)
 	if err != nil {
 		return err
 	}
@@ -151,7 +152,7 @@ func resourceConnectorAzureRepoRead(ctx context.Context, d *schema.ResourceData,
 func resourceConnectorAzureRepoCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorAzureRepo(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

@@ -6,6 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -17,12 +18,12 @@ func ResourceConnectorAwsKms() *schema.Resource {
 		ReadContext:   resourceConnectorAwsKmsRead,
 		CreateContext: resourceConnectorAwsKmsCreateOrUpdate,
 		UpdateContext: resourceConnectorAwsKmsCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
 			"arn_ref": {
-				Description: "A reference to the Harness secret containing the ARN of the AWS KMS." + secret_ref_text,
+				Description: "A reference to the Harness secret containing the ARN of the AWS KMS." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Optional:    true,
 			},
@@ -72,12 +73,12 @@ func ResourceConnectorAwsKms() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"access_key_ref": {
-										Description: "The reference to the Harness secret containing the AWS access key." + secret_ref_text,
+										Description: "The reference to the Harness secret containing the AWS access key." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
 									"secret_key_ref": {
-										Description: "The reference to the Harness secret containing the AWS secret key." + secret_ref_text,
+										Description: "The reference to the Harness secret containing the AWS secret key." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
@@ -165,7 +166,7 @@ func ResourceConnectorAwsKms() *schema.Resource {
 }
 
 func resourceConnectorAwsKmsRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.AwsKms)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.AwsKms)
 	if err != nil {
 		return err
 	}
@@ -184,7 +185,7 @@ func resourceConnectorAwsKmsRead(ctx context.Context, d *schema.ResourceData, me
 func resourceConnectorAwsKmsCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorAwsKms(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

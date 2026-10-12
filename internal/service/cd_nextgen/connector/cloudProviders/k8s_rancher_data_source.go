@@ -31,7 +31,7 @@ func DatasourceConnectorRancher() *schema.Resource {
 							Required:    true,
 						},
 						"password_ref": {
-							Description: "Reference to the secret containing the bearer token for the rancher cluster." + secret_ref_text,
+							Description: "Reference to the secret containing the bearer token for the rancher cluster." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Required:    true,
 						},

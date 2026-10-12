@@ -34,7 +34,7 @@ func DatasourceConnectorSplunk() *schema.Resource {
 				Computed:    true,
 			},
 			"password_ref": {
-				Description: "The reference to the Harness secret containing the Splunk password. Deprecated: Use 'username_password' block instead." + secret_ref_text,
+				Description: "The reference to the Harness secret containing the Splunk password. Deprecated: Use 'username_password' block instead." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
@@ -51,7 +51,7 @@ func DatasourceConnectorSplunk() *schema.Resource {
 							Computed:    true,
 						},
 						"password_ref": {
-							Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+							Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},
@@ -65,7 +65,7 @@ func DatasourceConnectorSplunk() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"bearer_token_ref": {
-							Description: "Reference to the Harness secret containing the Splunk bearer token." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the Splunk bearer token." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},
@@ -79,7 +79,7 @@ func DatasourceConnectorSplunk() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"hec_token_ref": {
-							Description: "Reference to the Harness secret containing the Splunk HEC token." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the Splunk HEC token." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},
