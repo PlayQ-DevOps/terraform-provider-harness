@@ -21,7 +21,7 @@ func TestAccResourceRuleEnforcement(t *testing.T) {
 	resourceName := "harness_governance_rule_enforcement.test"
 	awsAccountId := os.Getenv("AWS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRuleEnforcementDestroy(resourceName),
@@ -107,7 +107,7 @@ func TestAccResourceRuleEnforcement_CCM32336_OutOfBandDeleteRecreates(t *testing
 
 	var enforcementIDBefore string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRuleEnforcementDestroy(resourceName),
@@ -157,7 +157,7 @@ func TestAccResourceRuleEnforcementWithFalseBooleans(t *testing.T) {
 	resourceName := "harness_governance_rule_enforcement.test"
 	awsAccountId := os.Getenv("AWS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRuleEnforcementDestroy(resourceName),

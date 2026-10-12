@@ -22,7 +22,7 @@ func TestAccResourceServiceAccount(t *testing.T) {
 
 	resourceName := "harness_platform_service_account.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceAccountDestroy(resourceName),
@@ -42,7 +42,7 @@ func TestAccResourceServiceAccount(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "id", id),
 					resource.TestCheckResourceAttr(resourceName, "name", updatedName),
-					resource.TestCheckResourceAttr(resourceName, "account_id", accountId),		
+					resource.TestCheckResourceAttr(resourceName, "account_id", accountId),
 					resource.TestCheckResourceAttr(resourceName, "description", "test"),
 					resource.TestCheckResourceAttr(resourceName, "tags.#", "1"),
 				),
@@ -66,7 +66,7 @@ func TestAccResourceServiceAccountProjectLevel(t *testing.T) {
 
 	resourceName := "harness_platform_service_account.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceAccountDestroy(resourceName),
@@ -114,7 +114,7 @@ func TestAccResourceServiceAccountOrgLevel(t *testing.T) {
 
 	resourceName := "harness_platform_service_account.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceAccountDestroy(resourceName),

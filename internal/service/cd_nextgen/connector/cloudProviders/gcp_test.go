@@ -15,7 +15,7 @@ func TestAccResourceConnectorGcp_Inherit(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_gcp.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -46,7 +46,7 @@ func TestAccResourceConnectorGcp_Manual(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_gcp.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -81,7 +81,7 @@ func TestAccResourceConnectorGcp_OIDC(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_gcp.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -119,7 +119,7 @@ func TestAccResourceConnectorGcp_ForceDelete(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_gcp.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),

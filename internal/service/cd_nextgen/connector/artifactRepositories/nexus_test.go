@@ -17,7 +17,7 @@ func TestAccResourceConnectorNexus_Anonymous(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_nexus.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -63,7 +63,7 @@ func TestAccResourceConnectorNexus_UsernamePassword(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_nexus.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),

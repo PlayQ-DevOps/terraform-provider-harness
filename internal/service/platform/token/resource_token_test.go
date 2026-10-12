@@ -24,7 +24,7 @@ func TestAccResourceToken(t *testing.T) {
 
 	resourceName := "harness_platform_token.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccTokenDestroy(resourceName),
@@ -66,7 +66,7 @@ func TestAccResourceTokenOrgLevel(t *testing.T) {
 
 	resourceName := "harness_platform_token.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccTokenDestroy(resourceName),
@@ -108,7 +108,7 @@ func TestAccResourceTokenProjectLevel(t *testing.T) {
 
 	resourceName := "harness_platform_token.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccTokenDestroy(resourceName),

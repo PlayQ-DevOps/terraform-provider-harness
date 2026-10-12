@@ -16,7 +16,7 @@ func TestAccDataSourceConnectorAws(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -43,7 +43,7 @@ func TestOidcDataSourceConnectorAws(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -71,12 +71,12 @@ func TestAccDataSourceConnectorAwsFullJitterBackOff(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceConnectorAwsFullJitterBackOff(name),
+				Config:             testAccDataSourceConnectorAwsFullJitterBackOff(name),
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "id", name),
@@ -103,12 +103,12 @@ func TestAccDataSourceConnectorAwsEqualJitterBackOff(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceConnectorAwsEqualJitterBackOff(name),
+				Config:             testAccDataSourceConnectorAwsEqualJitterBackOff(name),
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "id", name),
@@ -134,12 +134,12 @@ func TestAccDataSourceConnectorAwsFixedDelayBackOff(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceConnectorAwsFixedDelayBackOff(name),
+				Config:             testAccDataSourceConnectorAwsFixedDelayBackOff(name),
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "id", name),

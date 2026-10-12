@@ -14,7 +14,7 @@ func TestAccDataSourceCentralNotificationChannel_email(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -40,7 +40,7 @@ func TestAccDataSourceCentralNotificationChannel_slack(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -65,7 +65,7 @@ func TestAccDataSourceCentralNotificationChannel_msteams(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -90,7 +90,7 @@ func TestAccDataSourceCentralNotificationChannel_pagerduty(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -115,7 +115,7 @@ func TestAccDataSourceCentralNotificationChannel_webhook(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -355,7 +355,7 @@ func TestAccDataSourceCentralNotificationChannel_datadog(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -419,4 +419,3 @@ func testAccDataSourceCentralNotificationChannelDatadog(id string, name string) 
 		}
 	`, id, name)
 }
-

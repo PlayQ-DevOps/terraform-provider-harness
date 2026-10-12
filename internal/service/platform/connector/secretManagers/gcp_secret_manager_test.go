@@ -15,7 +15,7 @@ func TestAccResourceConnectorGcpSM_manual(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_gcp_secret_manager.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -68,7 +68,7 @@ func TestOrgResourceConnectorGcpSM_manual(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_gcp_secret_manager.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -124,7 +124,7 @@ func TestProjectResourceConnectorGcpSM_manual(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_gcp_secret_manager.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -182,7 +182,7 @@ func TestAccResourceConnectorGcpSM_inherit(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_gcp_secret_manager.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -235,7 +235,7 @@ func TestOrgResourceConnectorGcpSM_inherit(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_gcp_secret_manager.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -291,7 +291,7 @@ func TestProjectResourceConnectorGcpSM_inherit(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_gcp_secret_manager.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -349,7 +349,7 @@ func TestAccResourceConnectorGcpSM_oidc_platform(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_gcp_secret_manager.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -404,7 +404,7 @@ func TestOrgResourceConnectorGcpSM_oidc_platform(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_gcp_secret_manager.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -462,7 +462,7 @@ func TestProjectResourceConnectorGcpSM_oidc_platform(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_gcp_secret_manager.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -522,7 +522,7 @@ func TestAccResourceConnectorGcpSM_oidc_delegate(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_gcp_secret_manager.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -581,7 +581,7 @@ func TestOrgResourceConnectorGcpSM_oidc_delegate(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_gcp_secret_manager.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -643,7 +643,7 @@ func TestProjectResourceConnectorGcpSM_oidc_delegate(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_gcp_secret_manager.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -707,7 +707,7 @@ func TestAccResourceConnectorGcpSM_manual_is_default(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_gcp_secret_manager.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

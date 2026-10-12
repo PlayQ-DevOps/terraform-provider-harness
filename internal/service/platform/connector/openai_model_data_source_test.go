@@ -40,7 +40,7 @@ func TestAccDataSourceConnectorOpenAIModel_Token(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -70,7 +70,7 @@ func TestAccDataSourceConnectorOpenAIModel_Vertex(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -102,7 +102,7 @@ func TestOrgDataSourceConnectorOpenAIModel_Token(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -133,7 +133,7 @@ func TestOrgDataSourceConnectorOpenAIModel_Vertex(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -167,7 +167,7 @@ func TestProjectDataSourceConnectorOpenAIModel_Token(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -200,7 +200,7 @@ func TestProjectDataSourceConnectorOpenAIModel_Vertex(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -268,4 +268,3 @@ data "harness_platform_connector_openai_model" "test" {
   project_id = "%s"
 }`, orgID, projectID)
 }
-

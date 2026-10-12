@@ -16,7 +16,7 @@ func TestAccResourceModule(t *testing.T) {
 	system := strings.ToLower(t.Name())
 	updatedName := fmt.Sprintf("%s_updated", name)
 	updatedSystem := fmt.Sprintf("%supdated", system)
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),

@@ -17,7 +17,7 @@ func TestAccResourceChaosSecurityGovernanceRule(t *testing.T) {
 	resourceName := "harness_chaos_security_governance_rule.test"
 	conditionResourceName := "harness_chaos_security_governance_condition.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccSecurityGovernanceRuleDestroy(resourceName),
@@ -48,7 +48,7 @@ func TestAccResourceChaosSecurityGovernanceRule_Update(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_security_governance_rule.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccSecurityGovernanceRuleDestroy(resourceName),

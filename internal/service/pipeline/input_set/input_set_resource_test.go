@@ -20,7 +20,7 @@ func TestAccResourceInputSet(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_input_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -75,7 +75,7 @@ func TestAccResourceInputSetRemote(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_input_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -121,7 +121,7 @@ func TestAccResourceInputSetHC(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_input_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -167,7 +167,7 @@ func TestAccResourceInputSetInline(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_input_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -212,7 +212,7 @@ func TestAccResourceInputSetImportFromGit(t *testing.T) {
 
 	resourceName := "harness_platform_input_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -292,7 +292,7 @@ func TestAccResourceInputSet_DeleteUnderlyingResource(t *testing.T) {
 	pipeline_id := id
 	resourceName := "harness_platform_input_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

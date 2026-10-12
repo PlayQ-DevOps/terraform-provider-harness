@@ -19,7 +19,7 @@ func TestAccResourceFMELargeSegmentEnvironmentAssociation_basic(t *testing.T) {
 	res := "harness_fme_large_segment_environment_association.test"
 	var envID string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

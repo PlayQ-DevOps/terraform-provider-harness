@@ -14,7 +14,7 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6)) //Add with muliptle logs and metrics
 	name := id
 	resourceName := "data.harness_platform_monitored_service.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -29,7 +29,7 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -44,7 +44,7 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -59,7 +59,7 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -74,7 +74,7 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -89,7 +89,7 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -104,7 +104,7 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -119,7 +119,7 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -134,7 +134,7 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

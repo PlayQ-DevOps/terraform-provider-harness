@@ -15,6 +15,7 @@ import (
 )
 
 func TestAccResourceUserGroupPermissions_AccountPermissions(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_user_group_permissions.test"
@@ -27,7 +28,7 @@ func TestAccResourceUserGroupPermissions_AccountPermissions(t *testing.T) {
 		c.UserClient.DeleteUserGroup(ug.Id)
 	}()
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.TestAccPreCheck(t)
 			c := acctest.TestAccGetApiClientFromProvider().CDClient
@@ -58,10 +59,11 @@ func TestAccResourceUserGroupPermissions_AccountPermissions(t *testing.T) {
 }
 
 func TestAccResourceUserGroupPermissions_DeleteUnderlyingResource(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.TestAccPreCheck(t)
 			c := acctest.TestAccGetApiClientFromProvider().CDClient
@@ -96,6 +98,7 @@ func TestAccResourceUserGroupPermissions_DeleteUnderlyingResource(t *testing.T) 
 }
 
 func TestAccResourceUserGroupPermissions_AppPermissions(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_user_group_permissions.test"
@@ -108,7 +111,7 @@ func TestAccResourceUserGroupPermissions_AppPermissions(t *testing.T) {
 		c.UserClient.DeleteUserGroup(ug.Id)
 	}()
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.TestAccPreCheck(t)
 			c := acctest.TestAccGetApiClientFromProvider().CDClient

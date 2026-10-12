@@ -20,7 +20,7 @@ func TestAccResourceResourceGroup(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
@@ -63,7 +63,7 @@ func TestProjectResourceResourceGroup(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
@@ -106,7 +106,7 @@ func TestOrgResourceResourceGroup(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
@@ -149,7 +149,7 @@ func TestAccResourceResourceGroup_emptyAttributeFilter(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
@@ -191,7 +191,7 @@ func TestProjectResourceResourceGroup_emptyAttributeFilter(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
@@ -233,7 +233,7 @@ func TestOrgResourceResourceGroup_emptyAttributeFilter(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
@@ -276,7 +276,7 @@ func TestAccResourceResourceGroup_TagsAttributeFilter(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
@@ -318,7 +318,7 @@ func TestOrgResourceResourceGroup_TagsAttributeFilter(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
@@ -361,7 +361,7 @@ func TestProjectResourceResourceGroup_TagsAttributeFilter(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGroupDestroy(resourceName),

@@ -24,7 +24,7 @@ func TestAccResourcePipeline(t *testing.T) {
 
 	resourceName := "harness_platform_pipeline.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPipelineDestroy(resourceName),
@@ -63,7 +63,7 @@ func TestAccResourcePipelineInline(t *testing.T) {
 
 	resourceName := "harness_platform_pipeline.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPipelineDestroy(resourceName),
@@ -96,7 +96,7 @@ func TestAccResourcePipelineImportFromGit(t *testing.T) {
 
 	resourceName := "harness_platform_pipeline.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPipelineDestroy(resourceName),
@@ -126,7 +126,7 @@ func TestAccResourcePipeline_DeleteUnderlyingResource(t *testing.T) {
 	org_id := id
 	resourceName := "harness_platform_pipeline.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -574,7 +574,7 @@ func TestAccResourcePipelineHarnessCode(t *testing.T) {
 
 	resourceName := "harness_platform_pipeline.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPipelineDestroy(resourceName),
@@ -625,7 +625,7 @@ func TestAccResourcePipelineInlineImplicit(t *testing.T) {
 	for _, tc := range testCases {
 		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
-			resource.UnitTest(t, resource.TestCase{
+			resource.Test(t, resource.TestCase{
 				PreCheck:          func() { acctest.TestAccPreCheck(t) },
 				ProviderFactories: acctest.ProviderFactories,
 				CheckDestroy:      testAccPipelineDestroy(resourceName),

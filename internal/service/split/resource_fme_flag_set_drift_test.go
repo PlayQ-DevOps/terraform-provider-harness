@@ -23,7 +23,7 @@ func TestAccFMEFlagSet_destroyedOutOfBand(t *testing.T) {
 	cfg := testAccFMEFlagSetOnly(id, fsName, "drift test flag set")
 	var flagSetID string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

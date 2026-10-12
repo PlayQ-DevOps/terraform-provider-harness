@@ -17,7 +17,7 @@ func TestAccSecretFile(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_secret_file.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccSecretDestroy(resourceName),
@@ -63,7 +63,7 @@ func TestAccSecretFileWMultipleTags(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_secret_file.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccSecretDestroy(resourceName),
@@ -109,7 +109,7 @@ func TestAccSecretFileOrgLevel(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_secret_file.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -159,7 +159,7 @@ func TestAccSecretFileProjectLevel(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_secret_file.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -297,7 +297,7 @@ func TestAccResourceSecretFile_AWS_SM_reference(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_secret_file.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccSecretDestroy(resourceName),

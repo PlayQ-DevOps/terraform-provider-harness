@@ -16,7 +16,7 @@ func TestAccResourceChaosImageRegistry(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_image_registry.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccChaosImageRegistryDestroy(resourceName),
@@ -41,7 +41,7 @@ func TestAccResourceChaosImageRegistry_Update(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_image_registry.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccChaosImageRegistryDestroy(resourceName),
@@ -71,7 +71,7 @@ func TestAccResourceChaosImageRegistry_Import(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_image_registry.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccChaosImageRegistryDestroy(resourceName),
@@ -113,7 +113,7 @@ func TestAccResourceChaosImageRegistry_WithCustomImages(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_image_registry.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccChaosImageRegistryDestroy(resourceName),

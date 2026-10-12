@@ -48,7 +48,7 @@ func TestAccResourceAwsCloudProvider_DeleteUnderlyingResourcez(t *testing.T) {
 		resourceName = "harness_cloudprovider_aws.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

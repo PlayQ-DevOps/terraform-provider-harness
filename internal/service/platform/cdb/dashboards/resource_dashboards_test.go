@@ -21,7 +21,7 @@ func TestAccResourceDashboard(t *testing.T) {
 	updatedTitle := fmt.Sprintf("%s_updated", title)
 	resourceName := "harness_platform_dashboards.dashboard"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccDashboardDestroy(resourceName),

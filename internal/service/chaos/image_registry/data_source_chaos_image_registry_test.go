@@ -26,7 +26,7 @@ func TestAccDataSourceChaosImageRegistry(t *testing.T) {
 	dataSourceName := "data.harness_chaos_image_registry.test"
 	resourceName := "harness_chaos_image_registry.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -50,7 +50,7 @@ func TestAccDataSourceChaosImageRegistry_CheckOverride(t *testing.T) {
 	rName := id
 	dataSourceName := "data.harness_chaos_image_registry.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -72,7 +72,7 @@ func TestAccDataSourceChaosImageRegistry_ProjectLevel(t *testing.T) {
 	dataSourceName := "data.harness_chaos_image_registry.test"
 	resourceName := "harness_chaos_image_registry.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

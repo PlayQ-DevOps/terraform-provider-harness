@@ -15,7 +15,7 @@ func TestAccDataSourceEnvironmentGroup(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_environment_group.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -38,7 +38,7 @@ func TestAccDataSourceEnvironmentGroupOrgLevel(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_environment_group.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -60,7 +60,7 @@ func TestAccDataSourceEnvironmentGroupAccountLevel(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_environment_group.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

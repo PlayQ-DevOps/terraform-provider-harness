@@ -21,7 +21,7 @@ func TestAccResourceTriggerPipeline_WaitAndCaptureOutputs(t *testing.T) {
 
 	var firstId string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

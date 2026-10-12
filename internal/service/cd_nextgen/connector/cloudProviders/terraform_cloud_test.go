@@ -34,7 +34,7 @@ func TestAccResourceConnectorTerraformCloud_DeleteUnderlyingResource(t *testing.
 	name := id
 	resourceName := "harness_platform_connector_terraform_cloud.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -63,7 +63,7 @@ func TestAccResourceConnectorTerraformCloud_DeleteUnderlyingResource(t *testing.
 func executeTfCloudTest(t *testing.T, config string, executeOnDelegate string, id string, name string) {
 	resourceName := "harness_platform_connector_terraform_cloud.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

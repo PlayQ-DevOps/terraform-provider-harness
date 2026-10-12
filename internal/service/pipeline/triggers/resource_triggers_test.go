@@ -21,7 +21,7 @@ func TestAccResourceTriggers(t *testing.T) {
 
 	resourceName := "harness_platform_triggers.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccTriggersDestroy(resourceName),
@@ -95,7 +95,7 @@ func TestAccResourceTriggers_DeleteUnderlyingResource(t *testing.T) {
 	target_id := id
 	resourceName := "harness_platform_triggers.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

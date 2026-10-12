@@ -18,7 +18,7 @@ func TestAccDataSourceConnectorVault(t *testing.T) {
 		vaultToken   = os.Getenv("HARNESS_TEST_VAULT_SECRET")
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -49,7 +49,7 @@ func TestAccDataSourceConnectorVaultProjectLevel(t *testing.T) {
 		vaultToken   = os.Getenv("HARNESS_TEST_VAULT_SECRET")
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -80,7 +80,7 @@ func TestAccDataSourceConnectorVaultOrgLevel(t *testing.T) {
 		vaultToken   = os.Getenv("HARNESS_TEST_VAULT_SECRET")
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -112,7 +112,7 @@ func TestAccDataSourceConnectorVault_VaultAgent(t *testing.T) {
 		resourceName = "data.harness_platform_connector_vault.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -143,7 +143,7 @@ func TestAccDataSourceConnectorVault_VaultAgentProjectLevel(t *testing.T) {
 		connectorName = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -174,7 +174,7 @@ func TestAccDataSourceConnectorVault_VaultAgentOrgLevel(t *testing.T) {
 		connectorName = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -206,7 +206,7 @@ func TestAccDataSourceConnectorVault_k8sAuth(t *testing.T) {
 		resourceName = "data.harness_platform_connector_vault.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -237,7 +237,7 @@ func TestAccDataSourceConnectorVault_k8sAuthProjectLevel(t *testing.T) {
 		resourceName  = "data.harness_platform_connector_vault.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -268,7 +268,7 @@ func TestAccDataSourceConnectorVault_k8sAuthOrgLevel(t *testing.T) {
 		connectorName = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -301,7 +301,7 @@ func TestAccDataSourceConnectorVault_AppRole(t *testing.T) {
 		vaultToken   = os.Getenv("HARNESS_TEST_VAULT_SECRET")
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -332,7 +332,7 @@ func TestAccDataSourceConnectorVault_AppRoleProjectLevel(t *testing.T) {
 		vaultToken   = os.Getenv("HARNESS_TEST_VAULT_SECRET")
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -363,7 +363,7 @@ func TestAccDataSourceConnectorVault_AppRoleOrgLevel(t *testing.T) {
 		vaultToken   = os.Getenv("HARNESS_TEST_VAULT_SECRET")
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -395,7 +395,7 @@ func TestAccDataSourceConnectorVault_AWSAuth(t *testing.T) {
 		vaultToken   = os.Getenv("HARNESS_TEST_VAULT_SECRET")
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -427,7 +427,7 @@ func TestAccDataSourceConnectorVault_AWSAuthProjectLevel(t *testing.T) {
 		vaultToken   = os.Getenv("HARNESS_TEST_VAULT_SECRET")
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -459,7 +459,7 @@ func TestAccDataSourceConnectorVault_AWSAuthOrgLevel(t *testing.T) {
 		vaultToken   = os.Getenv("HARNESS_TEST_VAULT_SECRET")
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

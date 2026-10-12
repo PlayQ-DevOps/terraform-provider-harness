@@ -17,6 +17,7 @@ import (
 )
 
 func TestAccResourceUserProjectLevel(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 	endpoint := os.Getenv("HARNESS_ENDPOINT")
 
 	if endpoint == "" {
@@ -40,7 +41,7 @@ func TestAccResourceUserProjectLevel(t *testing.T) {
 	email := strings.ToLower(id) + "@harness.io"
 	resourceName := "harness_platform_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserDestroy(resourceName),
@@ -64,6 +65,7 @@ func TestAccResourceUserProjectLevel(t *testing.T) {
 }
 
 func TestAccResourceUserAccountLevel(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 	endpoint := os.Getenv("HARNESS_ENDPOINT")
 
 	if endpoint == "" {
@@ -87,7 +89,7 @@ func TestAccResourceUserAccountLevel(t *testing.T) {
 	email := strings.ToLower(id) + "@harness.io"
 	resourceName := "harness_platform_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserDestroy(resourceName),
@@ -110,6 +112,7 @@ func TestAccResourceUserAccountLevel(t *testing.T) {
 }
 
 func TestAccResourceUserOrgLevel(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 	endpoint := os.Getenv("HARNESS_ENDPOINT")
 
 	if endpoint == "" {
@@ -133,7 +136,7 @@ func TestAccResourceUserOrgLevel(t *testing.T) {
 	email := strings.ToLower(id) + "@harness.io"
 	resourceName := "harness_platform_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserDestroy(resourceName),
@@ -156,6 +159,7 @@ func TestAccResourceUserOrgLevel(t *testing.T) {
 }
 
 func TestAccResourceUser_DeleteUnderlyingResourceProjectLevel(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 	endpoint := os.Getenv("HARNESS_ENDPOINT")
 
 	if endpoint == "" {
@@ -179,7 +183,7 @@ func TestAccResourceUser_DeleteUnderlyingResourceProjectLevel(t *testing.T) {
 	email := strings.ToLower(id) + "@harness.io"
 	resourceName := "harness_platform_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -210,6 +214,7 @@ func TestAccResourceUser_DeleteUnderlyingResourceProjectLevel(t *testing.T) {
 }
 
 func TestAccResourceUser_DeleteUnderlyingResourceAccountLevel(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 	endpoint := os.Getenv("HARNESS_ENDPOINT")
 
 	if endpoint == "" {
@@ -233,7 +238,7 @@ func TestAccResourceUser_DeleteUnderlyingResourceAccountLevel(t *testing.T) {
 	email := strings.ToLower(id) + "@harness.io"
 	resourceName := "harness_platform_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -260,6 +265,7 @@ func TestAccResourceUser_DeleteUnderlyingResourceAccountLevel(t *testing.T) {
 }
 
 func TestAccResourceUser_DeleteUnderlyingResourceOrgLevel(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 	endpoint := os.Getenv("HARNESS_ENDPOINT")
 
 	if endpoint == "" {
@@ -283,7 +289,7 @@ func TestAccResourceUser_DeleteUnderlyingResourceOrgLevel(t *testing.T) {
 	email := strings.ToLower(id) + "@harness.io"
 	resourceName := "harness_platform_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -313,6 +319,7 @@ func TestAccResourceUser_DeleteUnderlyingResourceOrgLevel(t *testing.T) {
 
 // New test case for user group updates
 func TestAccResourceUser_UpdateUserGroups(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 	endpoint := os.Getenv("HARNESS_ENDPOINT")
 
 	if endpoint == "" {
@@ -336,7 +343,7 @@ func TestAccResourceUser_UpdateUserGroups(t *testing.T) {
 	email := strings.ToLower(id) + "@harness.io"
 	resourceName := "harness_platform_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserDestroy(resourceName),

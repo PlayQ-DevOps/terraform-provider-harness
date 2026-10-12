@@ -16,7 +16,7 @@ func TestAccDataSourceDelegateToken(t *testing.T) {
 
 	resourceName := "data.harness_platform_delegatetoken.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -37,7 +37,7 @@ func TestAccDataSourceDelegateTokenOrgLevel(t *testing.T) {
 
 	resourceName := "data.harness_platform_delegatetoken.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -59,7 +59,7 @@ func TestAccDataSourceDelegateTokenProjectLevel(t *testing.T) {
 
 	resourceName := "data.harness_platform_delegatetoken.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -82,7 +82,7 @@ func TestAccDataSourceDelegateTokenWithRevokeAfter(t *testing.T) {
 
 	resourceName := "data.harness_platform_delegatetoken.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

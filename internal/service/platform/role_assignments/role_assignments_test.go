@@ -20,7 +20,7 @@ func TestAccRoleAssignments(t *testing.T) {
 	resourceName := "harness_platform_role_assignments.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRoleAssignmentsDestroy(resourceName),
@@ -63,7 +63,7 @@ func TestAccRoleAssignments_withoutSendingIdentifier(t *testing.T) {
 	resourceName := "harness_platform_role_assignments.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRoleAssignmentsDestroy(resourceName),
@@ -95,7 +95,7 @@ func TestAccRoleAssignments_withRoleReference(t *testing.T) {
 	resourceName := "harness_platform_role_assignments.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRoleAssignmentsDestroy(resourceName),
@@ -129,7 +129,7 @@ func TestAccResourceRoleAssignments_DeleteUnderlyingResource(t *testing.T) {
 	resourceName := "harness_platform_role_assignments.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

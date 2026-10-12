@@ -19,7 +19,7 @@ func TestAccResourcePipelineFilters(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_pipeline_filters.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPipelineFiltersDestroy(resourceName),
@@ -63,7 +63,7 @@ func TestAccResourcePipelineFiltersCD(t *testing.T) {
 	// updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_pipeline_filters.pipelinemoduleproperties"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPipelineFiltersDestroy(resourceName),
@@ -95,7 +95,7 @@ func TestAccResourcePipelineFiltersOrgLevel(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_pipeline_filters.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPipelineFiltersOrgLevelDestroy(resourceName),
@@ -139,7 +139,7 @@ func TestAccResourcePipelineFiltersTags(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_pipeline_filters.pipelinetags"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPipelineFiltersDestroy(resourceName),
@@ -189,7 +189,7 @@ func TestAccResourcePipelineFiltersTagsWithNullValue(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_pipeline_filters.pipelinetags"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPipelineFiltersDestroy(resourceName),
@@ -237,7 +237,7 @@ func TestAccResourcePipelineFiltersModuleProperties(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_pipeline_filters.pipelinemoduleproperties"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPipelineFiltersDestroy(resourceName),

@@ -24,7 +24,7 @@ func TestAccResourceEncryptedText(t *testing.T) {
 	value := "someval"
 	updatedValue := value + "-updated"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -59,7 +59,7 @@ func TestAccResourceEncryptedText_Reference(t *testing.T) {
 	value := "someval"
 	updatedValue := value + "-updated"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -93,7 +93,7 @@ func TestAccResourceEncryptedText_secretmanagerid_immutable(t *testing.T) {
 	resourceName := "harness_encrypted_text.test"
 	value := "someval"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -119,7 +119,7 @@ func TestAccResourceEncryptedText_secretmanagerid_DeleteUnderlyingResource(t *te
 	resourceName := "harness_encrypted_text.test"
 	value := "someval"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -155,7 +155,7 @@ func TestAccResourceEncryptedText_UsageScopes(t *testing.T) {
 	updatedName := fmt.Sprintf("%s-updated", name)
 	resourceName := "harness_encrypted_text.usage_scope_test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

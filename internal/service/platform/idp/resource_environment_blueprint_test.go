@@ -20,7 +20,7 @@ func TestAccResourceEnvironmentBlueprint(t *testing.T) {
 	updatedDescription := fmt.Sprintf("%s_updated", description)
 	resourceName := "harness_platform_idp_environment_blueprint.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccEnvironmentBlueprintDestroy(resourceName),

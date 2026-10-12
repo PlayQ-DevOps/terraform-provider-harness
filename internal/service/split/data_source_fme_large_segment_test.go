@@ -19,7 +19,7 @@ func TestAccDataSourceFMELargeSegment(t *testing.T) {
 	res := "harness_fme_large_segment.created"
 	ds := "data.harness_fme_large_segment.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

@@ -69,7 +69,7 @@ func TestAccTimeSleepCreateOnly(t *testing.T) {
 	}
 
 	start := time.Now()
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -100,7 +100,7 @@ func TestAccTimeSleepDestroyOnly(t *testing.T) {
 	}
 
 	var destroyStart time.Time
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy: func(_ *terraform.State) error {
@@ -147,7 +147,7 @@ func TestAccTimeSleepBothDurations(t *testing.T) {
 	}
 
 	start := time.Now()
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -192,7 +192,7 @@ func TestAccTimeSleepTriggers(t *testing.T) {
 
 	var idBeforeReplace string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -221,7 +221,7 @@ func TestAccTimeSleepTriggers(t *testing.T) {
 func TestAccTimeSleepMinutesValidation(t *testing.T) {
 	cfg := timeSleepProviderBlock() + configTimeSleepCreateOnly("5m")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -245,7 +245,7 @@ func TestAccTimeSleepInvalidDuration(t *testing.T) {
 		return
 	}
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

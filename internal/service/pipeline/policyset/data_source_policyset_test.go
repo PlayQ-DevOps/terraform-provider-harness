@@ -17,7 +17,7 @@ func TestAccDataSourcePolicyset(t *testing.T) {
 
 	policyIdentifier := fmt.Sprintf("policy%s", utils.RandStringBytes(6))
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

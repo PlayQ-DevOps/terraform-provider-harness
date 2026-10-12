@@ -16,7 +16,7 @@ func TestResourceClusterOrchestratorConfig(t *testing.T) {
 	resourceName := "harness_cluster_orchestrator_config.test"
 	orchResourceName := "harness_cluster_orchestrator.setup"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -44,7 +44,7 @@ func TestResourceClusterOrchestratorConfigDisabled(t *testing.T) {
 	resourceName := "harness_cluster_orchestrator_config.test"
 	orchResourceName := "harness_cluster_orchestrator.setup"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

@@ -18,7 +18,7 @@ func TestAccResourceFMEEnvironment_basic(t *testing.T) {
 	res := "harness_fme_environment.test"
 	var envID string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -64,7 +64,7 @@ func TestAccResourceFMEEnvironment_changePermissions(t *testing.T) {
 	res := "harness_fme_environment.test"
 	var envID string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

@@ -12,7 +12,7 @@ func TestAccDataSourceInfraModule(t *testing.T) {
 	name := strings.ToLower(t.Name())
 	system := strings.ToLower(t.Name())
 	resourceName := "harness_platform_infra_module.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

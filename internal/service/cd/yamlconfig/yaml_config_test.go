@@ -16,7 +16,7 @@ func TestAccResourceYamlConfig_CloudProvider(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", t.Name())
 	resourceName := "harness_yaml_config.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -51,7 +51,7 @@ func TestAccResourceYamlConfig_Application(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", t.Name())
 	resourceName := "harness_yaml_config.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

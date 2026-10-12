@@ -21,7 +21,7 @@ func TestAccDataSourceGitOpsRepoCert(t *testing.T) {
 	clusterName := id
 	resourceName := "data.harness_platform_gitops_repo_cert.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

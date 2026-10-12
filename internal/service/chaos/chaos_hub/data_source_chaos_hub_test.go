@@ -22,7 +22,7 @@ func TestAccDataSourceChaosHub_ProjectLevel(t *testing.T) {
 	dataSourceName := "data.harness_chaos_hub.test"
 	resourceName := "harness_chaos_hub.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

@@ -17,7 +17,7 @@ func TestAccResourceIdpScorecard(t *testing.T) {
 	resourceName := "harness_platform_idp_scorecard.test"
 	updatedName := id + "_updated"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccScorecardDestroy(resourceName),

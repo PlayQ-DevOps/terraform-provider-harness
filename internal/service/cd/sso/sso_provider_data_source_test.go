@@ -14,7 +14,7 @@ func TestAccDataSourceProvider_ldap(t *testing.T) {
 		resourceName = "data.harness_sso_provider.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -34,7 +34,7 @@ func TestAccDataSourceProvider_saml(t *testing.T) {
 		resourceName = "data.harness_sso_provider.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

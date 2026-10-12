@@ -17,7 +17,7 @@ func TestResourceSecretText_inline(t *testing.T) {
 	secretValue := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	resourceName := "harness_platform_secret_text.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -54,7 +54,7 @@ func TestResourceOrganization(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_organization.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -82,7 +82,7 @@ func TestResourceProject(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_project.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -111,7 +111,7 @@ func TestAccResourceUserGroup(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_usergroup.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -142,7 +142,7 @@ func TestAccResourceServiceAccount(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resourceName := "harness_platform_service_account.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -174,7 +174,7 @@ func TestAccSecretFile(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_secret_file.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -209,7 +209,7 @@ func TestAccConnectorVault_AppRole(t *testing.T) {
 	resourceName := "harness_platform_connector_vault.test"
 	vaultSecret := os.Getenv("HARNESS_TEST_VAULT_SECRET")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

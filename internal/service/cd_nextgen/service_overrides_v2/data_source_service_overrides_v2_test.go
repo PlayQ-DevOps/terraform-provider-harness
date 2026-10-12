@@ -14,7 +14,7 @@ func TestAccDataSourceServiceOverrides(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_service_overrides_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -35,7 +35,7 @@ func TestDataSourceRemoteServiceOverrides(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_service_overrides_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

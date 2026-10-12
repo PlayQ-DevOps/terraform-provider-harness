@@ -16,7 +16,7 @@ func TestAccDataSourceConnectorAwsKms_inherit(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -50,7 +50,7 @@ func TestProjectDataSourceConnectorAwsKms_inherit(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -82,7 +82,7 @@ func TestOrgDataSourceConnectorAwsKms_inherit(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -114,7 +114,7 @@ func TestAccDataSourceConnectorAwsKms_manual_arn_plaintext(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -147,7 +147,7 @@ func TestAccDataSourceConnectorAwsKms_manual(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -180,7 +180,7 @@ func TestProjectDataSourceConnectorAwsKms_manual(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -213,7 +213,7 @@ func TestOrgDataSourceConnectorAwsKms_manual(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -246,7 +246,7 @@ func TestAccDataSourceConnectorAwsKms_assumerole(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -280,7 +280,7 @@ func TestProjectDataSourceConnectorAwsKms_assumerole(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -314,7 +314,7 @@ func TestOrgDataSourceConnectorAwsKms_assumerole(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -348,7 +348,7 @@ func TestAccDataSourceConnectorAwsKms_oidc_platform(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -380,7 +380,7 @@ func TestProjectDataSourceConnectorAwsKms_oidc_platform(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -412,7 +412,7 @@ func TestOrgDataSourceConnectorAwsKms_oidc_platform(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -444,7 +444,7 @@ func TestAccDataSourceConnectorAwsKms_oidc_delegate(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -476,7 +476,7 @@ func TestProjectDataSourceConnectorAwsKms_oidc_delegate(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -508,7 +508,7 @@ func TestOrgDataSourceConnectorAwsKms_oidc_delegate(t *testing.T) {
 		resourceName = "data.harness_platform_connector_awskms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

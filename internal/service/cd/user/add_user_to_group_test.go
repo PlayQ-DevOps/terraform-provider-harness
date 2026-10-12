@@ -16,7 +16,7 @@ func TestAccResourceAddUserToGroup(t *testing.T) {
 	groupName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_add_user_to_group.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccAddUserToGroupDestroy(resourceName),

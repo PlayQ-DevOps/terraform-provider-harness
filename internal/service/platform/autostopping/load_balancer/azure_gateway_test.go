@@ -16,7 +16,7 @@ func TestResourceAzureGateway(t *testing.T) {
 	name := utils.RandStringBytes(5)
 	resourceName := "harness_autostopping_azure_gateway.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		//		CheckDestroy:      testAzureGatewayDestroy(resourceName),

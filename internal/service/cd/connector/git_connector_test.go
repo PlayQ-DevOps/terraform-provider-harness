@@ -57,7 +57,7 @@ func TestAccResourceGitConnector(t *testing.T) {
 		resourceName = "harness_git_connector.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccGitConnectorDestroy(resourceName),
@@ -92,7 +92,7 @@ func TestAccResourceGitConnector_DeleteUnderlyingResource(t *testing.T) {
 		resourceName = "harness_git_connector.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

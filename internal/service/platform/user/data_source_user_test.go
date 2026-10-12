@@ -33,6 +33,7 @@ func fetchEnvironmentFromEndpoint(endpoint string) (string, error) {
 }
 
 func TestAccDataSourceUserProjectLevel(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 	endpoint := os.Getenv("HARNESS_ENDPOINT")
 
 	if endpoint == "" {
@@ -56,7 +57,7 @@ func TestAccDataSourceUserProjectLevel(t *testing.T) {
 	email := strings.ToLower(id) + "@harness.io"
 	resourceName := "data.harness_platform_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -74,6 +75,7 @@ func TestAccDataSourceUserProjectLevel(t *testing.T) {
 }
 
 func TestAccDataSourceUserAccountLevel(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 	endpoint := os.Getenv("HARNESS_ENDPOINT")
 
 	if endpoint == "" {
@@ -97,7 +99,7 @@ func TestAccDataSourceUserAccountLevel(t *testing.T) {
 	email := strings.ToLower(id) + "@harness.io"
 	resourceName := "data.harness_platform_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -115,6 +117,7 @@ func TestAccDataSourceUserAccountLevel(t *testing.T) {
 }
 
 func TestAccDataSourceUserOrgLevel(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 	endpoint := os.Getenv("HARNESS_ENDPOINT")
 
 	if endpoint == "" {
@@ -138,7 +141,7 @@ func TestAccDataSourceUserOrgLevel(t *testing.T) {
 	email := strings.ToLower(id) + "@harness.io"
 	resourceName := "data.harness_platform_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

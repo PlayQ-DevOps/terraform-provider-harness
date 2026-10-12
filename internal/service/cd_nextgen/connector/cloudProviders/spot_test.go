@@ -30,7 +30,7 @@ func TestAccResourceConnectorSpot_DelegateFalse(t *testing.T) {
 func execute(t *testing.T, config string, executeOnDelegate string, id string, name string) {
 	resourceName := "harness_platform_connector_spot.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),

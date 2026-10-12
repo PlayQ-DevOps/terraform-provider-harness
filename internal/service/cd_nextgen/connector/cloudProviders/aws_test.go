@@ -15,7 +15,7 @@ func TestAccResourceConnectorAws_Inherit(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_aws.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -47,7 +47,7 @@ func TestAccResourceConnectorAws_Oidc(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_aws.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -80,7 +80,7 @@ func TestAccResourceConnectorAws_Oidc_Without_Delegate(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_aws.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -112,7 +112,7 @@ func TestAccResourceConnectorAws_Irsa(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_aws.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -144,7 +144,7 @@ func TestAccResourceConnectorAws_Manual(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_aws.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -179,7 +179,7 @@ func TestAccResourceConnectorAws_executeOnDelegateTrue(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_aws.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -215,7 +215,7 @@ func TestAccResourceConnectorAws_executeOnDelegate_UpdateConnector(t *testing.T)
 	name := id
 	resourceName := "harness_platform_connector_aws.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -256,7 +256,7 @@ func TestAccResourceConnectorAws_executeOnDelegateFalse(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_aws.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -291,7 +291,7 @@ func TestAccResourceConnectorAws_Manual_Equal_Jitter(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_aws.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -329,7 +329,7 @@ func TestAccResourceConnectorAws_Manual_Fixed_Delay(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_aws.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -366,7 +366,7 @@ func TestAccResourceConnectorAws_Manual_Full_Jitter(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_aws.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -405,7 +405,7 @@ func TestAccResourceConnectorAws_ForceDelete(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_aws.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),

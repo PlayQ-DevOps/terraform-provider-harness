@@ -16,7 +16,7 @@ func TestAccDataSourceConnectorAzureKeyVault(t *testing.T) {
 		resourceName = "data.harness_platform_connector_azure_key_vault.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -45,7 +45,7 @@ func TestAccDataSourceConnectorAzureKeyVaultProjectLevel(t *testing.T) {
 		resourceName = "data.harness_platform_connector_azure_key_vault.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -74,7 +74,7 @@ func TestAccDataSourceConnectorAzureKeyVaultOrgLevel(t *testing.T) {
 		resourceName = "data.harness_platform_connector_azure_key_vault.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

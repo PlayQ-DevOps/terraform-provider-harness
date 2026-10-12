@@ -19,7 +19,7 @@ func TestAccResourceFMEApiKey_invalidType(t *testing.T) {
 	envName := "tf" + testAccFMEAlphanum(10)
 	keyName := "tf_bad_key_" + testAccFMEAlphanum(8)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -70,7 +70,7 @@ func TestAccResourceFMERuleBasedSegment_invalidDefinitionJSON(t *testing.T) {
 	envName := "tf" + testAccFMEAlphanum(10)
 	rbsName := "tfrbsbad_" + testAccFMEAlphanum(8)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -135,7 +135,7 @@ func TestAccResourceFMEFeatureFlagDefinition_invalidDefinition(t *testing.T) {
 	envName := "tf" + testAccFMEAlphanum(10)
 	flagName := "tfflagbad_" + testAccFMEAlphanum(8)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -198,7 +198,7 @@ func TestAccResourceFMETrafficTypeAttribute_invalidSearchableType(t *testing.T) 
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
 	attrID := "tfattrbad_" + testAccFMEAlphanum(8)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

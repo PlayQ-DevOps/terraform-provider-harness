@@ -21,7 +21,7 @@ func TestAccResourceChaosHub(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_hub.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccChaosHubDestroy(resourceName),
@@ -58,7 +58,7 @@ func TestAccResourceChaosHub_Update(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", rName)
 	resourceName := "harness_chaos_hub.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccChaosHubDestroy(resourceName),

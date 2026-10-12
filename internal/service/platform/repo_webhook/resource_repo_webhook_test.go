@@ -21,7 +21,7 @@ const (
 func TestProjResourceRepoWebhook(t *testing.T) {
 	identifier := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testWebhookDestroy(resourceName),
@@ -54,7 +54,7 @@ func TestProjResourceRepoWebhook(t *testing.T) {
 func TestProjResourceRepoWebhookWithSecret(t *testing.T) {
 	identifier := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testWebhookDestroy(resourceName),

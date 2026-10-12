@@ -15,7 +15,7 @@ func TestAccResourceInfrastructureDefinition_K8sDirect(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", expectedName)
 	resourceName := "harness_infrastructure_definition.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccInfraDefDestroy(resourceName),

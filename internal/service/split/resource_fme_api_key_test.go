@@ -19,7 +19,7 @@ func TestAccResourceFMEApiKey_basic(t *testing.T) {
 	keyName := "tf_acc_key_" + testAccFMEAlphanum(8)
 	res := "harness_fme_api_key.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -83,7 +83,7 @@ func TestAccResourceFMEApiKey_clientSide(t *testing.T) {
 	keyName := "tf_acc_cs_key_" + testAccFMEAlphanum(8)
 	res := "harness_fme_api_key.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

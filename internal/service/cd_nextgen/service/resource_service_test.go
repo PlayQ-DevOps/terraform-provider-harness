@@ -20,7 +20,7 @@ func TestAccResourceService(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceDestroy(resourceName),
@@ -56,7 +56,7 @@ func TestProjectResourceService(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceDestroy(resourceName),
@@ -96,7 +96,7 @@ func TestOrgResourceService(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceDestroy(resourceName),
@@ -136,7 +136,7 @@ func TestAccResourceServiceWithYaml(t *testing.T) {
 	updatedVarValue := fmt.Sprintf("%s_updated", varValue)
 	resourceName := "harness_platform_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceDestroy(resourceName),
@@ -178,7 +178,7 @@ func TestAccResourceServiceWithYamlAccountLevel(t *testing.T) {
 	updatedVarValue := fmt.Sprintf("%s_updated", varValue)
 	resourceName := "harness_platform_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceDestroy(resourceName),
@@ -216,7 +216,7 @@ func TestAccResourceServiceWithYamlOrgLevel(t *testing.T) {
 	updatedVarValue := fmt.Sprintf("%s_updated", varValue)
 	resourceName := "harness_platform_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceDestroy(resourceName),
@@ -252,7 +252,7 @@ func TestAccResourceService_DeleteUnderlyingResource(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -287,7 +287,7 @@ func TestForceDeleteService(t *testing.T) {
 	varValue := t.Name()
 	resourceName := "harness_platform_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceDestroy(resourceName),
@@ -319,7 +319,7 @@ func TestResourceRemoteService(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceDestroy(resourceName),
@@ -348,7 +348,7 @@ func TestResourceImportRemoteService(t *testing.T) {
 
 	resourceName := "harness_platform_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceDestroy(resourceName),

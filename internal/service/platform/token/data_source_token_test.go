@@ -20,7 +20,7 @@ func TestAccDataSourceToken(t *testing.T) {
 
 	resourceName := "data.harness_platform_token.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -46,7 +46,7 @@ func TestAccDataSourceTokenOrgLevel(t *testing.T) {
 
 	resourceName := "data.harness_platform_token.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -73,7 +73,7 @@ func TestAccDataSourceTokenProjectLevel(t *testing.T) {
 
 	resourceName := "data.harness_platform_token.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

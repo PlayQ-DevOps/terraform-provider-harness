@@ -37,7 +37,7 @@ func TestAccFMEFlagSet_dataSourceMatchesResource(t *testing.T) {
 	ds := "data.harness_fme_flag_set.lookup"
 	var flagSetID string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

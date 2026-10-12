@@ -16,7 +16,7 @@ func TestAccDataSourceConnectorPagerDuty(t *testing.T) {
 		resourceName = "data.harness_platform_connector_pagerduty.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -45,7 +45,7 @@ func TestAccDataSourceConnectorPagerDutyProjectLevel(t *testing.T) {
 		resourceName = "data.harness_platform_connector_pagerduty.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -74,7 +74,7 @@ func TestAccDataSourceConnectorPagerDutyOrgLevel(t *testing.T) {
 		resourceName = "data.harness_platform_connector_pagerduty.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

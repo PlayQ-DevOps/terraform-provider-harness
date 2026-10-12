@@ -17,7 +17,7 @@ func TestAccResourceVariableSetProjLevel(t *testing.T) {
 	name := t.Name()
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	updatedName := fmt.Sprintf("%s_updated", name)
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceVariableSetDestroy(resourceName),
@@ -50,7 +50,7 @@ func TestAccResourceVariableSetOrgLevel(t *testing.T) {
 	name := t.Name()
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	updatedName := fmt.Sprintf("%s_updated", name)
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceVariableSetDestroy(resourceName),
@@ -83,7 +83,7 @@ func TestAccResourceVariableSetAccLevel(t *testing.T) {
 	name := t.Name()
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	updatedName := fmt.Sprintf("%s_updated", name)
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceVariableSetDestroy(resourceName),

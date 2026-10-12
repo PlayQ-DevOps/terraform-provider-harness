@@ -18,7 +18,7 @@ func TestAccOverrides_ProjectScope(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_overrides.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccOverridesDestroy(resourceName),
@@ -46,7 +46,7 @@ func TestAccOverrides_OrgScope(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_overrides.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccOverridesDestroy(resourceName),
@@ -73,7 +73,7 @@ func TestAccOverrides_AccountScope(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_overrides.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccOverridesDestroy(resourceName),
@@ -98,7 +98,7 @@ func TestAccRemoteOverrides(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_overrides.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccOverridesDestroy(resourceName),

@@ -17,7 +17,7 @@ func TestResourceAwsALB(t *testing.T) {
 	name := fmt.Sprintf("terr-awsalb-%s", randAlnum(5))
 	resourceName := "harness_autostopping_aws_alb.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		//		CheckDestroy:      testAWSProxyDestroy(resourceName),
@@ -45,7 +45,7 @@ func TestAccResourceAwsALB_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 
 	var lbIDBefore string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

@@ -19,7 +19,7 @@ func TestAccResourceInfrastructureDefinition_RenameCloudProvider(t *testing.T) {
 	resourceName := "harness_infrastructure_definition.test"
 	resourceCPName := "harness_cloudprovider_kubernetes.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccInfraDefDestroy(resourceName),

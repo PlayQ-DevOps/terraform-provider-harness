@@ -16,7 +16,7 @@ func TestAccDataSourceChaosSecurityGovernanceCondition(t *testing.T) {
 	dataSourceName := "data.harness_chaos_security_governance_condition.test"
 	resourceName := "harness_chaos_security_governance_condition.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

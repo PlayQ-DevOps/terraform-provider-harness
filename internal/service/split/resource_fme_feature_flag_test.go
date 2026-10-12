@@ -18,7 +18,7 @@ func TestAccResourceFMEFeatureFlag_basic(t *testing.T) {
 	flagName := "tfflag_" + testAccFMEAlphanum(8)
 	res := "harness_fme_feature_flag.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

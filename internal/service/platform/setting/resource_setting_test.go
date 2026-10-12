@@ -25,7 +25,7 @@ func TestAccResourceSetting_ProjectLevel(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	resourceName := "harness_platform_setting.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -61,7 +61,7 @@ func TestAccResourceSetting_OrgLevel(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	resourceName := "harness_platform_setting.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -125,7 +125,7 @@ func testAccResourceSettingOrgLevel(id string, value string, allowOverrides bool
 func TestAccResourceSetting_AccountLevel(t *testing.T) {
 	resourceName := "harness_platform_setting.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.TestAccPreCheck(t)
 			// Destroy resets the setting, so don't run if the account already has its own value.
@@ -170,7 +170,7 @@ func TestAccResourceSetting_DisallowOverridesRemovesChildOverride(t *testing.T) 
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	resourceName := "harness_platform_setting.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -208,7 +208,7 @@ func TestAccResourceSetting_BooleanValue(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	resourceName := "harness_platform_setting.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.TestAccPreCheck(t)
 			// The API rejects project values when the account (or the setting's default) disallows overrides.

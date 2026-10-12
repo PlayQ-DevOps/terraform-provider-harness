@@ -23,7 +23,7 @@ func TestAccResourceGitopsAppProjectMapping(t *testing.T) {
 	resourceName := "harness_platform_gitops_app_project_mapping.test"
 	argoProject := "test123"
 	argoProjectUpdated := "test123Updated"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		// CheckDestroy:      testAccResourceGitopsAppProjectMappingDestroy(resourceName, agentId), //commenting this since app project mapping cannot exist without an agent.

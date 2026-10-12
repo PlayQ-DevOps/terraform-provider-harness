@@ -60,7 +60,7 @@ func TestResourceClusterOrchestrator(t *testing.T) {
 	connectorID := fmt.Sprintf("tfco_%s", suffix)
 	resourceName := "harness_cluster_orchestrator.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		// CheckDestroy:      testRuleDestroy(resourceName),
@@ -93,7 +93,7 @@ func TestResourceClusterOrchestrator_CCM32336_OutOfBandDeleteRecreates(t *testin
 
 	var orchIDBefore string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

@@ -18,7 +18,7 @@ func TestAccResourceSSHCredential_SSHAuthentication(t *testing.T) {
 
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_ssh_credential.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccSSHCredentialDestroy(resourceName),
@@ -46,7 +46,7 @@ func TestAccResourceSSHCredential_SSHAuthentication_DeleteUnderlyingResource(t *
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_ssh_credential.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -80,7 +80,7 @@ func TestAccResourceSSHCredential_KerberosAuthentication(t *testing.T) {
 
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_ssh_credential.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccSSHCredentialDestroy(resourceName),
@@ -104,7 +104,7 @@ func TestAccResourceSSHCredential_BadAuthenticationMethods(t *testing.T) {
 
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -120,7 +120,7 @@ func TestAccResourceSSHCredential_SSH_BadSSHAuthenticationTypes(t *testing.T) {
 
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

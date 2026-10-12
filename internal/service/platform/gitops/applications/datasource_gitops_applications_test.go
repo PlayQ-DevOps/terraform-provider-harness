@@ -30,7 +30,7 @@ func TestAccDataSourceGitopsApplication(t *testing.T) {
 
 	namespace := "test"
 	resourceName := "harness_platform_gitops_applications.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

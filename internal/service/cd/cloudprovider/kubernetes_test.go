@@ -21,7 +21,7 @@ func TestAccResourceK8sCloudProviderConnector_delegate(t *testing.T) {
 		resourceName = "harness_cloudprovider_kubernetes.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccCloudProviderDestroy(resourceName),
@@ -59,7 +59,7 @@ func TestAccResourceK8sCloudProviderConnector_usagescope_application(t *testing.
 		resourceName = "harness_cloudprovider_kubernetes.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccCloudProviderDestroy(resourceName),
@@ -87,7 +87,7 @@ func TestAccResourceK8sCloudProviderConnector_username_password(t *testing.T) {
 		resourceName = "harness_cloudprovider_kubernetes.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccCloudProviderDestroy(resourceName),
@@ -110,7 +110,7 @@ func TestAccResourceK8sCloudProviderConnector_oidc(t *testing.T) {
 		resourceName = "harness_cloudprovider_kubernetes.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccCloudProviderDestroy(resourceName),
@@ -133,7 +133,7 @@ func TestAccResourceK8sCloudProviderConnector_service_account(t *testing.T) {
 		resourceName = "harness_cloudprovider_kubernetes.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccCloudProviderDestroy(resourceName),
@@ -156,7 +156,7 @@ func TestAccResourceK8sCloudProviderConnector_DeleteUnderlyingResource(t *testin
 		resourceName = "harness_cloudprovider_kubernetes.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -193,7 +193,7 @@ func TestAccResourceK8sCloudProviderConnector_DeleteUnderlyingResource(t *testin
 // 		resourceName = "harness_cloudprovider_kubernetes.test"
 // 	)
 
-// 	resource.UnitTest(t, resource.TestCase{
+// 	resource.Test(t, resource.TestCase{
 // 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 // 		ProviderFactories: acctest.ProviderFactories,
 // 		CheckDestroy:      testAccCloudProviderDestroy(resourceName),

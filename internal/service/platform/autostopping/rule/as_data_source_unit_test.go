@@ -23,7 +23,7 @@ import (
 // --- K8s ---
 
 func TestUnitDataSourceK8sRuleSchemaNoArgs(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
 			{
@@ -37,7 +37,7 @@ func TestUnitDataSourceK8sRuleSchemaNoArgs(t *testing.T) {
 // --- VM ---
 
 func TestUnitDataSourceVMRuleSchemaNoArgs(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
 			{
@@ -51,7 +51,7 @@ func TestUnitDataSourceVMRuleSchemaNoArgs(t *testing.T) {
 // --- ECS ---
 
 func TestUnitDataSourceECSRuleSchemaNoArgs(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
 			{
@@ -65,7 +65,7 @@ func TestUnitDataSourceECSRuleSchemaNoArgs(t *testing.T) {
 // --- RDS ---
 
 func TestUnitDataSourceRDSRuleSchemaNoArgs(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
 			{
@@ -79,7 +79,7 @@ func TestUnitDataSourceRDSRuleSchemaNoArgs(t *testing.T) {
 // --- Scale Group ---
 
 func TestUnitDataSourceScaleGroupRuleSchemaNoArgs(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
 			{
@@ -93,7 +93,7 @@ func TestUnitDataSourceScaleGroupRuleSchemaNoArgs(t *testing.T) {
 // --- Invalid regex (fails before any API call) ---
 
 func TestUnitDataSourceK8sRuleInvalidRegex(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
 			{
@@ -105,7 +105,7 @@ func TestUnitDataSourceK8sRuleInvalidRegex(t *testing.T) {
 }
 
 func TestUnitDataSourceVMRuleInvalidRegex(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
 			{

@@ -22,7 +22,7 @@ func TestAccResourceAzureCloudProviderConnector(t *testing.T) {
 		resourceName = "harness_cloudprovider_azure.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccCloudProviderDestroy(resourceName),
@@ -56,7 +56,7 @@ func TestAccResourceAzureCloudProviderConnector_DeleteUnderlyingResource(t *test
 		resourceName = "harness_cloudprovider_azure.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

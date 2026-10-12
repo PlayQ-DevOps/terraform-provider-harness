@@ -112,7 +112,7 @@ func TestResourceVMRuleCrossAccountHTTP(t *testing.T) {
 	name := fmt.Sprintf("terr-xvm-h-%s", randAlnum(5))
 	resourceName := "harness_autostopping_rule_vm.xacct"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -143,7 +143,7 @@ func TestResourceVMRuleCrossAccountTCP(t *testing.T) {
 	name := fmt.Sprintf("terr-xvm-t-%s", randAlnum(5))
 	resourceName := "harness_autostopping_rule_vm.xacct"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

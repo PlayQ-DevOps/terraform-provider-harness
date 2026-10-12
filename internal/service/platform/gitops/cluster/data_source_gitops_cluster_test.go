@@ -24,7 +24,7 @@ func TestAccDataSourceGitopsCluster(t *testing.T) {
 	clusterServer := os.Getenv("HARNESS_TEST_GITOPS_CLUSTER_SERVER")
 	clusterToken := os.Getenv("HARNESS_TEST_GITOPS_CLUSTER_TOKEN")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -54,7 +54,7 @@ func TestAccDataSourceGitopsClusterIAM(t *testing.T) {
 	caData := os.Getenv("HARNESS_TEST_AWS_CLUSTER_CA_DATA")
 	resourceName := "data.harness_platform_gitops_cluster.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

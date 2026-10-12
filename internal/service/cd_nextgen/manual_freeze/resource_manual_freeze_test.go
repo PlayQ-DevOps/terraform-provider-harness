@@ -21,7 +21,7 @@ func TestAccResourceManualFreezeWithRecurrence(t *testing.T) {
 	resourceName := "harness_platform_manual_freeze.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
@@ -63,7 +63,7 @@ func TestAccResourceManualFreezeWithQuarterlyRecurrence(t *testing.T) {
 	resourceName := "harness_platform_manual_freeze.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
@@ -109,7 +109,7 @@ func TestAccResourceManualFreeze_WithoutRecurrence(t *testing.T) {
 	resourceName := "harness_platform_manual_freeze.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
@@ -148,7 +148,7 @@ func TestAccResourceManualFreeze_WithoutRecurrenceForNonExpiredWindows(t *testin
 	resourceName := "harness_platform_manual_freeze.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
@@ -178,7 +178,7 @@ func TestAccResourceManualFreeze_DeleteUnderlyingResource(t *testing.T) {
 	resourceName := "harness_platform_manual_freeze.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -216,7 +216,7 @@ func TestAccResourceQuarterlyManualFreeze_DeleteUnderlyingResource(t *testing.T)
 	resourceName := "harness_platform_manual_freeze.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

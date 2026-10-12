@@ -16,7 +16,7 @@ func TestAccDataSourceConnectorDatadog(t *testing.T) {
 		resourceName = "data.harness_platform_connector_datadog.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

@@ -16,7 +16,7 @@ func TestAccResourceConnectorServiceNow_UsernamePassword(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_service_now.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -66,7 +66,7 @@ func TestAccResourceConnectorServiceNow_Adfs(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_service_now.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -116,7 +116,7 @@ func TestAccResourceConnectorServiceNow_RefreshToken(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_service_now.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -134,7 +134,7 @@ func TestAccResourceConnectorServiceNow_RefreshToken(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "tags.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "service_now_url", "https://test.service-now.com"),
 					resource.TestCheckResourceAttr(resourceName, "auth.0.refresh_token.0.token_url", "https://test.service-now.com/oauth_token.do"),
-					resource.TestCheckResourceAttr(resourceName, "auth.0.refresh_token.0.scope", "email openid profile"),					
+					resource.TestCheckResourceAttr(resourceName, "auth.0.refresh_token.0.scope", "email openid profile"),
 					resource.TestCheckResourceAttr(resourceName, "delegate_selectors.#", "1"),
 				),
 			},
@@ -148,7 +148,7 @@ func TestAccResourceConnectorServiceNow_RefreshToken(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "tags.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "service_now_url", "https://test.service-now.com"),
 					resource.TestCheckResourceAttr(resourceName, "auth.0.refresh_token.0.token_url", "https://test.service-now.com/oauth_token.do"),
-					resource.TestCheckResourceAttr(resourceName, "auth.0.refresh_token.0.scope", "email openid profile"),					
+					resource.TestCheckResourceAttr(resourceName, "auth.0.refresh_token.0.scope", "email openid profile"),
 					resource.TestCheckResourceAttr(resourceName, "delegate_selectors.#", "1"),
 				),
 			},

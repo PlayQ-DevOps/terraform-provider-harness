@@ -15,7 +15,7 @@ func TestAccDataSourceDBSchema(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_schema.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -38,7 +38,7 @@ func TestAccDataSourceDBSchemaForFlywayMigrationType(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_schema.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -61,7 +61,7 @@ func TestAccDataSourceDBSchemaArtifactory(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_schema.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -83,7 +83,7 @@ func TestAccDataSourceDBSchemaWithChangelogScript(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_schema.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -106,7 +106,7 @@ func TestAccDataSourceDBSchemaWithChangelogScriptForFlywayMigrationType(t *testi
 	name := id
 	resourceName := "data.harness_platform_db_schema.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -129,7 +129,7 @@ func TestAccDataSourceDBSchemaHarnessCodeRepo(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_schema.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -153,7 +153,7 @@ func TestAccDataSourceDBSchemaWithUsePercona(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_schema.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

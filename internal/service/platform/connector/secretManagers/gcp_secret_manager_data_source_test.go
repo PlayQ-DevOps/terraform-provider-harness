@@ -16,7 +16,7 @@ func TestAccDataSourceConnectorGcpSM_manual(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -48,7 +48,7 @@ func TestOrgDataSourceConnectorGcpSM_manual(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -81,7 +81,7 @@ func TestProjectDataSourceConnectorGcpSM_manual(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -115,7 +115,7 @@ func TestAccDataSourceConnectorGcpSM_inherit(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -147,7 +147,7 @@ func TestOrgDataSourceConnectorGcpSM_inherit(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -180,7 +180,7 @@ func TestProjectDataSourceConnectorGcpSM_inherit(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -214,7 +214,7 @@ func TestAccDataSourceConnectorGcpSM_oidc_platform(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -247,7 +247,7 @@ func TestOrgDataSourceConnectorGcpSM_oidc_platform(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -281,7 +281,7 @@ func TestProjectDataSourceConnectorGcpSM_oidc_platform(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -316,7 +316,7 @@ func TestAccDataSourceConnectorGcpSM_oidc_delegate(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -351,7 +351,7 @@ func TestOrgDataSourceConnectorGcpSM_oidc_delegate(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -387,7 +387,7 @@ func TestProjectDataSourceConnectorGcpSM_oidc_delegate(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -424,7 +424,7 @@ func TestAccDataSourceConnectorGcpSM_manual_is_default(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

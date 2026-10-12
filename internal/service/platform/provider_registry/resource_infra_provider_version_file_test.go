@@ -23,7 +23,7 @@ func TestAccResourceInfraProviderVersionFile(t *testing.T) {
 	filename := "terraform-provider-test_1.0.0_linux_amd64.zip"
 	resourceName := "harness_platform_infra_provider_version_file.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccInfraProviderVersionFileDestroy(resourceName),
@@ -55,7 +55,7 @@ func TestAccResourceInfraProviderVersionFile_DerivedFilename(t *testing.T) {
 	filename := "terraform-provider-test_1.0.0_darwin_amd64.zip"
 	resourceName := "harness_platform_infra_provider_version_file.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccInfraProviderVersionFileDestroy(resourceName),

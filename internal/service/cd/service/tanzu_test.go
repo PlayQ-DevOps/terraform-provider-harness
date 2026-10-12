@@ -22,7 +22,7 @@ func TestAccResourceTanzuService(t *testing.T) {
 		resourceName       = "harness_service_tanzu.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceDestroy(resourceName),
@@ -61,7 +61,7 @@ func TestAccResourceTanzuService_DeleteUnderlyingResource(t *testing.T) {
 		appId        = ""
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

@@ -14,7 +14,7 @@ func TestAccDataSourceDefaultNotificationTemplateSet_basic(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_default_notification_template_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -40,7 +40,7 @@ func TestAccDataSourceDefaultNotificationTemplateSet_slack(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_default_notification_template_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -67,7 +67,7 @@ func TestAccDataSourceDefaultNotificationTemplateSet_multipleEvents(t *testing.T
 	name := id
 	resourceName := "data.harness_platform_default_notification_template_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -93,7 +93,7 @@ func TestAccDataSourceDefaultNotificationTemplateSet_withVariables(t *testing.T)
 	name := id
 	resourceName := "data.harness_platform_default_notification_template_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -119,7 +119,7 @@ func TestAccDataSourceDefaultNotificationTemplateSet_withTags(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_default_notification_template_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

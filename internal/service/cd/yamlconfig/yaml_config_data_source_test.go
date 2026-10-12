@@ -14,7 +14,7 @@ func TestAccDataSourceYamlConfig_CloudProvider(t *testing.T) {
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_yaml_config.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

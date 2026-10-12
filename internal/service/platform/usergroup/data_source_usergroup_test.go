@@ -15,7 +15,7 @@ func TestAccDataSourceUserGroupAccountLevel(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_usergroup.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -35,7 +35,7 @@ func TestAccDataSourceUserGroupProjectLevel(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_usergroup.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -57,7 +57,7 @@ func TestAccDataSourceUserGroupOrgLevel(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_usergroup.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -79,7 +79,7 @@ func TestAccDataSourceUserGroupByNameAccountLevel(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_usergroup.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -99,7 +99,7 @@ func TestAccDataSourceUserGroupByNameProjectLevel(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_usergroup.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -121,7 +121,7 @@ func TestAccDataSourceUserGroupByNameOrgLevel(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_usergroup.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

@@ -17,7 +17,7 @@ func TestAccDataSourceUserGroup_Id(t *testing.T) {
 		resourceName = "data.harness_user_group.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -39,7 +39,7 @@ func TestAccDataSourceUserGroup_Name(t *testing.T) {
 		resourceName = "data.harness_user_group.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -56,7 +56,7 @@ func TestAccDataSourceUserGroup_Name(t *testing.T) {
 
 func TestAccDataSourceUserGroup_NotFound(t *testing.T) {
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

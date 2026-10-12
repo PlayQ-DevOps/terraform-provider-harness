@@ -14,7 +14,7 @@ func TestAccDataSourceGitopsProjectAccLevel(t *testing.T) {
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 	agentNamespace := os.Getenv("HARNESS_TEST_GITOPS_AGENT_NAMESPACE")
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		//CheckDestroy:      testAccResourceGitopsRepositoryDestroy(resourceName),

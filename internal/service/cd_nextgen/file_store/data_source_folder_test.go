@@ -15,7 +15,7 @@ func TestAccDataSourceFileStoreFolder(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_file_store_folder.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccFileStoreDestroy(resourceName),
@@ -38,7 +38,7 @@ func TestAccDataSourceFileStoreFolderOrgLevel(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_file_store_folder.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -64,7 +64,7 @@ func TestAccDataSourceFileStoreFolderProjectLevel(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_file_store_folder.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

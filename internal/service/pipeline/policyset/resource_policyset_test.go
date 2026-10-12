@@ -27,7 +27,7 @@ func TestAccResourcePolicyset(t *testing.T) {
 	policyFirstIdentifier := fmt.Sprintf("policyFirst%s", utils.RandStringBytes(5))
 	policySecondIdentifier := fmt.Sprintf("policySecond%s", utils.RandStringBytes(5))
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPolicysetDestroy(resourceName),
@@ -99,7 +99,7 @@ func TestAccResourcePolicysetCrossScope(t *testing.T) {
 	resourceName := "harness_platform_policyset.test"
 	policyIdentifier := fmt.Sprintf("policy%s", utils.RandStringBytes(5))
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPolicysetDestroy(resourceName),

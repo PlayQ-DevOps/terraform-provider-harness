@@ -12,7 +12,7 @@ func TestResourceAlert(t *testing.T) {
 	name := "terraform-alert-test"
 	resourceName := "harness_autostopping_alert.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

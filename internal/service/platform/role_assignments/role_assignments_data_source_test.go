@@ -17,7 +17,7 @@ func TestAccDataSourceRoleAssignments(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resourceName := "data.harness_platform_role_assignments.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -42,7 +42,7 @@ func TestAccDataSourceRoleAssignmentsProjectLevel(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resourceName := "data.harness_platform_role_assignments.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck: func() { acctest.TestAccPreCheck(t) },
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
@@ -72,7 +72,7 @@ func TestAccDataSourceRoleAssignmentsOrgLevel(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resourceName := "data.harness_platform_role_assignments.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

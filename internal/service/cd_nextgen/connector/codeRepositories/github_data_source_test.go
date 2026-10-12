@@ -16,7 +16,7 @@ func TestAccDataSourceConnectorGithub(t *testing.T) {
 		resourceName = "data.harness_platform_connector_github.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -49,7 +49,7 @@ func TestAccDataSourceConnectorGithub_github_app(t *testing.T) {
 		resourceName = "data.harness_platform_connector_github.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -82,7 +82,7 @@ func TestAccDataSourceConnectorGithubAnonymous(t *testing.T) {
 		resourceName = "data.harness_platform_connector_github.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

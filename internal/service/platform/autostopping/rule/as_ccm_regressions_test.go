@@ -25,7 +25,7 @@ func TestAccResourceECSRule_CCM32010_UpdateInPlaceAddsDepends(t *testing.T) {
 	resourceName := "harness_autostopping_rule_ecs.second"
 	resourceNameFirst := "harness_autostopping_rule_ecs.first"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -71,7 +71,7 @@ func TestAccResourceECSRule_CCM32012_DependsOrderNoPerpetualPlan(t *testing.T) {
 	var proxyID string
 	resourceName := "harness_autostopping_rule_ecs.leaf"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -113,7 +113,7 @@ func TestAccResourceVMRule_DryRunFalseOnUpdate(t *testing.T) {
 
 	var proxyID string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.TestAccPreCheck(t)
 			cleanupStaleRulesForVM(t)
@@ -166,7 +166,7 @@ func TestAccResourceECSRule_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 	var proxyID, ruleIDBefore string
 	resourceName := "harness_autostopping_rule_ecs.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

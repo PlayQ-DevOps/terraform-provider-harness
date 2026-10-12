@@ -28,7 +28,7 @@ func TestAccResourceGitopsCluster(t *testing.T) {
 	clusterToken := os.Getenv("HARNESS_TEST_GITOPS_CLUSTER_TOKEN")
 	clusterName := id
 	resourceName := "harness_platform_gitops_cluster.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
@@ -63,7 +63,7 @@ func TestAccResourceGitopsCluster(t *testing.T) {
 	name = id
 	clusterName = id
 	resourceName = "harness_platform_gitops_cluster.test2"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
@@ -98,7 +98,7 @@ func TestAccResourceGitopsCluster(t *testing.T) {
 	name = id
 	clusterName = id
 	resourceName = "harness_platform_gitops_cluster.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
@@ -141,7 +141,7 @@ func TestAccResourceGitopsClusterIAMProject(t *testing.T) {
 	awsClusterName := os.Getenv("HARNESS_TEST_AWS_CLUSTER_NAME")
 	caData := os.Getenv("HARNESS_TEST_AWS_CLUSTER_CA_DATA")
 	agentId := os.Getenv("HARNESS_TEST_AWS_GITOPS_AGENT")
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
@@ -188,7 +188,7 @@ func TestAccResourceGitopsClusterExecProviderProject(t *testing.T) {
 	awsSecretAccessKey := os.Getenv("GITOPS_AWS_CDPLAY_ACCOUNT_ACCESS_KEY_SECRET")
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
@@ -228,7 +228,7 @@ func TestAccResourceGitopsClusterSecretExpressions(t *testing.T) {
 	clusterName := id
 	resourceName := "harness_platform_gitops_cluster.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
@@ -582,7 +582,7 @@ func TestAccResourceGitopsClusterExecProviderProjectUpdate(t *testing.T) {
 	awsSecretAccessKey := os.Getenv("GITOPS_AWS_CDPLAY_ACCOUNT_ACCESS_KEY_SECRET")
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
@@ -690,7 +690,7 @@ func TestAccResourceGitopsClusterExecProviderProjectAppSync(t *testing.T) {
 		repoUrl = "https://github.com/harness-apps/hosted-gitops-example-apps"
 	}
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
@@ -728,7 +728,7 @@ func TestAccResourceGitopsClusterTLSProject(t *testing.T) {
 	keyData := os.Getenv("GITOPS_TLS_CLUSTER_KEY_DATA_BASE64")
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
@@ -774,7 +774,7 @@ func TestAccResourceGitopsClusterTLSProjectUpdate(t *testing.T) {
 	keyData := os.Getenv("GITOPS_TLS_CLUSTER_KEY_DATA_BASE64")
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
@@ -831,7 +831,7 @@ func TestAccResourceGitopsClusterTLSProjectAppSync(t *testing.T) {
 		repoUrl = "https://github.com/harness-apps/hosted-gitops-example-apps"
 	}
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
@@ -1136,7 +1136,7 @@ func TestAccResourceGitopsClusterExecProviderProjectInsecure(t *testing.T) {
 	awsSecretAccessKey := os.Getenv("GITOPS_AWS_CDPLAY_ACCOUNT_ACCESS_KEY_SECRET")
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
@@ -1180,7 +1180,7 @@ func TestAccResourceGitopsClusterTLSProjectInsecure(t *testing.T) {
 	keyData := os.Getenv("GITOPS_TLS_CLUSTER_KEY_DATA_BASE64")
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
@@ -1320,7 +1320,7 @@ func TestAccResourceGitopsClusterExecProviderProjectProxy(t *testing.T) {
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 	proxyUrl := "http://dummy-proxy.example.com:8080"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
@@ -1356,7 +1356,7 @@ func TestAccResourceGitopsClusterTLSProjectProxy(t *testing.T) {
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 	proxyUrl := "http://dummy-proxy.example.com:8080"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),

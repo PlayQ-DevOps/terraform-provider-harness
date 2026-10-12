@@ -43,7 +43,7 @@ func TestAccResourceGitopsApplication_AllTypes(t *testing.T) {
 	helmChartAppResource := "harness_platform_gitops_applications.helm_chart_app"
 	skipRepoAppResource := "harness_platform_gitops_applications.skip_repo_app"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy: resource.ComposeTestCheckFunc(
@@ -853,7 +853,7 @@ func TestAccResourceGitopsApplication_ForceDelete(t *testing.T) {
 	namespace := "test"
 	resourceName := "harness_platform_gitops_applications.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsApplicationDestroy(resourceName),

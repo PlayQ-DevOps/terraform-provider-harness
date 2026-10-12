@@ -15,7 +15,7 @@ func TestAccDataSourceConnectorGcpKMS_manual(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_kms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -52,7 +52,7 @@ func TestOrgDataSourceConnectorGcpKMS_manual(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_kms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -90,7 +90,7 @@ func TestProjectDataSourceConnectorGcpKMS_manual(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_kms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -129,7 +129,7 @@ func TestAccDataSourceConnectorGcpKMS_oidc_platform(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_kms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -167,7 +167,7 @@ func TestOrgDataSourceConnectorGcpKMS_oidc_platform(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_kms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -206,7 +206,7 @@ func TestProjectDataSourceConnectorGcpKMS_oidc_platform(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_kms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -246,7 +246,7 @@ func TestAccDataSourceConnectorGcpKMS_oidc_delegate(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_kms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -286,7 +286,7 @@ func TestOrgDataSourceConnectorGcpKMS_oidc_delegate(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_kms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -327,7 +327,7 @@ func TestProjectDataSourceConnectorGcpKMS_oidc_delegate(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_kms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -369,7 +369,7 @@ func TestAccDataSourceConnectorGcpKMS_manual_default(t *testing.T) {
 		resourceName = "data.harness_platform_connector_gcp_kms.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

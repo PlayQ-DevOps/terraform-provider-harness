@@ -34,7 +34,7 @@ func TestAccResourceConnectorAwsCC_CCM32336_OutOfBandDeleteRecreates(t *testing.
 	name := id
 	resourceName := "harness_platform_connector_awscc.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -70,7 +70,7 @@ func TestAccResourceConnectorKubernetsCloudCost_CCM32336_OutOfBandDeleteRecreate
 	name := id
 	resourceName := "harness_platform_connector_kubernetes_cloud_cost.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -106,7 +106,7 @@ func TestAccResourceConnectorGCPCloudCost_CCM32336_OutOfBandDeleteRecreates(t *t
 	name := id
 	resourceName := "harness_platform_connector_gcp_cloud_cost.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -142,7 +142,7 @@ func TestAccResourceConnectorAzureCloudCost_CCM32336_OutOfBandDeleteRecreates(t 
 	name := id
 	resourceName := "harness_platform_connector_azure_cloud_cost.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),

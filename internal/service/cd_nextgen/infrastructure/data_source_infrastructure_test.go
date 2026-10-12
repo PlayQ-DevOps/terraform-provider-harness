@@ -15,7 +15,7 @@ func TestAccDataSourceInfrastructure(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_infrastructure.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -38,7 +38,7 @@ func TestAccDataSourceInfrastructureAccountLevel(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_infrastructure.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -59,7 +59,7 @@ func TestAccDataSourceInfrastructureOrgLevel(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_infrastructure.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -80,7 +80,7 @@ func TestDataSourceRemoteInfrastrucutre(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_infrastructure.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

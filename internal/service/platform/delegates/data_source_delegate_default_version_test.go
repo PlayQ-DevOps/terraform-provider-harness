@@ -28,7 +28,7 @@ func TestAccDataSourceDelegateDefaultVersion(t *testing.T) {
 	t.Setenv("HARNESS_PLATFORM_API_KEY", os.Getenv("HARNESS_PLATFORM_ACCOUNT_LEVEL_API_KEY"))
 	resourceName := "data.harness_platform_delegate_default_version.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -50,7 +50,7 @@ func TestAccDataSourceDelegateDefaultVersionOrgLevelImplicitAccount(t *testing.T
 	orgId := os.Getenv("LATEST_DELEGATE_ORGANIZATION_ID")
 	resourceName := "data.harness_platform_delegate_default_version.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -74,7 +74,7 @@ func TestAccDataSourceDelegateDefaultVersionProjectLevel(t *testing.T) {
 	projectId := os.Getenv("LATEST_DELEGATE_PROJECT_ID")
 	resourceName := "data.harness_platform_delegate_default_version.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -140,4 +140,3 @@ data "harness_platform_delegate_default_version" "test" {
 }
 `, orgId, projectId)
 }
-

@@ -24,7 +24,7 @@ func TestAccResourceVariables(t *testing.T) {
 
 	resourceName := "harness_platform_variables.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccVariablesDestroy(resourceName),
@@ -65,7 +65,7 @@ func TestAccResourceVariablesProjectLevel(t *testing.T) {
 
 	resourceName := "harness_platform_variables.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccVariablesOrgLevelDestroy(resourceName),
@@ -107,7 +107,7 @@ func TestAccResourceVariablesOrgLevel(t *testing.T) {
 
 	resourceName := "harness_platform_variables.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccVariablesOrgLevelDestroy(resourceName),
@@ -144,7 +144,7 @@ func TestAccResourceVariables_DeleteUnderlyingResource(t *testing.T) {
 	resourceName := "harness_platform_variables.test"
 	variableValue := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

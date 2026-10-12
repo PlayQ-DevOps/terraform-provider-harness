@@ -20,7 +20,7 @@ func TestAccResourceEnvironmentGroup(t *testing.T) {
 	resourceName := "harness_platform_environment_group.test"
 	updatedColor := "#0063F8"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccEnvironmentGroupDestroy(resourceName),
@@ -62,7 +62,7 @@ func TestAccResourceEnvironmentGroupOrgLevel(t *testing.T) {
 	resourceName := "harness_platform_environment_group.test"
 	updatedColor := "#0063F8"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccEnvironmentGroupDestroy(resourceName),
@@ -102,7 +102,7 @@ func TestAccResourceEnvironmentGroupAccountLevel(t *testing.T) {
 	resourceName := "harness_platform_environment_group.test"
 	updatedColor := "#0063F8"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccEnvironmentGroupDestroy(resourceName),
@@ -176,7 +176,7 @@ func TestAccResourceEnvironmentGroupForceDelete(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_environment_group.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccEnvironmentGroupDestroy(resourceName),

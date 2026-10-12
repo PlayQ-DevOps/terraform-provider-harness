@@ -18,7 +18,7 @@ func TestAccDataSourceGitopsAgentDeployYaml(t *testing.T) {
 	namespace := "ns-" + agentId
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resourceName := "data.harness_platform_gitops_agent_deploy_yaml.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -39,7 +39,7 @@ func TestAccDataSourceGitopsAgentDeployYamlWithHelmTraversalEnabled(t *testing.T
 	namespace := "ns-" + agentId
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resourceName := "data.harness_platform_gitops_agent_deploy_yaml.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

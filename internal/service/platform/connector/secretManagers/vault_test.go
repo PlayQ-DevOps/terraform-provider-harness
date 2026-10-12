@@ -18,7 +18,7 @@ func TestAccResourceConnectorVault_Token(t *testing.T) {
 	resourceName := "harness_platform_connector_vault.test"
 	vaultToken := os.Getenv("HARNESS_TEST_VAULT_SECRET")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -72,7 +72,7 @@ func TestProjectResourceConnectorVault_Token(t *testing.T) {
 	resourceName := "harness_platform_connector_vault.test"
 	vaultToken := os.Getenv("HARNESS_TEST_VAULT_SECRET")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -127,7 +127,7 @@ func TestOrgResourceConnectorVault_Token(t *testing.T) {
 	resourceName := "harness_platform_connector_vault.test"
 	vaultToken := os.Getenv("HARNESS_TEST_VAULT_SECRET")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -182,7 +182,7 @@ func TestAccResourceConnectorVault_VaultAgent(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_vault.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -240,7 +240,7 @@ func TestProjectResourceConnectorVault_VaultAgent(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_vault.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -299,7 +299,7 @@ func TestOrgResourceConnectorVault_VaultAgent(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_vault.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -358,7 +358,7 @@ func TestAccResourceConnectorVault_K8sAuth(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_vault.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -414,7 +414,7 @@ func TestProjectResourceConnectorVault_K8sAuth(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_vault.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -471,7 +471,7 @@ func TestOrgResourceConnectorVault_K8sAuth(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_vault.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -529,7 +529,7 @@ func TestAccResourceConnectorVault_AppRole(t *testing.T) {
 	resourceName := "harness_platform_connector_vault.test"
 	vault_sercet := os.Getenv("HARNESS_TEST_VAULT_SECRET")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -586,7 +586,7 @@ func TestProjectResourceConnectorVault_AppRole(t *testing.T) {
 	resourceName := "harness_platform_connector_vault.test"
 	vaultSecret := os.Getenv("HARNESS_TEST_VAULT_SECRET")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -643,7 +643,7 @@ func TestOrgResourceConnectorVault_AppRole(t *testing.T) {
 	resourceName := "harness_platform_connector_vault.test"
 	vault_sercet := os.Getenv("HARNESS_TEST_VAULT_SECRET")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -701,7 +701,7 @@ func TestAccResourceConnectorVault_AwsAuth(t *testing.T) {
 	resourceName := "harness_platform_connector_vault.test"
 	vault_sercet := os.Getenv("HARNESS_TEST_VAULT_SECRET")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -757,7 +757,7 @@ func TestProjectResourceConnectorVault_AwsAuth(t *testing.T) {
 	resourceName := "harness_platform_connector_vault.test"
 	vault_sercet := os.Getenv("HARNESS_TEST_VAULT_SECRET")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -814,7 +814,7 @@ func TestOrgResourceConnectorVault_AwsAuth(t *testing.T) {
 	resourceName := "harness_platform_connector_vault.test"
 	vault_sercet := os.Getenv("HARNESS_TEST_VAULT_SECRET")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

@@ -1,6 +1,8 @@
 package sweep_test
 
 import (
+	"os"
+	"strings"
 	"testing"
 
 	"github.com/harness/harness-go-sdk/harness/cd"
@@ -12,12 +14,26 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// sweepRequested reports whether this test binary was invoked to run sweepers
+// (`go test ./internal/sweep -sweep=...`). Only then do we need a live client;
+// a plain `go test ./...` without credentials must not fail here.
+func sweepRequested() bool {
+	for _, arg := range os.Args[1:] {
+		if strings.HasPrefix(arg, "-sweep") || strings.HasPrefix(arg, "--sweep") {
+			return true
+		}
+	}
+	return false
+}
+
 func TestMain(m *testing.M) {
-	client, err := cd.NewClient(cd.DefaultConfig())
-	if err != nil {
-		panic(err)
+	if sweepRequested() || os.Getenv(resource.EnvTfAcc) != "" {
+		client, err := cd.NewClient(cd.DefaultConfig())
+		if err != nil {
+			panic(err)
+		}
+		sweep.SweeperClient = client
 	}
 
-	sweep.SweeperClient = client
 	resource.TestMain(m)
 }

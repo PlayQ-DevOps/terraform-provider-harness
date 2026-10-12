@@ -45,7 +45,7 @@ func TestAccResourceUserGroup(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_usergroup.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserGroupDestroy(resourceName),
@@ -82,7 +82,7 @@ func TestProjectResourceUserGroup(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_usergroup.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserGroupDestroy(resourceName),
@@ -119,7 +119,7 @@ func TestOrgResourceUserGroup(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_usergroup.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserGroupDestroy(resourceName),
@@ -150,6 +150,7 @@ func TestOrgResourceUserGroup(t *testing.T) {
 }
 
 func TestAccResourceUserGroup_emails(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 	endpoint := os.Getenv("HARNESS_ENDPOINT")
 
 	if endpoint == "" {
@@ -173,7 +174,7 @@ func TestAccResourceUserGroup_emails(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_usergroup.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		//CheckDestroy:      testAccUserGroupDestroy(resourceName),
@@ -221,7 +222,7 @@ func TestAccResourceUserGroup_userIds(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_usergroup.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserGroupDestroy(resourceName),
@@ -262,6 +263,7 @@ func TestAccResourceUserGroup_userIds(t *testing.T) {
 }
 
 func TestProjectResourceUserGroup_emails(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 	endpoint := os.Getenv("HARNESS_ENDPOINT")
 
 	if endpoint == "" {
@@ -285,7 +287,7 @@ func TestProjectResourceUserGroup_emails(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_usergroup.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserGroupDestroy(resourceName),
@@ -321,6 +323,7 @@ func TestProjectResourceUserGroup_emails(t *testing.T) {
 
 func TestOrgResourceUserGroup_emails(t *testing.T) {
 
+	acctest.TestAccSkipIfNotAcc(t)
 	endpoint := os.Getenv("HARNESS_ENDPOINT")
 
 	if endpoint == "" {
@@ -344,7 +347,7 @@ func TestOrgResourceUserGroup_emails(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_usergroup.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserGroupDestroy(resourceName),
@@ -384,7 +387,7 @@ func TestAccResourceUserGroup_DeleteUnderlyingResource(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_usergroup.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

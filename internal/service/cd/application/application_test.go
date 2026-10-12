@@ -18,7 +18,7 @@ func TestAccResourceApplication(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", expectedName)
 	resourceName := "harness_application.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccApplicationDestroy(resourceName),
@@ -55,7 +55,7 @@ func TestAccResourceApplication_DeleteUnderlyingResource(t *testing.T) {
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "harness_application.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccApplicationDestroy(resourceName),

@@ -16,7 +16,7 @@ func TestAccResourceRuleSet(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_governance_rule_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRuleDestroy(resourceName),
@@ -63,7 +63,7 @@ func TestAccResourceRuleSet_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 
 	var ruleSetIDBefore string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRuleDestroy(resourceName),
@@ -117,7 +117,7 @@ func TestAccResourceRuleSetUpdateRuleIds(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	resourceName := "harness_governance_rule_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRuleDestroy(resourceName),

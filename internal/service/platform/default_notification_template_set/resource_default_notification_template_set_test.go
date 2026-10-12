@@ -18,7 +18,7 @@ func TestAccResourceDefaultNotificationTemplateSet_basic(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_default_notification_template_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccDefaultNotificationTemplateSetDestroy(resourceName),
@@ -54,7 +54,7 @@ func TestAccResourceDefaultNotificationTemplateSet_projectLevel(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_default_notification_template_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccDefaultNotificationTemplateSetDestroy(resourceName),
@@ -82,7 +82,7 @@ func TestAccResourceDefaultNotificationTemplateSet_orgLevel(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_default_notification_template_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccDefaultNotificationTemplateSetDestroy(resourceName),
@@ -110,7 +110,7 @@ func TestAccResourceDefaultNotificationTemplateSet_multipleChannelTypes(t *testi
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_default_notification_template_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccDefaultNotificationTemplateSetDestroy(resourceName),
@@ -138,7 +138,7 @@ func TestAccResourceDefaultNotificationTemplateSet_multipleEventConfigurations(t
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_default_notification_template_set.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccDefaultNotificationTemplateSetDestroy(resourceName),

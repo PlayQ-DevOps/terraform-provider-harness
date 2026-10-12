@@ -22,7 +22,7 @@ func TestResourceAWSProxy(t *testing.T) {
 	resourceName := "harness_autostopping_aws_proxy.test"
 	var proxyID string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.TestAccPreCheck(t)
 			cleanupStaleAWSProxies(t)

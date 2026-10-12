@@ -27,7 +27,7 @@ func TestAccResourceUserGroup_LDAP(t *testing.T) {
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_user_group.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserGroupDestroy(resourceName),
@@ -53,7 +53,7 @@ func TestAccResourceUserGroup_SAML(t *testing.T) {
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_user_group.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserGroupDestroy(resourceName),
@@ -79,7 +79,7 @@ func TestAccResourceUserGroup_NotificationsSettings(t *testing.T) {
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_user_group.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserGroupDestroy(resourceName),
@@ -105,7 +105,7 @@ func TestAccResourceUserGroup_AccountPermissions(t *testing.T) {
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_user_group.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserGroupDestroy(resourceName),
@@ -131,7 +131,7 @@ func TestAccResourceUserGroup_DeleteUnderlyingResource(t *testing.T) {
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_user_group.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -166,7 +166,7 @@ func TestAccResourceUserGroup_AppPermissions(t *testing.T) {
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_user_group.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserGroupDestroy(resourceName),

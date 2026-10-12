@@ -18,7 +18,7 @@ func TestAccDataSourcePermissions(t *testing.T) {
 	resourceName := "data.harness_platform_permissions.test"
 	id_value := fmt.Sprintf("%d", terraformUtils.StringHashcode(helpers.EnvVars.AccountId.Get()+name+name))
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

@@ -18,7 +18,7 @@ func TestAccServiceOverrides_ProjectScope(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_service_overrides_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceOverridesDestroy(resourceName),
@@ -46,7 +46,7 @@ func TestAccServiceOverrides_OrgScope(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_service_overrides_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceOverridesDestroy(resourceName),
@@ -73,7 +73,7 @@ func TestAccServiceOverrides_AccountScope(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_service_overrides_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceOverridesDestroy(resourceName),
@@ -97,7 +97,7 @@ func TestAccRemoteServiceOverrides(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_service_overrides_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceOverridesDestroy(resourceName),
@@ -135,7 +135,7 @@ func TestAccServiceOverridesEditGitDetails(t *testing.T) {
 	path1 := fmt.Sprintf("test-path-%s-1", utils.RandStringBytes(6))
 	path2 := fmt.Sprintf("test-path-%s-2", utils.RandStringBytes(6))
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceOverridesDestroy(resourceName1),

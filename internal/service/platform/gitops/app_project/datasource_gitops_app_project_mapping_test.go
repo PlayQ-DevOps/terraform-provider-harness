@@ -19,7 +19,7 @@ func TestAccDatasourceGitopsAppProjectMapping(t *testing.T) {
 	resourceName := "harness_platform_gitops_app_project_mapping.test"
 	dataSourceName := "data.harness_platform_gitops_app_project_mapping.test1"
 	argoProject := "test123"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

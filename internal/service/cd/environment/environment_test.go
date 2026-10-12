@@ -20,7 +20,7 @@ func TestAccResourceEnvironment(t *testing.T) {
 		resourceName = "harness_environment.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccEnvironmentDestroy(resourceName),
@@ -61,7 +61,7 @@ func TestAccResourceEnvironment_WithVariables(t *testing.T) {
 		resourceName = "harness_environment.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccEnvironmentDestroy(resourceName),
@@ -95,7 +95,7 @@ func TestAccResourceEnvironment_DeleteUnderlyingResource(t *testing.T) {
 		resourceName = "harness_environment.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

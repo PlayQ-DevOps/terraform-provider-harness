@@ -25,7 +25,7 @@ func TestAccDataSourceDelegateIds(t *testing.T) {
 	pullDelegateImage(context.Background(), &delegate.DockerDelegateConfig{})
 	delegate := createDelegateContainer(t, delegateName, false)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
 			{

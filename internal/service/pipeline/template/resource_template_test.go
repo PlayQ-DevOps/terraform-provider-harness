@@ -22,7 +22,7 @@ func TestAccResourceTemplateProjectScope(t *testing.T) {
 
 	resourceName := "harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -65,7 +65,7 @@ func TestAccResourceTemplateProjectScopeInline(t *testing.T) {
 
 	resourceName := "harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccTemplateDestroy(resourceName),
@@ -104,7 +104,7 @@ func TestAccResourceTemplate_OrgScope(t *testing.T) {
 
 	resourceName := "harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -147,7 +147,7 @@ func TestAccResourceTemplate_OrgScopeInline(t *testing.T) {
 
 	resourceName := "harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccTemplateDestroy(resourceName),
@@ -183,7 +183,7 @@ func TestAccResourceTemplate_OrgScopeImportFromGit(t *testing.T) {
 
 	resourceName := "harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -215,7 +215,7 @@ func TestAccResourceTemplate_ProjectScopeImportFromGit(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -247,7 +247,7 @@ func TestAccResourceTemplate_ProjectScopeImportFromGitNonDefaultBranch(t *testin
 	name := id
 	resourceName := "harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -280,7 +280,7 @@ func TestAccResourceTemplate_AccountScopeImportFromGit(t *testing.T) {
 
 	resourceName := "harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -313,7 +313,7 @@ func TestAccResourceTemplate_OrgScopeInline_UpdateStable(t *testing.T) {
 
 	resourceName := "harness_platform_template.test2"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccTemplateDestroy(resourceName),
@@ -347,7 +347,7 @@ func TestAccResourceTemplate_AccountScope(t *testing.T) {
 
 	resourceName := "harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -407,7 +407,7 @@ func TestAccResourceTemplate_AccountScopeInline(t *testing.T) {
 
 	resourceName := "harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -450,7 +450,7 @@ func TestAccResourceTemplate_DeleteUnderlyingResource(t *testing.T) {
 	org_id := id + "org"
 	resourceName := "harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1582,7 +1582,7 @@ func TestAccTemplateImport_ProjectScope_StableVersion(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccTemplateDestroy(resourceName),
@@ -1621,7 +1621,7 @@ func TestAccTemplateImport_ProjectScope_NonStableVersion(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_template.test_v2"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccTemplateDestroy(resourceName),
@@ -1669,7 +1669,7 @@ func TestAccTemplateImport_OrgScope_StableVersion(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccTemplateDestroy(resourceName),
@@ -1706,7 +1706,7 @@ func TestAccTemplateImport_OrgScope_NonStableVersion(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_template.test_v2"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccTemplateDestroy(resourceName),
@@ -1747,7 +1747,7 @@ func TestAccTemplateImport_AccountScope_StableVersion(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccTemplateDestroy(resourceName),
@@ -1777,7 +1777,7 @@ func TestAccTemplateImport_AccountScope_NonStableVersion(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_template.test_v2"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccTemplateDestroy(resourceName),
@@ -2096,7 +2096,7 @@ func TestAccResourceTemplate_OPAPolicyDenial(t *testing.T) {
 	id := fmt.Sprintf("hsf94_opa_%s", utils.RandStringBytes(6))
 	name := id
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

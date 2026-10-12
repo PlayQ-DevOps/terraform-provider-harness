@@ -15,7 +15,7 @@ func TestAccResourceInfrastructureDefinition_AwsAmI_ASG(t *testing.T) {
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_infrastructure_definition.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccInfraDefDestroy(resourceName),
@@ -41,7 +41,7 @@ func TestAccResourceInfrastructureDefinition_AwsAmI_Spot(t *testing.T) {
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	resourceName := "harness_infrastructure_definition.test"
 	config := testAccInfraDefAwsAmi_SpotInst(expectedName)
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccInfraDefDestroy(resourceName),

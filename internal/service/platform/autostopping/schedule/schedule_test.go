@@ -15,7 +15,7 @@ func TestResourceVMRule(t *testing.T) {
 	name := "terraform-schedule-test"
 	resourceName := "harness_autostopping_schedule.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -43,7 +43,7 @@ func TestAccResourceSchedule_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 
 	var schedIDBefore string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

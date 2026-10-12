@@ -12,7 +12,7 @@ func TestResourceScaleGroupRule(t *testing.T) {
 	name := fmt.Sprintf("terr-sg-%s", randAlnum(5)) // "terr-sg-"+5 = 12 chars
 	resourceName := "harness_autostopping_rule_scale_group.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

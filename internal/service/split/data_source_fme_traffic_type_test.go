@@ -18,7 +18,7 @@ func TestAccDataSourceFMETrafficType(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
 	ds := "data.harness_fme_traffic_type.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -47,7 +47,7 @@ func TestAccDataSourceFMETrafficType_matchesResource(t *testing.T) {
 	ds := "data.harness_fme_traffic_type.lookup"
 	var trafficTypeID string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

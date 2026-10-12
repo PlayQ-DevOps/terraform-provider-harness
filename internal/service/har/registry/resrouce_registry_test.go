@@ -53,7 +53,7 @@ func TestAccResourceVirtualDockerRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -94,7 +94,7 @@ func TestAccResourcePublicVirtualDockerRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -137,7 +137,7 @@ func TestOrgResourceVirtualDockerRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -176,7 +176,7 @@ func TestProjectResourceVirtualDockerRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -215,7 +215,7 @@ func TestAccResourceUpstreamDockerRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -247,7 +247,7 @@ func TestOrgResourceUpstreamDockerRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -279,7 +279,7 @@ func TestProjectResourceUpstreamDockerRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -512,7 +512,7 @@ func TestAccResourceVirtualHelmRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -541,7 +541,7 @@ func TestOrgResourceVirtualHelmRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -570,7 +570,7 @@ func TestProjectResourceVirtualHelmRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -599,7 +599,7 @@ func TestAccResourceUpstreamHelmRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -629,7 +629,7 @@ func TestOrgResourceUpstreamHelmRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -659,7 +659,7 @@ func TestProjectResourceUpstreamHelmRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -875,7 +875,7 @@ func TestAccResourceUpstreamDockerAnonymousRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -906,7 +906,7 @@ func TestOrgResourceUpstreamDockerAnonymousRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -937,7 +937,7 @@ func TestProjectResourceUpstreamDockerAnonymousRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1047,7 +1047,7 @@ func TestAccResourceUpstreamHelmAnonymousRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1073,7 +1073,7 @@ func TestOrgResourceUpstreamHelmAnonymousRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1099,7 +1099,7 @@ func TestProjectResourceUpstreamHelmAnonymousRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1207,7 +1207,7 @@ func TestAccResourceVirtualDockerRegistryUpdate(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1259,7 +1259,7 @@ func TestAccResourceVirtualMavenRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1308,7 +1308,7 @@ func TestAccResourceVirtualNPMRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1357,7 +1357,7 @@ func TestAccResourceVirtualGenericRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1408,7 +1408,7 @@ func TestAccResourceVirtualDockerRegistryWithUpstreamProxy(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1475,7 +1475,7 @@ func TestAccResourceVirtualDockerRegistryWithBlockedPatterns(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1526,7 +1526,7 @@ func TestAccResourceVirtualDockerRegistryWithAllowedPatterns(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1580,7 +1580,7 @@ func TestAccResourceVirtualDockerRegistryUpdateUpstreamProxies(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1635,7 +1635,7 @@ func TestAccResourceVirtualDockerRegistryUpdateAllowedPattern(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1681,7 +1681,7 @@ func TestAccResourceVirtualDockerRegistryUpdateBlockedPattern(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1727,7 +1727,7 @@ func TestAccResourceVirtualDockerRegistryAsLocal(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1763,7 +1763,7 @@ func TestAccResourceUpstreamDockerRegistryNoAuth(t *testing.T) {
 	id := fmt.Sprintf("tfauto_up_noauth_%s", randAlphanumeric(5))
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1782,7 +1782,7 @@ func TestAccResourceUpstreamHelmRegistryNoAuth(t *testing.T) {
 	id := fmt.Sprintf("tfauto_uphelm_noauth_%s", randAlphanumeric(5))
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1801,7 +1801,7 @@ func TestAccResourceUpstreamMavenRegistryNoAuth(t *testing.T) {
 	id := fmt.Sprintf("tfauto_upmaven_noauth_%s", randAlphanumeric(5))
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1820,7 +1820,7 @@ func TestAccResourceUpstreamRegistryWithExternalSecretManager(t *testing.T) {
 	id := fmt.Sprintf("tfauto_up_extsm_%s", randAlphanumeric(5))
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1912,7 +1912,7 @@ func TestAccResourceUpstreamNpmRegistryFirewallEnabled(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1943,7 +1943,7 @@ func TestAccResourceUpstreamNpmRegistryFirewallQuarantined(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -1974,7 +1974,7 @@ func TestAccResourceUpstreamNpmRegistryFirewallUpdate(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2009,7 +2009,7 @@ func TestAccResourceUpstreamNpmRegistryPublicFirewall(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2054,7 +2054,7 @@ func TestAccResourceUpstreamDockerRegistryFirewallRejected(t *testing.T) {
 	id := fmt.Sprintf("tfauto_up_fw_dk_%s", randAlphanumeric(5))
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2072,7 +2072,7 @@ func TestAccResourceUpstreamHelmRegistryFirewallRejected(t *testing.T) {
 	id := fmt.Sprintf("tfauto_up_fw_hm_%s", randAlphanumeric(5))
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2090,7 +2090,7 @@ func TestAccResourceVirtualRegistryFirewallRejected(t *testing.T) {
 	id := fmt.Sprintf("tfauto_vr_fw_%s", randAlphanumeric(5))
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2109,7 +2109,7 @@ func TestAccResourceVirtualDockerRegistryWithMetadata(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2141,7 +2141,7 @@ func TestAccResourceVirtualDockerRegistryMetadataUpdate(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2182,7 +2182,7 @@ func TestAccResourceVirtualDockerRegistryMetadataRemove(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2216,7 +2216,7 @@ func TestAccResourceMetadataInvalidKeyRejected(t *testing.T) {
 	id := fmt.Sprintf("tfauto_meta_inv_%s", randAlphanumeric(5))
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -2233,7 +2233,7 @@ func TestAccResourceMetadataInvalidValueRejected(t *testing.T) {
 	id := fmt.Sprintf("tfauto_meta_ivl_%s", randAlphanumeric(5))
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -2255,7 +2255,7 @@ func TestAccResourceMetadataTooManyItemsRejected(t *testing.T) {
 		tooMany[fmt.Sprintf("key%d", i)] = fmt.Sprintf("value%d", i)
 	}
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -2408,7 +2408,7 @@ func TestAccResourceUpstreamPythonRegistryRemoteUrlSuffix(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2446,7 +2446,7 @@ func TestAccResourceUpstreamPythonRegistryRemoteUrlSuffixUpdate(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2514,7 +2514,7 @@ func TestAccResourceUpstreamDockerRegistryRemoteUrlSuffixRejected(t *testing.T) 
 	id := fmt.Sprintf("tfauto_up_py_sfx_dk_%s", randAlphanumeric(5))
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2532,7 +2532,7 @@ func TestAccResourceUpstreamPythonRegistryRemoteUrlSuffixPyPiSourceRejected(t *t
 	id := fmt.Sprintf("tfauto_up_py_sfx_pi_%s", randAlphanumeric(5))
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2550,7 +2550,7 @@ func TestAccResourceVirtualRegistryRemoteUrlSuffixRejected(t *testing.T) {
 	id := fmt.Sprintf("tfauto_vr_py_sfx_%s", randAlphanumeric(5))
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -2606,7 +2606,7 @@ func TestAccResourceVirtualGoRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2647,7 +2647,7 @@ func TestAccResourceUpstreamGoRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2682,7 +2682,7 @@ func TestAccResourceVirtualCondaRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2723,7 +2723,7 @@ func TestAccResourceUpstreamCondaRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2758,7 +2758,7 @@ func TestAccResourceVirtualHelmHTTPRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2799,7 +2799,7 @@ func TestAccResourceUpstreamHelmHTTPRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2835,7 +2835,7 @@ func TestAccResourceVirtualConanRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2876,7 +2876,7 @@ func TestAccResourceUpstreamConanRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2915,7 +2915,7 @@ func TestAccResourceVirtualRubyRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2956,7 +2956,7 @@ func TestAccResourceUpstreamRubyRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -2995,7 +2995,7 @@ func TestAccResourceVirtualAlpineRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -3036,7 +3036,7 @@ func TestAccResourceUpstreamAlpineRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -3075,7 +3075,7 @@ func TestAccResourceVirtualWolfiRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -3116,7 +3116,7 @@ func TestAccResourceUpstreamWolfiRegistry(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -3235,7 +3235,7 @@ func testVirtualRegistryOrg(t *testing.T, packageType string) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -3262,7 +3262,7 @@ func testVirtualRegistryProject(t *testing.T, packageType string) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -3289,7 +3289,7 @@ func testUpstreamCustomAuthRegistry(t *testing.T, packageType string) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -3406,7 +3406,7 @@ func TestAccResourceVirtualDebianRegistryWithDebianConfig(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -3452,7 +3452,7 @@ func TestAccResourceVirtualDebianRegistryWithoutDebianConfig(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -3485,7 +3485,7 @@ func TestAccResourceDebianConfigWrongPackageTypeRejected(t *testing.T) {
 	id := fmt.Sprintf("tfauto_deb_wpt_%s", randAlphanumeric(5))
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -3502,7 +3502,7 @@ func TestAccResourceDebianConfigUpstreamRejected(t *testing.T) {
 	id := fmt.Sprintf("tfauto_deb_up_%s", randAlphanumeric(5))
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -3576,7 +3576,7 @@ func TestAccResourceUpstreamMavenRegistryWithCacheTTL(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -3618,7 +3618,7 @@ func TestAccResourceUpstreamMavenRegistryWithMetadataCacheTTLOnly(t *testing.T) 
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -3651,7 +3651,7 @@ func TestAccResourceUpstreamMavenRegistryWithNegativeCacheTTLOnly(t *testing.T) 
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),
@@ -3684,7 +3684,7 @@ func TestAccResourceUpstreamMavenRegistryWithZeroCacheTTL(t *testing.T) {
 	resourceName := "harness_platform_har_registry.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRegistryCheckDestroy("harness_platform_har_registry"),

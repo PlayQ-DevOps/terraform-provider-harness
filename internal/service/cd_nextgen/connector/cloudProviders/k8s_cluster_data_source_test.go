@@ -16,7 +16,7 @@ func TestAccDataSourceConnectorK8sInheritFromDelegate(t *testing.T) {
 		resourceName = "data.harness_platform_connector_kubernetes.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -42,7 +42,7 @@ func TestAccDataSourceConnectorK8sServiceAccount(t *testing.T) {
 		resourceName = "data.harness_platform_connector_kubernetes.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

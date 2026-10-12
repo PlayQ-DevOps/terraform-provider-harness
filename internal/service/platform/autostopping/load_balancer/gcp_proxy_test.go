@@ -24,7 +24,7 @@ func TestResourceGCPProxy(t *testing.T) {
 	name := fmt.Sprintf("terr-gcpproxy-%s", randAlnum(5))
 	resourceName := "harness_autostopping_gcp_proxy.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		//		CheckDestroy:      testAWSProxyDestroy(resourceName),

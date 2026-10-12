@@ -20,7 +20,7 @@ func TestAccResourceRoles(t *testing.T) {
 
 	resourceName := "harness_platform_roles.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRolesDestroy(resourceName),
@@ -66,7 +66,7 @@ func TestProjectResourceRoles(t *testing.T) {
 
 	resourceName := "harness_platform_roles.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRolesDestroy(resourceName),
@@ -112,7 +112,7 @@ func TestOrgResourceRoles(t *testing.T) {
 
 	resourceName := "harness_platform_roles.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRolesDestroy(resourceName),
@@ -155,7 +155,7 @@ func TestRepoResourceRoles(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_roles.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccRolesDestroy(resourceName),
@@ -173,10 +173,10 @@ func TestRepoResourceRoles(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateIdFunc:       acctest.ProjectResourceImportStateIdFunc(resourceName),
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateIdFunc: acctest.ProjectResourceImportStateIdFunc(resourceName),
 			},
 		},
 	})

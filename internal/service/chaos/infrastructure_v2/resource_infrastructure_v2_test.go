@@ -43,7 +43,7 @@ func TestAccResourceChaosInfrastructureV2_basic(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_infrastructure_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccChaosInfrastructureV2Destroy(resourceName),
@@ -79,7 +79,7 @@ func TestAccResourceChaosInfrastructureV2_Update(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_infrastructure_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccChaosInfrastructureV2Destroy(resourceName),
@@ -121,7 +121,7 @@ func TestAccResourceChaosInfrastructureV2_Resources(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_infrastructure_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccChaosInfrastructureV2Destroy(resourceName),
@@ -153,7 +153,7 @@ func TestAccResourceChaosInfrastructureV2_KubernetesType(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_infrastructure_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccChaosInfrastructureV2Destroy(resourceName),
@@ -175,7 +175,7 @@ func TestAccResourceChaosInfrastructureV2_Import(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_infrastructure_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

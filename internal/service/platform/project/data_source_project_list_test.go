@@ -15,7 +15,7 @@ func TestAccDataSourceProjectList(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_project_list.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

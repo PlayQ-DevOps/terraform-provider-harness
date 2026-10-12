@@ -21,7 +21,7 @@ func TestAccSecretText_inline(t *testing.T) {
 	updatedValue := secretValue + "updated"
 	resourceName := "harness_platform_secret_text.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccSecretDestroy(resourceName),
@@ -70,7 +70,7 @@ func TestAccResourceSecretText_reference(t *testing.T) {
 	updatedValue := secretValue + "updated"
 	resourceName := "harness_platform_secret_text.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccSecretDestroy(resourceName),
@@ -119,7 +119,7 @@ func TestProjectSecretText_inline(t *testing.T) {
 	updatedValue := secretValue + "updated"
 	resourceName := "harness_platform_secret_text.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccSecretDestroy(resourceName),
@@ -173,7 +173,7 @@ func TestOrgSecretText_inline(t *testing.T) {
 	updatedValue := secretValue + "updated"
 	resourceName := "harness_platform_secret_text.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccSecretDestroy(resourceName),
@@ -226,7 +226,7 @@ func TestOrgResourceSecretText_reference(t *testing.T) {
 	updatedValue := secretValue + "updated"
 	resourceName := "harness_platform_secret_text.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccSecretDestroy(resourceName),
@@ -277,7 +277,7 @@ func TestAccSecretText_DeleteUnderLyingResource(t *testing.T) {
 
 	resourceName := "harness_platform_secret_text.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -310,7 +310,7 @@ func TestAccSecretText_ForceDelete(t *testing.T) {
 
 	resourceName := "harness_platform_secret_text.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -506,7 +506,7 @@ func TestAccResourceSecretText_GCP_SM_reference(t *testing.T) {
 	updatedValue := secretValue + "updated"
 	resourceName := "harness_platform_secret_text.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccSecretDestroy(resourceName),
@@ -557,7 +557,7 @@ func TestAccResourceSecretText_AWS_SM_reference(t *testing.T) {
 	updatedValue := secretValue + "updated"
 	resourceName := "harness_platform_secret_text.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccSecretDestroy(resourceName),

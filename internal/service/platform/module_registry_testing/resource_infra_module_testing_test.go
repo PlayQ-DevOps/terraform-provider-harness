@@ -21,7 +21,7 @@ func TestAccResourceModuleTesting(t *testing.T) {
 	provisionerVersion := "1.5.0"
 	updatedProvisionerVersion := "1.6.0"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceModuleTestingDestroy(resourceName),
@@ -61,7 +61,7 @@ func TestAccResourceModuleTestingWithReleasePipeline(t *testing.T) {
 	provisionerType := "terraform"
 	provisionerVersion := "1.5.0"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceModuleTestingDestroy(resourceName),

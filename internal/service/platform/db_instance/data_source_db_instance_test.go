@@ -15,7 +15,7 @@ func TestAccDataSourceDBInstance(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_instance.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -126,7 +126,7 @@ func TestAccDataSourceDBInstanceWithCommitSha(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_instance.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -149,7 +149,7 @@ func TestAccDataSourceDBInstanceWithGitTag(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_instance.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -172,7 +172,7 @@ func TestAccDataSourceDBInstanceWithSubstituteProps(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_instance.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

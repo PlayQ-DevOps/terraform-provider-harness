@@ -24,7 +24,7 @@ const (
 func TestProjResourceRepo(t *testing.T) {
 	identifier := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testRepoDestroy(resourceName),
@@ -58,7 +58,7 @@ func TestProjResourceRepo(t *testing.T) {
 func TestAccResourceRepo(t *testing.T) {
 	identifier := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testRepoDestroy(resourceName),
@@ -92,7 +92,7 @@ func TestAccResourceRepo(t *testing.T) {
 func TestAccResourceRepo_Import(t *testing.T) {
 	identifier := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testRepoDestroy(resourceName),
@@ -126,7 +126,7 @@ func TestAccResourceRepo_Import(t *testing.T) {
 func TestProjResourceRepo_Import(t *testing.T) {
 	identifier := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testRepoDestroy(resourceName),
@@ -162,7 +162,7 @@ func TestAccResourceRepo_DeleteUnderlyingResource(t *testing.T) {
 
 	identifier := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testRepoDestroy(resourceName),
@@ -201,7 +201,7 @@ func TestAccResourceRepo_DeleteUnderlyingResource(t *testing.T) {
 func TestAccResourceRepo_ImportNonExistentGithubRepo(t *testing.T) {
 	id := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

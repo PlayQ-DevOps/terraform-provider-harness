@@ -17,7 +17,7 @@ func TestAccDataSourceSecretText(t *testing.T) {
 		resourceName = "data.harness_platform_secret_text.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -43,7 +43,7 @@ func TestAccDataSourceSecretTextProjectLevel(t *testing.T) {
 		resourceName = "data.harness_platform_secret_text.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -72,7 +72,7 @@ func TestAccDataSourceSecretTextOrgLevel(t *testing.T) {
 		resourceName = "data.harness_platform_secret_text.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

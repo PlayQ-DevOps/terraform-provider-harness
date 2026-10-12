@@ -32,7 +32,7 @@ func TestAccResourceIdpPlugin_basic(t *testing.T) {
 	pluginId := getTestPluginId(t)
 	resourceName := "harness_platform_idp_plugin.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -56,7 +56,7 @@ func TestAccResourceIdpPlugin_withEnvVariables(t *testing.T) {
 	secretId := getTestSecretId(t)
 	resourceName := "harness_platform_idp_plugin.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -82,7 +82,7 @@ func TestAccResourceIdpPlugin_withProxy(t *testing.T) {
 	pluginId := getTestPluginId(t)
 	resourceName := "harness_platform_idp_plugin.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -107,7 +107,7 @@ func TestAccResourceIdpPlugin_disable(t *testing.T) {
 	pluginId := getTestPluginId(t)
 	resourceName := "harness_platform_idp_plugin.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -136,7 +136,7 @@ func TestAccResourceIdpPlugin_import(t *testing.T) {
 	pluginId := getTestPluginId(t)
 	resourceName := "harness_platform_idp_plugin.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -161,7 +161,7 @@ func TestAccDataSourceIdpPlugin(t *testing.T) {
 	pluginId := getTestPluginId(t)
 	resourceName := "data.harness_platform_idp_plugin.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

@@ -64,7 +64,7 @@ func TestAccDataSourceK8sRuleById(t *testing.T) {
 	ruleID, _ := testAccDataSourceEnv(t, "AS_DS_TEST_K8S_RULE_ID", "AS_DS_TEST_K8S_RULE_NAME")
 	dataSourceName := "data.harness_autostopping_rule_k8s.by_id"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -90,7 +90,7 @@ func TestAccDataSourceK8sRuleByName(t *testing.T) {
 	namePattern := fmt.Sprintf("^%s$", ruleName)
 	dataSourceName := "data.harness_autostopping_rule_k8s.by_name"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -117,7 +117,7 @@ func TestAccDataSourceVMRuleById(t *testing.T) {
 	ruleID, _ := testAccDataSourceEnv(t, "AS_DS_TEST_VM_RULE_ID", "AS_DS_TEST_VM_RULE_NAME")
 	dataSourceName := "data.harness_autostopping_rule_vm.by_id"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -143,7 +143,7 @@ func TestAccDataSourceVMRuleByName(t *testing.T) {
 	namePattern := fmt.Sprintf("^%s$", ruleName)
 	dataSourceName := "data.harness_autostopping_rule_vm.by_name"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

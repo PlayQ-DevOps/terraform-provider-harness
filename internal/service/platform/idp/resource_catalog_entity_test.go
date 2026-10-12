@@ -21,7 +21,7 @@ func TestAccResourceCatalogEntity(t *testing.T) {
 	updatedDescription := fmt.Sprintf("%s_updated", description)
 	resourceName := "harness_platform_idp_catalog_entity.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccCatalogEntityDestroy(resourceName),
@@ -55,7 +55,7 @@ func TestAccResourceCatalogEntityDetectsDrift(t *testing.T) {
 	driftedDescription := fmt.Sprintf("%s_drifted", description)
 	resourceName := "harness_platform_idp_catalog_entity.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccCatalogEntityDestroy(resourceName),
@@ -122,7 +122,7 @@ func TestAccResourceRemoteCatalogEntity(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", description, utils.RandStringBytes(5))
 	resourceName := "harness_platform_idp_catalog_entity.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccCatalogEntityDestroy(resourceName),
@@ -221,7 +221,7 @@ func TestAccResourceImportRemoteCatalogEntity(t *testing.T) {
 
 	resourceName := "harness_platform_idp_catalog_entity.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccCatalogEntityDestroy(resourceName),

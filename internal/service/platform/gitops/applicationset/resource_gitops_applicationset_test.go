@@ -24,7 +24,7 @@ func TestAccResourceGitopsApplicationSet_AllClustersGenerator(t *testing.T) {
 	resourceName1 := "harness_platform_gitops_applicationset.test1"
 	resourceName2 := "harness_platform_gitops_applicationset.test2"
 	resourceName3 := "harness_platform_gitops_applicationset.test3"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -288,7 +288,7 @@ func TestAccResourceGitopsApplicationSet_MatrixGitClusters(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -456,7 +456,7 @@ func TestAccResourceGitopsApplicationSet_SCMProviderGitHub(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -599,7 +599,7 @@ func TestAccResourceGitopsApplicationSet_SCMProviderGitLab(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -747,7 +747,7 @@ func TestAccResourceGitopsApplicationSet_MatrixSCMProviderClustersWithSelector(t
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -933,7 +933,7 @@ func TestAccResourceGitopsApplicationSet_SyncPolicy(t *testing.T) {
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1082,7 +1082,7 @@ func TestAccResourceGitopsApplicationSet_Strategy(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1263,7 +1263,7 @@ func TestAccResourceGitopsApplicationSet_IgnoreApplicationDifferences(t *testing
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1416,7 +1416,7 @@ func TestAccResourceGitopsApplicationSet_MultiSource(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1558,7 +1558,7 @@ func TestAccResourceGitopsApplicationSet_GitGeneratorWithSelector(t *testing.T) 
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -1732,7 +1732,7 @@ func TestAccResourceGitopsApplicationSet_IgnoreDifference(t *testing.T) {
 						jq_path_expressions = [".spec.replicas"]
 					  }`
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

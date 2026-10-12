@@ -26,7 +26,7 @@ func TestAccResourceInfraProviderSigningKey(t *testing.T) {
 	user := "test-user@example.com"
 	resourceName := "harness_platform_infra_provider_signing_key.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccInfraProviderSigningKeyDestroy(resourceName),

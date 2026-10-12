@@ -16,7 +16,7 @@ func TestResourceAzureProxy(t *testing.T) {
 	name := fmt.Sprintf("terr-az-proxy%s", randAlnum(5))
 	resourceName := "harness_autostopping_azure_proxy.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		//		CheckDestroy:      testAzureProxyDestroy(resourceName),

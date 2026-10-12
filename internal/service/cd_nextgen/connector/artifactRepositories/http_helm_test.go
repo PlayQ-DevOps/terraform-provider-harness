@@ -16,7 +16,7 @@ func TestAccResourceConnector_httphelm_Anonymous(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_helm.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -60,7 +60,7 @@ func TestAccResourceConnector_httphelm_UsernamePassword(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_helm.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -97,7 +97,7 @@ func TestAccResourceConnector_httphelm_UsernameRefPassword(t *testing.T) {
 	resourceName := "harness_platform_connector_helm.test"
 	secret := fmt.Sprintf("%s_secret", id)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -132,7 +132,7 @@ func TestAccResourceConnectorAccountLevel_httphelm_ForceDelete(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_helm.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

@@ -140,7 +140,7 @@ func TestAccDataSourceConnectorAnthropicModel_Token(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -179,7 +179,7 @@ func TestAccDataSourceConnectorAnthropicModel_BedrockApiKey(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -219,7 +219,7 @@ func TestAccDataSourceConnectorAnthropicModel_CloudProvider(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -263,7 +263,7 @@ func TestOrgDataSourceConnectorAnthropicModel_Token(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -307,7 +307,7 @@ func TestOrgDataSourceConnectorAnthropicModel_BedrockApiKey(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -352,7 +352,7 @@ func TestOrgDataSourceConnectorAnthropicModel_CloudProvider(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -401,7 +401,7 @@ func TestProjectDataSourceConnectorAnthropicModel_Token(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -450,7 +450,7 @@ func TestProjectDataSourceConnectorAnthropicModel_BedrockApiKey(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -500,7 +500,7 @@ func TestProjectDataSourceConnectorAnthropicModel_CloudProvider(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -825,7 +825,7 @@ func TestUnitAccDataSourceConnectorAnthropicModel_Token(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -856,7 +856,7 @@ func TestUnitAccDataSourceConnectorAnthropicModel_BedrockApiKey(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -888,7 +888,7 @@ func TestUnitAccDataSourceConnectorAnthropicModel_CloudProvider(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -924,7 +924,7 @@ func TestUnitOrgDataSourceConnectorAnthropicModel_Token(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -949,7 +949,7 @@ func TestUnitOrgDataSourceConnectorAnthropicModel_BedrockApiKey(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -975,7 +975,7 @@ func TestUnitOrgDataSourceConnectorAnthropicModel_CloudProvider(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -1005,7 +1005,7 @@ func TestUnitProjectDataSourceConnectorAnthropicModel_Token(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -1031,7 +1031,7 @@ func TestUnitProjectDataSourceConnectorAnthropicModel_BedrockApiKey(t *testing.T
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -1058,7 +1058,7 @@ func TestUnitProjectDataSourceConnectorAnthropicModel_CloudProvider(t *testing.T
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_platform_connector_anthropic_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

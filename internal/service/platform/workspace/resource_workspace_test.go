@@ -22,7 +22,7 @@ func TestAccResourceWorkspace(t *testing.T) {
 	name3 := t.Name()
 	id3 := fmt.Sprintf("%s_%s", name3, utils.RandStringBytes(5))
 	updatedName3 := fmt.Sprintf("%s_updated", name3)
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),
@@ -91,7 +91,7 @@ func TestAccResourceWorkspaceTerragrunt(t *testing.T) {
 	name := t.Name()
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	updatedName := fmt.Sprintf("%s_updated", name)
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),

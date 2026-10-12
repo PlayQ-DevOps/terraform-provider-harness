@@ -17,7 +17,7 @@ func TestAccResourceInfraProvider(t *testing.T) {
 	providerType := fmt.Sprintf("test-provider-%s", utils.RandStringBytes(5))
 	resourceName := "harness_platform_infra_provider.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccInfraProviderDestroy(resourceName),

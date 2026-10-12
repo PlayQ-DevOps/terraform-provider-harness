@@ -19,7 +19,7 @@ func TestAccResourcePipeline_TagsWithColons(t *testing.T) {
 
 	resourceName := "harness_platform_pipeline.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPipelineDestroy(resourceName),
@@ -50,7 +50,7 @@ func TestAccResourcePipeline_TagsWithHarnessExpressions(t *testing.T) {
 
 	resourceName := "harness_platform_pipeline.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPipelineDestroy(resourceName),

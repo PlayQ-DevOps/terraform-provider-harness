@@ -22,7 +22,7 @@ func TestAccResourceSSHService(t *testing.T) {
 		resourceName       = "harness_service_ssh.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccServiceDestroy(resourceName),
@@ -61,7 +61,7 @@ func TestAccResourceSSHService_DeleteUnderlyingResource(t *testing.T) {
 		appId        = ""
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

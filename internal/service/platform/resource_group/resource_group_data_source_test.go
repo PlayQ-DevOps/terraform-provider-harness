@@ -16,7 +16,7 @@ func TestAccDataSourceResourceGroup(t *testing.T) {
 		resourceName = "data.harness_platform_resource_group.test"
 		accountId    = os.Getenv("HARNESS_ACCOUNT_ID")
 	)
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -42,7 +42,7 @@ func TestAccDataSourceResourceGroupProjectLevel(t *testing.T) {
 		resourceName = "data.harness_platform_resource_group.test"
 		accountId    = os.Getenv("HARNESS_ACCOUNT_ID")
 	)
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -68,7 +68,7 @@ func TestAccDataSourceResourceGroupOrgLevel(t *testing.T) {
 		resourceName = "data.harness_platform_resource_group.test"
 		accountId    = os.Getenv("HARNESS_ACCOUNT_ID")
 	)
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

@@ -15,7 +15,7 @@ func TestAccDataSourceConnectorKubernetesCloudCost(t *testing.T) {
 		resourceName = "data.harness_platform_connector_kubernetes_cloud_cost.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

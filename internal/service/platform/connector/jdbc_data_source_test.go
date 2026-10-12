@@ -15,7 +15,7 @@ func TestAccDataSourceConnectorJDBC(t *testing.T) {
 		resourceName = "data.harness_platform_connector_jdbc.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -47,7 +47,7 @@ func TestAccDataSourceConnectorJDBCDefaultAuth(t *testing.T) {
 		resourceName = "data.harness_platform_connector_jdbc.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -79,7 +79,7 @@ func TestAccDataSourceConnectorJDBCServiceAccountAuth(t *testing.T) {
 		resourceName = "data.harness_platform_connector_jdbc.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -216,7 +216,7 @@ func TestAccDataSourceConnectorJDBCKeyPairAuth(t *testing.T) {
 		resourceName = "data.harness_platform_connector_jdbc.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -297,7 +297,7 @@ func TestAccDataSourceConnectorJDBCOidcAuth(t *testing.T) {
 		resourceName = "data.harness_platform_connector_jdbc.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -361,7 +361,7 @@ func TestAccDataSourceConnectorJDBCInheritFromDelegateAuth(t *testing.T) {
 		resourceName = "data.harness_platform_connector_jdbc.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -392,7 +392,7 @@ func TestAccDataSourceConnectorJDBCInheritFromDelegateEmptyBlock(t *testing.T) {
 		resourceName = "data.harness_platform_connector_jdbc.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

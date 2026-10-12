@@ -3,6 +3,7 @@ package acctest
 import (
 	"context"
 	"fmt"
+	"os"
 	"strings"
 	"sync"
 	"testing"
@@ -48,7 +49,30 @@ func TestAccConfigureProvider() {
 	})
 }
 
+// TestAccSkipIfNotAcc skips the calling test unless TF_ACC is set. Use it at the top of
+// acceptance tests that read environment configuration before calling resource.Test,
+// so that `go test ./...` without credentials skips them instead of failing.
+func TestAccSkipIfNotAcc(t *testing.T) {
+	t.Helper()
+	if os.Getenv(resource.EnvTfAcc) == "" {
+		t.Skipf("set %s=1 (plus Harness credentials) to run this acceptance test against the live Harness API", resource.EnvTfAcc)
+	}
+}
+
 func TestAccPreCheck(t *testing.T) {
+	t.Helper()
+	if os.Getenv(resource.EnvTfAcc) != "" {
+		var missing []string
+		if helpers.EnvVars.AccountId.Get() == "" {
+			missing = append(missing, helpers.EnvVars.AccountId.String())
+		}
+		if helpers.EnvVars.PlatformApiKey.Get() == "" && helpers.EnvVars.ApiKey.Get() == "" {
+			missing = append(missing, helpers.EnvVars.PlatformApiKey.String()+" (or "+helpers.EnvVars.ApiKey.String()+" for FirstGen resources)")
+		}
+		if len(missing) > 0 {
+			t.Fatalf("TF_ACC is set, so this acceptance test would run against the live Harness API, but required configuration is missing: %s", strings.Join(missing, ", "))
+		}
+	}
 	TestAccConfigureProvider()
 }
 

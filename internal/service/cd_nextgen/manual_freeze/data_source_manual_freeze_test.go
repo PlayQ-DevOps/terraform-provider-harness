@@ -16,7 +16,7 @@ func TestAccDataSourceResourceGroup(t *testing.T) {
 		resourceName = "data.harness_platform_manual_freeze.test"
 		accountId    = os.Getenv("HARNESS_ACCOUNT_ID")
 	)
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

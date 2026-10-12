@@ -17,7 +17,7 @@ func TestResourceRDSRule(t *testing.T) {
 	var proxyID string
 	resourceName := "harness_autostopping_rule_rds.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

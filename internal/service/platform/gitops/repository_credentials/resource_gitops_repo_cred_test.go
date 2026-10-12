@@ -22,7 +22,7 @@ func TestAccResourceGitopsRepoCred(t *testing.T) {
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resourceName := "harness_platform_gitops_repo_cred.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsRepoCredDestroy(resourceName),
@@ -47,7 +47,7 @@ func TestAccResourceGitopsRepoCred(t *testing.T) {
 	//id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	//name := id
 	//resourceName = "harness_platform_gitops_repo_cred.test"
-	//resource.UnitTest(t, resource.TestCase{
+	//resource.Test(t, resource.TestCase{
 	//	PreCheck:          func() { acctest.TestAccPreCheck(t) },
 	//	ProviderFactories: acctest.ProviderFactories,
 	//	CheckDestroy:      testAccResourceGitopsRepoCredDestroy(resourceName),
@@ -78,7 +78,7 @@ func TestAccResourceGitopsRepoCred_IdentifierForceNew(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resourceName := "harness_platform_gitops_repo_cred.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsRepoCredDestroyByIdentifier(newId, agentId),

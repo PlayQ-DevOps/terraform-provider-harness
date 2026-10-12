@@ -15,7 +15,7 @@ func TestAccDataSourceServiceList(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_service_list.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -36,7 +36,7 @@ func TestAccDataSourceServiceListOrgLevel(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_service_list.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

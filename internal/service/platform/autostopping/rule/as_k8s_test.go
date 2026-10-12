@@ -12,7 +12,7 @@ func TestResourceK8sRule(t *testing.T) {
 	name := fmt.Sprintf("terr-k8s-%s", randAlnum(5)) // "terr-k8s-"+5 = 13 chars
 	resourceName := "harness_autostopping_rule_k8s.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

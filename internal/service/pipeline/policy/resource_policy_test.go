@@ -26,7 +26,7 @@ func TestAccResourcePolicy(t *testing.T) {
 
 	resourceName := "harness_platform_policy.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPolicyDestroy(resourceName),
@@ -82,7 +82,7 @@ func TestAccResourcePolicyOrgProject(t *testing.T) {
 	orgResourceName := "harness_platform_policy.org"
 	projectResourceName := "harness_platform_policy.project"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      resource.ComposeTestCheckFunc(testAccPolicyDestroy(orgResourceName), testAccPolicyDestroy(projectResourceName)),
@@ -153,7 +153,7 @@ func TestAccResourcePolicyGit(t *testing.T) {
 	id := fmt.Sprintf("%s%s", t.Name(), utils.RandStringBytes(5))
 	resourceName := "harness_platform_policy.git"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccPolicyDestroy(resourceName),

@@ -15,7 +15,7 @@ func TestAccDataSourceTemplate(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
@@ -39,7 +39,7 @@ func TestAccDataSourceTemplateInline(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -61,7 +61,7 @@ func TestAccDataSourceTemplateOrgScope(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
@@ -83,7 +83,7 @@ func TestAccDataSourceTemplateProjectScope(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_template.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{

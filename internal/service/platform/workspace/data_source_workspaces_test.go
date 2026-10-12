@@ -16,7 +16,7 @@ func TestAccDataSourceWorkspaces(t *testing.T) {
 	filteredDataSourceName := "data.harness_platform_workspaces.filtered"
 	filteredID := fmt.Sprintf("%s-2", id)
 	filteredName := fmt.Sprintf("%s-2", name)
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{

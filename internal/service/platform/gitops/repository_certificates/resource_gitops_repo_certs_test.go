@@ -24,7 +24,7 @@ func TestAccResourceGitopsRepoCerts(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	clusterName := id
 	resourceName := "harness_platform_gitops_repo_cert.test"
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		//CheckDestroy:      testAccResourceGitopsRepoCertsDestroy(resourceName),

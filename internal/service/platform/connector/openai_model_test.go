@@ -101,7 +101,7 @@ func openaiDelegateSelectorCount(csv string) int {
 // ============================================================================
 
 func TestResourceConnectorOpenAIModel_TokenAuthWithVertexBlock(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
 			{
@@ -128,7 +128,7 @@ resource "harness_platform_connector_openai_model" "test" {
 }
 
 func TestResourceConnectorOpenAIModel_VertexAuthWithTokenBlock(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
 			{
@@ -169,7 +169,7 @@ func TestAccResourceConnectorOpenAIModel_Token(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -219,7 +219,7 @@ func TestAccResourceConnectorOpenAIModel_Vertex(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -268,7 +268,7 @@ func TestOrgResourceConnectorOpenAIModel_Token(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -306,7 +306,7 @@ func TestOrgResourceConnectorOpenAIModel_Vertex(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -347,7 +347,7 @@ func TestProjectResourceConnectorOpenAIModel_Token(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -387,7 +387,7 @@ func TestProjectResourceConnectorOpenAIModel_Vertex(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccConnectorDestroy(resourceName),
@@ -582,4 +582,3 @@ resource "harness_platform_connector_openai_model" "test" {
   }
 }`, id, name, orgID, projectID, delegateBlock, saKeyRef, gcpProjectID, region)
 }
-

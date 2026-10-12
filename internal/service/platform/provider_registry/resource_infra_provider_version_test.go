@@ -19,7 +19,7 @@ func TestAccResourceInfraProviderVersion(t *testing.T) {
 	keyId := fmt.Sprintf("test-key-%s", utils.RandStringBytes(8))
 	resourceName := "harness_platform_infra_provider_version.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccInfraProviderVersionDestroy(resourceName),

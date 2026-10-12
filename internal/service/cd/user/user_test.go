@@ -28,7 +28,7 @@ func TestAccResourceUser(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", expectedName)
 	resourceName := "harness_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserDestroy(resourceName),
@@ -66,7 +66,7 @@ func TestAccResourceUser_DeleteUnderlyingResource(t *testing.T) {
 	expectedEmail := fmt.Sprintf("%s@example.com", expectedName)
 	resourceName := "harness_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserDestroy(resourceName),
@@ -105,7 +105,7 @@ func TestAccResourceUser_WithUserGroups(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", expectedName)
 	resourceName := "harness_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		CheckDestroy:      testAccUserDestroy(resourceName),

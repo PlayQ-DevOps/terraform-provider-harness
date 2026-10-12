@@ -26,7 +26,7 @@ func TestResourceECSRule(t *testing.T) {
 	// Step 1 creates all resources in a single apply (before async proxy
 	// provisioning can fail). Steps 2+ wait for the proxy to be healthy
 	// before running updates.
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		Steps: []resource.TestStep{
