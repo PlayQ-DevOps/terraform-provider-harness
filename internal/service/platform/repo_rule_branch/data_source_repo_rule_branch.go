@@ -39,12 +39,6 @@ func dataSourceRepoRuleRead(ctx context.Context, d *schema.ResourceData, meta in
 			ProjectIdentifier: projectID,
 		},
 	)
-	if resp.StatusCode == 404 {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
-
 	if err != nil {
 		return helpers.HandleApiError(err, d, resp)
 	}

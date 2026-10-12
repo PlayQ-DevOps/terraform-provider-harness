@@ -29,6 +29,10 @@ func resourceLoadBalancerRead(ctx context.Context, d *schema.ResourceData, meta 
 		return helpers.HandleReadApiError(err, d, httpResp)
 	}
 
+	if resp.Response == nil {
+		return helpers.ReadMissing(ctx, d, "load balancer "+id)
+	}
+
 	readLoadBalancer(d, resp.Response)
 
 	return nil
@@ -51,6 +55,10 @@ func resourceLoadBalancerCreateOrUpdate(ctx context.Context, d *schema.ResourceD
 
 	if err != nil {
 		return helpers.HandleApiError(err, d, httpResp)
+	}
+
+	if resp.Response == nil {
+		return helpers.HandleEmptyCreateUpdateResponse(nil, "load balancer")
 	}
 
 	readLoadBalancer(d, resp.Response)

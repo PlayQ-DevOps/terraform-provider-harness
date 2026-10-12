@@ -53,11 +53,7 @@ resource "harness_platform_connector_github" "test" {
 			}
 		},
 		KnownFailing: map[string]string{
-			acctest.CellScopeChange:                         "#1347 / FORK-3.1: org_id and project_id are not ForceNew, so a scope change is planned as an in-place update that the API rejects",
-			acctest.CellNotFoundStyles + "/invalid_request": "FORK-2.1: HandleReadApiError errors or panics on a 404 whose body is not a Harness not-found envelope",
-			acctest.CellNotFoundStyles + "/html":            "FORK-2.1: HandleReadApiError errors or panics on a 404 whose body is not a Harness not-found envelope",
-			acctest.CellNotFoundStyles + "/empty":           "FORK-2.1: HandleReadApiError errors or panics on a 404 whose body is not a Harness not-found envelope",
-			acctest.CellNotFoundStyles + "/gateway_runtime": "FORK-2.1: HandleReadApiError errors or panics on a 404 whose body is not a Harness not-found envelope",
+			acctest.CellScopeChange: "#1347 / FORK-3.1: org_id and project_id are not ForceNew, so a scope change is planned as an in-place update that the API rejects",
 		},
 	})
 }

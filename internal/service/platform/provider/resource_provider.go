@@ -10,6 +10,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -182,18 +183,11 @@ func createProvider(d *schema.ResourceData) *nextgen.ProviderCreateRequest {
 	if len(specData) > 0 {
 		specMap := specData[0].(map[string]interface{})
 
-		delegateInterfaces, ok := specMap["delegate_selectors"].([]interface{})
-		if !ok {
-			log.Fatalf("delegate_selectors is not a []interface{}")
-		}
-
+		// The schema guarantees a list of strings; anything else is simply ignored rather than
+		// aborting the whole plugin process.
 		var delegateSelectors []string
-		for _, v := range delegateInterfaces {
-			str, ok := v.(string)
-			if !ok {
-				log.Fatalf("One of the delegate_selectors is not a string")
-			}
-			delegateSelectors = append(delegateSelectors, str)
+		if delegateInterfaces, ok := specMap["delegate_selectors"].([]interface{}); ok {
+			delegateSelectors = utils.InterfaceSliceToStringSlice(delegateInterfaces)
 		}
 
 		if specMap["type"] == "BITBUCKET_SERVER" {

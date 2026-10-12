@@ -1,641 +1,119 @@
 package helpers
 
+// Deprecated wrappers. These keep the historical names compiling while call sites are
+// migrated to the lifecycle helpers in lifecycle.go (HandleRead, HandleDelete, HandleWrite,
+// HandleWriteGit, HandleError). They will be deleted once the migration is complete; do not
+// add new callers.
+//
+// Behavioural note: the read-mode wrappers now treat every HTTP 404 (and every body the
+// classifier recognises as not-found) as "gone", for every SDK client. Previously only the
+// nextgen client with specific body codes cleared state, and other bodies could panic.
+
 import (
-	"encoding/json"
-	"fmt"
-	"log"
+	"context"
 	"net/http"
 	"strings"
 
-	"github.com/harness/harness-go-sdk/harness/chaos"
-	"github.com/harness/harness-go-sdk/harness/code"
-	"github.com/harness/harness-go-sdk/harness/policymgmt"
-
-	"github.com/harness/harness-go-sdk/harness/nextgen"
-	openapi_client_nextgen "github.com/harness/harness-openapi-go-client/nextgen"
-	"google.golang.org/grpc/codes"
-
-	"github.com/harness/harness-go-sdk/harness/dbops"
+	"github.com/harness/terraform-provider-harness/internal/apierr"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// isUndefinedResponseTypeError checks if the error is the SDK's "undefined response type"
-// error, which occurs when the API returns a non-JSON/non-XML response (e.g., HTML from
-// a misconfigured endpoint or a proxy/load balancer error page).
-func isUndefinedResponseTypeError(err error) bool {
-	return err != nil && strings.Contains(err.Error(), "undefined response type")
-}
-
-// handleUndefinedResponseTypeError returns a user-friendly diagnostic for the
-// "undefined response type" error.
-func handleUndefinedResponseTypeError(httpResp *http.Response) diag.Diagnostics {
-	statusInfo := ""
-	if httpResp != nil {
-		statusInfo = fmt.Sprintf(" (HTTP %d)", httpResp.StatusCode)
+// messageContains is a transitional predicate for the chaos helpers below; it has no minimum
+// phrase length, unlike apierr.MessageHasPhrase, so it reproduces the old behaviour exactly.
+func messageContains(phrases ...string) apierr.Predicate {
+	return func(c apierr.Classified) bool {
+		msg := strings.ToLower(c.Message)
+		for _, p := range phrases {
+			if p != "" && strings.Contains(msg, strings.ToLower(p)) {
+				return true
+			}
+		}
+		return false
 	}
-	return diag.Errorf(
-		"Received a non-JSON/non-XML response from the Harness API%s. "+
-			"This usually indicates one of the following:\n"+
-			"1) The 'endpoint' (HARNESS_ENDPOINT) is incorrect or unreachable.\n"+
-			"2) A proxy or load balancer is returning an error page instead of the API response.\n"+
-			"3) The Harness API service is temporarily unavailable.\n\n"+
-			"Please verify your provider configuration:\n"+
-			"  - endpoint: should be a valid Harness API URL (e.g., https://app.harness.io/gateway)\n"+
-			"  - account_id: your Harness account identifier (env: HARNESS_ACCOUNT_ID)\n"+
-			"  - platform_api_key: a valid API key (env: HARNESS_PLATFORM_API_KEY)",
-		statusInfo,
-	)
 }
 
+// Deprecated: use HandleWrite (create/update), HandleDelete (delete) or HandleError (data
+// sources and auxiliary calls).
 func HandleApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
-	return handleApiError(err, d, httpResp, false)
+	return HandleError(context.TODO(), d, err, httpResp)
 }
 
-// HandleGitApiError handles API errors specifically related to Git operations
-// This provides more specific error messages for common Git-related errors
-func HandleGitApiError(err error, d *schema.ResourceData, httpResp *http.Response, connectorRef string, repoName string) diag.Diagnostics {
-	if httpResp != nil && httpResp.StatusCode == 400 && err != nil {
-		errMsg := err.Error()
-
-		if strings.Contains(errMsg, "No connector found") && strings.Contains(errMsg, connectorRef) {
-			return diag.Errorf("Invalid connector reference: %s. Please check if the connector exists and you have the correct permissions.", connectorRef)
-		}
-
-		if strings.Contains(errMsg, "Please check the requested file path") && strings.Contains(errMsg, repoName) {
-			return diag.Errorf("Invalid repository name: %s. Please check if the repository exists and is accessible.", repoName)
-		}
-	}
-
-	return HandleApiError(err, d, httpResp)
-}
-
-// HandleGitApiErrorWithResourceData extracts Git details from the resource data and handles Git-related API errors
-func HandleGitApiErrorWithResourceData(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
-	connectorRef, hasConnector := d.GetOk("git_details.0.connector_ref")
-	repoName, hasRepo := d.GetOk("git_details.0.repo_name")
-	if hasConnector && hasRepo {
-		return HandleGitApiError(err, d, httpResp, connectorRef.(string), repoName.(string))
-	}
-	return HandleApiError(err, d, httpResp)
-}
-
-func HandleDBOpsApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
-	erro, ok := err.(dbops.GenericSwaggerError)
-	if ok && httpResp != nil {
-		if httpResp.StatusCode == 400 {
-			errorBody := erro.Body()
-			var jsonMap map[string]interface{}
-			if err := json.Unmarshal(errorBody, &jsonMap); err == nil {
-				if message, exists := jsonMap["message"]; exists {
-					return diag.Errorf("Bad Request: %s", message)
-				}
-			}
-			return diag.Errorf("Bad Request: %s", string(errorBody))
-		}
-		if httpResp.StatusCode == 401 {
-			return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-				"1) Please check if token has expired or is wrong.\n"+
-				"2) Harness Provider is misconfigured. For firstgen resources please give the correct api_key and for nextgen resources please give the correct platform_api_key.")
-		}
-		if httpResp.StatusCode == 403 {
-			return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-				"1) Please check if the token has required permission for this operation.\n"+
-				"2) Please check if the token has expired or is wrong.")
-		}
-		if httpResp.StatusCode == 404 {
-			return diag.Errorf("resource with ID %s not found: %v", d.Id(), erro.Error())
-		}
-	}
-
-	if isUndefinedResponseTypeError(err) {
-		return handleUndefinedResponseTypeError(httpResp)
-	}
-	return diag.Errorf("%s", err.Error())
-}
-
-func HandlePolicyApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
-	se, ok := err.(policymgmt.GenericSwaggerError)
-	if ok && httpResp != nil {
-		if httpResp.StatusCode == 400 {
-			// Extract error message from SDK error object instead of re-reading response body
-			errorBody := se.Body()
-			var jsonMap map[string]interface{}
-			if err := json.Unmarshal(errorBody, &jsonMap); err == nil {
-				if message, exists := jsonMap["message"]; exists {
-					return diag.Errorf("Bad Request: %s", message)
-				}
-			}
-			return diag.Errorf("Bad Request: %s", string(errorBody))
-		}
-		if httpResp.StatusCode == 401 {
-			return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-				"1) Please check if token has expired or is wrong.\n"+
-				"2) Harness Provider is misconfigured. For firstgen resources please give the correct api_key and for nextgen resources please give the correct platform_api_key.")
-		}
-		if httpResp.StatusCode == 403 {
-			return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-				"1) Please check if the token has required permission for this operation.\n"+
-				"2) Please check if the token has expired or is wrong.")
-		}
-		if httpResp.StatusCode == 404 {
-			d.SetId("")
-			return nil
-		}
-	}
-
-	if isUndefinedResponseTypeError(err) {
-		return handleUndefinedResponseTypeError(httpResp)
-	}
-	return handleApiError(err, d, httpResp, false)
-}
-
-func handleApiError(err error, d *schema.ResourceData, httpResp *http.Response, read bool) diag.Diagnostics {
-	erro, ok := err.(nextgen.GenericSwaggerError)
-	if ok {
-		errMessage := erro.Error()
-		gitopsErr, gitopsErrOk := erro.Model().(nextgen.GatewayruntimeError)
-		if gitopsErrOk {
-			errMessage = gitopsErr.Message
-		}
-
-		if httpResp != nil && httpResp.StatusCode == 401 {
-			return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-				"1) Please check if token has expired or is wrong.\n"+
-				"2) Harness Provider is misconfigured. For firstgen resources please give the correct api_key and for nextgen resources please give the correct platform_api_key.")
-		}
-		if gitopsErrOk && httpResp != nil && httpResp.StatusCode == 403 {
-			if len(errMessage) > 0 {
-				return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-					"1) Please check if the token has required permission for this operation.\n"+
-					"2) Please check if the token has expired or is wrong.\n"+
-					"3) "+errMessage)
-			}
-		}
-		if httpResp != nil && httpResp.StatusCode == 403 {
-			return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-				"1) Please check if the token has required permission for this operation.\n"+
-				"2) Please check if the token has expired or is wrong.")
-		}
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			// GitOps handling for NotFound
-			if gitopsErrOk && read {
-				if codes.Code(gitopsErr.Code) == codes.NotFound {
-					d.SetId("")
-					d.MarkNewResource()
-					return nil
-				}
-			}
-			respErrorBody, err := ParseErrorBody(erro)
-			if err == nil {
-				if read && (respErrorBody.Code == string(nextgen.ErrorCodes.EntityNotFound) || respErrorBody.Code == string(nextgen.ErrorCodes.ResourceNotFound)) {
-					d.SetId("")
-					d.MarkNewResource()
-					return nil
-				}
-			}
-			if read && !gitopsErrOk && (erro.Code() == nextgen.ErrorCodes.EntityNotFound) {
-				d.SetId("")
-				d.MarkNewResource()
-				return nil
-			}
-			return diag.Errorf("resource with ID %s not found: %v", d.Id(), errMessage)
-		}
-		if read && !gitopsErrOk {
-			respErrorBody, err := ParseErrorBody(erro)
-			if err == nil {
-				if respErrorBody.Code == string(nextgen.ErrorCodes.EntityNotFound) || respErrorBody.Code == string(nextgen.ErrorCodes.ResourceNotFound) {
-					d.SetId("")
-					d.MarkNewResource()
-					return nil
-				}
-			}
-		}
-		return diag.Errorf("%s", errMessage)
-	}
-
-	err_openapi_client, ok := err.(openapi_client_nextgen.GenericSwaggerError)
-	if ok {
-		if httpResp != nil && httpResp.StatusCode == 401 {
-			return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-				"1) Please check if token has expired or is wrong.\n"+
-				"2) Harness Provider is misconfigured. For firstgen resources please give the correct api_key and for nextgen resources please give the correct platform_api_key.")
-		}
-		if httpResp != nil && httpResp.StatusCode == 403 {
-			return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-				"1) Please check if the token has required permission for this operation.\n"+
-				"2) Please check if the token has expired or is wrong.")
-		}
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			return diag.Errorf("resource with ID %s not found: %v", d.Id(), erro.Error())
-		}
-		var jsonMap map[string]interface{}
-		err := json.Unmarshal(err_openapi_client.Body(), &jsonMap)
-		if err == nil {
-			return diag.Errorf("%s", jsonMap["message"].(string))
-		}
-		return diag.Errorf("%s", err_openapi_client.Error())
-	}
-
-	if isUndefinedResponseTypeError(err) {
-		return handleUndefinedResponseTypeError(httpResp)
-	}
-	return diag.Errorf("%s", err.Error())
-}
-
-func ParseErrorBody(err nextgen.GenericSwaggerError) (*nextgen.ModelError, error) {
-	var parsed nextgen.ModelError
-	if err := json.Unmarshal(err.Body(), &parsed); err != nil {
-		return nil, err
-	}
-	return &parsed, nil
-}
-
+// Deprecated: use HandleRead.
 func HandleReadApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
-	return handleApiError(err, d, httpResp, true)
+	return HandleRead(context.TODO(), d, err, httpResp)
 }
 
-// HandleIacmReadApiError handles read errors from IaCM endpoints (e.g. Ansible
-// inventory/playbook). IaCM endpoints return an IacmError body which has no "code"
-// field, so the generic code-based not-found detection in handleApiError never fires
-// for them (and erro.Code() would panic, since the decoded model is a ModelError, not
-// a Failure). Instead, detect a deleted resource by the HTTP status directly and clear
-// it from state so Terraform can recreate it.
-func HandleIacmReadApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
-	if httpResp != nil && httpResp.StatusCode == 404 {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
-	if isUndefinedResponseTypeError(err) {
-		return handleUndefinedResponseTypeError(httpResp)
-	}
-	return diag.Errorf("%s", err.Error())
-}
-
-func HandleDBOpsReadApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
-	_, ok := err.(dbops.GenericSwaggerError)
-	if ok && httpResp != nil {
-		if httpResp.StatusCode == 401 {
-			return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-				"1) Please check if token has expired or is wrong.\n"+
-				"2) Harness Provider is misconfigured. For firstgen resources please give the correct api_key and for nextgen resources please give the correct platform_api_key.")
-		}
-		if httpResp.StatusCode == 403 {
-			return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-				"1) Please check if the token has required permission for this operation.\n"+
-				"2) Please check if the token has expired or is wrong.")
-		}
-		if httpResp.StatusCode == 404 {
-			d.SetId("")
-			d.MarkNewResource()
-			return nil
-		}
-	}
-	if isUndefinedResponseTypeError(err) {
-		return handleUndefinedResponseTypeError(httpResp)
-	}
-	return diag.Errorf("%s", err.Error())
-}
-
-// HandleCodeApiError Provide helpful error messages like
-// Error: Bad Request: Couldn't find <user>/<repo> at <gitprovider>: Not Found
-func HandleCodeApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
-	return handleCodeApiError(err, d, httpResp, false)
-}
-
-// HandleCodeReadApiError Provide helpful error messages like
-// Error: Bad Request: Couldn't find <user>/<repo> at <git provider>: Not Found
-func HandleCodeReadApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
-	return handleCodeApiError(err, d, httpResp, true)
-}
-
-// HandleCodeReadApiError Provide helpful error messages like
-// Error: Bad Request: Couldn't find <user>/<repo> at <git provider>: Not Found
-// instead of unhelpful errors like "Error: 400 Bad Request"
-func handleCodeApiError(err error, d *schema.ResourceData, httpResp *http.Response, read bool) diag.Diagnostics {
-	codeErr, ok := err.(code.GenericSwaggerError)
-	if !ok {
-		if isUndefinedResponseTypeError(err) {
-			return handleUndefinedResponseTypeError(httpResp)
-		}
-		return handleApiError(err, d, httpResp, read)
-	}
-	if httpResp == nil {
-		if isUndefinedResponseTypeError(err) {
-			return handleUndefinedResponseTypeError(nil)
-		}
-		return diag.Errorf("%s", codeErr.Error())
-	}
-
-	var errorMessage string
-	if len(codeErr.Body()) > 0 {
-		var jsonMap map[string]interface{}
-		if jsonErr := json.Unmarshal(codeErr.Body(), &jsonMap); jsonErr == nil {
-			if msg, exists := jsonMap["message"]; exists {
-				errorMessage = fmt.Sprintf("%v", msg)
-			}
-		}
-	}
-	if errorMessage == "" {
-		errorMessage = codeErr.Error()
-	}
-
-	switch httpResp.StatusCode {
-	case 400:
-		return diag.Errorf("Bad Request: %s", errorMessage)
-	case 401:
-		return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-			"1) Please check if token has expired or is wrong.\n"+
-			"2) Harness Provider is misconfigured. For firstgen resources please give the correct api_key and for nextgen resources please give the correct platform_api_key.")
-	case 403:
-		return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-			"1) Please check if the token has required permission for this operation.\n"+
-			"2) Please check if the token has expired or is wrong.")
-	case 404:
-		if read {
-			d.SetId("")
-			d.MarkNewResource()
-			return nil
-		}
-		return diag.Errorf("resource with ID %s not found: %s", d.Id(), errorMessage)
-	default:
-		return diag.Errorf("%s: %s", httpResp.Status, errorMessage)
-	}
-}
-
-// HandleChaosApiError handles errors from Chaos Engineering SDK
-// This provides detailed error messages extracted from the API response
-func HandleChaosApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
-	return handleChaosApiError(err, d, httpResp, false)
-}
-
-// HandleChaosReadApiError handles read errors from Chaos Engineering SDK
-// For 404 errors during read operations, it clears the resource from state
-func HandleChaosReadApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
-	return handleChaosApiError(err, d, httpResp, true)
-}
-
-// HandleChaosReadApiErrorWithGracefulDestroy handles read errors from Chaos Engineering SDK
-// For 404 errors and certain 500 errors (resource not found/inconsistent state) during read,
-// it clears the resource from state. This is useful during destroy operations when
-// dependent resources may have already been deleted.
-//
-// gracefulErrorPatterns: list of error message patterns that should be treated as "not found"
-// Example: []string{"no matching infra", "at least one hub is required"}
-func HandleChaosReadApiErrorWithGracefulDestroy(err error, d *schema.ResourceData, httpResp *http.Response, gracefulErrorPatterns []string) diag.Diagnostics {
-	chaosErr, ok := err.(chaos.GenericSwaggerError)
-	if !ok {
-		return diag.Errorf("%s", err.Error())
-	}
-
-	// Handle 404 - resource not found
-	if httpResp != nil && httpResp.StatusCode == 404 {
-		log.Printf("[DEBUG] Resource not found (404), removing from state")
-		d.SetId("")
-		return nil
-	}
-
-	// Handle 500 errors that indicate resource is gone or in inconsistent state
-	if httpResp != nil && httpResp.StatusCode == 500 && len(gracefulErrorPatterns) > 0 {
-		errMsg := ""
-
-		// Try to extract error message from model
-		if chaosErr.Model() != nil {
-			if apiErr, ok := chaosErr.Model().(chaos.ApiRestError); ok {
-				if apiErr.Description != "" {
-					errMsg = apiErr.Description
-				} else if apiErr.Message != "" {
-					errMsg = apiErr.Message
-				}
-			}
-		}
-
-		// Fallback to error string
-		if errMsg == "" {
-			errMsg = fmt.Sprintf("%v", err)
-		}
-
-		// Check if error matches any graceful patterns
-		for _, pattern := range gracefulErrorPatterns {
-			if strings.Contains(strings.ToLower(errMsg), strings.ToLower(pattern)) {
-				log.Printf("[WARN] Resource not found or in inconsistent state during read (matched pattern: %s): %v", pattern, err)
-				d.SetId("")
-				return nil
-			}
-		}
-	}
-
-	// Not a graceful error, handle normally
-	return handleChaosApiError(err, d, httpResp, true)
-}
-
-// handleChaosApiError is the internal implementation for chaos error handling
-// It extracts detailed error messages from the error body or model
-func handleChaosApiError(err error, d *schema.ResourceData, httpResp *http.Response, read bool) diag.Diagnostics {
-	chaosErr, ok := err.(chaos.GenericSwaggerError)
-	if !ok {
-		if isUndefinedResponseTypeError(err) {
-			return handleUndefinedResponseTypeError(httpResp)
-		}
-		return diag.Errorf("%s", err.Error())
-	}
-	if httpResp == nil {
-		if isUndefinedResponseTypeError(err) {
-			return handleUndefinedResponseTypeError(nil)
-		}
-		return diag.Errorf("%s", chaosErr.Error())
-	}
-
-	// Debug: Log the raw error body
-	log.Printf("[DEBUG] Chaos API Error - Status: %d, Body: %s", httpResp.StatusCode, string(chaosErr.Body()))
-	if chaosErr.Model() != nil {
-		log.Printf("[DEBUG] Chaos API Error - Model type: %T, Model: %+v", chaosErr.Model(), chaosErr.Model())
-	} else {
-		log.Printf("[DEBUG] Chaos API Error - Model is nil")
-	}
-
-	// Extract detailed error message from model or body
-	var errorMessage string
-
-	// Try to get error from model first (for 500 errors, SDK decodes ApiRestError)
-	if chaosErr.Model() != nil {
-		if apiErr, ok := chaosErr.Model().(chaos.ApiRestError); ok {
-			// Prioritize Description as it often contains more detailed error info
-			if apiErr.Description != "" {
-				errorMessage = apiErr.Description
-			} else if apiErr.Message != "" {
-				errorMessage = apiErr.Message
-			}
-		}
-	}
-
-	// Fallback to parsing body if model didn't have a message
-	if errorMessage == "" && len(chaosErr.Body()) > 0 {
-		var jsonMap map[string]interface{}
-		if jsonErr := json.Unmarshal(chaosErr.Body(), &jsonMap); jsonErr == nil {
-			// Try different common error message fields
-			if msg, exists := jsonMap["message"]; exists {
-				errorMessage = fmt.Sprintf("%v", msg)
-			} else if desc, exists := jsonMap["description"]; exists {
-				errorMessage = fmt.Sprintf("%v", desc)
-			} else if errMsg, exists := jsonMap["error"]; exists {
-				errorMessage = fmt.Sprintf("%v", errMsg)
-			} else if details, exists := jsonMap["details"]; exists {
-				errorMessage = fmt.Sprintf("%v", details)
-			}
-		}
-	}
-
-	// Fallback to HTTP status if no detailed message found
-	if errorMessage == "" {
-		// If we have a body but couldn't parse it, include it
-		if len(chaosErr.Body()) > 0 && len(chaosErr.Body()) < 500 {
-			errorMessage = fmt.Sprintf("%s (response: %s)", httpResp.Status, string(chaosErr.Body()))
-		} else if len(chaosErr.Body()) > 0 {
-			errorMessage = fmt.Sprintf("%s (response body too large: %d bytes)", httpResp.Status, len(chaosErr.Body()))
-		} else {
-			errorMessage = httpResp.Status + " (no error details provided by server)"
-		}
-		log.Printf("[DEBUG] Chaos API Error - No structured error message found, using: %s", errorMessage)
-	}
-
-	// Handle specific status codes with helpful hints
-	switch httpResp.StatusCode {
-	case 400:
-		return diag.Errorf("Bad Request: %s", errorMessage)
-
-	case 401:
-		return diag.Errorf("%s\n\nHint:\n"+
-			"1) Please check if token has expired or is wrong.\n"+
-			"2) Harness Provider is misconfigured. Please provide the correct platform_api_key.",
-			errorMessage)
-
-	case 403:
-		return diag.Errorf("%s\n\nHint:\n"+
-			"1) Please check if the token has required permission for this operation.\n"+
-			"2) Please check if the token has expired or is wrong.",
-			errorMessage)
-
-	case 404:
-		if read {
-			// For read operations, clear the resource from state
-			d.SetId("")
-			d.MarkNewResource()
-			return nil
-		}
-		resourceID := "unknown"
-		if d != nil && d.Id() != "" {
-			resourceID = d.Id()
-		}
-		return diag.Errorf("Resource with ID %s not found: %s", resourceID, errorMessage)
-
-	case 500:
-		return diag.Errorf("Internal Server Error: %s", errorMessage)
-
-	default:
-		// For other status codes, return the error message with status
-		return diag.Errorf("%s: %s", httpResp.Status, errorMessage)
-	}
-}
-
-// HandleChaosGraphQLError handles errors from Chaos GraphQL APIs
-// This provides better error messages by extracting details from GraphQL errors
-func HandleChaosGraphQLError(err error, d *schema.ResourceData, operation string) diag.Diagnostics {
-	return handleChaosGraphQLError(err, d, operation, false)
-}
-
-// HandleChaosGraphQLReadError handles read errors from Chaos GraphQL APIs
-// For not found errors during read operations, it clears the resource from state
-func HandleChaosGraphQLReadError(err error, d *schema.ResourceData, operation string) diag.Diagnostics {
-	return handleChaosGraphQLError(err, d, operation, true)
-}
-
-// handleChaosGraphQLError is the internal implementation for Chaos GraphQL error handling
-// It extracts meaningful error messages from Chaos GraphQL errors and provides helpful hints
-func handleChaosGraphQLError(err error, d *schema.ResourceData, operation string, read bool) diag.Diagnostics {
+// Deprecated: use HandleWriteGit.
+func HandleGitApiError(err error, d *schema.ResourceData, httpResp *http.Response, connectorRef string, repoName string) diag.Diagnostics {
 	if err == nil {
 		return nil
 	}
-
-	// Get the full error message for logging and analysis
-	fullErrorMessage := err.Error()
-	errorMessage := fullErrorMessage
-
-	// Log the complete raw error for debugging
-	log.Printf("[DEBUG] GraphQL Error (Raw) - Operation: %s, Full Error: %s", operation, fullErrorMessage)
-
-	// Try to extract GraphQL error details
-	// Pattern: "graphql error: <message> (path: [<path>])"
-	if strings.Contains(errorMessage, "graphql error:") {
-		// Extract the actual error message
-		parts := strings.Split(errorMessage, "graphql error:")
-		if len(parts) > 1 {
-			message := strings.TrimSpace(parts[len(parts)-1])
-
-			// Remove the path suffix if present
-			if idx := strings.Index(message, " (path:"); idx > 0 {
-				message = message[:idx]
-			}
-
-			errorMessage = message
-		}
+	c := apierr.Classify(err, httpResp)
+	if msg, ok := apierr.GitRewrite(c, connectorRef, repoName); ok {
+		return diag.Errorf("%s", msg)
 	}
+	return HandleWrite(context.TODO(), d, err, httpResp)
+}
 
-	// Remove redundant wrapping (e.g., "failed to update: failed to update:")
-	operationPrefix := "failed to " + operation + ": "
-	for strings.HasPrefix(errorMessage, operationPrefix) {
-		errorMessage = strings.TrimPrefix(errorMessage, operationPrefix)
-	}
+// Deprecated: use HandleWriteGit.
+func HandleGitApiErrorWithResourceData(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
+	return HandleWriteGit(context.TODO(), d, err, httpResp)
+}
 
-	// Log the cleaned error message
-	log.Printf("[DEBUG] GraphQL Error (Cleaned) - Operation: %s, Message: %s", operation, errorMessage)
+// Deprecated: use HandleWrite, HandleDelete or HandleError.
+func HandleDBOpsApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
+	return HandleError(context.TODO(), d, err, httpResp)
+}
 
-	// Check if there's any additional context we might have missed
-	// Only warn if the cleaned message is suspiciously short (less than 10 chars)
-	// or if it's empty, as this might indicate we're losing actual error content
-	if len(errorMessage) < 10 && len(fullErrorMessage) > 20 {
-		log.Printf("[WARN] GraphQL Error - Cleaned error message is very short. Original: %q, Cleaned: %q", fullErrorMessage, errorMessage)
-	} else if len(errorMessage) == 0 {
-		log.Printf("[ERROR] GraphQL Error - Error message was completely removed during cleaning. Original: %q", fullErrorMessage)
-		// Fall back to the full error if we accidentally removed everything
-		errorMessage = fullErrorMessage
-	}
+// Deprecated: use HandleRead.
+func HandleDBOpsReadApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
+	return HandleRead(context.TODO(), d, err, httpResp)
+}
 
-	// Provide helpful hints based on error message
-	errorLower := strings.ToLower(errorMessage)
+// Deprecated: use HandleRead.
+func HandleIacmReadApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
+	return HandleRead(context.TODO(), d, err, httpResp)
+}
 
-	switch {
-	case strings.Contains(errorLower, "duplicate key"):
-		return diag.Errorf("Resource already exists: %s. Use 'terraform import' to manage existing resources.", errorMessage)
+// Deprecated: use HandleRead for reads and HandleWrite/HandleDelete elsewhere. The policy
+// helper historically cleared state on 404 for every operation, which this preserves.
+func HandlePolicyApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
+	return HandleRead(context.TODO(), d, err, httpResp)
+}
 
-	case strings.Contains(errorLower, "not found"):
-		if read {
-			// For read operations, clear the resource from state
-			log.Printf("[WARN] Resource not found during read, removing from state: %s", errorMessage)
-			d.SetId("")
-			return nil
-		}
-		resourceID := "unknown"
-		if d != nil && d.Id() != "" {
-			resourceID = d.Id()
-		}
-		return diag.Errorf("Resource with ID %s not found: %s", resourceID, errorMessage)
+// Deprecated: use HandleWrite, HandleDelete or HandleError.
+func HandleCodeApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
+	return HandleError(context.TODO(), d, err, httpResp)
+}
 
-	case strings.Contains(errorLower, "permission denied") || strings.Contains(errorLower, "unauthorized"):
-		return diag.Errorf("Permission denied: %s. Verify your API key has the required permissions and the correct scope (account/org/project).", errorMessage)
+// Deprecated: use HandleRead.
+func HandleCodeReadApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
+	return HandleRead(context.TODO(), d, err, httpResp)
+}
 
-	case strings.Contains(errorLower, "internal system error") || strings.Contains(errorLower, "internal server error"):
-		return diag.Errorf("Internal server error: %s. Please check your configuration and try again. If the issue persists, contact Harness support.", errorMessage)
+// Deprecated: use HandleWrite, HandleDelete or HandleError.
+func HandleChaosApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
+	return HandleError(context.TODO(), d, err, httpResp)
+}
 
-	case strings.Contains(errorLower, "validation") || strings.Contains(errorLower, "invalid"):
-		return diag.Errorf("Validation error: %s. Please check your resource configuration.", errorMessage)
+// Deprecated: use HandleRead.
+func HandleChaosReadApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
+	return HandleRead(context.TODO(), d, err, httpResp)
+}
 
-	case strings.Contains(errorLower, "timeout"):
-		return diag.Errorf("Request timeout: %s. The operation took too long to complete. Please try again.", errorMessage)
+// Deprecated: use HandleRead with NotFoundWhen(apierr.And(apierr.StatusIs(500),
+// apierr.MessageHasPhrase(...))) and exact phrases.
+func HandleChaosReadApiErrorWithGracefulDestroy(err error, d *schema.ResourceData, httpResp *http.Response, gracefulErrorPatterns []string) diag.Diagnostics {
+	return HandleRead(context.TODO(), d, err, httpResp, NotFoundWhen(apierr.And(apierr.StatusIs(500), messageContains(gracefulErrorPatterns...))))
+}
 
-	default:
-		// For other errors, return with operation context
-		return diag.Errorf("Failed to %s: %s", operation, errorMessage)
-	}
+// Deprecated: use HandleWrite, HandleDelete or HandleError.
+func HandleChaosGraphQLError(err error, d *schema.ResourceData, operation string) diag.Diagnostics {
+	return HandleError(context.TODO(), d, err, nil)
+}
+
+// Deprecated: use HandleRead with a NotFoundWhen predicate naming the object ("hub not found").
+func HandleChaosGraphQLReadError(err error, d *schema.ResourceData, operation string) diag.Diagnostics {
+	return HandleRead(context.TODO(), d, err, nil, NotFoundWhen(messageContains("not found")))
 }

@@ -283,14 +283,8 @@ func resourceTemplateRead(ctx context.Context, d *schema.ResourceData, meta inte
 		}
 	}
 
-	if httpResp.StatusCode == 404 {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
-
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleReadApiError(err, d, httpResp)
 	}
 
 	readTemplate(d, resp, comments.Value(), store_type, base_branch, commit_message, connector_ref)

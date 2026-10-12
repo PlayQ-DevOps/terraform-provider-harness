@@ -30,6 +30,9 @@ func Read(ctx context.Context, d *schema.ResourceData, meta interface{}, connTyp
 	if err != nil {
 		return nil, helpers.HandleReadApiError(err, d, httpResp)
 	}
+	if resp.Data == nil || resp.Data.Connector == nil {
+		return nil, helpers.ReadMissing(ctx, d, "connector "+id)
+	}
 
 	if connType != resp.Data.Connector.Type_ {
 		return nil, diag.FromErr(fmt.Errorf("expected connector to be of type %s, but got %s", connType, resp.Data.Connector.Type_))
@@ -52,6 +55,9 @@ func DataRead(ctx context.Context, d *schema.ResourceData, meta interface{}, con
 	resp, httpResp, err := c.ConnectorsApi.GetConnector(ctx, c.AccountId, id, readOpts(d))
 	if err != nil {
 		return nil, helpers.HandleApiError(err, d, httpResp)
+	}
+	if resp.Data == nil || resp.Data.Connector == nil {
+		return nil, diag.Errorf("connector %s was not found", id)
 	}
 
 	if connType != resp.Data.Connector.Type_ {

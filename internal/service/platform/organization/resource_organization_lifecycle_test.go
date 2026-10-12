@@ -30,11 +30,5 @@ resource "harness_platform_organization" "test" {
 				resource.TestCheckResourceAttr("harness_platform_organization.test", "tags.#", "2"),
 			}
 		},
-		KnownFailing: map[string]string{
-			acctest.CellNotFoundStyles + "/invalid_request": "FORK-2.1: HandleReadApiError errors or panics on a 404 whose body is not a Harness not-found envelope",
-			acctest.CellNotFoundStyles + "/html":            "FORK-2.1: HandleReadApiError errors or panics on a 404 whose body is not a Harness not-found envelope",
-			acctest.CellNotFoundStyles + "/empty":           "FORK-2.1: HandleReadApiError errors or panics on a 404 whose body is not a Harness not-found envelope",
-			acctest.CellNotFoundStyles + "/gateway_runtime": "FORK-2.1: HandleReadApiError errors or panics on a 404 whose body is not a Harness not-found envelope",
-		},
 	})
 }

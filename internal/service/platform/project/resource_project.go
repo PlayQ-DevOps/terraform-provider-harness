@@ -59,6 +59,10 @@ func resourceProjectRead(ctx context.Context, d *schema.ResourceData, meta inter
 		return helpers.HandleReadApiError(err, d, httpResp)
 	}
 
+	if resp.Data == nil || resp.Data.Project == nil {
+		return helpers.ReadMissing(ctx, d, "project "+id)
+	}
+
 	readProject(d, resp.Data.Project)
 
 	return nil

@@ -49,8 +49,5 @@ resource "harness_platform_pipeline" "test" {
 				resource.TestCheckResourceAttrSet("harness_platform_pipeline.test", "yaml"),
 			}
 		},
-		KnownFailing: map[string]string{
-			acctest.CellRetryExhausted: "FORK-2.1: resourcePipelineRead dereferences httpResp before checking err, so an exhausted retry (nil response) crashes the plugin",
-		},
 	})
 }

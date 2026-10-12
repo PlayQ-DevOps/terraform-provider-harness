@@ -196,7 +196,6 @@ func resourcePipelineRead(ctx context.Context, d *schema.ResourceData, meta inte
 	var base_branch = helpers.BuildField(d, "git_details.0.base_branch")
 	var commit_message = helpers.BuildField(d, "git_details.0.commit_message")
 	var connector_ref = helpers.BuildField(d, "git_details.0.connector_ref")
-	var object_id = helpers.BuildField(d, "git_details.0.object_id")
 	resp, httpResp, err := c.PipelinesApi.GetPipeline(ctx,
 		org_id,
 		project_id,
@@ -204,16 +203,9 @@ func resourcePipelineRead(ctx context.Context, d *schema.ResourceData, meta inte
 		&nextgen.PipelinesApiGetPipelineOpts{HarnessAccount: optional.NewString(c.AccountId), BranchName: branch_name},
 	)
 
-	if httpResp.StatusCode == 404 {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
-
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleReadApiError(err, d, httpResp)
 	}
-	print(object_id.Value())
 
 	readPipeline(d, resp, org_id, project_id, template_applied, store_type, base_branch, commit_message, connector_ref)
 

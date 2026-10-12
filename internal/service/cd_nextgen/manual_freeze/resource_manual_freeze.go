@@ -177,18 +177,12 @@ func resourceManualFreezeRead(ctx context.Context, d *schema.ResourceData, meta 
 		ProjectIdentifier: helpers.BuildField(d, "project_id"),
 	})
 
-	if httpResp.StatusCode == 404 {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
-
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleReadApiError(err, d, httpResp)
 	}
 
 	if resp.Data == nil {
-		return nil
+		return helpers.ReadMissing(ctx, d, "deployment freeze "+id)
 	}
 
 	readFreezeResponse(d, resp.Data)

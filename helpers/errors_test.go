@@ -3,131 +3,95 @@ package helpers
 import (
 	"errors"
 	"net/http"
-	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// TestHandleIacmReadApiError_404ClearsState verifies that a 404 during a read on an
-// IaCM endpoint (Ansible inventory/playbook, workspace, etc.) clears the resource from
-// state instead of erroring. IaCM endpoints return an IacmError body that has no "code"
-// field, so the generic code-based not-found detection never fires for them. A resource
-// deleted out-of-band must be detected so Terraform can recreate it.
-func TestHandleIacmReadApiError_404ClearsState(t *testing.T) {
+func newTestData(t *testing.T, id string) *schema.ResourceData {
+	t.Helper()
 	d := schema.TestResourceDataRaw(t, map[string]*schema.Schema{
 		"name": {Type: schema.TypeString, Optional: true},
 	}, map[string]interface{}{})
-	d.SetId("my-inventory")
-
-	httpResp := &http.Response{StatusCode: 404}
-	diags := HandleIacmReadApiError(errors.New("not found"), d, httpResp)
-
-	if diags.HasError() {
-		t.Fatalf("expected no error diagnostics on 404 read, got: %v", diags)
-	}
-	if d.Id() != "" {
-		t.Errorf("expected resource ID to be cleared on 404 read, got: %q", d.Id())
-	}
+	d.SetId(id)
+	return d
 }
 
-// TestHandleIacmReadApiError_NonNotFoundReturnsError verifies that non-404 errors still
-// surface as diagnostics and do NOT clear state.
-func TestHandleIacmReadApiError_NonNotFoundReturnsError(t *testing.T) {
-	d := schema.TestResourceDataRaw(t, map[string]*schema.Schema{
-		"name": {Type: schema.TypeString, Optional: true},
-	}, map[string]interface{}{})
-	d.SetId("my-inventory")
-
-	httpResp := &http.Response{StatusCode: 500}
-	diags := HandleIacmReadApiError(errors.New("boom"), d, httpResp)
-
-	if !diags.HasError() {
-		t.Fatal("expected error diagnostics on 500 read, got none")
-	}
-	if d.Id() == "" {
-		t.Error("expected resource ID to be preserved on non-404 read")
-	}
-}
-
-func TestIsUndefinedResponseTypeError(t *testing.T) {
-	tests := []struct {
-		name     string
-		err      error
-		expected bool
-	}{
-		{
-			name:     "exact match",
-			err:      errors.New("undefined response type"),
-			expected: true,
+// The deprecated wrappers must keep their historical not-found behaviour while call sites
+// migrate to the lifecycle helpers.
+func TestDeprecatedReadWrappers_404ClearsState(t *testing.T) {
+	wrappers := map[string]func(error, *schema.ResourceData, *http.Response) diagResult{
+		"HandleReadApiError": func(e error, d *schema.ResourceData, r *http.Response) diagResult {
+			return diagResult(HandleReadApiError(e, d, r))
 		},
-		{
-			name:     "wrapped message",
-			err:      errors.New("error decoding response: undefined response type"),
-			expected: true,
+		"HandleIacmReadApiError": func(e error, d *schema.ResourceData, r *http.Response) diagResult {
+			return diagResult(HandleIacmReadApiError(e, d, r))
 		},
-		{
-			name:     "nil error",
-			err:      nil,
-			expected: false,
+		"HandleDBOpsReadApiError": func(e error, d *schema.ResourceData, r *http.Response) diagResult {
+			return diagResult(HandleDBOpsReadApiError(e, d, r))
 		},
-		{
-			name:     "different error",
-			err:      errors.New("connection refused"),
-			expected: false,
+		"HandleCodeReadApiError": func(e error, d *schema.ResourceData, r *http.Response) diagResult {
+			return diagResult(HandleCodeReadApiError(e, d, r))
 		},
-		{
-			name:     "empty error",
-			err:      errors.New(""),
-			expected: false,
+		"HandleChaosReadApiError": func(e error, d *schema.ResourceData, r *http.Response) diagResult {
+			return diagResult(HandleChaosReadApiError(e, d, r))
+		},
+		"HandlePolicyApiError": func(e error, d *schema.ResourceData, r *http.Response) diagResult {
+			return diagResult(HandlePolicyApiError(e, d, r))
 		},
 	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			result := isUndefinedResponseTypeError(tt.err)
-			if result != tt.expected {
-				t.Errorf("isUndefinedResponseTypeError() = %v, want %v", result, tt.expected)
+	for name, fn := range wrappers {
+		t.Run(name, func(t *testing.T) {
+			d := newTestData(t, "obj")
+			if diags := fn(errors.New("404 Not Found"), d, &http.Response{StatusCode: 404}); diags.HasError() {
+				t.Fatalf("404 on read must not be an error, got %v", diags)
+			}
+			if d.Id() != "" {
+				t.Errorf("404 on read must clear the ID, got %q", d.Id())
+			}
+			d = newTestData(t, "obj")
+			if diags := fn(errors.New("500 Internal Server Error"), d, &http.Response{StatusCode: 500}); !diags.HasError() {
+				t.Fatal("500 on read must be an error")
+			}
+			if d.Id() != "obj" {
+				t.Errorf("500 on read must keep the ID, got %q", d.Id())
 			}
 		})
 	}
 }
 
-func TestHandleUndefinedResponseTypeError_WithHTTPResponse(t *testing.T) {
-	httpResp := &http.Response{StatusCode: 502}
-	diags := handleUndefinedResponseTypeError(httpResp)
-
-	if len(diags) == 0 {
-		t.Fatal("expected diagnostics, got none")
+func TestDeprecatedWriteWrappers_404IsAnError(t *testing.T) {
+	d := newTestData(t, "obj")
+	for name, diags := range map[string]diagResult{
+		"HandleApiError":      diagResult(HandleApiError(errors.New("404 Not Found"), d, &http.Response{StatusCode: 404})),
+		"HandleDBOpsApiError": diagResult(HandleDBOpsApiError(errors.New("404 Not Found"), d, &http.Response{StatusCode: 404})),
+		"HandleCodeApiError":  diagResult(HandleCodeApiError(errors.New("404 Not Found"), d, &http.Response{StatusCode: 404})),
+		"HandleChaosApiError": diagResult(HandleChaosApiError(errors.New("404 Not Found"), d, &http.Response{StatusCode: 404})),
+	} {
+		if !diags.HasError() {
+			t.Errorf("%s: 404 outside a read must be an error", name)
+		}
 	}
-
-	msg := diags[0].Summary
-	if !strings.Contains(msg, "HTTP 502") {
-		t.Errorf("expected message to contain 'HTTP 502', got: %s", msg)
-	}
-	if !strings.Contains(msg, "HARNESS_ENDPOINT") {
-		t.Errorf("expected message to mention HARNESS_ENDPOINT, got: %s", msg)
-	}
-	if !strings.Contains(msg, "HARNESS_ACCOUNT_ID") {
-		t.Errorf("expected message to mention HARNESS_ACCOUNT_ID, got: %s", msg)
-	}
-	if !strings.Contains(msg, "HARNESS_PLATFORM_API_KEY") {
-		t.Errorf("expected message to mention HARNESS_PLATFORM_API_KEY, got: %s", msg)
+	if d.Id() != "obj" {
+		t.Errorf("write wrappers must never clear the ID, got %q", d.Id())
 	}
 }
 
-func TestHandleUndefinedResponseTypeError_WithoutHTTPResponse(t *testing.T) {
-	diags := handleUndefinedResponseTypeError(nil)
-
-	if len(diags) == 0 {
-		t.Fatal("expected diagnostics, got none")
+func TestDeprecatedChaosWrappers(t *testing.T) {
+	d := newTestData(t, "obj")
+	diags := HandleChaosReadApiErrorWithGracefulDestroy(errors.New("500 Internal Server Error"), d, &http.Response{StatusCode: 500}, []string{"no matching infra"})
+	if !diags.HasError() || d.Id() != "obj" {
+		t.Errorf("a 500 whose message does not match the pattern must be an error without clearing: %v %q", diags, d.Id())
 	}
 
-	msg := diags[0].Summary
-	if strings.Contains(msg, "HTTP") {
-		t.Errorf("expected message to NOT contain HTTP status when response is nil, got: %s", msg)
+	d = newTestData(t, "obj")
+	if diags := HandleChaosGraphQLReadError(errors.New("graphql error: hub not found (path: [getHub])"), d, "read"); diags.HasError() || d.Id() != "" {
+		t.Errorf("GraphQL 'not found' on read must clear state: %v %q", diags, d.Id())
 	}
-	if !strings.Contains(msg, "HARNESS_ENDPOINT") {
-		t.Errorf("expected message to mention HARNESS_ENDPOINT, got: %s", msg)
+	d = newTestData(t, "obj")
+	if diags := HandleChaosGraphQLError(errors.New("graphql error: hub not found (path: [getHub])"), d, "delete"); !diags.HasError() || d.Id() != "obj" {
+		t.Errorf("GraphQL errors outside a read must be errors: %v %q", diags, d.Id())
 	}
 }
+
+type diagResult = interface{ HasError() bool }
