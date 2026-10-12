@@ -32,7 +32,7 @@ func ResourceConnectorAwsCC() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    false,
 				Computed:    false,
-                                Optional:    true,
+				Optional:    true,
 			},
 			// "region": {
 			// 	Description: "The AWS region.",
@@ -44,7 +44,7 @@ func ResourceConnectorAwsCC() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    false,
 				Computed:    false,
-                                Optional:    true,
+				Optional:    true,
 			},
 			// "s3_prefix": {
 

@@ -1,0 +1,10 @@
+# The repository stores LF line endings and checks them out as LF on every
+# platform, so gofmt, sed-based tooling and CI behave identically on Windows
+# and Unix. Binary files are detected automatically by text=auto.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.zip binary
+*.gz binary
