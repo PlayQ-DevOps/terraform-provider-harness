@@ -163,7 +163,10 @@ func resourcePipelineCentralNotificationRuleCreate(ctx context.Context, d *schem
 		d.MarkNewResource()
 	}
 	scope := getScope(d)
-	rule := buildPipelineCentralNotificationRule(d)
+	rule, buildErr := buildPipelineCentralNotificationRule(d)
+	if buildErr != nil {
+		return diag.FromErr(buildErr)
+	}
 	var resp nextgen.NotificationRuleDto
 	var httpResp *http.Response
 	var err error
@@ -236,7 +239,10 @@ func resourcePipelineCentralNotificationRuleUpdate(ctx context.Context, d *schem
 	identifier := d.Get("identifier").(string)
 	scope := getScope(d)
 
-	rule := buildPipelineCentralNotificationRule(d)
+	rule, buildErr := buildPipelineCentralNotificationRule(d)
+	if buildErr != nil {
+		return diag.FromErr(buildErr)
+	}
 
 	var resp nextgen.NotificationRuleDto
 	var httpResp *http.Response
@@ -327,7 +333,7 @@ func expandPipelineNotificationTemplateVariables(raw []interface{}) []nextgen.No
 	return result
 }
 
-func expandPipelineNotificationConditions(raw []interface{}) []nextgen.NotificationConditionDto {
+func expandPipelineNotificationConditions(raw []interface{}) ([]nextgen.NotificationConditionDto, error) {
 	result := make([]nextgen.NotificationConditionDto, len(raw))
 
 	for i, cond := range raw {
@@ -354,7 +360,7 @@ func expandPipelineNotificationConditions(raw []interface{}) []nextgen.Notificat
 								ScopeIdentifiers: expandPipelineStringList(eventDataMap["scope_identifiers"]),
 							}
 						default:
-							panic(fmt.Sprintf("unsupported resource type: %s", t))
+							return nil, fmt.Errorf("notification_conditions[%d].notification_event_configs[%d].notification_event_data.type %q is not supported (only PIPELINE)", i, j, t)
 						}
 					}
 				}
@@ -368,10 +374,14 @@ func expandPipelineNotificationConditions(raw []interface{}) []nextgen.Notificat
 		}
 	}
 
-	return result
+	return result, nil
 }
 
-func buildPipelineCentralNotificationRule(d *schema.ResourceData) nextgen.NotificationRuleDto {
+func buildPipelineCentralNotificationRule(d *schema.ResourceData) (nextgen.NotificationRuleDto, error) {
+	conditions, err := expandPipelineNotificationConditions(d.Get("notification_conditions").([]interface{}))
+	if err != nil {
+		return nextgen.NotificationRuleDto{}, err
+	}
 	rule := nextgen.NotificationRuleDto{
 		Identifier: d.Get("identifier").(string),
 		Name:       d.Get("name").(string),
@@ -382,7 +392,7 @@ func buildPipelineCentralNotificationRule(d *schema.ResourceData) nextgen.Notifi
 			return &s
 		}(),
 		NotificationChannelRefs: expandPipelineStringList(d.Get("notification_channel_refs")),
-		NotificationConditions:  expandPipelineNotificationConditions(d.Get("notification_conditions").([]interface{})),
+		NotificationConditions:  conditions,
 	}
 
 	if v, ok := d.GetOk("custom_notification_template_ref"); ok {
@@ -395,7 +405,7 @@ func buildPipelineCentralNotificationRule(d *schema.ResourceData) nextgen.Notifi
 		rule.CustomNotificationTemplateRef = &templateRef
 	}
 
-	return rule
+	return rule, nil
 }
 
 func readPipelineCentralNotificationRule(accountIdentifier string, d *schema.ResourceData, notificationRuleDto nextgen.NotificationRuleDto) diag.Diagnostics {

@@ -192,29 +192,6 @@ func BuildField(d *schema.ResourceData, field string) optional.String {
 	return optional.EmptyString()
 }
 
-func BuildFieldInt32(d *schema.ResourceData, field string) optional.Int32 {
-	if arr, ok := d.GetOk(field); ok {
-		return optional.NewInt32(int32(arr.(int)))
-	}
-	return optional.EmptyInt32()
-}
-
-func BuildFieldForBoolean(d *schema.ResourceData, field string) optional.Bool {
-	if arr, ok := d.GetOk(field); ok {
-
-		return optional.NewBool(arr.(string) == "true")
-	}
-	return optional.EmptyBool()
-}
-
-func BuildFieldBool(d *schema.ResourceData, field string) optional.Bool {
-	if b, ok := d.GetOk(field); ok {
-		return optional.NewBool(b.(bool))
-	}
-
-	return optional.EmptyBool()
-}
-
 // Shared importers. Each is an ImportSpec (see importer.go): the accepted formats are
 // documented by ImportSpec.Format, malformed IDs are errors rather than panics, and the
 // resource ID is the bare identifier with the scope stored in attributes.

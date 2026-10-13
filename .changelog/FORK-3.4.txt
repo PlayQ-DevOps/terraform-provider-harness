@@ -1,0 +1,6 @@
+```release-note:bug
+resource/harness_platform_monitored_service: a health source, change source or dependency with a `type` the provider does not support, a `spec` that is not valid JSON, or a metric threshold of an unknown type is now an error for the apply instead of a crash of the provider plugin; a tag without a colon no longer crashes it either. resource/harness_platform_central_notification_rule: an unsupported `notification_event_data.type` is an error instead of a crash. resource/harness_platform_connector_jdbc: an unknown `auth_type` is an error instead of a crash.
+```
+```release-note:bug
+provider: boolean and integer inputs that are explicitly set to `false` or `0` (for example `force_delete = false`, `git_details.is_new_branch = false`, `load_from_fallback_branch = false`, the service list data source's `page = 0`) are sent to Harness as such instead of being dropped as if they were omitted.
+```

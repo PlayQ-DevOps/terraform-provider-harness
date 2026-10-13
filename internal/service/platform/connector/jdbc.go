@@ -330,7 +330,10 @@ func resourceConnectorJDBCRead(ctx context.Context, d *schema.ResourceData, meta
 }
 
 func resourceConnectorJDBCCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn := buildConnectorJDBC(d)
+	conn, buildErr := buildConnectorJDBC(d)
+	if buildErr != nil {
+		return diag.FromErr(buildErr)
+	}
 
 	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
@@ -344,7 +347,7 @@ func resourceConnectorJDBCCreateOrUpdate(ctx context.Context, d *schema.Resource
 	return nil
 }
 
-func buildConnectorJDBC(d *schema.ResourceData) *nextgen.ConnectorInfo {
+func buildConnectorJDBC(d *schema.ResourceData) (*nextgen.ConnectorInfo, error) {
 	config := d.Get("credentials").([]interface{})[0].(map[string]interface{})
 	authType := config["auth_type"].(string)
 
@@ -472,14 +475,14 @@ func buildConnectorJDBC(d *schema.ResourceData) *nextgen.ConnectorInfo {
 			}
 		}
 	default:
-		panic(fmt.Sprintf("unknown jdbc auth method type %s", authType))
+		return nil, fmt.Errorf("unknown jdbc auth method type %q", authType)
 	}
 
 	if attr, ok := d.GetOk("delegate_selectors"); ok {
 		connector1.JDBC.DelegateSelectors = utils.InterfaceSliceToStringSlice(attr.(*schema.Set).List())
 	}
 
-	return connector1
+	return connector1, nil
 }
 
 func readConnectorJDBC(d *schema.ResourceData, connector *nextgen.ConnectorInfo) error {
