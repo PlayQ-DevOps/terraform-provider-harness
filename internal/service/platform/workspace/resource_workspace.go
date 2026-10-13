@@ -380,8 +380,10 @@ func resourceWorkspaceCreate(ctx context.Context, d *schema.ResourceData, meta i
 		return parseError(err, httpResp)
 	}
 
-	resourceWorkspaceRead(ctx, d, meta)
-	return nil
+	if d.Id() == "" {
+		d.SetId(d.Get("identifier").(string))
+	}
+	return helpers.ReadAfterWrite(ctx, d, meta, 0, resourceWorkspaceRead)
 }
 
 func resourceWorkspaceUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -437,8 +439,10 @@ func resourceWorkspaceUpdate(ctx context.Context, d *schema.ResourceData, meta i
 		}
 	}
 
-	resourceWorkspaceRead(ctx, d, meta)
-	return nil
+	if d.Id() == "" {
+		d.SetId(d.Get("identifier").(string))
+	}
+	return helpers.ReadAfterWrite(ctx, d, meta, 0, resourceWorkspaceRead)
 }
 
 func readWorkspace(d *schema.ResourceData, ws *nextgen.IacmShowWorkspaceResponseBody) {

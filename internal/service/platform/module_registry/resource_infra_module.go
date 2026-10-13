@@ -186,8 +186,7 @@ func resourceInfraModuleCreate(ctx context.Context, d *schema.ResourceData, m in
 		return parseError(err, httpRes)
 	}
 	setModuleId(d, &modRes)
-	resourceInfraModuleRead(ctx, d, m)
-	return nil
+	return helpers.ReadAfterWrite(ctx, d, m, 0, resourceInfraModuleRead)
 }
 
 func resourceInfraModuleDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -217,8 +216,7 @@ func resourceInfraModuleUpdate(ctx context.Context, d *schema.ResourceData, m in
 	if err != nil {
 		return parseError(err, httpRes)
 	}
-	resourceInfraModuleRead(ctx, d, m)
-	return nil
+	return helpers.ReadAfterWrite(ctx, d, m, 0, resourceInfraModuleRead)
 }
 
 func setModuleId(d *schema.ResourceData, module *nextgen.CreateModuleResponseBody) {

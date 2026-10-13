@@ -53,6 +53,9 @@ type Resource struct {
 	// RequireParents: a create fails with 400 when the org/project it names does not exist in
 	// the store, so scope-change tests are realistic.
 	RequireParents bool
+	// RoutesOnly: the API does not follow the generic CRUD shape, so only Routes are served
+	// (IDPEntities). Kind, BasePath and RequireParents still apply.
+	RoutesOnly bool
 	// Decorate adds server-side fields to a stored object on create/update.
 	Decorate func(obj map[string]any)
 	// Validate rejects a create/update.
@@ -142,15 +145,17 @@ func (s *Server) Mount(res Resource) {
 	s.kinds[res.Kind] = basePathRegexp(base)
 	s.mu.Unlock()
 
-	s.mux.HandleFunc("POST "+base, func(w http.ResponseWriter, r *http.Request) { s.handleCreate(res, w, r) })
-	s.mux.HandleFunc("GET "+base, func(w http.ResponseWriter, r *http.Request) { s.handleList(res, w, r) })
-	s.mux.HandleFunc("GET "+base+"/{fakeid}", func(w http.ResponseWriter, r *http.Request) { s.handleGet(res, w, r) })
-	if res.UpdateHasID {
-		s.mux.HandleFunc("PUT "+base+"/{fakeid}", func(w http.ResponseWriter, r *http.Request) { s.handleUpdate(res, w, r) })
-	} else {
-		s.mux.HandleFunc("PUT "+base, func(w http.ResponseWriter, r *http.Request) { s.handleUpdate(res, w, r) })
+	if !res.RoutesOnly {
+		s.mux.HandleFunc("POST "+base, func(w http.ResponseWriter, r *http.Request) { s.handleCreate(res, w, r) })
+		s.mux.HandleFunc("GET "+base, func(w http.ResponseWriter, r *http.Request) { s.handleList(res, w, r) })
+		s.mux.HandleFunc("GET "+base+"/{fakeid}", func(w http.ResponseWriter, r *http.Request) { s.handleGet(res, w, r) })
+		if res.UpdateHasID {
+			s.mux.HandleFunc("PUT "+base+"/{fakeid}", func(w http.ResponseWriter, r *http.Request) { s.handleUpdate(res, w, r) })
+		} else {
+			s.mux.HandleFunc("PUT "+base, func(w http.ResponseWriter, r *http.Request) { s.handleUpdate(res, w, r) })
+		}
+		s.mux.HandleFunc("DELETE "+base+"/{fakeid}", func(w http.ResponseWriter, r *http.Request) { s.handleDelete(res, w, r) })
 	}
-	s.mux.HandleFunc("DELETE "+base+"/{fakeid}", func(w http.ResponseWriter, r *http.Request) { s.handleDelete(res, w, r) })
 	for pattern, h := range res.Routes {
 		h := h
 		s.mux.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) { h(s, res, w, r) })

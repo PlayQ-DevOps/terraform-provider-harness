@@ -2,8 +2,10 @@ package helpers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/harness/terraform-provider-harness/internal/apierr"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -176,4 +178,65 @@ func GracefulNotFound(status int, phrases ...string) ReadOption {
 // phrase that names the object (for example "hub not found") where the API provides one.
 func GraphQLNotFound() ReadOption {
 	return NotFoundWhen(MessageContains("not found"))
+}
+
+// Read-after-write pacing. The first wait doubles on every attempt up to the maximum; tests
+// shorten both.
+var (
+	readAfterWriteDelay    = time.Second
+	readAfterWriteMaxDelay = 10 * time.Second
+)
+
+// ReadAfterWrite finishes a Create or Update by reading the object back through read, the
+// resource's own ReadContext, so state always reflects what the API stored. d.Id() must be
+// set before the call.
+//
+// Some Harness backends index writes asynchronously, so the object may not be readable for a
+// short while after the write succeeded (#1385). While read reports the object as missing (it
+// clears the ID, as HandleRead and ReadMissing do) the read is repeated, with backoff, until
+// window has elapsed; a window of zero means a single read. Any other read failure is
+// returned as is.
+//
+// If the object is still missing when the window ends, the ID is restored and an error is
+// returned: Terraform keeps the resource in state and the next apply retries. Returning with
+// an empty ID instead would make Terraform report an opaque "inconsistent result after apply"
+// and forget an object that exists.
+//
+// Use it only from Create and Update, never from Read or plan paths.
+func ReadAfterWrite(ctx context.Context, d *schema.ResourceData, meta interface{}, window time.Duration, read schema.ReadContextFunc) diag.Diagnostics {
+	id := d.Id()
+	if id == "" {
+		return diag.Errorf("provider bug: ReadAfterWrite called before the resource ID was set; report this at https://github.com/harness/terraform-provider-harness/issues")
+	}
+	deadline := time.Now().Add(window)
+	delay := readAfterWriteDelay
+	for attempt := 1; ; attempt++ {
+		d.SetId(id)
+		diags := read(ctx, d, meta)
+		if diags.HasError() || d.Id() != "" {
+			return diags
+		}
+		remaining := time.Until(deadline)
+		if remaining <= 0 {
+			break
+		}
+		wait := min(delay, remaining)
+		tflog.Debug(ctx, "resource is not readable yet after a write; retrying", map[string]any{"id": id, "attempt": attempt, "retry_in": wait.String()})
+		timer := time.NewTimer(wait)
+		select {
+		case <-ctx.Done():
+			timer.Stop()
+			d.SetId(id)
+			return diag.FromErr(ctx.Err())
+		case <-timer.C:
+		}
+		delay = min(delay*2, readAfterWriteMaxDelay)
+	}
+	d.SetId(id)
+	tflog.Warn(ctx, "resource was written but could not be read back", map[string]any{"id": id, "window": window.String()})
+	within := ""
+	if window > 0 {
+		within = fmt.Sprintf(" within %s", window)
+	}
+	return diag.Errorf("%s was written but could not be read back%s. Terraform has kept the resource in state; run `terraform apply` again. If this persists, the API may not expose the object at the scope Terraform reads it from.", id, within)
 }

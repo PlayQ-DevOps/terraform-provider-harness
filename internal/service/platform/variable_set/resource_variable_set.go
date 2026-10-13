@@ -298,8 +298,10 @@ func resourceVarsetCreate(ctx context.Context, d *schema.ResourceData, meta inte
 		return parseError(err, httpResp)
 	}
 
-	resourceVarsetRead(ctx, d, meta)
-	return nil
+	if d.Id() == "" {
+		d.SetId(d.Get("identifier").(string))
+	}
+	return helpers.ReadAfterWrite(ctx, d, meta, 0, resourceVarsetRead)
 }
 
 func resourceVarsetUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -353,8 +355,10 @@ func resourceVarsetUpdate(ctx context.Context, d *schema.ResourceData, meta inte
 		return parseError(err, httpResp)
 	}
 
-	resourceVarsetRead(ctx, d, meta)
-	return nil
+	if d.Id() == "" {
+		d.SetId(d.Get("identifier").(string))
+	}
+	return helpers.ReadAfterWrite(ctx, d, meta, 0, resourceVarsetRead)
 }
 
 func readVariableSet(d *schema.ResourceData, vs *nextgen.VariableSetsGetVariableSetAccountLevelResponseBody) {

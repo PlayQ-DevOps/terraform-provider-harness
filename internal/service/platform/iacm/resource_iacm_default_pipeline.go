@@ -62,10 +62,6 @@ func ResourceIacmDefaultPipeline() *schema.Resource {
 
 func resourceIacmDefaultPipelineRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	id := d.Id()
-	if id == "" {
-
-	}
 	defaultPipelines, httpResp, err := c.SettingsApi.SettingsListDefaultPipelines(
 		ctx,
 		d.Get("org_id").(string),
@@ -84,10 +80,7 @@ func resourceIacmDefaultPipelineRead(ctx context.Context, d *schema.ResourceData
 			return nil
 		}
 	}
-	if d.Id() == "" {
-		return diag.Errorf("resource with provisioner type '%s' and operation '%s' not found", d.Get("provisioner_type"), d.Get("operation"))
-	}
-	return diag.Errorf("resource with ID %s not found", d.Id())
+	return helpers.ReadMissing(ctx, d, fmt.Sprintf("default pipeline for provisioner %s and operation %s", d.Get("provisioner_type"), d.Get("operation")))
 }
 
 func resourceIacmDefaultPipelineDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -140,8 +133,8 @@ func resourceIacmDefaultPipelineUpdate(ctx context.Context, d *schema.ResourceDa
 		return parseError(err, httpResp)
 	}
 
-	resourceIacmDefaultPipelineRead(ctx, d, meta)
-	return nil
+	d.SetId(fmt.Sprintf("%s-%s", d.Get("provisioner_type").(string), d.Get("operation").(string)))
+	return helpers.ReadAfterWrite(ctx, d, meta, 0, resourceIacmDefaultPipelineRead)
 }
 
 // iacm errors are in a different format from other harness services

@@ -313,15 +313,6 @@ func TestGetCatalogEntityInfoFromResponseIgnoresProjectOnlyScope(t *testing.T) {
 	require.Equal(t, "idp", info.ProjectId.Value())
 }
 
-func TestIsTransientPostWriteReadError(t *testing.T) {
-	err := errors.New("read failed")
-
-	require.True(t, isTransientPostWriteReadError(err, &http.Response{StatusCode: http.StatusNotFound}))
-	require.False(t, isTransientPostWriteReadError(err, &http.Response{StatusCode: http.StatusUnauthorized}))
-	require.False(t, isTransientPostWriteReadError(err, &http.Response{StatusCode: http.StatusForbidden}))
-	require.False(t, isTransientPostWriteReadError(nil, &http.Response{StatusCode: http.StatusNotFound}))
-}
-
 func TestReadGitDetailsWithUnsetConnectorRef(t *testing.T) {
 	gitDetails := readGitDetails(idp_sdk.EntityResponse{
 		GitDetails: &idp_sdk.GitDetails{

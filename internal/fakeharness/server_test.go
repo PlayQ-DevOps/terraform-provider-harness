@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 	"sync"
 	"testing"
@@ -318,5 +319,66 @@ func TestKindMatching(t *testing.T) {
 	}
 	if k := s.KindFor("/ng/api/connectorsx"); k != "" {
 		t.Fatalf("prefix must not match a different path: %q", k)
+	}
+}
+
+func TestIDPEntities(t *testing.T) {
+	s := New(t, WithMounts(IDPEntities()))
+	do(t, s, "POST", "/ng/api/organizations?accountIdentifier=acct", `{"organization":{"identifier":"o","name":"O"}}`)
+	do(t, s, "POST", "/ng/api/projects?accountIdentifier=acct&orgIdentifier=o", `{"project":{"identifier":"p","name":"P"}}`)
+	yaml := "apiVersion: harness.io/v1\nkind: Component\nname: Svc\nidentifier: svc\norgIdentifier: o\nprojectIdentifier: p\nspec:\n  lifecycle: prod\n"
+	body := `{"yaml":` + strconv.Quote(yaml) + `}`
+	st, m, _, _ := do(t, s, "POST", "/v1/entities?orgIdentifier=o&projectIdentifier=p", body)
+	if st != 201 || m["identifier"] != "svc" || m["kind"] != "component" || m["orgIdentifier"] != "o" || m["projectIdentifier"] != "p" || m["scope"] != "account.o.p" || m["yaml"] != yaml {
+		t.Fatalf("create: %d %v", st, m)
+	}
+	if !s.Store().Has(KindIDPEntity, Key{Org: "o", Project: "p", ID: "svc"}) {
+		t.Fatal("the entity is not stored under its scope key")
+	}
+	if st, _, _, _ := do(t, s, "POST", "/v1/entities?orgIdentifier=o&projectIdentifier=p", body); st != 400 {
+		t.Fatalf("duplicate create: %d", st)
+	}
+	if st, m, _, _ := do(t, s, "GET", "/v1/entities/account.o.p/component/svc?orgIdentifier=o&projectIdentifier=p", ""); st != 200 || m["name"] != "Svc" {
+		t.Fatalf("get: %d %v", st, m)
+	}
+	if st, _, _, _ := do(t, s, "GET", "/v1/entities/account.o.p/component/svc", ""); st != 200 {
+		t.Fatalf("get with the scope taken from the path: %d", st)
+	}
+	if st, _, _, _ := do(t, s, "GET", "/v1/entities/account.o.p/resource/svc?orgIdentifier=o&projectIdentifier=p", ""); st != 404 {
+		t.Fatalf("get with the wrong kind: %d", st)
+	}
+	if st, _, _, _ := do(t, s, "GET", "/v1/entities/account/component/svc", ""); st != 404 {
+		t.Fatalf("get at the wrong scope: %d", st)
+	}
+	upd := strings.Replace(yaml, "name: Svc", "name: Svc 2", 1)
+	if st, m, _, _ := do(t, s, "PUT", "/v1/entities/account.o.p/component/svc?orgIdentifier=o&projectIdentifier=p", `{"yaml":`+strconv.Quote(upd)+`}`); st != 200 || m["name"] != "Svc 2" || m["yaml"] != upd {
+		t.Fatalf("update: %d %v", st, m)
+	}
+	if st, m, _, _ := do(t, s, "PUT", "/v1/entities/git-metadata/account.o.p/component/svc?orgIdentifier=o&projectIdentifier=p", `{"connector_ref":"account.gh","repo_name":"r","file_path":"f.yaml"}`); st != 200 {
+		t.Fatalf("git metadata: %d %v", st, m)
+	}
+	if st, m, _, _ := do(t, s, "GET", "/v1/entities/account.o.p/component/svc?orgIdentifier=o&projectIdentifier=p", ""); st != 200 || m["git_details"].(map[string]any)["repo_name"] != "r" {
+		t.Fatalf("get after git metadata: %d %v", st, m)
+	}
+	s.EventuallyConsistent(KindIDPEntity, 1)
+	if st, _, _, _ := do(t, s, "POST", "/v1/entities", `{"yaml":"kind: Resource\nidentifier: acc\nname: Acc\n"}`); st != 201 {
+		t.Fatalf("account-level create: %d", st)
+	}
+	for i, want := range []int{404, 200} {
+		if st, _, _, _ := do(t, s, "GET", "/v1/entities/account/resource/acc", ""); st != want {
+			t.Fatalf("eventually consistent read %d: %d, want %d", i, st, want)
+		}
+	}
+	if st, _, _, _ := do(t, s, "DELETE", "/v1/entities/account.o.p/component/svc?orgIdentifier=o&projectIdentifier=p", ""); st != 204 {
+		t.Fatalf("delete: %d", st)
+	}
+	if st, _, _, _ := do(t, s, "DELETE", "/v1/entities/account.o.p/component/svc?orgIdentifier=o&projectIdentifier=p", ""); st != 404 {
+		t.Fatalf("delete again: %d", st)
+	}
+	if st, _, _, _ := do(t, s, "POST", "/v1/entities?orgIdentifier=o&projectIdentifier=missing", body); st != 400 {
+		t.Fatalf("create under a missing project: %d", st)
+	}
+	if got := strings.Join(s.MutatingMethods(0, KindIDPEntity), ","); got != "POST,POST,PUT,PUT,POST,DELETE,DELETE,POST" {
+		t.Fatalf("mutating methods on the kind: %s", got)
 	}
 }

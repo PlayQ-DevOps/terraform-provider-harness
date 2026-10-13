@@ -141,9 +141,10 @@ func resourceEnvironmentUpdateOrCreate(ctx context.Context, d *schema.ResourceDa
 		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
-	resourceEnvironmentRead(ctx, d, meta)
-
-	return nil
+	if d.Id() == "" {
+		d.SetId(d.Get("identifier").(string))
+	}
+	return helpers.ReadAfterWrite(ctx, d, meta, idpReadAfterWriteWindow, resourceEnvironmentRead)
 }
 
 func resourceEnvironmentDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {

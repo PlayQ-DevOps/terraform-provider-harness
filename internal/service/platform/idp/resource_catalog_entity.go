@@ -27,6 +27,10 @@ type catalogEntityInfo struct {
 	BranchName optional.String
 }
 
+// idpReadAfterWriteWindow is how long a freshly written IDP entity is re-read while the
+// catalog still reports it missing: the catalog indexes writes asynchronously (#1385).
+const idpReadAfterWriteWindow = 60 * time.Second
+
 func ResourceCatalogEntity() *schema.Resource {
 	resource := &schema.Resource{
 		Description:   "Resource for creating IDP catalog entities.",
@@ -174,7 +178,6 @@ func resourceCatalogEntityUpdateOrCreate(ctx context.Context, d *schema.Resource
 	var entityInfo catalogEntityInfo
 
 	id := d.Id()
-	isNewResource := id == ""
 	if id == "" {
 		if d.Get("import_from_git").(bool) {
 			entityInfo, err = getCatalogEntityInfoFromImportResourceData(d)
@@ -260,7 +263,7 @@ func resourceCatalogEntityUpdateOrCreate(ctx context.Context, d *schema.Resource
 			return diag.Errorf("failed to get and verify catalog entity info: %v", err)
 		}
 
-		resp, httpResp, err = c.EntitiesApi.UpdateEntity(ctx, idp.EntityUpdateRequest{
+		_, httpResp, err = c.EntitiesApi.UpdateEntity(ctx, idp.EntityUpdateRequest{
 			Yaml:       yaml,
 			GitDetails: gitDetails,
 		}, entityInfo.Scope, entityInfo.Kind, id, &idp.EntitiesApiUpdateEntityOpts{
@@ -280,17 +283,18 @@ func resourceCatalogEntityUpdateOrCreate(ctx context.Context, d *schema.Resource
 		}
 	}
 
-	if isNewResource {
-		resp, httpResp, err = getCatalogEntityWithRetry(ctx, c, entityInfo)
-	} else {
-		resp, httpResp, err = getCatalogEntity(ctx, c, entityInfo)
-	}
-	if err != nil {
-		return handleIDPApiError(err, d, httpResp)
-	}
-
-	readCatalogEntity(d, resp)
-	return nil
+	// Read back through the entity info the write established (the scope, kind and branch may
+	// come from the response rather than the configuration). The catalog indexes writes
+	// asynchronously, so an entity that is not readable yet is retried for a while (#1385).
+	d.SetId(entityInfo.Identifier)
+	return helpers.ReadAfterWrite(ctx, d, meta, idpReadAfterWriteWindow, func(ctx context.Context, d *schema.ResourceData, _ interface{}) diag.Diagnostics {
+		resp, httpResp, err := getCatalogEntity(ctx, c, entityInfo)
+		if err != nil {
+			return handleIDPReadApiError(err, d, httpResp)
+		}
+		readCatalogEntity(d, resp)
+		return nil
+	})
 }
 
 func catalogEntityGetOpts(c *idp.APIClient, info catalogEntityInfo) *idp.EntitiesApiGetEntityOpts {
@@ -307,48 +311,6 @@ func catalogEntityGetOpts(c *idp.APIClient, info catalogEntityInfo) *idp.Entitie
 
 func getCatalogEntity(ctx context.Context, c *idp.APIClient, info catalogEntityInfo) (idp.EntityResponse, *http.Response, error) {
 	return c.EntitiesApi.GetEntity(ctx, info.Scope, info.Kind, info.Identifier, catalogEntityGetOpts(c, info))
-}
-
-func getCatalogEntityWithRetry(ctx context.Context, c *idp.APIClient, info catalogEntityInfo) (idp.EntityResponse, *http.Response, error) {
-	const attempts = 6
-	const delay = 2 * time.Second
-
-	var resp idp.EntityResponse
-	var httpResp *http.Response
-	var err error
-
-	for attempt := 0; attempt < attempts; attempt++ {
-		resp, httpResp, err = getCatalogEntity(ctx, c, info)
-		if err == nil {
-			return resp, httpResp, nil
-		}
-
-		if !isTransientPostWriteReadError(err, httpResp) || attempt == attempts-1 {
-			return resp, httpResp, err
-		}
-
-		timer := time.NewTimer(delay)
-		select {
-		case <-ctx.Done():
-			if !timer.Stop() {
-				<-timer.C
-			}
-			return resp, httpResp, ctx.Err()
-		case <-timer.C:
-		}
-	}
-
-	return resp, httpResp, err
-}
-
-func isTransientPostWriteReadError(err error, httpResp *http.Response) bool {
-	if err == nil {
-		return false
-	}
-	if httpResp != nil {
-		return httpResp.StatusCode == http.StatusNotFound
-	}
-	return isNotFoundError(err)
 }
 
 func handleIDPApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {

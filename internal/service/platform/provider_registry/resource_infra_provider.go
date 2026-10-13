@@ -119,8 +119,7 @@ func resourceInfraProviderCreate(ctx context.Context, d *schema.ResourceData, m 
 		return parseError(err, httpRes)
 	}
 	setProviderId(d, &provRes)
-	resourceInfraProviderRead(ctx, d, m)
-	return nil
+	return helpers.ReadAfterWrite(ctx, d, m, 0, resourceInfraProviderRead)
 }
 
 func resourceInfraProviderDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

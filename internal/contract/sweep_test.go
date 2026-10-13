@@ -179,3 +179,42 @@ func TestNoStatusCodeBeforeErrorCheck(t *testing.T) {
 		}
 	}
 }
+
+// A Create or Update that calls the resource's Read as a statement drops the read's
+// diagnostics: a failed read-back leaves stale or empty state, and an eventually-consistent
+// read is never retried. The read-back goes through helpers.ReadAfterWrite instead.
+var readFuncRe = regexp.MustCompile(`(?i)read$`)
+
+func TestNoDiscardedReadCalls(t *testing.T) {
+	for _, path := range serviceFiles(t) {
+		fset, f := parse(t, path)
+		for _, decl := range f.Decls {
+			fn, ok := decl.(*ast.FuncDecl)
+			if !ok || fn.Body == nil {
+				continue
+			}
+			ast.Inspect(fn.Body, func(n ast.Node) bool {
+				var call *ast.CallExpr
+				switch st := n.(type) {
+				case *ast.ExprStmt:
+					call, _ = st.X.(*ast.CallExpr)
+				case *ast.AssignStmt:
+					if len(st.Lhs) == 1 && len(st.Rhs) == 1 {
+						if id, ok := st.Lhs[0].(*ast.Ident); ok && id.Name == "_" {
+							call, _ = st.Rhs[0].(*ast.CallExpr)
+						}
+					}
+				}
+				if call == nil {
+					return true
+				}
+				id, ok := call.Fun.(*ast.Ident)
+				if !ok || !readFuncRe.MatchString(id.Name) || len(call.Args) != 3 {
+					return true
+				}
+				t.Errorf("%s:%d: %s discards the diagnostics of %s; use `return helpers.ReadAfterWrite(ctx, d, meta, window, %s)`", rel(path), fset.Position(call.Pos()).Line, fn.Name.Name, id.Name, id.Name)
+				return true
+			})
+		}
+	}
+}

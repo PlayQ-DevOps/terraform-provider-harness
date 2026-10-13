@@ -7,8 +7,10 @@ import (
 	"net/url"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/harness/terraform-provider-harness/internal/apierr"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -157,4 +159,87 @@ func TestHandleErrorAndReadMissing(t *testing.T) {
 	if !IsTransportError(&url.Error{Op: "Get", URL: "x", Err: errors.New("refused")}, nil) || IsTransportError(errors.New("x"), &http.Response{StatusCode: 500}) {
 		t.Error("IsTransportError")
 	}
+}
+
+func TestReadAfterWrite(t *testing.T) {
+	ctx := context.Background()
+	readAfterWriteDelay, readAfterWriteMaxDelay = time.Millisecond, 2*time.Millisecond
+	t.Cleanup(func() { readAfterWriteDelay, readAfterWriteMaxDelay = time.Second, 10*time.Second })
+
+	// missingFor returns a Read that reports the object missing for the first n calls.
+	missingFor := func(n int, calls *int) schema.ReadContextFunc {
+		return func(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+			*calls++
+			if *calls <= n {
+				d.SetId("")
+				return nil
+			}
+			_ = d.Set("name", "from api")
+			return nil
+		}
+	}
+
+	t.Run("readable at once", func(t *testing.T) {
+		d := newTestData(t, "obj")
+		var calls int
+		diags := ReadAfterWrite(ctx, d, nil, time.Second, missingFor(0, &calls))
+		if diags.HasError() || calls != 1 || d.Id() != "obj" || d.Get("name") != "from api" {
+			t.Errorf("diags=%v calls=%d id=%q name=%v", diags, calls, d.Id(), d.Get("name"))
+		}
+	})
+	t.Run("missing then readable within the window", func(t *testing.T) {
+		d := newTestData(t, "obj")
+		var calls int
+		diags := ReadAfterWrite(ctx, d, nil, time.Second, missingFor(2, &calls))
+		if diags.HasError() || calls != 3 || d.Id() != "obj" || d.Get("name") != "from api" {
+			t.Errorf("diags=%v calls=%d id=%q", diags, calls, d.Id())
+		}
+	})
+	t.Run("window zero reads once and keeps the ID", func(t *testing.T) {
+		d := newTestData(t, "obj")
+		var calls int
+		diags := ReadAfterWrite(ctx, d, nil, 0, missingFor(1, &calls))
+		if !diags.HasError() || calls != 1 || d.Id() != "obj" || !strings.Contains(diags[0].Summary, "obj was written but could not be read back.") {
+			t.Errorf("diags=%v calls=%d id=%q", diags, calls, d.Id())
+		}
+	})
+	t.Run("still missing after the window keeps the ID and errors", func(t *testing.T) {
+		d := newTestData(t, "obj")
+		var calls int
+		diags := ReadAfterWrite(ctx, d, nil, 20*time.Millisecond, missingFor(1000, &calls))
+		if !diags.HasError() || calls < 2 || d.Id() != "obj" || !strings.Contains(diags[0].Summary, "could not be read back within 20ms") {
+			t.Errorf("diags=%v calls=%d id=%q", diags, calls, d.Id())
+		}
+	})
+	t.Run("read errors are returned unchanged", func(t *testing.T) {
+		d := newTestData(t, "obj")
+		var calls int
+		diags := ReadAfterWrite(ctx, d, nil, time.Second, func(context.Context, *schema.ResourceData, interface{}) diag.Diagnostics {
+			calls++
+			return diag.Errorf("boom")
+		})
+		if !diags.HasError() || calls != 1 || diags[0].Summary != "boom" || d.Id() != "obj" {
+			t.Errorf("diags=%v calls=%d id=%q", diags, calls, d.Id())
+		}
+	})
+	t.Run("a cancelled context stops the wait", func(t *testing.T) {
+		readAfterWriteDelay = time.Minute
+		t.Cleanup(func() { readAfterWriteDelay = time.Millisecond })
+		cctx, cancel := context.WithCancel(ctx)
+		cancel()
+		d := newTestData(t, "obj")
+		var calls int
+		diags := ReadAfterWrite(cctx, d, nil, time.Hour, missingFor(1000, &calls))
+		if !diags.HasError() || calls != 1 || d.Id() != "obj" || !strings.Contains(diags[0].Summary, "context canceled") {
+			t.Errorf("diags=%v calls=%d id=%q", diags, calls, d.Id())
+		}
+	})
+	t.Run("the ID must be set first", func(t *testing.T) {
+		d := newTestData(t, "")
+		var calls int
+		diags := ReadAfterWrite(ctx, d, nil, 0, missingFor(0, &calls))
+		if !diags.HasError() || calls != 0 || !strings.Contains(diags[0].Summary, "provider bug") {
+			t.Errorf("diags=%v calls=%d", diags, calls)
+		}
+	})
 }
