@@ -269,6 +269,7 @@ func TestContract(t *testing.T) {
 		checkDataSource(rep, name, p.DataSourcesMap[name])
 	}
 	checkProviderSchema(rep, p)
+	checkFrameworkTypes(t, rep)
 
 	fwResources, fwDataSources := frameworkTypeNames(t)
 	resourceNames := union(sortedKeys(p.ResourcesMap), fwResources)

@@ -124,6 +124,7 @@ var contractBaselineCounts = map[string]map[string]int{
 		"harness_platform_pipeline_filters":               1,
 		"harness_platform_policy":                         2,
 		"harness_platform_policyset":                      2,
+		"harness_platform_project":                        1,
 		"harness_platform_repo":                           1,
 		"harness_platform_resource_group":                 3,
 		"harness_platform_role_assignments":               7,

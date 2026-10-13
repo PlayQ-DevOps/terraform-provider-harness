@@ -2,7 +2,14 @@
 
 ## Purpose
 
-This package implements Terraform resources and data sources for Harness connectors. Connectors provide integration with external systems like cloud providers, monitoring tools, ticketing systems, and secret managers.
+This package implements Terraform resources and data sources for Harness connectors.
+
+**Status (fork):** this package is SDK v2 and frozen. No new SDK v2 connector may be added
+(`TestContract` rejects any type missing from `internal/provider/testdata/sdk_v2_types.txt`).
+New connectors are written on terraform-plugin-framework with the `internal/framework` helpers
+and registered in `internal/provider/framework_provider.go`; see the root `AGENTS.md`. The
+existing connectors move to the framework one source package at a time (plan Phase 5); until a
+package has moved, fixes to its SDK v2 code still go here and keep using `connectorbase`. Connectors provide integration with external systems like cloud providers, monitoring tools, ticketing systems, and secret managers.
 
 ## Package Structure
 
