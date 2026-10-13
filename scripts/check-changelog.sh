@@ -14,7 +14,7 @@ set -euo pipefail
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$(dirname "$__dir")"
 
-VALID_TYPES="breaking-change|note|feature|new-resource|new-data-source|new-guide|enhancement|bug"
+VALID_TYPES="breaking-change|note|feature|new-resource|new-data-source|new-guide|new-ephemeral-resource|enhancement|bug"
 
 entries=()
 if [ "${1:-}" = "--all" ]; then

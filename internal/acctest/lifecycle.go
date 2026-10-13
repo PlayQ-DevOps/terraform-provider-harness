@@ -1,6 +1,7 @@
 package acctest
 
 import (
+	"context"
 	"fmt"
 	"regexp"
 	"strings"
@@ -22,7 +23,11 @@ import (
 func OfflineFactories() map[string]func() (tfprotov5.ProviderServer, error) {
 	return map[string]func() (tfprotov5.ProviderServer, error){
 		"harness": func() (tfprotov5.ProviderServer, error) {
-			return provider.Provider("test")().GRPCProvider(), nil
+			server, err := provider.NewMuxServer(context.Background(), "test")
+			if err != nil {
+				return nil, err
+			}
+			return server(), nil
 		},
 	}
 }

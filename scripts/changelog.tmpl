@@ -15,7 +15,7 @@ NOTES:
 {{ end -}}
 {{- end -}}
 
-{{- $features := combineTypes .NotesByType.feature (index .NotesByType "new-resource" ) (index .NotesByType "new-data-source") (index .NotesByType "new-guide") }}
+{{- $features := combineTypes .NotesByType.feature (index .NotesByType "new-resource" ) (index .NotesByType "new-data-source") (index .NotesByType "new-guide") (index .NotesByType "new-ephemeral-resource") }}
 {{- if $features }}
 FEATURES:
 

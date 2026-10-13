@@ -3,14 +3,8 @@ package provider
 import (
 	"context"
 	"fmt"
-	"log"
-	"net/url"
-	"os"
-	"strconv"
-	"strings"
 	"time"
 
-	"github.com/harness/terraform-provider-harness/internal/httpclient"
 	"github.com/harness/terraform-provider-harness/internal/service/pipeline/policy"
 	"github.com/harness/terraform-provider-harness/internal/service/pipeline/policyset"
 
@@ -22,14 +16,6 @@ import (
 	"github.com/harness/terraform-provider-harness/internal/service/platform/central_notification_channel"
 	"github.com/harness/terraform-provider-harness/internal/service/platform/central_notification_rule"
 
-	"github.com/harness/harness-go-sdk/harness/har"
-	"github.com/harness/harness-go-sdk/harness/idp"
-	"github.com/harness/harness-go-sdk/harness/po"
-	"github.com/harness/harness-go-sdk/harness/policymgmt"
-	"github.com/harness/harness-go-sdk/harness/split"
-	"github.com/harness/harness-go-sdk/harness/svcdiscovery"
-
-	"github.com/harness/harness-go-sdk/harness/chaos"
 	cdng_service "github.com/harness/terraform-provider-harness/internal/service/cd_nextgen/service"
 	"github.com/harness/terraform-provider-harness/internal/service/chaos/action_template"
 	chaos_hub "github.com/harness/terraform-provider-harness/internal/service/chaos/chaos_hub"
@@ -81,14 +67,8 @@ import (
 	"github.com/harness/terraform-provider-harness/internal/service/platform/usergroup"
 	"github.com/harness/terraform-provider-harness/internal/service/platform/workspace"
 
-	"github.com/harness/harness-go-sdk/harness/cd"
-	"github.com/harness/harness-go-sdk/harness/code"
-	"github.com/harness/harness-go-sdk/harness/dbops"
 	"github.com/harness/harness-go-sdk/harness/helpers"
-	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
-	openapi_client_nextgen "github.com/harness/harness-openapi-go-client/nextgen"
-	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/service/cd/account"
 	"github.com/harness/terraform-provider-harness/internal/service/cd/application"
 	"github.com/harness/terraform-provider-harness/internal/service/cd/cloudprovider"
@@ -220,14 +200,14 @@ func Provider(version string) func() *schema.Provider {
 					Description:  "Maximum number of retries for a request that fails with a retryable error: HTTP 429, HTTP 503 with a Retry-After header, and (for idempotent requests only, never for POST/PUT) other 5xx responses, HTTP 408 and network failures. Defaults to `5`. This can also be set using the `HARNESS_MAX_RETRIES` environment variable.",
 					Type:         schema.TypeInt,
 					Optional:     true,
-					DefaultFunc:  envIntDefaultFunc("HARNESS_MAX_RETRIES", 5),
+					DefaultFunc:  envIntDefaultFunc(envMaxRetries, defaultMaxRetries),
 					ValidateFunc: validation.IntAtLeast(0),
 				},
 				"request_timeout": {
 					Description:  "Timeout in seconds for a single request attempt to the Harness API. Defaults to `120`. This can also be set using the `HARNESS_REQUEST_TIMEOUT` environment variable.",
 					Type:         schema.TypeInt,
 					Optional:     true,
-					DefaultFunc:  envIntDefaultFunc("HARNESS_REQUEST_TIMEOUT", 120),
+					DefaultFunc:  envIntDefaultFunc(envRequestTimeout, int(defaultRequestTimeout/time.Second)),
 					ValidateFunc: validation.IntAtLeast(1),
 				},
 			},
@@ -662,257 +642,28 @@ func Provider(version string) func() *schema.Provider {
 }
 
 // envIntDefaultFunc reads an integer default from the environment, falling back to def.
-func envIntDefaultFunc(key string, def int) schema.SchemaDefaultFunc {
-	return func() (interface{}, error) {
-		v := strings.TrimSpace(os.Getenv(key))
-		if v == "" {
-			return def, nil
-		}
-		n, err := strconv.Atoi(v)
-		if err != nil {
-			return nil, fmt.Errorf("%s must be an integer, got %q", key, v)
-		}
-		return n, nil
-	}
-}
-
-// newHTTPConfig derives the shared HTTP client policy (retries, timeout, user agent,
-// redaction) from the provider configuration. Every SDK client is built from it.
-func newHTTPConfig(d *schema.ResourceData, version string) httpclient.Config {
-	return httpclient.Config{
-		MaxRetries:     d.Get("max_retries").(int),
-		RequestTimeout: time.Duration(d.Get("request_timeout").(int)) * time.Second,
-		UserAgent:      fmt.Sprintf("terraform-provider-harness-%s", version),
-		Secrets:        []string{d.Get("api_key").(string), d.Get("platform_api_key").(string)},
-	}
-}
-
-func getCDClient(d *schema.ResourceData, version string, hc httpclient.Config) *cd.ApiClient {
-	cfg := cd.DefaultConfig()
-	cfg.AccountId = d.Get("account_id").(string)
-	cfg.Endpoint = d.Get("endpoint").(string)
-	cfg.APIKey = d.Get("api_key").(string)
-	cfg.UserAgent = fmt.Sprintf("terraform-provider-harness-%s", version)
-	cfg.HTTPClient = httpclient.NewRetryable(hc)
-	cfg.DebugLogging = false
-
-	client, err := cd.NewClient(cfg)
-	if err != nil {
-		log.Printf("[WARN] error creating CD client: %s", err)
-	}
-	return client
-}
-
-func getPLClient(d *schema.ResourceData, version string, hc httpclient.Config) *nextgen.APIClient {
-	return newPLClient(d.Get("account_id").(string), d.Get("endpoint").(string), d.Get("platform_api_key").(string), version, hc)
-}
-
-// newPLClient builds the platform (nextgen) client from plain values so the SDK v2 and
-// plugin-framework halves of the provider share it.
-func newPLClient(accountId, endpoint, platformApiKey, version string, hc httpclient.Config) *nextgen.APIClient {
-	return nextgen.NewAPIClient(&nextgen.Configuration{
-		AccountId:  accountId,
-		BasePath:   endpoint,
-		ApiKey:     platformApiKey,
-		UserAgent:  fmt.Sprintf("terraform-provider-harness-platform-%s", version),
-		HTTPClient: httpclient.NewRetryable(hc),
-	})
-}
-
-func getDBOpsClient(d *schema.ResourceData, version string, hc httpclient.Config) *dbops.APIClient {
-	return dbops.NewAPIClient(&dbops.Configuration{
-		AccountId:  d.Get("account_id").(string),
-		BasePath:   d.Get("endpoint").(string),
-		ApiKey:     d.Get("platform_api_key").(string),
-		UserAgent:  fmt.Sprintf("terraform-provider-harness-platform-%s", version),
-		HTTPClient: httpclient.NewStandard(hc),
-	})
-}
-
-func getClient(d *schema.ResourceData, version string, hc httpclient.Config) *openapi_client_nextgen.APIClient {
-	return openapi_client_nextgen.NewAPIClient(&openapi_client_nextgen.Configuration{
-		AccountId:  d.Get("account_id").(string),
-		BasePath:   d.Get("endpoint").(string),
-		ApiKey:     d.Get("platform_api_key").(string),
-		UserAgent:  fmt.Sprintf("terraform-provider-harness-platform-%s", version),
-		HTTPClient: httpclient.NewRetryable(hc),
-	})
-}
-
-func getCodeClient(d *schema.ResourceData, version string, hc httpclient.Config) *code.APIClient {
-	return code.NewAPIClient(&code.Configuration{
-		AccountId:     d.Get("account_id").(string),
-		BasePath:      d.Get("endpoint").(string) + "/code/api/v1", // todo: this should be fixed in go sdk later
-		ApiKey:        d.Get("platform_api_key").(string),
-		UserAgent:     fmt.Sprintf("terraform-provider-harness-platform-%s", version),
-		HTTPClient:    httpclient.NewRetryable(hc),
-		DefaultHeader: map[string]string{"X-Api-Key": d.Get("platform_api_key").(string)}, // todo: this should be fixed in go sdk later
-	})
-}
-
-func getChaosClient(d *schema.ResourceData, version string, hc httpclient.Config) *chaos.APIClient {
-	return chaos.NewAPIClient(&chaos.Configuration{
-		AccountId:     d.Get("account_id").(string),
-		BasePath:      d.Get("endpoint").(string) + "/chaos/manager/api", // check if this can be taken from sdk
-		ApiKey:        d.Get("platform_api_key").(string),
-		UserAgent:     fmt.Sprintf("terraform-provider-harness-platform-%s", version),
-		HTTPClient:    httpclient.NewStandard(hc),
-		DefaultHeader: map[string]string{"X-Api-Key": d.Get("platform_api_key").(string)},
-	})
-}
-
-func getServiceDiscoveryClient(d *schema.ResourceData, version string, hc httpclient.Config) *svcdiscovery.APIClient {
-	return svcdiscovery.NewAPIClient(&svcdiscovery.Configuration{
-		AccountId:     d.Get("account_id").(string),
-		BasePath:      d.Get("endpoint").(string) + "/servicediscovery", // check if this can be taken from sdk
-		ApiKey:        d.Get("platform_api_key").(string),
-		UserAgent:     fmt.Sprintf("terraform-provider-harness-platform-%s", version),
-		HTTPClient:    httpclient.NewStandard(hc),
-		DefaultHeader: map[string]string{"X-Api-Key": d.Get("platform_api_key").(string)},
-	})
-}
-
-func getHarClient(d *schema.ResourceData, version string, hc httpclient.Config) *har.APIClient {
-	endpoint := d.Get("endpoint").(string)
-	return har.NewAPIClient(&har.Configuration{
-		AccountId:     d.Get("account_id").(string),
-		BasePath:      endpoint + "/har/api/v1",
-		BasePathV3:    endpoint + "/har/api/v3",
-		ApiKey:        d.Get("platform_api_key").(string),
-		UserAgent:     fmt.Sprintf("terraform-provider-harness-platform-%s", version),
-		HTTPClient:    httpclient.NewRetryable(hc),
-		DefaultHeader: map[string]string{"X-Api-Key": d.Get("platform_api_key").(string)},
-	})
-}
-
-func getIDPClient(d *schema.ResourceData, version string, hc httpclient.Config) *idp.APIClient {
-	return idp.NewAPIClient(&idp.Configuration{
-		AccountId:  d.Get("account_id").(string),
-		BasePath:   d.Get("endpoint").(string),
-		ApiKey:     d.Get("platform_api_key").(string),
-		UserAgent:  fmt.Sprintf("terraform-provider-harness-platform-%s", version),
-		HTTPClient: httpclient.NewRetryable(hc),
-	})
-}
-
-func getPOClient(d *schema.ResourceData, version string, hc httpclient.Config) *po.APIClient {
-	return po.NewAPIClient(&po.Configuration{
-		AccountId:     d.Get("account_id").(string),
-		BasePath:      d.Get("endpoint").(string) + "/po",
-		ApiKey:        d.Get("platform_api_key").(string),
-		UserAgent:     fmt.Sprintf("terraform-provider-harness-platform-%s", version),
-		HTTPClient:    httpclient.NewRetryable(hc),
-		DefaultHeader: map[string]string{"X-Api-Key": d.Get("platform_api_key").(string)},
-	})
-}
-
-func getPolicyClient(d *schema.ResourceData, version string, hc httpclient.Config) *policymgmt.APIClient {
-	cfg := policymgmt.NewConfiguration()
-	cfg.BasePath = d.Get("endpoint").(string) + "/pm"
-	cfg.UserAgent = fmt.Sprintf("terraform-provider-harness-platform-%s", version)
-	cfg.HTTPClient = httpclient.NewRetryable(hc)
-	cfg.DebugLogging = false
-	return policymgmt.NewAPIClient(cfg)
-}
-
-func resolveFMEAdminAPIEndpoint(endpoint, override string) (string, error) {
-	if override != "" {
-		return override, nil
-	}
-
-	endpoint = strings.TrimRight(endpoint, "/")
-	if !strings.HasSuffix(endpoint, "/gateway") {
-		return "", fmt.Errorf("cannot derive FME admin API endpoint from %q: endpoint must end in /gateway", endpoint)
-	}
-
-	return strings.TrimSuffix(endpoint, "/gateway") + "/fme", nil
-}
-
-// getSplitClient returns a Split API client for FME resources using account_id and platform_api_key.
-// The Split SDK layers its own rate-limit/retry transport on the plain client it is given.
-func getSplitClient(d *schema.ResourceData, version, basePath string, hc httpclient.Config) *split.APIClient {
-	apiKey := d.Get("platform_api_key").(string)
-	cfg := &split.Configuration{
-		AccountId:     d.Get("account_id").(string),
-		BasePath:      basePath,
-		ApiKey:        apiKey,
-		UserAgent:     fmt.Sprintf("terraform-provider-harness-%s", version),
-		HTTPClient:    httpclient.NewPlain(hc),
-		DefaultHeader: map[string]string{"X-Api-Key": apiKey},
-	}
-	return split.NewAPIClient(cfg)
-}
-
-// Setup the client for interacting with the Harness API
+// configure builds the session for the SDK v2 half of the provider from the same
+// SessionConfig the plugin-framework half uses (see session.go).
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+		cfg := SessionConfig{
+			Endpoint:            d.Get("endpoint").(string),
+			FMEAdminAPIEndpoint: d.Get("fme_admin_api_endpoint").(string),
+			AccountID:           d.Get("account_id").(string),
+			APIKey:              d.Get("api_key").(string),
+			PlatformAPIKey:      d.Get("platform_api_key").(string),
+			MaxRetries:          d.Get("max_retries").(int),
+			RequestTimeout:      time.Duration(d.Get("request_timeout").(int)) * time.Second,
+			Version:             version,
+		}
+		warnings, err := cfg.Validate()
+		if err != nil {
+			return nil, diag.FromErr(err)
+		}
 		var diags diag.Diagnostics
-
-		endpoint := d.Get("endpoint").(string)
-		fmeAdminAPIEndpointOverride := d.Get("fme_admin_api_endpoint").(string)
-		accountId := d.Get("account_id").(string)
-		apiKey := d.Get("api_key").(string)
-		platformApiKey := d.Get("platform_api_key").(string)
-
-		// Validate endpoint URL format
-		parsedURL, err := url.Parse(endpoint)
-		if err != nil || parsedURL.Scheme == "" || parsedURL.Host == "" {
-			return nil, diag.Errorf(
-				"Invalid Harness API endpoint %q. The endpoint must be a valid URL with a scheme (http/https) and host. "+
-					"Example: https://app.harness.io/gateway. "+
-					"This can be set using the 'endpoint' provider attribute or the %s environment variable.",
-				endpoint, helpers.EnvVars.Endpoint.String(),
-			)
+		for _, w := range warnings {
+			diags = append(diags, diag.Diagnostic{Severity: diag.Warning, Summary: w.Summary, Detail: w.Detail})
 		}
-
-		if accountId == "" {
-			diags = append(diags, diag.Diagnostic{
-				Severity: diag.Warning,
-				Summary:  "Harness account_id is not configured",
-				Detail: fmt.Sprintf(
-					"The account_id is not set. Most Harness resources require an account_id to function correctly. "+
-						"Set it in the provider configuration or via the %s environment variable.",
-					helpers.EnvVars.AccountId.String(),
-				),
-			})
-		}
-
-		if apiKey == "" && platformApiKey == "" {
-			diags = append(diags, diag.Diagnostic{
-				Severity: diag.Warning,
-				Summary:  "No Harness API key configured",
-				Detail: fmt.Sprintf(
-					"Neither api_key nor platform_api_key is set. API operations will fail without authentication. "+
-						"Set platform_api_key (env: %s) for NextGen/Platform resources or api_key (env: %s) for FirstGen resources. "+
-						"See https://registry.terraform.io/providers/harness/harness/latest/docs#api_key-1 for more details.",
-					helpers.EnvVars.PlatformApiKey.String(), helpers.EnvVars.ApiKey.String(),
-				),
-			})
-		}
-
-		fmeAdminAPIEndpoint, fmeAdminAPIEndpointErr := resolveFMEAdminAPIEndpoint(endpoint, fmeAdminAPIEndpointOverride)
-		hc := newHTTPConfig(d, version)
-
-		session := &internal.Session{
-			AccountId:                accountId,
-			Endpoint:                 endpoint,
-			CDClient:                 getCDClient(d, version, hc),
-			PLClient:                 getPLClient(d, version, hc),
-			Client:                   getClient(d, version, hc),
-			CodeClient:               getCodeClient(d, version, hc),
-			DBOpsClient:              getDBOpsClient(d, version, hc),
-			ChaosClient:              getChaosClient(d, version, hc),
-			SDClient:                 getServiceDiscoveryClient(d, version, hc),
-			FMEAdminAPIEndpointError: fmeAdminAPIEndpointErr,
-			HARClient:                getHarClient(d, version, hc),
-			IDPClient:                getIDPClient(d, version, hc),
-			POClient:                 getPOClient(d, version, hc),
-			PolicyClient:             getPolicyClient(d, version, hc),
-		}
-		if fmeAdminAPIEndpointErr == nil {
-			session.SplitClient = getSplitClient(d, version, fmeAdminAPIEndpoint, hc)
-		}
-
-		return session, diags
+		return NewSession(ctx, cfg), diags
 	}
 }

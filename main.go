@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/harness/terraform-provider-harness/internal/provider"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
+	"github.com/hashicorp/terraform-plugin-go/tfprotov5/tf5server"
 )
 
 // Run "go generate" to format example terraform files and generate the docs for the registry/website
@@ -17,7 +17,7 @@ import (
 
 // Run the docs generation tool, check its repository for more information on how it works and how docs
 // can be customized.
-//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
+//go:generate go tool tfplugindocs
 
 var (
 	// these will be set by the goreleaser configuration
@@ -34,15 +34,20 @@ func main() {
 	flag.BoolVar(&debugMode, "debug", false, "set to true to run the provider with support for debuggers like delve")
 	flag.Parse()
 
-	opts := &plugin.ServeOpts{ProviderFunc: provider.Provider(version)}
+	ctx := context.Background()
 
-	if debugMode {
-		err := plugin.Debug(context.Background(), "harness/harness", opts)
-		if err != nil {
-			log.Fatal(err.Error())
-		}
-		return
+	// The SDK v2 provider and the plugin-framework provider are served as one provider.
+	muxServer, err := provider.NewMuxServer(ctx, version)
+	if err != nil {
+		log.Fatal(err.Error())
 	}
 
-	plugin.Serve(opts)
+	var serveOpts []tf5server.ServeOpt
+	if debugMode {
+		serveOpts = append(serveOpts, tf5server.WithManagedDebug())
+	}
+
+	if err := tf5server.Serve("registry.terraform.io/harness/harness", muxServer, serveOpts...); err != nil {
+		log.Fatal(err.Error())
+	}
 }
