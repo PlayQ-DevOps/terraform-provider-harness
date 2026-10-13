@@ -1,6 +1,8 @@
-// Package connectorbase holds the CRUD logic shared by every connector resource and data
-// source: scope-aware read, create-or-update, delete and the common attribute mapping.
-// Each connector type adds only its schema, its build function and its read function.
+// Package connectorbase holds the SDK v2 CRUD logic of the connector resources. The served
+// provider no longer uses it: every connector is served by the framework through
+// internal/service/platform/connectors. It remains so provider.LegacySDKProvider can apply
+// SDK v2 state in acctest.RunMigration, which proves the migrated state is taken over
+// without a diff.
 package connectorbase
 
 import (

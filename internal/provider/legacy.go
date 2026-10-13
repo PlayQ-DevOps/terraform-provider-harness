@@ -8,9 +8,10 @@ import (
 )
 
 // LegacySDKProvider is the SDK v2 provider with the SDK v2 implementations of the types
-// that have been migrated to the framework added back. acctest.RunMigration applies state
-// with it and then hands that state to the muxed provider, proving the migration leaves
-// an empty plan. It is never served to users.
+// that have been migrated to the framework added back (organization, project and every
+// connector). acctest.RunMigration applies state with it and then hands that state to the
+// muxed provider, proving the migration leaves an empty plan. It is test scaffolding and is
+// never served to users; the legacy CRUD code it needs stays for that reason only.
 func LegacySDKProvider(version string) *schema.Provider {
 	p := Provider(version)()
 	p.ResourcesMap["harness_platform_organization"] = organization.LegacyResourceOrganization()
