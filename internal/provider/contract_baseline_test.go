@@ -89,6 +89,7 @@ var contractBaselineCounts = map[string]map[string]int{
 		"harness_platform_connector_github":               1,
 		"harness_platform_connector_jira":                 3,
 		"harness_platform_connector_service_now":          3,
+		"harness_platform_connector_spot":                 1,
 		"harness_platform_connector_terraform_cloud":      1,
 		"harness_platform_connector_vault":                2,
 		"harness_platform_dashboards":                     5,
