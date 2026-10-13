@@ -18,9 +18,9 @@ func TestAccResourceAnsiblePlaybook(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceAnsiblePlaybookDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceAnsiblePlaybookDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceAnsiblePlaybook(id, name),

@@ -22,9 +22,9 @@ func TestAccResourceCatalogEntity(t *testing.T) {
 	resourceName := "harness_platform_idp_catalog_entity.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCatalogEntityDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCatalogEntityDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceCatalogEntity(id, description),
@@ -56,9 +56,9 @@ func TestAccResourceCatalogEntityDetectsDrift(t *testing.T) {
 	resourceName := "harness_platform_idp_catalog_entity.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCatalogEntityDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCatalogEntityDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceCatalogEntity(id, description),
@@ -123,9 +123,9 @@ func TestAccResourceRemoteCatalogEntity(t *testing.T) {
 	resourceName := "harness_platform_idp_catalog_entity.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCatalogEntityDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCatalogEntityDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRemoteCatalogEntity(id, description),
@@ -222,9 +222,9 @@ func TestAccResourceImportRemoteCatalogEntity(t *testing.T) {
 	resourceName := "harness_platform_idp_catalog_entity.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCatalogEntityDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCatalogEntityDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceImportRemoteCatalogEntity(),

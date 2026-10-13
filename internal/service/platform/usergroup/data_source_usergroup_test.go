@@ -16,8 +16,8 @@ func TestAccDataSourceUserGroupAccountLevel(t *testing.T) {
 	resourceName := "data.harness_platform_usergroup.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceUserGroupAccountLevel(id, name),
@@ -36,8 +36,8 @@ func TestAccDataSourceUserGroupProjectLevel(t *testing.T) {
 	resourceName := "data.harness_platform_usergroup.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceUserGroupProjectLevel(id, name),
@@ -58,8 +58,8 @@ func TestAccDataSourceUserGroupOrgLevel(t *testing.T) {
 	resourceName := "data.harness_platform_usergroup.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceUserGroupOrgLevel(id, name),
@@ -80,8 +80,8 @@ func TestAccDataSourceUserGroupByNameAccountLevel(t *testing.T) {
 	resourceName := "data.harness_platform_usergroup.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceUserGroupByNameAccountLevel(id, name),
@@ -100,8 +100,8 @@ func TestAccDataSourceUserGroupByNameProjectLevel(t *testing.T) {
 	resourceName := "data.harness_platform_usergroup.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceUserGroupByNameProjectLevel(id, name),
@@ -122,8 +122,8 @@ func TestAccDataSourceUserGroupByNameOrgLevel(t *testing.T) {
 	resourceName := "data.harness_platform_usergroup.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceUserGroupByNameOrgLevel(id, name),

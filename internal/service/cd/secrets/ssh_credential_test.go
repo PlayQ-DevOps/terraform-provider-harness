@@ -19,9 +19,9 @@ func TestAccResourceSSHCredential_SSHAuthentication(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_ssh_credential.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSSHCredentialDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSSHCredentialDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSSHCredential(name, true, graphql.SSHAuthenticationTypes.SSHAuthentication),
@@ -47,8 +47,8 @@ func TestAccResourceSSHCredential_SSHAuthentication_DeleteUnderlyingResource(t *
 	resourceName := "harness_ssh_credential.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSSHCredential(name, true, graphql.SSHAuthenticationTypes.SSHAuthentication),
@@ -81,9 +81,9 @@ func TestAccResourceSSHCredential_KerberosAuthentication(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_ssh_credential.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSSHCredentialDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSSHCredentialDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSSHCredential(name, true, graphql.SSHAuthenticationTypes.KerberosAuthentication),
@@ -105,8 +105,8 @@ func TestAccResourceSSHCredential_BadAuthenticationMethods(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccResourceSSHCredentialBadAuthenticationMethod(name),
@@ -121,8 +121,8 @@ func TestAccResourceSSHCredential_SSH_BadSSHAuthenticationTypes(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccResourceSSHCredentialBadSSHAuthenticationTypes(name),

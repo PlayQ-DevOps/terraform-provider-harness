@@ -11,7 +11,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func ResourceOrganization() *schema.Resource {
+// LegacyResourceOrganization is the SDK v2 implementation, kept only for the migration test
+// (acctest.RunMigration applies state with it, then the framework implementation takes over).
+func LegacyResourceOrganization() *schema.Resource {
 	resource := &schema.Resource{
 		Description: "Resource for creating a Harness organization.",
 
@@ -46,7 +48,7 @@ func resourceOrganizationRead(ctx context.Context, d *schema.ResourceData, meta 
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	readOrganization(d, resp.Data.Organization)
+	legacyReadOrganization(d, resp.Data.Organization)
 
 	return nil
 }
@@ -55,7 +57,7 @@ func resourceOrganizationCreateOrUpdate(ctx context.Context, d *schema.ResourceD
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 
 	id := d.Id()
-	org := buildOrganization(d)
+	org := legacyBuildOrganization(d)
 
 	var err error
 	var resp nextgen.ResponseDtoOrganizationResponse
@@ -71,7 +73,7 @@ func resourceOrganizationCreateOrUpdate(ctx context.Context, d *schema.ResourceD
 		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
-	readOrganization(d, resp.Data.Organization)
+	legacyReadOrganization(d, resp.Data.Organization)
 
 	return nil
 }
@@ -87,7 +89,7 @@ func resourceOrganizationDelete(ctx context.Context, d *schema.ResourceData, met
 	return nil
 }
 
-func buildOrganization(d *schema.ResourceData) *nextgen.Organization {
+func legacyBuildOrganization(d *schema.ResourceData) *nextgen.Organization {
 	return &nextgen.Organization{
 		Identifier:  d.Get("identifier").(string),
 		Name:        d.Get("name").(string),
@@ -96,7 +98,7 @@ func buildOrganization(d *schema.ResourceData) *nextgen.Organization {
 	}
 }
 
-func readOrganization(d *schema.ResourceData, org *nextgen.Organization) {
+func legacyReadOrganization(d *schema.ResourceData, org *nextgen.Organization) {
 	d.SetId(org.Identifier)
 	d.Set("identifier", org.Identifier)
 	d.Set("name", org.Name)

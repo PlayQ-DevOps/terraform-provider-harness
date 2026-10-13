@@ -20,9 +20,9 @@ func TestAccResourceDashboardFolder(t *testing.T) {
 	resourceName := "harness_platform_dashboard_folder.folder"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDashboardFolderDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDashboardFolderDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDashboardFolder(name),

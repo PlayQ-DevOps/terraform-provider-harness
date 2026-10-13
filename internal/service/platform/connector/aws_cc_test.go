@@ -18,9 +18,9 @@ func TestAccResourceConnectorAwsCC(t *testing.T) {
 	resourceName := "harness_platform_connector_awscc.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorAwsCC(id, name),
@@ -91,9 +91,9 @@ func TestAccResourceConnectorAwsCCNoCUR(t *testing.T) {
 	resourceName := "harness_platform_connector_awscc.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorAwsCCNoCUR(id, name),

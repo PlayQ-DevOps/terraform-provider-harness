@@ -126,9 +126,7 @@ import (
 	"github.com/harness/terraform-provider-harness/internal/service/platform/default_images"
 	idp_resource "github.com/harness/terraform-provider-harness/internal/service/platform/idp"
 	"github.com/harness/terraform-provider-harness/internal/service/platform/monitored_service"
-	"github.com/harness/terraform-provider-harness/internal/service/platform/organization"
 	pl_permissions "github.com/harness/terraform-provider-harness/internal/service/platform/permissions"
-	"github.com/harness/terraform-provider-harness/internal/service/platform/project"
 	pl_provider "github.com/harness/terraform-provider-harness/internal/service/platform/provider"
 	"github.com/harness/terraform-provider-harness/internal/service/platform/repo"
 	"github.com/harness/terraform-provider-harness/internal/service/platform/resource_group"
@@ -285,12 +283,9 @@ func Provider(version string) func() *schema.Provider {
 				"harness_platform_infrastructure":                     cdng_infrastructure.DataSourceInfrastructure(),
 				"harness_platform_input_set":                          pipeline_input_set.DataSourceInputSet(),
 				"harness_platform_monitored_service":                  monitored_service.DataSourceMonitoredService(),
-				"harness_platform_organization":                       organization.DataSourceOrganization(),
 				"harness_platform_pipeline":                           pipeline.DataSourcePipeline(),
 				"harness_platform_pipeline_list":                      pipeline.DataSourcePipelineList(),
 				"harness_platform_permissions":                        pl_permissions.DataSourcePermissions(),
-				"harness_platform_project":                            project.DataSourceProject(),
-				"harness_platform_project_list":                       project.DataSourceProjectList(),
 				"harness_platform_service":                            cdng_service.DataSourceService(),
 				"harness_platform_service_list":                       cdng_service.DataSourceServiceList(),
 				"harness_platform_usergroup":                          usergroup.DataSourceUserGroup(),
@@ -500,10 +495,8 @@ func Provider(version string) func() *schema.Provider {
 				"harness_platform_infrastructure":                        cdng_infrastructure.ResourceInfrastructure(),
 				"harness_platform_input_set":                             pipeline_input_set.ResourceInputSet(),
 				"harness_platform_monitored_service":                     monitored_service.ResourceMonitoredService(),
-				"harness_platform_organization":                          organization.ResourceOrganization(),
 				"harness_platform_pipeline":                              pipeline.ResourcePipeline(),
 				"harness_platform_trigger_pipeline":                      trigger_pipeline.ResourceTriggerPipeline(),
-				"harness_platform_project":                               project.ResourceProject(),
 				"harness_platform_service":                               cdng_service.ResourceService(),
 				"harness_platform_user":                                  pl_user.ResourceUser(),
 				"harness_platform_usergroup":                             usergroup.ResourceUserGroup(),

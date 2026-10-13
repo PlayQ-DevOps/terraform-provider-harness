@@ -22,8 +22,8 @@ func TestAccResourceTriggerPipeline_WaitAndCaptureOutputs(t *testing.T) {
 	var firstId string
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				// Fire-and-forget: trigger the run but don't wait.

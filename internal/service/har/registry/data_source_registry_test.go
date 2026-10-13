@@ -18,8 +18,8 @@ func TestAccDataSourceVirtualRegistry(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				PreConfig: func() {
@@ -41,8 +41,8 @@ func TestAccDataSourceUpstreamAWSRegistry(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				PreConfig: func() {
@@ -64,8 +64,8 @@ func TestAccDataSourceUpstreamAWSRegistry2(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				PreConfig: func() {
@@ -172,8 +172,8 @@ func TestAccDataSourceUpstreamNpmRegistryFirewall(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				PreConfig: func() {
@@ -198,8 +198,8 @@ func TestAccDataSourceVirtualRegistryMetadata(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				PreConfig: func() {

@@ -15,8 +15,8 @@ func TestAccDataSourceYamlConfig_CloudProvider(t *testing.T) {
 	resourceName := "data.harness_yaml_config.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceYamlConfigCloudProvider(expectedName),

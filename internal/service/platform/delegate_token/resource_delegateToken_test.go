@@ -20,9 +20,9 @@ func TestAccResourceDelegateToken(t *testing.T) {
 	resourceName := "harness_platform_delegatetoken.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testDelegateTokenDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testDelegateTokenDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: tesAccResourceDelegateToken(name, account_id),
@@ -43,9 +43,9 @@ func TestAccResourceDelegateTokenOrgLevel(t *testing.T) {
 	resourceName := "harness_platform_delegatetoken.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testDelegateTokenDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testDelegateTokenDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: tesAccResourceDelegateTokenOrgLevel(name, account_id, org_id),
@@ -67,9 +67,9 @@ func TestAccResourceDelegateTokenProjectLevel(t *testing.T) {
 	resourceName := "harness_platform_delegatetoken.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testDelegateTokenDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testDelegateTokenDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: tesAccResourceDelegateTokenProjectLevel(name, account_id, org_id, project_id),
@@ -89,9 +89,9 @@ func TestAccResourceDelegateTokenWithRevokeAfter(t *testing.T) {
 	resourceName := "harness_platform_delegatetoken.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testDelegateTokenDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testDelegateTokenDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDelegateTokenWithRevokeAfter(name, account_id),
@@ -115,7 +115,7 @@ func TestAccResourceDelegateTokenWithRevokeAfter(t *testing.T) {
 
 // 	resource.Test(t, resource.TestCase{
 // 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-// 		ProviderFactories: acctest.ProviderFactories,
+// 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 // 		Steps: []resource.TestStep{
 // 			{
 // 				Config: tesAccResourceDelegateToken(name, account_id),
@@ -144,7 +144,7 @@ func TestAccResourceDelegateTokenWithRevokeAfter(t *testing.T) {
 
 // 	resource.Test(t, resource.TestCase{
 // 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-// 		ProviderFactories: acctest.ProviderFactories,
+// 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 // 		Steps: []resource.TestStep{
 // 			{
 // 				Config: tesAccResourceDelegateTokenOrgLevel(name, account_id, org_id),
@@ -174,7 +174,7 @@ func TestAccResourceDelegateTokenWithRevokeAfter(t *testing.T) {
 
 // 	resource.Test(t, resource.TestCase{
 // 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-// 		ProviderFactories: acctest.ProviderFactories,
+// 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 // 		Steps: []resource.TestStep{
 // 			{
 // 				Config: tesAccResourceDelegateTokenProjectLevel(name, account_id, org_id, project_id),

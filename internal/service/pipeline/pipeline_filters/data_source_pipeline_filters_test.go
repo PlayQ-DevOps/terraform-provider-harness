@@ -16,8 +16,8 @@ func TestAccDataSourcePipelineFilters(t *testing.T) {
 	resourceName := "data.harness_platform_pipeline_filters.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourcePipelineFilters(id, name),
@@ -50,8 +50,8 @@ func TestAccDataSourcePipelineFiltersOrgLevel(t *testing.T) {
 	resourceName := "data.harness_platform_pipeline_filters.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourcePipelineFiltersOrgLevel(id, name),

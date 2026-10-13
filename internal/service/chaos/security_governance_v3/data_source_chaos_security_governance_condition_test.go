@@ -17,8 +17,8 @@ func TestAccDataSourceChaosSecurityGovernanceCondition(t *testing.T) {
 	resourceName := "harness_chaos_security_governance_condition_v3.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceChaosSecurityGovernanceConditionConfig(rName, id, "Kubernetes"),

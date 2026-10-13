@@ -18,8 +18,8 @@ func TestAccDataSourceRoleAssignments(t *testing.T) {
 	resourceName := "data.harness_platform_role_assignments.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceRoleAssignments(id, name, accountId),
@@ -47,7 +47,7 @@ func TestAccDataSourceRoleAssignmentsProjectLevel(t *testing.T) {
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceRoleAssignmentsProjectLevel(id, name, accountId),
@@ -73,8 +73,8 @@ func TestAccDataSourceRoleAssignmentsOrgLevel(t *testing.T) {
 	resourceName := "data.harness_platform_role_assignments.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},

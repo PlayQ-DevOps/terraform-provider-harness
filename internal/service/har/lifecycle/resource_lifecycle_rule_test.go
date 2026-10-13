@@ -62,9 +62,9 @@ func TestAccLifecycleRuleDeleteAction(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
 		resource.Test(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleBasic(name, sc),
@@ -92,9 +92,9 @@ func TestAccLifecycleRuleProtectAction(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
 		resource.Test(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleProtect(name, sc),
@@ -115,9 +115,9 @@ func TestAccLifecycleRuleKeepLastN(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
 		resource.Test(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleWithKeepLastN(name, sc, 10),
@@ -147,9 +147,9 @@ func TestAccLifecycleRuleAgeBased(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
 		resource.Test(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleWithAgeBased(name, sc),
@@ -171,9 +171,9 @@ func TestAccLifecycleRuleMultipleCriteria(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
 		resource.Test(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleWithMultipleCriteria(name, sc),
@@ -195,9 +195,9 @@ func TestAccLifecycleRuleWithSchedule(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
 		resource.Test(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleWithSchedule(name, sc),
@@ -223,9 +223,9 @@ func TestAccLifecycleRuleDockerFilter(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
 		resource.Test(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleWithDockerFilter(name, sc),
@@ -247,9 +247,9 @@ func TestAccLifecycleRuleUpdate(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
 		resource.Test(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleWithKeepLastN(name, sc, 10),
@@ -277,9 +277,9 @@ func TestAccLifecycleRuleDryRun(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
 		resource.Test(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleWithKeepLastN(name, sc, 5),

@@ -20,8 +20,8 @@ func TestAccResourceGitopsProjectAccLevel(t *testing.T) {
 	resourceName := "harness_platform_gitops_app_project.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		//CheckDestroy:      testAccResourceGitopsRepositoryDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{

@@ -58,9 +58,9 @@ func TestAccResourceGitConnector(t *testing.T) {
 	)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccGitConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccGitConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: acctest.TestAccResourceGitConnector_default(name),
@@ -93,8 +93,8 @@ func TestAccResourceGitConnector_DeleteUnderlyingResource(t *testing.T) {
 	)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:                    testAccResourceGitConnector(name, false, false, false),

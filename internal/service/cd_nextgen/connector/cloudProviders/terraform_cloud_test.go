@@ -35,8 +35,8 @@ func TestAccResourceConnectorTerraformCloud_DeleteUnderlyingResource(t *testing.
 	resourceName := "harness_platform_connector_terraform_cloud.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorTerraformCloudNoDependency(id, name),
@@ -64,8 +64,8 @@ func executeTfCloudTest(t *testing.T, config string, executeOnDelegate string, i
 	resourceName := "harness_platform_connector_terraform_cloud.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},

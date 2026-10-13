@@ -20,8 +20,8 @@ func TestAccDatasourceGitopsAppProjectMapping(t *testing.T) {
 	dataSourceName := "data.harness_platform_gitops_app_project_mapping.test1"
 	argoProject := "test123"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				// Test Case 1: Data source reads auto_create_service_env = true

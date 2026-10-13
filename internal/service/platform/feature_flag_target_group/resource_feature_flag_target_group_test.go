@@ -22,9 +22,9 @@ func TestAccResourceFeatureFlagTargetGroup(t *testing.T) {
 	resourceName := "harness_platform_environment.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceFeatureFlagTargetGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceFeatureFlagTargetGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFeatureFlagTargetGroup(id, name),

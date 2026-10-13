@@ -27,7 +27,7 @@ func TestResourceAWSProxy(t *testing.T) {
 			acctest.TestAccPreCheck(t)
 			cleanupStaleAWSProxies(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAWSProxy(name, apiKey),

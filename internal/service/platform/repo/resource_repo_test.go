@@ -25,9 +25,9 @@ func TestProjResourceRepo(t *testing.T) {
 	identifier := identifier(t.Name())
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testRepoDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testRepoDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjResourceRepo(identifier, description),
@@ -59,9 +59,9 @@ func TestAccResourceRepo(t *testing.T) {
 	identifier := identifier(t.Name())
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testRepoDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testRepoDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRepo(identifier, description),
@@ -93,9 +93,9 @@ func TestAccResourceRepo_Import(t *testing.T) {
 	identifier := identifier(t.Name())
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testRepoDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testRepoDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRepoImport(identifier, description, providerRepo),
@@ -127,9 +127,9 @@ func TestProjResourceRepo_Import(t *testing.T) {
 	identifier := identifier(t.Name())
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testRepoDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testRepoDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjResourceRepoImport(identifier, description, providerRepo),
@@ -163,9 +163,9 @@ func TestAccResourceRepo_DeleteUnderlyingResource(t *testing.T) {
 	identifier := identifier(t.Name())
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testRepoDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testRepoDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjResourceRepo(identifier, description),
@@ -202,8 +202,8 @@ func TestAccResourceRepo_ImportNonExistentGithubRepo(t *testing.T) {
 	id := identifier(t.Name())
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccResourceRepoImport(id, description, "nonexistent-org-abc123/nonexistent-repo-xyz789"),

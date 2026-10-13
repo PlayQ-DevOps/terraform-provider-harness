@@ -27,8 +27,8 @@ func TestAccDataSourceChaosImageRegistry(t *testing.T) {
 	resourceName := "harness_chaos_image_registry.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceChaosImageRegistryConfig(rName, id, "docker.io", "test-account"),
@@ -51,8 +51,8 @@ func TestAccDataSourceChaosImageRegistry_CheckOverride(t *testing.T) {
 	dataSourceName := "data.harness_chaos_image_registry.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceChaosImageRegistryCheckOverrideConfig(rName, id, "docker.io", "test-account"),
@@ -73,8 +73,8 @@ func TestAccDataSourceChaosImageRegistry_ProjectLevel(t *testing.T) {
 	resourceName := "harness_chaos_image_registry.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceChaosImageRegistryProjectLevelConfig(rName, id, "docker.io", "test-account"),

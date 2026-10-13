@@ -22,3 +22,13 @@ func SessionFromProviderData(data any, diags *diag.Diagnostics) *internal.Sessio
 	}
 	return s
 }
+
+// RequireSession reports an error when the provider has not been configured, which no
+// CRUD call should ever see.
+func RequireSession(s *internal.Session, diags *diag.Diagnostics) bool {
+	if s == nil {
+		diags.AddError("Provider not configured", "The Harness provider was not configured before this resource was used. This is a bug in the provider.")
+		return false
+	}
+	return true
+}

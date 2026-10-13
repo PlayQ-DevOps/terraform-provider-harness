@@ -27,8 +27,8 @@ func TestResourceECSRule(t *testing.T) {
 	// provisioning can fail). Steps 2+ wait for the proxy to be healthy
 	// before running updates.
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testECSRuleWithDependency(nameFirst, name, proxyName, apiKey, true),

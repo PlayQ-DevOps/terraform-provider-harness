@@ -22,9 +22,9 @@ func TestAccResourceModuleTesting(t *testing.T) {
 	updatedProvisionerVersion := "1.6.0"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceModuleTestingDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceModuleTestingDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceModuleTesting(name, system, org, project, provisionerType, provisionerVersion),
@@ -62,9 +62,9 @@ func TestAccResourceModuleTestingWithReleasePipeline(t *testing.T) {
 	provisionerVersion := "1.5.0"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceModuleTestingDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceModuleTestingDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceModuleTestingWithReleasePipeline(name, system, org, project, provisionerType, provisionerVersion),

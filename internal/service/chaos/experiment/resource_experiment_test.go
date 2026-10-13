@@ -15,8 +15,8 @@ func TestAccResourceChaosExperiment_basic(t *testing.T) {
 	resourceName := "harness_chaos_experiment.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosExperiment_basic(name),
@@ -73,8 +73,8 @@ func TestAccResourceChaosExperiment_updateNotSupported(t *testing.T) {
 	resourceName := "harness_chaos_experiment.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosExperiment_config(name, "Initial description", `["test", "terraform"]`),
@@ -215,8 +215,8 @@ func TestAccResourceChaosExperiment_localImport(t *testing.T) {
 	resourceName := "harness_chaos_experiment.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosExperiment_localImport(name),
@@ -249,8 +249,8 @@ func TestAccResourceChaosExperiment_hubScopeFields(t *testing.T) {
 	resourceName := "harness_chaos_experiment.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosExperiment_basic(name),

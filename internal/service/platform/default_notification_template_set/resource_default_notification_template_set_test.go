@@ -19,9 +19,9 @@ func TestAccResourceDefaultNotificationTemplateSet_basic(t *testing.T) {
 	resourceName := "harness_platform_default_notification_template_set.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDefaultNotificationTemplateSetDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDefaultNotificationTemplateSetDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDefaultNotificationTemplateSetBasic(id, name),
@@ -55,9 +55,9 @@ func TestAccResourceDefaultNotificationTemplateSet_projectLevel(t *testing.T) {
 	resourceName := "harness_platform_default_notification_template_set.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDefaultNotificationTemplateSetDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDefaultNotificationTemplateSetDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDefaultNotificationTemplateSetProjectLevel(id, name),
@@ -83,9 +83,9 @@ func TestAccResourceDefaultNotificationTemplateSet_orgLevel(t *testing.T) {
 	resourceName := "harness_platform_default_notification_template_set.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDefaultNotificationTemplateSetDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDefaultNotificationTemplateSetDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDefaultNotificationTemplateSetOrgLevel(id, name),
@@ -111,9 +111,9 @@ func TestAccResourceDefaultNotificationTemplateSet_multipleChannelTypes(t *testi
 	resourceName := "harness_platform_default_notification_template_set.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDefaultNotificationTemplateSetDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDefaultNotificationTemplateSetDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDefaultNotificationTemplateSetSlack(id, name),
@@ -139,9 +139,9 @@ func TestAccResourceDefaultNotificationTemplateSet_multipleEventConfigurations(t
 	resourceName := "harness_platform_default_notification_template_set.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDefaultNotificationTemplateSetDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDefaultNotificationTemplateSetDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDefaultNotificationTemplateSetMultipleEvents(id, name),

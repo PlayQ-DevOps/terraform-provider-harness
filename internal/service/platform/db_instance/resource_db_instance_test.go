@@ -21,9 +21,9 @@ func TestAccResourceDBInstance(t *testing.T) {
 	resourceName := "harness_platform_db_instance.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDBInstanceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDBInstanceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDBInstance(id, name),
@@ -60,9 +60,9 @@ func TestAccResourceDBInstanceWithSubstituteProps(t *testing.T) {
 	resourceName := "harness_platform_db_instance.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDBInstanceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDBInstanceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDBInstanceWithSubstituteProps(id, name),
@@ -226,9 +226,9 @@ func TestAccResourceDBInstanceWithCommitSha(t *testing.T) {
 	resourceName := "harness_platform_db_instance.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDBInstanceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDBInstanceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDBInstanceWithCommitSha(id, name),
@@ -265,9 +265,9 @@ func TestAccResourceDBInstanceWithGitTag(t *testing.T) {
 	resourceName := "harness_platform_db_instance.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDBInstanceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDBInstanceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDBInstanceWithGitTag(id, name),
@@ -302,8 +302,8 @@ func TestAccResourceDBInstanceConflictingFields(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccResourceDBInstanceWithConflictingFields(id, name),
@@ -319,9 +319,9 @@ func TestAccResourceDBInstanceTransitionRevisionStrategy(t *testing.T) {
 	resourceName := "harness_platform_db_instance.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDBInstanceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDBInstanceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDBInstanceWithCommitSha(id, name),

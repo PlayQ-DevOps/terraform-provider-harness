@@ -14,9 +14,9 @@ func TestAccResourceInfrastructureDefinition_AwsEcs_Fargate(t *testing.T) {
 	resourceName := "harness_infrastructure_definition.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccInfraDefDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccInfraDefDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccInfraDefAwsAmi_ECS_Fargate(expectedName),
@@ -40,9 +40,9 @@ func TestAccResourceInfrastructureDefinition_AwsEcs_EC2(t *testing.T) {
 	resourceName := "harness_infrastructure_definition.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccInfraDefDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccInfraDefDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccInfraDefAwsAmi_ECS_EC2(expectedName),

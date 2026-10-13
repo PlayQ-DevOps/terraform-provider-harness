@@ -27,9 +27,9 @@ func TestAccResourceGitopsCluster(t *testing.T) {
 	clusterName := id
 	resourceName := "harness_platform_gitops_cluster.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsClusterDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsClusterAccountLevel(id, accountId, name, agentId, clusterName, clusterServer, clusterToken),
@@ -62,9 +62,9 @@ func TestAccResourceGitopsCluster(t *testing.T) {
 	clusterName = id
 	resourceName = "harness_platform_gitops_cluster.test2"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsClusterDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsClusterAccountLevelTags(id, accountId, name, agentId, clusterName, clusterServer, clusterToken),
@@ -97,9 +97,9 @@ func TestAccResourceGitopsCluster(t *testing.T) {
 	clusterName = id
 	resourceName = "harness_platform_gitops_cluster.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsClusterDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsClusterProjectLevel(id, accountId, name, agentId, clusterName, clusterServer, clusterToken),
@@ -140,9 +140,9 @@ func TestAccResourceGitopsClusterIAMProject(t *testing.T) {
 	caData := os.Getenv("HARNESS_TEST_AWS_CLUSTER_CA_DATA")
 	agentId := os.Getenv("HARNESS_TEST_AWS_GITOPS_AGENT")
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsClusterDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsClusterProjectLevelIAM(id, accountId, name, agentId, clusterName, clusterServer, roleARN, awsClusterName, caData),
@@ -187,9 +187,9 @@ func TestAccResourceGitopsClusterExecProviderProject(t *testing.T) {
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsClusterDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsClusterProjectLevelExecProvider(id, accountId, name, agentId, clusterName, clusterServer, caData, awsAccessKeyId, awsSecretAccessKey),
@@ -227,9 +227,9 @@ func TestAccResourceGitopsClusterSecretExpressions(t *testing.T) {
 	resourceName := "harness_platform_gitops_cluster.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsClusterDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				// Step 1: Create cluster with secret_expressions backed by a TF-managed secret
@@ -580,9 +580,9 @@ func TestAccResourceGitopsClusterExecProviderProjectUpdate(t *testing.T) {
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsClusterDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				// Step 1: Create the cluster with basic config
@@ -688,9 +688,9 @@ func TestAccResourceGitopsClusterExecProviderProjectAppSync(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsClusterDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				// Step 1: Create the cluster and the application
@@ -726,9 +726,9 @@ func TestAccResourceGitopsClusterTLSProject(t *testing.T) {
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsClusterDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsClusterProjectLevelTLS(id, accountId, name, agentId, clusterName, clusterServer, caData, certData, keyData),
@@ -772,9 +772,9 @@ func TestAccResourceGitopsClusterTLSProjectUpdate(t *testing.T) {
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsClusterDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				// Step 1: Create the cluster with basic config
@@ -829,9 +829,9 @@ func TestAccResourceGitopsClusterTLSProjectAppSync(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsClusterDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				// Step 1: Create the cluster and the application
@@ -1134,9 +1134,9 @@ func TestAccResourceGitopsClusterExecProviderProjectInsecure(t *testing.T) {
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsClusterDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsClusterProjectLevelExecProviderInsecure(id, accountId, name, agentId, clusterName, clusterServer, awsAccessKeyId, awsSecretAccessKey),
@@ -1178,9 +1178,9 @@ func TestAccResourceGitopsClusterTLSProjectInsecure(t *testing.T) {
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsClusterDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsClusterProjectLevelTLSInsecure(id, accountId, name, agentId, clusterName, clusterServer, certData, keyData),
@@ -1319,7 +1319,7 @@ func TestAccResourceGitopsClusterExecProviderProjectProxy(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
@@ -1355,7 +1355,7 @@ func TestAccResourceGitopsClusterTLSProjectProxy(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		CheckDestroy:      testAccResourceGitopsClusterDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{

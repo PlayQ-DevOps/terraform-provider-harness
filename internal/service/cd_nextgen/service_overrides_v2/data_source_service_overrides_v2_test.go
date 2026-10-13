@@ -16,8 +16,8 @@ func TestAccDataSourceServiceOverrides(t *testing.T) {
 	resourceName := "data.harness_platform_service_overrides_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceServiceOverrides(id, name),
@@ -37,8 +37,8 @@ func TestDataSourceRemoteServiceOverrides(t *testing.T) {
 	resourceName := "data.harness_platform_service_overrides_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:             testRemoteAccerviceOverrides(id, name),

@@ -17,9 +17,9 @@ func TestAccSecretWinRM_ntlm(t *testing.T) {
 	resourceName := "harness_platform_secret_winrm.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_winrm_ntlm(id, name),
@@ -69,9 +69,9 @@ func TestAccSecretWinRM_ntlm_project(t *testing.T) {
 	resourceName := "harness_platform_secret_winrm.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -123,9 +123,9 @@ func TestAccSecretWinRM_kerberos_password(t *testing.T) {
 	resourceName := "harness_platform_secret_winrm.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_winrm_kerberos_password(id, name),
@@ -174,9 +174,9 @@ func TestAccSecretWinRM_kerberos_keytab(t *testing.T) {
 	resourceName := "harness_platform_secret_winrm.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_winrm_kerberos_keytab(id, name),
@@ -228,9 +228,9 @@ func TestAccSecretWinRM_ntlm_org(t *testing.T) {
 	resourceName := "harness_platform_secret_winrm.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -284,9 +284,9 @@ func TestAccSecretWinRM_kerberos_password_project(t *testing.T) {
 	resourceName := "harness_platform_secret_winrm.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -339,9 +339,9 @@ func TestAccSecretWinRM_kerberos_password_org(t *testing.T) {
 	resourceName := "harness_platform_secret_winrm.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -394,9 +394,9 @@ func TestAccSecretWinRM_kerberos_keytab_project(t *testing.T) {
 	resourceName := "harness_platform_secret_winrm.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -449,9 +449,9 @@ func TestAccSecretWinRM_kerberos_keytab_org(t *testing.T) {
 	resourceName := "harness_platform_secret_winrm.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},

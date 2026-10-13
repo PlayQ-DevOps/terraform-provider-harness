@@ -20,8 +20,8 @@ func TestAccResourceFMEApiKey_invalidType(t *testing.T) {
 	keyName := "tf_bad_key_" + testAccFMEAlphanum(8)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccResourceFMEApiKeyInvalidType(id, envName, keyName),
@@ -71,8 +71,8 @@ func TestAccResourceFMERuleBasedSegment_invalidDefinitionJSON(t *testing.T) {
 	rbsName := "tfrbsbad_" + testAccFMEAlphanum(8)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccResourceFMERuleBasedSegmentBadJSON(id, envName, rbsName),
@@ -136,8 +136,8 @@ func TestAccResourceFMEFeatureFlagDefinition_invalidDefinition(t *testing.T) {
 	flagName := "tfflagbad_" + testAccFMEAlphanum(8)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccResourceFMEFeatureFlagDefinitionInvalidJSON(id, envName, flagName),
@@ -199,8 +199,8 @@ func TestAccResourceFMETrafficTypeAttribute_invalidSearchableType(t *testing.T) 
 	attrID := "tfattrbad_" + testAccFMEAlphanum(8)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccResourceFMETrafficTypeAttributeInvalidSearchable(id, attrID),

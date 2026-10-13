@@ -13,7 +13,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func ResourceProject() *schema.Resource {
+// LegacyResourceProject is the SDK v2 implementation, kept only for the migration test
+// (acctest.RunMigration applies state with it, then the framework implementation takes over).
+func LegacyResourceProject() *schema.Resource {
 	resource := &schema.Resource{
 		Description: "Resource for creating a Harness project.",
 
@@ -63,7 +65,7 @@ func resourceProjectRead(ctx context.Context, d *schema.ResourceData, meta inter
 		return helpers.ReadMissing(ctx, d, "project "+id)
 	}
 
-	readProject(d, resp.Data.Project)
+	legacyReadProject(d, resp.Data.Project)
 
 	return nil
 }
@@ -75,7 +77,7 @@ func resourceProjectCreateOrUpdate(ctx context.Context, d *schema.ResourceData, 
 	var resp nextgen.ResponseDtoProjectResponse
 	var httpResp *http.Response
 	id := d.Id()
-	project := buildProject(d)
+	project := legacyBuildProject(d)
 
 	if id == "" {
 		resp, httpResp, err = c.ProjectApi.PostProject(ctx, nextgen.ProjectRequest{Project: project}, c.AccountId, &nextgen.ProjectApiPostProjectOpts{
@@ -91,7 +93,7 @@ func resourceProjectCreateOrUpdate(ctx context.Context, d *schema.ResourceData, 
 		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
-	readProject(d, resp.Data.Project)
+	legacyReadProject(d, resp.Data.Project)
 
 	return nil
 }
@@ -107,7 +109,7 @@ func resourceProjectDelete(ctx context.Context, d *schema.ResourceData, meta int
 	return nil
 }
 
-func buildProject(d *schema.ResourceData) *nextgen.Project {
+func legacyBuildProject(d *schema.ResourceData) *nextgen.Project {
 	return &nextgen.Project{
 		Identifier:    d.Get("identifier").(string),
 		OrgIdentifier: d.Get("org_id").(string),
@@ -119,7 +121,7 @@ func buildProject(d *schema.ResourceData) *nextgen.Project {
 	}
 }
 
-func readProject(d *schema.ResourceData, project *nextgen.Project) {
+func legacyReadProject(d *schema.ResourceData, project *nextgen.Project) {
 	d.SetId(project.Identifier)
 	d.Set("identifier", project.Identifier)
 	d.Set("org_id", project.OrgIdentifier)

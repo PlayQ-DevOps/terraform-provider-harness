@@ -20,9 +20,9 @@ func TestAccResourceNotificationRule(t *testing.T) {
 	resourceName := "harness_platform_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccNotificationRuleDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccNotificationRuleDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceNotificationRule(id, name),

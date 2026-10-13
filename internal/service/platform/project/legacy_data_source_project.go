@@ -13,7 +13,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func DataSourceProject() *schema.Resource {
+// LegacyDataSourceProject is the SDK v2 implementation, kept for the legacy provider used by the
+// migration test.
+func LegacyDataSourceProject() *schema.Resource {
 	resource := &schema.Resource{
 		Description: "Data source for retrieving a Harness project.",
 
@@ -71,7 +73,7 @@ func dataSourceProjectRead(ctx context.Context, d *schema.ResourceData, meta int
 
 	}
 
-	readProject(d, proj.Project)
+	legacyReadProject(d, proj.Project)
 
 	return nil
 }

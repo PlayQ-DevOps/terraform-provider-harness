@@ -20,9 +20,9 @@ func TestAccResourceInfraProviderVersion(t *testing.T) {
 	resourceName := "harness_platform_infra_provider_version.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccInfraProviderVersionDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccInfraProviderVersionDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceInfraProviderVersion(providerType, version, keyId),

@@ -20,9 +20,9 @@ func TestAccResourceDBSchema(t *testing.T) {
 	resourceName := "harness_platform_db_schema.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDBSchemaDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDBSchemaDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDBSchema(id, name),
@@ -65,9 +65,9 @@ func TestAccResourceDBSchemaForFlywayMigrationType(t *testing.T) {
 	resourceName := "harness_platform_db_schema.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDBSchemaDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDBSchemaDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDBSchemaForFlywayMigrationType(id, name),
@@ -108,9 +108,9 @@ func TestAccResourceDBSchemaArtifactory(t *testing.T) {
 	resourceName := "harness_platform_db_schema.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDBSchemaDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDBSchemaDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDBSchemaArtifactory(id, name),
@@ -151,9 +151,9 @@ func TestAccResourceDBSchemaWithChangelogScript(t *testing.T) {
 	resourceName := "harness_platform_db_schema.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDBSchemaDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDBSchemaDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDBSchemaWithChangelogScript(id, name),
@@ -197,9 +197,9 @@ func TestAccResourceDBSchemaWithChangelogScriptForFlywayMigrationType(t *testing
 	resourceName := "harness_platform_db_schema.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDBSchemaDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDBSchemaDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDBSchemaWithChangelogScriptForFlywayMigrationType(id, name),
@@ -243,9 +243,9 @@ func TestAccResourceDBSchemaWithUsePercona(t *testing.T) {
 	resourceName := "harness_platform_db_schema.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDBSchemaDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDBSchemaDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDBSchemaWithUsePercona(id, name),
@@ -609,9 +609,9 @@ func TestAccResourceDBSchemaHarnessCodeRepo(t *testing.T) {
 	resourceName := "harness_platform_db_schema.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDBSchemaDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDBSchemaDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDBSchemaHarnessCodeRepo(id, name),

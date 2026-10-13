@@ -19,9 +19,9 @@ func TestAccEnvServiceOverrides_ProjectScope(t *testing.T) {
 	resourceName := "harness_platform_environment_service_overrides.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccEnvServiceOverridesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccEnvServiceOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccEnvServiceOverridesProjectScope(id, name),
@@ -47,9 +47,9 @@ func TestAccEnvServiceOverrides_OrgScope(t *testing.T) {
 	resourceName := "harness_platform_environment_service_overrides.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccEnvServiceOverridesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccEnvServiceOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccEnvServiceOverridesOrgScope(id, name),
@@ -74,9 +74,9 @@ func TestAccEnvServiceOverrides_AccountScope(t *testing.T) {
 	resourceName := "harness_platform_environment_service_overrides.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccEnvServiceOverridesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccEnvServiceOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccEnvServiceOverridesAccountScope(id, name),

@@ -27,9 +27,9 @@ func TestAccResourceInfraProviderSigningKey(t *testing.T) {
 	resourceName := "harness_platform_infra_provider_signing_key.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccInfraProviderSigningKeyDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccInfraProviderSigningKeyDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceInfraProviderSigningKey(keyId, keyName, user),

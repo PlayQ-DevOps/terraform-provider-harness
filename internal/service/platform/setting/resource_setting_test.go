@@ -26,8 +26,8 @@ func TestAccResourceSetting_ProjectLevel(t *testing.T) {
 	resourceName := "harness_platform_setting.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSettingProjectLevel(id, "repo-one", true),
@@ -62,8 +62,8 @@ func TestAccResourceSetting_OrgLevel(t *testing.T) {
 	resourceName := "harness_platform_setting.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSettingOrgLevel(id, "org-repo", false),
@@ -133,7 +133,7 @@ func TestAccResourceSetting_AccountLevel(t *testing.T) {
 				t.Skipf("account already sets %s; skipping so the test doesn't reset it", testBoolSetting)
 			}
 		},
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSettingAccountLevel("true"),
@@ -171,8 +171,8 @@ func TestAccResourceSetting_DisallowOverridesRemovesChildOverride(t *testing.T) 
 	resourceName := "harness_platform_setting.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSettingOrgWithProject(id, "org-repo", true),
@@ -216,7 +216,7 @@ func TestAccResourceSetting_BooleanValue(t *testing.T) {
 				t.Skipf("%s doesn't allow overrides on this account; enable \"Allow overrides\" for it in Account Settings > Default Settings to run this test", testBoolSetting)
 			}
 		},
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSettingBooleanProjectLevel(id, "true"),

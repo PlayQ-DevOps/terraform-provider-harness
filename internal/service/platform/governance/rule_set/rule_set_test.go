@@ -17,9 +17,9 @@ func TestAccResourceRuleSet(t *testing.T) {
 	resourceName := "harness_governance_rule_set.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRuleDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRuleDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRule(name),
@@ -64,9 +64,9 @@ func TestAccResourceRuleSet_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 	var ruleSetIDBefore string
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRuleDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRuleDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRule(name),
@@ -118,9 +118,9 @@ func TestAccResourceRuleSetUpdateRuleIds(t *testing.T) {
 	resourceName := "harness_governance_rule_set.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRuleDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRuleDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccRuleSetWithOneRule(name),

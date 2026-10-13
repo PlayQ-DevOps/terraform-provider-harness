@@ -42,9 +42,9 @@ func TestAccResourceUserProjectLevel(t *testing.T) {
 	resourceName := "harness_platform_user.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserProjectLevel(id, name, email),
@@ -90,9 +90,9 @@ func TestAccResourceUserAccountLevel(t *testing.T) {
 	resourceName := "harness_platform_user.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserAccountLevel(id, name, email),
@@ -137,9 +137,9 @@ func TestAccResourceUserOrgLevel(t *testing.T) {
 	resourceName := "harness_platform_user.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserOrgLevel(id, name, email),
@@ -184,8 +184,8 @@ func TestAccResourceUser_DeleteUnderlyingResourceProjectLevel(t *testing.T) {
 	resourceName := "harness_platform_user.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 
 			{
@@ -239,8 +239,8 @@ func TestAccResourceUser_DeleteUnderlyingResourceAccountLevel(t *testing.T) {
 	resourceName := "harness_platform_user.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserAccountLevel(id, name, email),
@@ -290,8 +290,8 @@ func TestAccResourceUser_DeleteUnderlyingResourceOrgLevel(t *testing.T) {
 	resourceName := "harness_platform_user.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserOrgLevel(id, name, email),
@@ -344,9 +344,9 @@ func TestAccResourceUser_UpdateUserGroups(t *testing.T) {
 	resourceName := "harness_platform_user.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserProjectLevel(id, name, email),

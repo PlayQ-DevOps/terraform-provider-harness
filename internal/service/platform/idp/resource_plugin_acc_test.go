@@ -33,8 +33,8 @@ func TestAccResourceIdpPlugin_basic(t *testing.T) {
 	resourceName := "harness_platform_idp_plugin.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePluginBasic(pluginId),
@@ -57,8 +57,8 @@ func TestAccResourceIdpPlugin_withEnvVariables(t *testing.T) {
 	resourceName := "harness_platform_idp_plugin.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePluginWithEnvVars(pluginId, secretId),
@@ -83,8 +83,8 @@ func TestAccResourceIdpPlugin_withProxy(t *testing.T) {
 	resourceName := "harness_platform_idp_plugin.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePluginWithProxy(pluginId),
@@ -108,8 +108,8 @@ func TestAccResourceIdpPlugin_disable(t *testing.T) {
 	resourceName := "harness_platform_idp_plugin.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePluginDisabled(pluginId),
@@ -137,8 +137,8 @@ func TestAccResourceIdpPlugin_import(t *testing.T) {
 	resourceName := "harness_platform_idp_plugin.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePluginBasic(pluginId),
@@ -162,8 +162,8 @@ func TestAccDataSourceIdpPlugin(t *testing.T) {
 	resourceName := "data.harness_platform_idp_plugin.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourcePlugin(pluginId),

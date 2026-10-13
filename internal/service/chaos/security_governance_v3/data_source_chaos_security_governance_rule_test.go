@@ -17,8 +17,8 @@ func TestAccDataSourceChaosSecurityGovernanceRule(t *testing.T) {
 	resourceName := "harness_chaos_security_governance_rule_v3.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceChaosSecurityGovernanceRuleConfig(rName, id, "Kubernetes"),
@@ -41,8 +41,8 @@ func TestAccDataSourceChaosSecurityGovernanceRule_ByName(t *testing.T) {
 	dataSourceName := "data.harness_chaos_security_governance_rule_v3.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceChaosSecurityGovernanceRuleConfigByName(rName, id, "Kubernetes"),

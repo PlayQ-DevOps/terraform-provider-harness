@@ -16,9 +16,9 @@ func TestAccDataSourceFileStoreFolder(t *testing.T) {
 	resourceName := "harness_platform_file_store_folder.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccFileStoreDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccFileStoreDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceFileStore_Folder(id, name),
@@ -39,8 +39,8 @@ func TestAccDataSourceFileStoreFolderOrgLevel(t *testing.T) {
 	resourceName := "harness_platform_file_store_folder.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -65,8 +65,8 @@ func TestAccDataSourceFileStoreFolderProjectLevel(t *testing.T) {
 	resourceName := "harness_platform_file_store_folder.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},

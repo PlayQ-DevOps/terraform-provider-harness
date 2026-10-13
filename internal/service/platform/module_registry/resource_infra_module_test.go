@@ -18,9 +18,9 @@ func TestAccResourceModule(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	updatedSystem := fmt.Sprintf("%supdated", system)
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceWorkspaceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceModule(name, system),

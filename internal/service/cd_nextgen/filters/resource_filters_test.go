@@ -20,9 +20,9 @@ func TestAccResourceFilters(t *testing.T) {
 	resourceName := "harness_platform_filters.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccFiltersDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccFiltersDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFilters(id, name),
@@ -64,9 +64,9 @@ func TestAccResourceFiltersWOnlyCreator(t *testing.T) {
 	resourceName := "harness_platform_filters.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccFiltersDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccFiltersDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFilterswCreator(id, name),
@@ -102,9 +102,9 @@ func TestAccResourceFiltersProjectLevel(t *testing.T) {
 	resourceName := "harness_platform_filters.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccFiltersDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccFiltersDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFiltersProjectLevel(id, name),
@@ -145,9 +145,9 @@ func TestAccResourceFiltersProjectLevelNoFilterVisiblity(t *testing.T) {
 	resourceName := "harness_platform_filters.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccFiltersDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccFiltersDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFiltersProjectLevelNoFilterVisiblity(id, name),
@@ -187,9 +187,9 @@ func TestAccResourceFiltersOrgLevel(t *testing.T) {
 	resourceName := "harness_platform_filters.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccFiltersOrgLevelDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccFiltersOrgLevelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFiltersOrgLevel(id, name),
@@ -231,9 +231,9 @@ func TestAccResourceFiltersOrgLevelWfFileStore(t *testing.T) {
 	resourceName := "harness_platform_filters.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccFiltersOrgLevelDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccFiltersOrgLevelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFiltersOrgLevelWFileStore(id, name),

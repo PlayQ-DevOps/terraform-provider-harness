@@ -17,9 +17,9 @@ func TestAccResourceConnectorAwsSM_inherit(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorAwsSM_inherit(id, name),
@@ -63,9 +63,9 @@ func TestProjectResourceConnectorAwsSM_inherit(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectResourceConnectorAwsSM_inherit(id, name),
@@ -110,9 +110,9 @@ func TestOrgResourceConnectorAwsSM_inherit(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgResourceConnectorAwsSM_inherit(id, name),
@@ -160,8 +160,8 @@ func TestAccResourceConnectorAwsSM_manual(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -210,8 +210,8 @@ func TestAccResourceConnectorAwsSM_manualWithUsePutSecretTrue(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -260,8 +260,8 @@ func TestProjectResourceConnectorAwsSM_manual(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -309,8 +309,8 @@ func TestAccResourceConnectorAwsSM_manualWithForceDeleteWithoutRecovery(t *testi
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -362,8 +362,8 @@ func TestAccResourceConnectorAwsSM_manualWithRecoveryWindow(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -412,9 +412,9 @@ func TestAccResourceConnectorAwsSM_assumerole(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorAwsSM_assumerole(id, name),
@@ -462,9 +462,9 @@ func TestProjectResourceConnectorAwsSM_assumerole(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectResourceConnectorAwsSM_assumerole(id, name),
@@ -514,9 +514,9 @@ func TestOrgResourceConnectorAwsSM_assumerole(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgResourceConnectorAwsSM_assumerole(id, name),
@@ -566,9 +566,9 @@ func TestAccResourceConnectorAwsSM_oidc_platform(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorAwsSM_oidc_platform(id, name),
@@ -615,9 +615,9 @@ func TestOrgResourceConnectorAwsSM_oidc_platform(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgResourceConnectorAwsSM_oidc_platform(id, name),
@@ -667,9 +667,9 @@ func TestProjectResourceConnectorAwsSM_oidc_platform(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectResourceConnectorAwsSM_oidc_platform(id, name),
@@ -721,9 +721,9 @@ func TestAccResourceConnectorAwsSM_oidc_delegate(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorAwsSM_oidc_delegate(id, name),
@@ -774,9 +774,9 @@ func TestOrgResourceConnectorAwsSM_oidc_delegate(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgResourceConnectorAwsSM_oidc_delegate(id, name),
@@ -830,9 +830,9 @@ func TestProjectResourceConnectorAwsSM_oidc_delegate(t *testing.T) {
 	resourceName := "harness_platform_connector_aws_secret_manager.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectResourceConnectorAwsSM_oidc_delegate(id, name),

@@ -15,6 +15,9 @@ import (
 	"strings"
 	"testing"
 
+	fwdatasource "github.com/hashicorp/terraform-plugin-framework/datasource"
+	fwresource "github.com/hashicorp/terraform-plugin-framework/resource"
+
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/provider"
@@ -267,13 +270,15 @@ func TestContract(t *testing.T) {
 	}
 	checkProviderSchema(rep, p)
 
-	resourceNames := sortedKeys(p.ResourcesMap)
-	dataSourceNames := sortedKeys(p.DataSourcesMap)
+	fwResources, fwDataSources := frameworkTypeNames(t)
+	resourceNames := union(sortedKeys(p.ResourcesMap), fwResources)
+	dataSourceNames := union(sortedKeys(p.DataSourcesMap), fwDataSources)
 
 	if *updateContract {
 		writeContractBaseline(t, rep)
 		writeGolden(t, "resource_names.txt", resourceNames)
 		writeGolden(t, "data_source_names.txt", dataSourceNames)
+		compareFrozen(t, "sdk_v2_types.txt", append(sortedKeys(p.ResourcesMap), sortedKeys(p.DataSourcesMap)...), true)
 		t.Log("regenerated contract_baseline_test.go and testdata golden files; re-run without -update")
 		return
 	}
@@ -283,6 +288,9 @@ func TestContract(t *testing.T) {
 	// removing one is a breaking change that needs a changelog entry.
 	compareGolden(t, "resource_names.txt", resourceNames)
 	compareGolden(t, "data_source_names.txt", dataSourceNames)
+	// The SDK v2 maps are frozen: a type may leave them for the framework, but new types are
+	// written with terraform-plugin-framework (internal/framework), never added here.
+	compareFrozen(t, "sdk_v2_types.txt", append(sortedKeys(p.ResourcesMap), sortedKeys(p.DataSourcesMap)...), *updateContract)
 
 	for _, check := range sortedKeys(rep.sets) {
 		for _, key := range sortedKeys(rep.sets[check]) {
@@ -422,4 +430,59 @@ func importerPanics(t *testing.T, r *schema.Resource, id string) (panicked bool)
 		_, _ = r.Importer.State(d, &internal.Session{})
 	}
 	return false
+}
+
+// frameworkTypeNames lists the resource and data source types the plugin-framework half of
+// the provider serves.
+func frameworkTypeNames(t *testing.T) (resources, dataSources []string) {
+	t.Helper()
+	ctx := context.Background()
+	fw := provider.NewFrameworkProvider("test")()
+	for _, newResource := range fw.Resources(ctx) {
+		mr := &fwresource.MetadataResponse{}
+		newResource().Metadata(ctx, fwresource.MetadataRequest{ProviderTypeName: "harness"}, mr)
+		resources = append(resources, mr.TypeName)
+	}
+	for _, newDataSource := range fw.DataSources(ctx) {
+		mr := &fwdatasource.MetadataResponse{}
+		newDataSource().Metadata(ctx, fwdatasource.MetadataRequest{ProviderTypeName: "harness"}, mr)
+		dataSources = append(dataSources, mr.TypeName)
+	}
+	sort.Strings(resources)
+	sort.Strings(dataSources)
+	return resources, dataSources
+}
+
+func union(a, b []string) []string {
+	set := map[string]bool{}
+	for _, s := range a {
+		set[s] = true
+	}
+	for _, s := range b {
+		set[s] = true
+	}
+	return sortedKeys(set)
+}
+
+// compareFrozen checks that every name is in the frozen list. The list is written once
+// (with -update, when it does not exist yet) and then only edited by hand.
+func compareFrozen(t *testing.T, name string, got []string, update bool) {
+	t.Helper()
+	if _, err := os.Stat(goldenPath(name)); os.IsNotExist(err) && update {
+		writeGolden(t, name, got)
+		return
+	}
+	raw, err := os.ReadFile(goldenPath(name))
+	if err != nil {
+		t.Fatalf("read %s (create it once with -update): %v", name, err)
+	}
+	frozen := map[string]bool{}
+	for _, w := range strings.Fields(string(raw)) {
+		frozen[w] = true
+	}
+	for _, g := range got {
+		if !frozen[g] {
+			t.Errorf("%s is an SDK v2 type registered after the framework freeze; write new types with terraform-plugin-framework (internal/framework) and register them in the framework provider", g)
+		}
+	}
 }

@@ -31,8 +31,8 @@ func TestAccDataSourceGitopsApplication(t *testing.T) {
 	namespace := "test"
 	resourceName := "harness_platform_gitops_applications.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceGitopsApplication(id, accountId, name, agentId, clusterName, namespace, clusterServer, clusterId, repo, repoId, clusterToken),

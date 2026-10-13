@@ -22,9 +22,9 @@ func TestAccResourceChaosHub(t *testing.T) {
 	resourceName := "harness_chaos_hub.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosHubDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosHubDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -59,9 +59,9 @@ func TestAccResourceChaosHub_Update(t *testing.T) {
 	resourceName := "harness_chaos_hub.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosHubDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosHubDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},

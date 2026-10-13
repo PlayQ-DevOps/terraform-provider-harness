@@ -27,9 +27,9 @@ func TestAccResourcePolicy(t *testing.T) {
 	resourceName := "harness_platform_policy.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPolicyDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPolicyDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePolicy(id, name, description, rego),
@@ -83,9 +83,9 @@ func TestAccResourcePolicyOrgProject(t *testing.T) {
 	projectResourceName := "harness_platform_policy.project"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      resource.ComposeTestCheckFunc(testAccPolicyDestroy(orgResourceName), testAccPolicyDestroy(projectResourceName)),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             resource.ComposeTestCheckFunc(testAccPolicyDestroy(orgResourceName), testAccPolicyDestroy(projectResourceName)),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePolicyOrgProject(id, rego),
@@ -154,9 +154,9 @@ func TestAccResourcePolicyGit(t *testing.T) {
 	resourceName := "harness_platform_policy.git"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPolicyDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPolicyDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePolicyGit(id),

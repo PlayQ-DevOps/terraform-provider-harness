@@ -21,9 +21,9 @@ func TestAccResourceIPAllowlist(t *testing.T) {
 	resourceName := "harness_platform_ip_allowlist.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccIPAllowlistDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccIPAllowlistDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIPAllowlist(id, name, "0.0.0.0/0", "API"),

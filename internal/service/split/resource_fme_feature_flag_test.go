@@ -19,8 +19,8 @@ func TestAccResourceFMEFeatureFlag_basic(t *testing.T) {
 	res := "harness_fme_feature_flag.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFMEFeatureFlag(id, flagName, "acc feature flag v1", []string{"acc_test"}),

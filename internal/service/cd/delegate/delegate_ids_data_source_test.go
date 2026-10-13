@@ -26,7 +26,7 @@ func TestAccDataSourceDelegateIds(t *testing.T) {
 	delegate := createDelegateContainer(t, delegateName, false)
 
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDelegateIds(delegateName),

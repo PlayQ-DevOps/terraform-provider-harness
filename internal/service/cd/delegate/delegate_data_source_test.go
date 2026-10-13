@@ -26,7 +26,7 @@ func TestAccDataSourceDelegate_hostname(t *testing.T) {
 	delegate := createDelegateContainer(t, delegateName, false)
 
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDelegate_hostname(delegate.HostName),
@@ -54,7 +54,7 @@ func TestAccDataSourceDelegate_name(t *testing.T) {
 	delegate := createDelegateContainer(t, delegateName, false)
 
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDelegate_name(delegate.DelegateName),

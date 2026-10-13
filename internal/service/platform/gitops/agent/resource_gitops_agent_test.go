@@ -26,9 +26,9 @@ func TestAccResourceGitopsAgent(t *testing.T) {
 	namespace := "terraform-test"
 	updatedNamespace := namespace + "-updated"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsAgentDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsAgentDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsAgentAccountLevel(id, accountId, agentName, namespace, "false"),
@@ -63,9 +63,9 @@ func TestAccResourceGitopsAgent(t *testing.T) {
 	namespace = "terraform-test"
 	updatedNamespace = namespace + "-updated"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsAgentDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsAgentDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsAgentProjectLevel(id, accountId, agentName, namespace),
@@ -103,9 +103,9 @@ func TestAccResourceGitopsAgentFlamingo(t *testing.T) {
 	namespace := "terraform-test"
 	updatedNamespace := namespace + "-updated"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsAgentDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsAgentDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsFluxAgentAccountLevel(id, accountId, agentName, namespace),
@@ -139,9 +139,9 @@ func TestAccResourceGitopsAgentFlamingo(t *testing.T) {
 	namespace = "terraform-test"
 	updatedNamespace = namespace + "-updated"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsAgentDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsAgentDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsAgentFluxProjectLevel(id, accountId, agentName, namespace),
@@ -178,9 +178,9 @@ func TestAccResourceGitopsAgentNS(t *testing.T) {
 	namespace := "terraform-test"
 	updatedNamespace := namespace + "-updated"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsAgentDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsAgentDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsAgentAccountLevel(id, accountId, agentName, namespace, "true"),
@@ -221,9 +221,9 @@ func TestAccResourceGitopsAgentBYOA(t *testing.T) {
 	agentName := id
 	namespace := "terraform-test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsAgentDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsAgentDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsAgentBYOAAccountLevel(id, accountId, agentName, namespace, true),
@@ -262,8 +262,8 @@ func TestAccResourceGitopsAgentBYOAScopes(t *testing.T) {
 	projectResourceName := "harness_platform_gitops_agent.project"
 	namespace := "terraform-test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		CheckDestroy: func(s *terraform.State) error {
 			if err := testAccResourceGitopsAgentDestroy(orgResourceName)(s); err != nil {
 				return err
@@ -292,8 +292,8 @@ func TestAccResourceGitopsAgentHostedType(t *testing.T) {
 	id = strings.ReplaceAll(id, "_", "")
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:             testAccResourceGitopsAgentHostedType(id, accountId),

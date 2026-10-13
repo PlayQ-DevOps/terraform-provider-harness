@@ -22,9 +22,9 @@ func TestAccResourceDashboard(t *testing.T) {
 	resourceName := "harness_platform_dashboards.dashboard"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccDashboardDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccDashboardDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceDashboard(dashboardId, description, folderId, title),

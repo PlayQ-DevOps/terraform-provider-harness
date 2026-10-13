@@ -21,8 +21,8 @@ func TestAccDataSourceToken(t *testing.T) {
 	resourceName := "data.harness_platform_token.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceToken(id, tokenName, parent_id, account_id),
@@ -47,8 +47,8 @@ func TestAccDataSourceTokenOrgLevel(t *testing.T) {
 	resourceName := "data.harness_platform_token.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceTokenOrgLevel(id, tokenName, parent_id, account_id),
@@ -74,8 +74,8 @@ func TestAccDataSourceTokenProjectLevel(t *testing.T) {
 	resourceName := "data.harness_platform_token.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceTokenProjectLevel(id, tokenName, parent_id, account_id),

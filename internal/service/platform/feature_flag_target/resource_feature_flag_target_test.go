@@ -18,9 +18,9 @@ func TestAccResourceFeatureFlagTarget(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_environment.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceFeatureFlagTargetDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceFeatureFlagTargetDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFeatureFlagTarget(id, name),

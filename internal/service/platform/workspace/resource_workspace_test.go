@@ -23,9 +23,9 @@ func TestAccResourceWorkspace(t *testing.T) {
 	id3 := fmt.Sprintf("%s_%s", name3, utils.RandStringBytes(5))
 	updatedName3 := fmt.Sprintf("%s_updated", name3)
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceWorkspaceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceWorkspace(id, name, "branch"),
@@ -92,9 +92,9 @@ func TestAccResourceWorkspaceTerragrunt(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceWorkspaceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceWorkspaceTerragrunt(id, name, "branch"),

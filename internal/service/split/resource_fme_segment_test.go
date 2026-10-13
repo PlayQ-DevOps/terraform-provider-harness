@@ -18,8 +18,8 @@ func TestAccResourceFMESegment_basic(t *testing.T) {
 	res := "harness_fme_segment.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFMESegment(id, segName, "acc segment v1"),

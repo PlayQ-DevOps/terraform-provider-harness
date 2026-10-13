@@ -12,7 +12,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func DataSourceProjectList() *schema.Resource {
+// LegacyDataSourceProjectList is the SDK v2 implementation, kept for the legacy provider used by
+// the migration test.
+func LegacyDataSourceProjectList() *schema.Resource {
 	resource := &schema.Resource{
 		Description: "Data source for retrieving a Harness project.",
 

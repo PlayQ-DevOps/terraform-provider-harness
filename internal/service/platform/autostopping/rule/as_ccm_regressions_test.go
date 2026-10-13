@@ -26,8 +26,8 @@ func TestAccResourceECSRule_CCM32010_UpdateInPlaceAddsDepends(t *testing.T) {
 	resourceNameFirst := "harness_autostopping_rule_ecs.first"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testECSCCM32010Step1NoDepends(nameFirst, nameSecond, proxyName, apiKey, true),
@@ -72,8 +72,8 @@ func TestAccResourceECSRule_CCM32012_DependsOrderNoPerpetualPlan(t *testing.T) {
 	resourceName := "harness_autostopping_rule_ecs.leaf"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testECSCCM32012Stack(nameA, nameB, nameC, proxyName, apiKey, true),
@@ -118,7 +118,7 @@ func TestAccResourceVMRule_DryRunFalseOnUpdate(t *testing.T) {
 			acctest.TestAccPreCheck(t)
 			cleanupStaleRulesForVM(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testVMRule(name, proxyName, apiKey, true),
@@ -167,8 +167,8 @@ func TestAccResourceECSRule_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 	resourceName := "harness_autostopping_rule_ecs.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testECSCCM32336Rule(name, proxyName, apiKey),

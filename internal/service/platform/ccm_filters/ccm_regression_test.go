@@ -26,9 +26,9 @@ func TestAccResourceCCMFilters_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 	resourceName := "harness_platform_ccm_filters.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCCMFiltersOrgLevelDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCCMFiltersOrgLevelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceCCMFiltersOrgLevel(id, name),

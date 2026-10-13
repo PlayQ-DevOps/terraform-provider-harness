@@ -17,8 +17,8 @@ func TestAccDataSourceDelegateToken(t *testing.T) {
 	resourceName := "data.harness_platform_delegatetoken.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: tesAccDataSourceDelegateToken(name, account_id),
@@ -38,8 +38,8 @@ func TestAccDataSourceDelegateTokenOrgLevel(t *testing.T) {
 	resourceName := "data.harness_platform_delegatetoken.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: tesAccDataSourceDelegateTokenOrgLevel(name, account_id),
@@ -60,8 +60,8 @@ func TestAccDataSourceDelegateTokenProjectLevel(t *testing.T) {
 	resourceName := "data.harness_platform_delegatetoken.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: tesAccDataSourceDelegateTokenProjectLevel(name, account_id),
@@ -83,8 +83,8 @@ func TestAccDataSourceDelegateTokenWithRevokeAfter(t *testing.T) {
 	resourceName := "data.harness_platform_delegatetoken.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDelegateTokenWithRevokeAfter(name, account_id),

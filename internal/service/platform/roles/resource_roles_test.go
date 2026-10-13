@@ -21,9 +21,9 @@ func TestAccResourceRoles(t *testing.T) {
 	resourceName := "harness_platform_roles.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRolesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRolesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRoles(id, name),
@@ -67,9 +67,9 @@ func TestProjectResourceRoles(t *testing.T) {
 	resourceName := "harness_platform_roles.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRolesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRolesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectResourceRoles(id, name),
@@ -113,9 +113,9 @@ func TestOrgResourceRoles(t *testing.T) {
 	resourceName := "harness_platform_roles.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRolesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRolesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgResourceRoles(id, name),
@@ -156,9 +156,9 @@ func TestRepoResourceRoles(t *testing.T) {
 	resourceName := "harness_platform_roles.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRolesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRolesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testRepoResourceRoles(id, name),

@@ -25,8 +25,8 @@ func TestAccResourceEncryptedText(t *testing.T) {
 	updatedValue := value + "-updated"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceEncryptedText(name, value, ""),
@@ -60,8 +60,8 @@ func TestAccResourceEncryptedText_Reference(t *testing.T) {
 	updatedValue := value + "-updated"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceEncryptedText_Reference(name, value, awsSecretManager, "test/secret/micah"),
@@ -94,8 +94,8 @@ func TestAccResourceEncryptedText_secretmanagerid_immutable(t *testing.T) {
 	value := "someval"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceEncryptedText(name, value, ""),
@@ -120,8 +120,8 @@ func TestAccResourceEncryptedText_secretmanagerid_DeleteUnderlyingResource(t *te
 	value := "someval"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceEncryptedText(name, value, ""),
@@ -156,8 +156,8 @@ func TestAccResourceEncryptedText_UsageScopes(t *testing.T) {
 	resourceName := "harness_encrypted_text.usage_scope_test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceEncryptedText_UsageScopes(name),

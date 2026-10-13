@@ -22,9 +22,9 @@ func TestAccResourceTriggers(t *testing.T) {
 	resourceName := "harness_platform_triggers.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccTriggersDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccTriggersDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceTriggers(id, name),
@@ -96,8 +96,8 @@ func TestAccResourceTriggers_DeleteUnderlyingResource(t *testing.T) {
 	resourceName := "harness_platform_triggers.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceTriggers(id, name),

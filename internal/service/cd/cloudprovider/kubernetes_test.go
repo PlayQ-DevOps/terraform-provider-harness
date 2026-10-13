@@ -22,9 +22,9 @@ func TestAccResourceK8sCloudProviderConnector_delegate(t *testing.T) {
 	)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCloudProviderDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCloudProviderDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceK8sCloudProvider_delegate(name),
@@ -60,9 +60,9 @@ func TestAccResourceK8sCloudProviderConnector_usagescope_application(t *testing.
 	)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCloudProviderDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCloudProviderDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceK8sCloudProvider_usagescope_application(name),
@@ -88,9 +88,9 @@ func TestAccResourceK8sCloudProviderConnector_username_password(t *testing.T) {
 	)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCloudProviderDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCloudProviderDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceK8sCloudProvider_username_password(name),
@@ -111,9 +111,9 @@ func TestAccResourceK8sCloudProviderConnector_oidc(t *testing.T) {
 	)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCloudProviderDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCloudProviderDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceK8sCloudProvider_oidc(name),
@@ -134,9 +134,9 @@ func TestAccResourceK8sCloudProviderConnector_service_account(t *testing.T) {
 	)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCloudProviderDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCloudProviderDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceK8sCloudProvider_service_account(name),
@@ -157,8 +157,8 @@ func TestAccResourceK8sCloudProviderConnector_DeleteUnderlyingResource(t *testin
 	)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceK8sCloudProvider_service_account(name),
@@ -195,7 +195,7 @@ func TestAccResourceK8sCloudProviderConnector_DeleteUnderlyingResource(t *testin
 
 // 	resource.Test(t, resource.TestCase{
 // 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-// 		ProviderFactories: acctest.ProviderFactories,
+// 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 // 		CheckDestroy:      testAccCloudProviderDestroy(resourceName),
 // 		Steps: []resource.TestStep{
 // 			{

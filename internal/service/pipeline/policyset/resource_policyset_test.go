@@ -28,9 +28,9 @@ func TestAccResourcePolicyset(t *testing.T) {
 	policySecondIdentifier := fmt.Sprintf("policySecond%s", utils.RandStringBytes(5))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPolicysetDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPolicysetDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePolicyset(id, name, action, policyType, policyFirstIdentifier, policySecondIdentifier, false),
@@ -100,9 +100,9 @@ func TestAccResourcePolicysetCrossScope(t *testing.T) {
 	policyIdentifier := fmt.Sprintf("policy%s", utils.RandStringBytes(5))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPolicysetDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPolicysetDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePolicysetCrossScope(id, policyIdentifier),

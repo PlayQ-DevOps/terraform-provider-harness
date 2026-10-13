@@ -26,8 +26,8 @@ func TestAccResourceGitopsRepositoryOrgLevel(t *testing.T) {
 	resourceName := "harness_platform_gitops_repository.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		//CheckDestroy:      testAccResourceGitopsRepositoryDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
@@ -66,8 +66,8 @@ func TestAccResourceGitopsRepository(t *testing.T) {
 	resourceName := "harness_platform_gitops_repository.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		//CheckDestroy:      testAccResourceGitopsRepositoryDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
@@ -102,8 +102,8 @@ func TestAccResourceGitopsRepository(t *testing.T) {
 	repoName = id
 	resourceName = "harness_platform_gitops_repository.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		//CheckDestroy:      testAccResourceGitopsRepositoryDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
@@ -253,8 +253,8 @@ func TestHelmRepoOCIECR(t *testing.T) {
 	awsAccessId := os.Getenv("HARNESS_TEST_AWS_ACCESS_KEY_ID")
 	awsAccessKey := os.Getenv("HARNESS_TEST_AWS_SECRET_ACCESS_KEY")
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testHelmRepoOCIECR(id, name, repo, repoName, agentId, accountId, awsAccessId, awsAccessKey),
@@ -281,8 +281,8 @@ func TestHelmRepoOCIECRJwt(t *testing.T) {
 	awsAccessId := os.Getenv("HARNESS_TEST_AWS_ACCESS_KEY_ID")
 	awsAccessKey := os.Getenv("HARNESS_TEST_AWS_SECRET_ACCESS_KEY")
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testHelmRepoOCIECRJwt(id, name, repo, repoName, agentId, accountId, awsAccessId, awsAccessKey),
@@ -309,8 +309,8 @@ func TestHelmRepoOCIGCRWorkload(t *testing.T) {
 	awsAccessId := os.Getenv("HARNESS_TEST_AWS_ACCESS_KEY_ID")
 	awsAccessKey := os.Getenv("HARNESS_TEST_AWS_SECRET_ACCESS_KEY")
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testHelmRepoOCIGCRWorkload(id, name, repo, repoName, agentId, accountId, awsAccessId, awsAccessKey),
@@ -338,8 +338,8 @@ func TestHelmRepoOCIGCRServiceAccount(t *testing.T) {
 	awsAccessId := os.Getenv("HARNESS_TEST_AWS_ACCESS_KEY_ID")
 	awsAccessKey := os.Getenv("HARNESS_TEST_AWS_SECRET_ACCESS_KEY")
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testHelmRepoOCIGCRServiceAccount(id, name, repo, repoName, agentId, accountId, gcrAccountKey, awsAccessId, awsAccessKey),

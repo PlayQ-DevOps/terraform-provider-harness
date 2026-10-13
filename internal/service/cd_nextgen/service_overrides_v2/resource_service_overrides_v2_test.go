@@ -19,9 +19,9 @@ func TestAccServiceOverrides_ProjectScope(t *testing.T) {
 	resourceName := "harness_platform_service_overrides_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccServiceOverridesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccServiceOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccServiceOverridesProjectScope(id, name),
@@ -47,9 +47,9 @@ func TestAccServiceOverrides_OrgScope(t *testing.T) {
 	resourceName := "harness_platform_service_overrides_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccServiceOverridesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccServiceOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccServiceOverridesOrgScope(id, name),
@@ -74,9 +74,9 @@ func TestAccServiceOverrides_AccountScope(t *testing.T) {
 	resourceName := "harness_platform_service_overrides_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccServiceOverridesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccServiceOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccServiceOverridesAccountScope(id, name),
@@ -98,9 +98,9 @@ func TestAccRemoteServiceOverrides(t *testing.T) {
 	resourceName := "harness_platform_service_overrides_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccServiceOverridesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccServiceOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config:             testRemoteServiceOverrides(id, name),
@@ -136,9 +136,9 @@ func TestAccServiceOverridesEditGitDetails(t *testing.T) {
 	path2 := fmt.Sprintf("test-path-%s-2", utils.RandStringBytes(6))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccServiceOverridesDestroy(resourceName1),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccServiceOverridesDestroy(resourceName1),
 		Steps: []resource.TestStep{
 			{
 				Config:             testAccServiceOverridesGitDetailsWithIdentifier(baseId1, name1, "main", path1, identifier1, "test1"),

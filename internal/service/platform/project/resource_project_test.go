@@ -21,9 +21,9 @@ func TestAccResourceProject(t *testing.T) {
 	resourceName := "harness_platform_project.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccProjectDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccProjectDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceProject(id, name),
@@ -56,8 +56,8 @@ func TestAccResourceProject_DeleteUnderlyingResource(t *testing.T) {
 	resourceName := "harness_platform_project.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceProject(id, name),

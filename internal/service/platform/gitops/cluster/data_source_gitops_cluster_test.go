@@ -25,8 +25,8 @@ func TestAccDataSourceGitopsCluster(t *testing.T) {
 	clusterToken := os.Getenv("HARNESS_TEST_GITOPS_CLUSTER_TOKEN")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceGitopsCluster(id, accountId, name, agentId, clusterName, clusterServer, clusterToken),
@@ -55,8 +55,8 @@ func TestAccDataSourceGitopsClusterIAM(t *testing.T) {
 	resourceName := "data.harness_platform_gitops_cluster.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceGitopsClusterIAM(id, accountId, name, agentId, clusterName, clusterServer, roleARN, awsClusterName, caData),

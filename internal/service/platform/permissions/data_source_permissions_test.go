@@ -19,8 +19,8 @@ func TestAccDataSourcePermissions(t *testing.T) {
 	id_value := fmt.Sprintf("%d", terraformUtils.StringHashcode(helpers.EnvVars.AccountId.Get()+name+name))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourcePermissions(id, name),

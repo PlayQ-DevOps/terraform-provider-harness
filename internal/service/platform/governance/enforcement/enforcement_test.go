@@ -22,9 +22,9 @@ func TestAccResourceRuleEnforcement(t *testing.T) {
 	awsAccountId := os.Getenv("AWS_ACCOUNT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRuleEnforcementDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRuleEnforcementDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRuleEnforcement(name, awsAccountId),
@@ -108,9 +108,9 @@ func TestAccResourceRuleEnforcement_CCM32336_OutOfBandDeleteRecreates(t *testing
 	var enforcementIDBefore string
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRuleEnforcementDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRuleEnforcementDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRuleEnforcement(name, awsAccountId),
@@ -158,9 +158,9 @@ func TestAccResourceRuleEnforcementWithFalseBooleans(t *testing.T) {
 	awsAccountId := os.Getenv("AWS_ACCOUNT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRuleEnforcementDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRuleEnforcementDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRuleEnforcementWithFalseBooleans(name, awsAccountId),

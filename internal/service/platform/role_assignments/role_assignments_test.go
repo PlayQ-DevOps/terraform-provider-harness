@@ -21,9 +21,9 @@ func TestAccRoleAssignments(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRoleAssignmentsDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRoleAssignmentsDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRoleAssignments(id, name, "false", accountId),
@@ -64,9 +64,9 @@ func TestAccRoleAssignments_withoutSendingIdentifier(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRoleAssignmentsDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRoleAssignmentsDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRoleAssignments_withoutIdentifier(id, name, "false", accountId),
@@ -96,9 +96,9 @@ func TestAccRoleAssignments_withRoleReference(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRoleAssignmentsDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRoleAssignmentsDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRoleAssignments_withRoleReference(id, name, "false", accountId),
@@ -130,8 +130,8 @@ func TestAccResourceRoleAssignments_DeleteUnderlyingResource(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRoleAssignments(id, name, "false", accountId),

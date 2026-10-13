@@ -16,8 +16,8 @@ func TestAccDataSourceInfrastructure(t *testing.T) {
 	resourceName := "data.harness_platform_infrastructure.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceInfrastructure(id, name),
@@ -39,8 +39,8 @@ func TestAccDataSourceInfrastructureAccountLevel(t *testing.T) {
 	resourceName := "data.harness_platform_infrastructure.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceInfrastructureAccountLevel(id, name),
@@ -60,8 +60,8 @@ func TestAccDataSourceInfrastructureOrgLevel(t *testing.T) {
 	resourceName := "data.harness_platform_infrastructure.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceInfrastructureOrgLevel(id, name),
@@ -81,8 +81,8 @@ func TestDataSourceRemoteInfrastrucutre(t *testing.T) {
 	resourceName := "data.harness_platform_infrastructure.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testSourceRemoteInfrastructure(id, name),

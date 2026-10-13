@@ -44,8 +44,8 @@ func TestAccResourceGitopsApplication_AllTypes(t *testing.T) {
 	skipRepoAppResource := "harness_platform_gitops_applications.skip_repo_app"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		CheckDestroy: resource.ComposeTestCheckFunc(
 			testAccResourceGitopsApplicationDestroy(helmAppResource),
 			testAccResourceGitopsApplicationDestroy(kustomizeAppResource),
@@ -131,9 +131,9 @@ func TestAccResourceGitopsApplication_DetectDrift(t *testing.T) {
 	resourceName := "harness_platform_gitops_applications.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsApplicationDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsApplicationDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				// Step 1: Create the GitOps application
@@ -854,9 +854,9 @@ func TestAccResourceGitopsApplication_ForceDelete(t *testing.T) {
 	resourceName := "harness_platform_gitops_applications.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsApplicationDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsApplicationDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				// Step 1: Create with force_delete = true and verify it is persisted in state

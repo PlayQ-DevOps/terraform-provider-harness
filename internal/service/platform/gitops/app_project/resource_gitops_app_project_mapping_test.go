@@ -22,8 +22,8 @@ func TestAccResourceGitopsAppProjectMapping(t *testing.T) {
 	argoProject := "test123"
 	argoProjectUpdated := "test123Updated"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		// CheckDestroy:      testAccResourceGitopsAppProjectMappingDestroy(resourceName, agentId), //commenting this since app project mapping cannot exist without an agent.
 		Steps: []resource.TestStep{
 			{

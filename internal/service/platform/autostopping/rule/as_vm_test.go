@@ -26,7 +26,7 @@ func TestResourceVMRule(t *testing.T) {
 			acctest.TestAccPreCheck(t)
 			cleanupStaleRulesForVM(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testVMRule(name, proxyName, apiKey, true),

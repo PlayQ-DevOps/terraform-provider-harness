@@ -24,7 +24,7 @@ import (
 
 func TestUnitDataSourceK8sRuleSchemaNoArgs(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testDataSourceConfig("harness_autostopping_rule_k8s", "test", ""),
@@ -38,7 +38,7 @@ func TestUnitDataSourceK8sRuleSchemaNoArgs(t *testing.T) {
 
 func TestUnitDataSourceVMRuleSchemaNoArgs(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testDataSourceConfig("harness_autostopping_rule_vm", "test", ""),
@@ -52,7 +52,7 @@ func TestUnitDataSourceVMRuleSchemaNoArgs(t *testing.T) {
 
 func TestUnitDataSourceECSRuleSchemaNoArgs(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testDataSourceConfig("harness_autostopping_rule_ecs", "test", ""),
@@ -66,7 +66,7 @@ func TestUnitDataSourceECSRuleSchemaNoArgs(t *testing.T) {
 
 func TestUnitDataSourceRDSRuleSchemaNoArgs(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testDataSourceConfig("harness_autostopping_rule_rds", "test", ""),
@@ -80,7 +80,7 @@ func TestUnitDataSourceRDSRuleSchemaNoArgs(t *testing.T) {
 
 func TestUnitDataSourceScaleGroupRuleSchemaNoArgs(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testDataSourceConfig("harness_autostopping_rule_scale_group", "test", ""),
@@ -94,7 +94,7 @@ func TestUnitDataSourceScaleGroupRuleSchemaNoArgs(t *testing.T) {
 
 func TestUnitDataSourceK8sRuleInvalidRegex(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testDataSourceConfig("harness_autostopping_rule_k8s", "test", `name = "[invalid"`),
@@ -106,7 +106,7 @@ func TestUnitDataSourceK8sRuleInvalidRegex(t *testing.T) {
 
 func TestUnitDataSourceVMRuleInvalidRegex(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testDataSourceConfig("harness_autostopping_rule_vm", "test", `name = "[invalid"`),

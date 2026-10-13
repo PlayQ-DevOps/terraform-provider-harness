@@ -15,8 +15,8 @@ func TestAccResourceFaultTemplate_basic(t *testing.T) {
 	resourceName := "harness_chaos_fault_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFaultTemplate_basic(name),
@@ -45,8 +45,8 @@ func TestAccResourceFaultTemplate_update(t *testing.T) {
 	resourceName := "harness_chaos_fault_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFaultTemplate_basic(name),
@@ -72,8 +72,8 @@ func TestAccResourceFaultTemplate_withKubernetesSpec(t *testing.T) {
 	resourceName := "harness_chaos_fault_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFaultTemplate_withKubernetesSpec(name),
@@ -99,8 +99,8 @@ func TestAccResourceFaultTemplate_withVolumes(t *testing.T) {
 	resourceName := "harness_chaos_fault_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFaultTemplate_withVolumes(name),
@@ -128,8 +128,8 @@ func TestAccResourceFaultTemplate_withTargets(t *testing.T) {
 	resourceName := "harness_chaos_fault_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFaultTemplate_withTargets(name),
@@ -156,8 +156,8 @@ func TestAccResourceFaultTemplate_withVariables(t *testing.T) {
 	resourceName := "harness_chaos_fault_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFaultTemplate_withVariables(name),
@@ -189,8 +189,8 @@ func TestAccResourceFaultTemplate_withLinks(t *testing.T) {
 	resourceName := "harness_chaos_fault_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFaultTemplate_withLinks(name),
@@ -643,8 +643,8 @@ func TestAccResourceFaultTemplate_accountScopeImport(t *testing.T) {
 	resourceName := "harness_chaos_fault_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFaultTemplate_accountScope(name),
@@ -672,8 +672,8 @@ func TestAccResourceFaultTemplate_orgScopeImport(t *testing.T) {
 	resourceName := "harness_chaos_fault_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFaultTemplate_orgScope(name),

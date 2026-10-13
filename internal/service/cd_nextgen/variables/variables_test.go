@@ -25,9 +25,9 @@ func TestAccResourceVariables(t *testing.T) {
 	resourceName := "harness_platform_variables.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccVariablesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccVariablesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceVariables(id, name, variableValue),
@@ -66,9 +66,9 @@ func TestAccResourceVariablesProjectLevel(t *testing.T) {
 	resourceName := "harness_platform_variables.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccVariablesOrgLevelDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccVariablesOrgLevelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectResourceVariables(id, name, variableValue),
@@ -108,9 +108,9 @@ func TestAccResourceVariablesOrgLevel(t *testing.T) {
 	resourceName := "harness_platform_variables.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccVariablesOrgLevelDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccVariablesOrgLevelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgResourceVariables(id, name, variableValue),
@@ -145,8 +145,8 @@ func TestAccResourceVariables_DeleteUnderlyingResource(t *testing.T) {
 	variableValue := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectResourceVariables(id, name, variableValue),

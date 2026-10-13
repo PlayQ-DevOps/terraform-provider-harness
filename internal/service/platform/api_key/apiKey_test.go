@@ -25,9 +25,9 @@ func TestAccResourceApiKey(t *testing.T) {
 	resourceName := "harness_platform_apikey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccApiKeyDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccApiKeyDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceApiKey(id, apiKeyName, parent_id, account_id),

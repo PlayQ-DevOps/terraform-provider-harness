@@ -16,9 +16,9 @@ func TestAccResourceApplicationGitSync(t *testing.T) {
 	resourceName := "harness_application_gitsync.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccApplicationGitSyncDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccApplicationGitSyncDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceApplicationGitSync(expectedName),

@@ -22,9 +22,9 @@ func TestProjResourceRepoWebhook(t *testing.T) {
 	identifier := identifier(t.Name())
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testWebhookDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testWebhookDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjResourceRepoWebhook(identifier, description),
@@ -55,9 +55,9 @@ func TestProjResourceRepoWebhookWithSecret(t *testing.T) {
 	identifier := identifier(t.Name())
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testWebhookDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testWebhookDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjResourceRepoWebhookWithSecret(identifier, description),

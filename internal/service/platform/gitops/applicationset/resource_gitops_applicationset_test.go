@@ -25,8 +25,8 @@ func TestAccResourceGitopsApplicationSet_AllClustersGenerator(t *testing.T) {
 	resourceName2 := "harness_platform_gitops_applicationset.test2"
 	resourceName3 := "harness_platform_gitops_applicationset.test3"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsApplicationsetClusterGenerator(id, accountId, name, agentId, namespace),
@@ -289,8 +289,8 @@ func TestAccResourceGitopsApplicationSet_MatrixGitClusters(t *testing.T) {
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsApplicationsetMatrixGitClusters(id, accountId, name, agentId, namespace),
@@ -457,8 +457,8 @@ func TestAccResourceGitopsApplicationSet_SCMProviderGitHub(t *testing.T) {
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsApplicationsetSCMProviderGitHub(id, accountId, name, agentId, namespace),
@@ -600,8 +600,8 @@ func TestAccResourceGitopsApplicationSet_SCMProviderGitLab(t *testing.T) {
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsApplicationsetSCMProviderGitLab(id, accountId, name, agentId, namespace),
@@ -748,8 +748,8 @@ func TestAccResourceGitopsApplicationSet_MatrixSCMProviderClustersWithSelector(t
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsApplicationsetMatrixSCMProviderClustersWithSelector(id, accountId, name, agentId, namespace),
@@ -934,8 +934,8 @@ func TestAccResourceGitopsApplicationSet_SyncPolicy(t *testing.T) {
 	resourceName := "harness_platform_gitops_applicationset.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsApplicationsetWithSyncPolicy(id, accountId, name, agentId, namespace),
@@ -1083,8 +1083,8 @@ func TestAccResourceGitopsApplicationSet_Strategy(t *testing.T) {
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsApplicationsetStrategy(id, accountId, name, agentId, namespace),
@@ -1264,8 +1264,8 @@ func TestAccResourceGitopsApplicationSet_IgnoreApplicationDifferences(t *testing
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsApplicationsetIgnoreApplicationDifferences(id, accountId, name, agentId, namespace),
@@ -1417,8 +1417,8 @@ func TestAccResourceGitopsApplicationSet_MultiSource(t *testing.T) {
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsApplicationsetMultiSource(id, accountId, name, agentId, namespace),
@@ -1559,8 +1559,8 @@ func TestAccResourceGitopsApplicationSet_GitGeneratorWithSelector(t *testing.T) 
 	namespace := os.Getenv("HARNESS_TEST_GITOPS_NAMESPACE")
 	resourceName := "harness_platform_gitops_applicationset.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsApplicationsetGitGeneratorWithSelector(id, accountId, name, agentId, namespace),
@@ -1733,8 +1733,8 @@ func TestAccResourceGitopsApplicationSet_IgnoreDifference(t *testing.T) {
 					  }`
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsApplicationsetIgnoreDifference(id, accountId, name, agentId, namespace, createIgnore),

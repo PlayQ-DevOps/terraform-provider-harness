@@ -17,9 +17,9 @@ func TestAccResourceChaosHubV2_basic(t *testing.T) {
 	resourceName := "harness_chaos_hub_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosHubV2Destroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosHubV2Destroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosHubV2ConfigBasic(id, name),
@@ -48,9 +48,9 @@ func TestAccResourceChaosHubV2_Update(t *testing.T) {
 	resourceName := "harness_chaos_hub_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosHubV2Destroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosHubV2Destroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosHubV2ConfigBasic(id, name),
@@ -79,9 +79,9 @@ func TestAccResourceChaosHubV2_Import(t *testing.T) {
 	resourceName := "harness_chaos_hub_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosHubV2Destroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosHubV2Destroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosHubV2ConfigBasic(id, name),

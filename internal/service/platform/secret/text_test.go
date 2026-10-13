@@ -22,9 +22,9 @@ func TestAccSecretText_inline(t *testing.T) {
 	resourceName := "harness_platform_secret_text.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_text_inline(id, name, secretValue),
@@ -71,9 +71,9 @@ func TestAccResourceSecretText_reference(t *testing.T) {
 	resourceName := "harness_platform_secret_text.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_text_reference(id, name, secretValue, "azureSecretManager"),
@@ -120,9 +120,9 @@ func TestProjectSecretText_inline(t *testing.T) {
 	resourceName := "harness_platform_secret_text.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -174,9 +174,9 @@ func TestOrgSecretText_inline(t *testing.T) {
 	resourceName := "harness_platform_secret_text.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -227,9 +227,9 @@ func TestOrgResourceSecretText_reference(t *testing.T) {
 	resourceName := "harness_platform_secret_text.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -278,8 +278,8 @@ func TestAccSecretText_DeleteUnderLyingResource(t *testing.T) {
 	resourceName := "harness_platform_secret_text.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_text_inline(id, name, secretValue),
@@ -311,8 +311,8 @@ func TestAccSecretText_ForceDelete(t *testing.T) {
 	resourceName := "harness_platform_secret_text.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_text_inline(id, name, secretValue),
@@ -507,9 +507,9 @@ func TestAccResourceSecretText_GCP_SM_reference(t *testing.T) {
 	resourceName := "harness_platform_secret_text.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_text_reference(id, name, secretValue, "GCP_SM"),
@@ -558,9 +558,9 @@ func TestAccResourceSecretText_AWS_SM_reference(t *testing.T) {
 	resourceName := "harness_platform_secret_text.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_text_inline_AWS_SM(id, name, secretValue, "harnessSecretManager"),

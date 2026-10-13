@@ -43,8 +43,8 @@ func TestAccDataSourceChaosInfrastructureV2_basic(t *testing.T) {
 	resourceName := "data.harness_chaos_infrastructure_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceChaosInfrastructureV2Config(id, rName, "KUBERNETESV2", "NAMESPACE"),
@@ -72,8 +72,8 @@ func TestAccDataSourceChaosInfrastructureV2_WithAllOptions(t *testing.T) {
 	resourceName := "data.harness_chaos_infrastructure_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceChaosInfrastructureV2Config_WithAllOptions(id, rName),
@@ -99,8 +99,8 @@ func TestAccDataSourceChaosInfrastructureV2_KubernetesType(t *testing.T) {
 	resourceName := "data.harness_chaos_infrastructure_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceChaosInfrastructureV2Config(id, rName, "KUBERNETESV2", "NAMESPACE"),
@@ -119,8 +119,8 @@ func TestAccDataSourceChaosInfrastructureV2_NotFound(t *testing.T) {
 	rName := id
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccDataSourceChaosInfrastructureV2Config_NonExistent(id, rName),

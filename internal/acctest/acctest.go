@@ -8,6 +8,8 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-go/tfprotov5"
+
 	"github.com/harness/harness-go-sdk/harness/cd/graphql"
 	"github.com/harness/harness-go-sdk/harness/code"
 	"github.com/harness/harness-go-sdk/harness/dbops"
@@ -403,12 +405,16 @@ func ChaosTemplateImportStateIdFunc(resourceName string) resource.ImportStateIdF
 	}
 }
 
-// providerFactories are used to instantiate a provider during acceptance testing.
-// The factory function will be invoked for every Terraform CLI command executed
-// to create a provider server to which the CLI can reattach.
-var ProviderFactories = map[string]func() (*schema.Provider, error){
-	"harness": func() (*schema.Provider, error) {
-		return provider.Provider("dev")(), nil
+// ProtoV5ProviderFactories serves the muxed provider (the SDK v2 and plugin-framework
+// halves) to acceptance tests against the real API. A factory is invoked for every
+// Terraform CLI command, which reattaches to the in-process provider server.
+var ProtoV5ProviderFactories = map[string]func() (tfprotov5.ProviderServer, error){
+	"harness": func() (tfprotov5.ProviderServer, error) {
+		server, err := provider.NewMuxServer(context.Background(), "dev")
+		if err != nil {
+			return nil, err
+		}
+		return server(), nil
 	},
 }
 

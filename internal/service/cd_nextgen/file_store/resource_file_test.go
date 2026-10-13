@@ -21,9 +21,9 @@ func TestAccResourceFileStoreFile(t *testing.T) {
 	resourceName := "harness_platform_file_store_file.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccFileStoreDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccFileStoreDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFileStore_File(id, name),
@@ -65,9 +65,9 @@ func TestAccResourceFileStoreFileWithContent(t *testing.T) {
 	resourceName := "harness_platform_file_store_file.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccFileStoreDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccFileStoreDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFileStore_FileContent(id, name),
@@ -99,8 +99,8 @@ func TestAccResourceFileStoreFileOrgLevel(t *testing.T) {
 	resourceName := "harness_platform_file_store_file.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -147,8 +147,8 @@ func TestAccResourceFileStoreFileProjectLevel(t *testing.T) {
 	resourceName := "harness_platform_file_store_file.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -194,8 +194,8 @@ func TestAccResourceFileStoreFile_DeleteUnderlyingResource(t *testing.T) {
 	resourceName := "harness_platform_file_store_file.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},

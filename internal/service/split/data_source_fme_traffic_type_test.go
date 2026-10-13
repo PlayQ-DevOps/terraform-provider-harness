@@ -19,8 +19,8 @@ func TestAccDataSourceFMETrafficType(t *testing.T) {
 	ds := "data.harness_fme_traffic_type.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceFMETrafficType(id, defaultFMETrafficTypeName),
@@ -48,8 +48,8 @@ func TestAccDataSourceFMETrafficType_matchesResource(t *testing.T) {
 	var trafficTypeID string
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceFMETrafficTypeWithResource(id, ttName),

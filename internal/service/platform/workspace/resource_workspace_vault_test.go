@@ -18,9 +18,9 @@ func TestAccResourceWorkspace_VaultConnector(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceWorkspaceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceWorkspaceWithVault(id, name),
@@ -60,9 +60,9 @@ func TestAccResourceWorkspace_VaultConnectorUpdate(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceWorkspaceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceWorkspaceWithVaultConnector(id, name, "vault_connector_1"),
@@ -93,9 +93,9 @@ func TestAccResourceWorkspace_VaultAndAWSConnectors(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceWorkspaceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceWorkspaceWithVaultAndAWS(id, name),
@@ -126,9 +126,9 @@ func TestAccResourceWorkspace_VaultMultipleConnectorTypes(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceWorkspaceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceWorkspaceWithAllConnectorTypes(id, name),
@@ -160,9 +160,9 @@ func TestAccResourceWorkspace_VaultConnectorRemoval(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceWorkspaceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceWorkspaceWithVault(id, name),
@@ -191,8 +191,8 @@ func TestAccResourceWorkspace_DuplicateVaultConnectors(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccResourceWorkspaceWithDuplicateVault(id, name),

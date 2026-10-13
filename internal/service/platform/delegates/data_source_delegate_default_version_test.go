@@ -29,8 +29,8 @@ func TestAccDataSourceDelegateDefaultVersion(t *testing.T) {
 	resourceName := "data.harness_platform_delegate_default_version.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDelegateDefaultVersionImplicitAccount(),
@@ -51,8 +51,8 @@ func TestAccDataSourceDelegateDefaultVersionOrgLevelImplicitAccount(t *testing.T
 	resourceName := "data.harness_platform_delegate_default_version.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDelegateDefaultVersionOrgLevelImplicitAccount(orgId),
@@ -75,8 +75,8 @@ func TestAccDataSourceDelegateDefaultVersionProjectLevel(t *testing.T) {
 	resourceName := "data.harness_platform_delegate_default_version.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDelegateDefaultVersionProjectLevel(orgId, projectId),

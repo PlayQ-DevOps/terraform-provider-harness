@@ -20,9 +20,9 @@ func TestAccResourcePipelineFilters(t *testing.T) {
 	resourceName := "harness_platform_pipeline_filters.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPipelineFiltersDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPipelineFiltersDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineFilters(id, name),
@@ -64,9 +64,9 @@ func TestAccResourcePipelineFiltersCD(t *testing.T) {
 	resourceName := "harness_platform_pipeline_filters.pipelinemoduleproperties"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPipelineFiltersDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPipelineFiltersDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineFiltersWithModulePropertiesCDTag(id, name),
@@ -96,9 +96,9 @@ func TestAccResourcePipelineFiltersOrgLevel(t *testing.T) {
 	resourceName := "harness_platform_pipeline_filters.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPipelineFiltersOrgLevelDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPipelineFiltersOrgLevelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineFiltersOrgLevel(id, name),
@@ -140,9 +140,9 @@ func TestAccResourcePipelineFiltersTags(t *testing.T) {
 	resourceName := "harness_platform_pipeline_filters.pipelinetags"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPipelineFiltersDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPipelineFiltersDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineFiltersWithTags(id, name),
@@ -190,9 +190,9 @@ func TestAccResourcePipelineFiltersTagsWithNullValue(t *testing.T) {
 	resourceName := "harness_platform_pipeline_filters.pipelinetags"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPipelineFiltersDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPipelineFiltersDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineFiltersWithTagsWithNullValue(id, name),
@@ -238,9 +238,9 @@ func TestAccResourcePipelineFiltersModuleProperties(t *testing.T) {
 	resourceName := "harness_platform_pipeline_filters.pipelinemoduleproperties"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPipelineFiltersDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPipelineFiltersDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineFiltersWithModuleProperties(id, name),

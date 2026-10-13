@@ -19,9 +19,9 @@ func TestAccOverrides_ProjectScope(t *testing.T) {
 	resourceName := "harness_platform_overrides.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccOverridesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccOverridesProjectScope(id, name),
@@ -47,9 +47,9 @@ func TestAccOverrides_OrgScope(t *testing.T) {
 	resourceName := "harness_platform_overrides.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccOverridesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccOverridesOrgScope(id, name),
@@ -74,9 +74,9 @@ func TestAccOverrides_AccountScope(t *testing.T) {
 	resourceName := "harness_platform_overrides.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccOverridesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccOverridesAccountScope(id, name),
@@ -99,9 +99,9 @@ func TestAccRemoteOverrides(t *testing.T) {
 	resourceName := "harness_platform_overrides.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccOverridesDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testRemoteOverrides(id, name),

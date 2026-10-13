@@ -32,7 +32,7 @@ func TestAccApproveDelegate(t *testing.T) {
 			pullDelegateImage(context.Background(), &delegate.DockerDelegateConfig{})
 			createDelegateContainer(t, name, false)
 		},
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testaccDelegateApproval(name, true),
@@ -68,7 +68,7 @@ func TestAccApproveDelegate_DelegateNotFound(t *testing.T) {
 		PreCheck: func() {
 			acctest.TestAccPreCheck(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testaccDelegateApproval(name, true),

@@ -23,8 +23,8 @@ func TestAccDataSourceGitopsAgent(t *testing.T) {
 	resourceName := "data.harness_platform_gitops_agent.test"
 	byoaResourceName := "data.harness_platform_gitops_agent.byoa"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceGitopsAgent(agentId, name, accountId, agentId),
@@ -50,8 +50,8 @@ func TestAccDataSourceGitopsAgentFlamingo(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resourceName := "data.harness_platform_gitops_agent.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceGitopsAgentFlamingo(agentId, name, accountId, agentId),

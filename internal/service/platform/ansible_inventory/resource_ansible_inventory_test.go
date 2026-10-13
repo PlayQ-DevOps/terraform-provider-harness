@@ -19,9 +19,9 @@ func TestAccResourceAnsibleInventory(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceAnsibleInventoryDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceAnsibleInventoryDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceAnsibleInventoryManual(id, name),

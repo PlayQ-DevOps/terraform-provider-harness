@@ -16,8 +16,8 @@ func TestAccDataSourceDashboardFolders(t *testing.T) {
 	resourceNameCreated := "harness_platform_dashboard_folder.folder"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceFolder(name),
@@ -49,8 +49,8 @@ func TestAccDataSourceDashboardFolders_List(t *testing.T) {
 	createdResource := "harness_platform_dashboard_folder.folder"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceFolderList(name),

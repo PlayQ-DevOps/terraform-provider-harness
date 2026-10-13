@@ -23,9 +23,9 @@ func TestAccResourceGitopsGnupg(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resourceName := "harness_platform_gitops_gnupg.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsGnupgDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsGnupgDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsGnupg(id, accountId, name, agentId),

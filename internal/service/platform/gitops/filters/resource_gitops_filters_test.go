@@ -22,9 +22,9 @@ func TestAccResourceGitOpsFilters(t *testing.T) {
 	resourceName := "harness_platform_gitops_filters.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitOpsFiltersDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitOpsFiltersDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitOpsFiltersProjectLevel(id, name),

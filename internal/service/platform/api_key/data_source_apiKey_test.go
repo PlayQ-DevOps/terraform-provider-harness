@@ -20,8 +20,8 @@ func TestAccDataSourceApiKey(t *testing.T) {
 	resourceName := "data.harness_platform_apikey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceApiKey(id, apiKeyName, parent_id, account_id),

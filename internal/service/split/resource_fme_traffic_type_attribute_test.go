@@ -20,8 +20,8 @@ func TestAccResourceFMETrafficTypeAttribute_basic(t *testing.T) {
 	var attributeAPIID string
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFMETrafficTypeAttribute(id, attrID, "ACC TT Attribute", false, []string{"acc_a", "acc_b"}),

@@ -28,9 +28,9 @@ func TestAccResourceUserGroup_LDAP(t *testing.T) {
 	resourceName := "harness_user_group.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserGroupLDAP(expectedName),
@@ -54,9 +54,9 @@ func TestAccResourceUserGroup_SAML(t *testing.T) {
 	resourceName := "harness_user_group.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserGroupSAML(expectedName),
@@ -80,9 +80,9 @@ func TestAccResourceUserGroup_NotificationsSettings(t *testing.T) {
 	resourceName := "harness_user_group.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserGroupNotificationSettings(expectedName),
@@ -106,9 +106,9 @@ func TestAccResourceUserGroup_AccountPermissions(t *testing.T) {
 	resourceName := "harness_user_group.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserGroupAccountPermissions(expectedName),
@@ -132,8 +132,8 @@ func TestAccResourceUserGroup_DeleteUnderlyingResource(t *testing.T) {
 	resourceName := "harness_user_group.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserGroupAccountPermissions(expectedName),
@@ -167,9 +167,9 @@ func TestAccResourceUserGroup_AppPermissions(t *testing.T) {
 	resourceName := "harness_user_group.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserGroupAppPermissions(expectedName),

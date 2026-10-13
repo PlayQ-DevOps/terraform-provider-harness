@@ -12,7 +12,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func DataSourceOrganization() *schema.Resource {
+// LegacyDataSourceOrganization is the SDK v2 implementation, kept for the legacy provider used by
+// the migration test.
+func LegacyDataSourceOrganization() *schema.Resource {
 	resource := &schema.Resource{
 		Description: "Data source for retrieving a Harness organization",
 		ReadContext: dataSourceOrganizationRead,
@@ -53,7 +55,7 @@ func dataSourceOrganizationRead(ctx context.Context, d *schema.ResourceData, met
 
 	}
 
-	readOrganization(d, org.Organization)
+	legacyReadOrganization(d, org.Organization)
 
 	return nil
 }

@@ -14,8 +14,8 @@ func TestAccDataSourceInfraModule(t *testing.T) {
 	system := strings.ToLower(t.Name())
 	resourceName := "harness_platform_infra_module.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceInfraModule(name, system),

@@ -19,7 +19,7 @@ package connector_test
 
 // 	resource.Test(t, resource.TestCase{
 // 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-// 		ProviderFactories: acctest.ProviderFactories,
+// 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 // 		Steps: []resource.TestStep{
 // 			{
 // 				Config: testAccDataSourceConnector(name),

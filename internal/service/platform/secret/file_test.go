@@ -18,9 +18,9 @@ func TestAccSecretFile(t *testing.T) {
 	resourceName := "harness_platform_secret_file.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_file(id, name),
@@ -64,9 +64,9 @@ func TestAccSecretFileWMultipleTags(t *testing.T) {
 	resourceName := "harness_platform_secret_file.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_fileMultipleTags(id, name),
@@ -110,8 +110,8 @@ func TestAccSecretFileOrgLevel(t *testing.T) {
 	resourceName := "harness_platform_secret_file.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -160,8 +160,8 @@ func TestAccSecretFileProjectLevel(t *testing.T) {
 	resourceName := "harness_platform_secret_file.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -298,9 +298,9 @@ func TestAccResourceSecretFile_AWS_SM_reference(t *testing.T) {
 	resourceName := "harness_platform_secret_file.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_file_AWS_SM(id, name),

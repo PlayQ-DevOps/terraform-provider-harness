@@ -23,8 +23,8 @@ func TestAccResourceTemplateProjectScope(t *testing.T) {
 	resourceName := "harness_platform_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 			"null": {},
@@ -66,9 +66,9 @@ func TestAccResourceTemplateProjectScopeInline(t *testing.T) {
 	resourceName := "harness_platform_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccTemplateDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccTemplateDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceTemplateProjectScopeInline(id, name),
@@ -105,8 +105,8 @@ func TestAccResourceTemplate_OrgScope(t *testing.T) {
 	resourceName := "harness_platform_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 			"null": {},
@@ -148,9 +148,9 @@ func TestAccResourceTemplate_OrgScopeInline(t *testing.T) {
 	resourceName := "harness_platform_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccTemplateDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccTemplateDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceTemplateOrgScopeInline(id, name),
@@ -184,8 +184,8 @@ func TestAccResourceTemplate_OrgScopeImportFromGit(t *testing.T) {
 	resourceName := "harness_platform_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 			"null": {},
@@ -216,8 +216,8 @@ func TestAccResourceTemplate_ProjectScopeImportFromGit(t *testing.T) {
 	resourceName := "harness_platform_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 			"null": {},
@@ -248,8 +248,8 @@ func TestAccResourceTemplate_ProjectScopeImportFromGitNonDefaultBranch(t *testin
 	resourceName := "harness_platform_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 			"null": {},
@@ -281,8 +281,8 @@ func TestAccResourceTemplate_AccountScopeImportFromGit(t *testing.T) {
 	resourceName := "harness_platform_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 			"null": {},
@@ -314,9 +314,9 @@ func TestAccResourceTemplate_OrgScopeInline_UpdateStable(t *testing.T) {
 	resourceName := "harness_platform_template.test2"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccTemplateDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccTemplateDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -348,8 +348,8 @@ func TestAccResourceTemplate_AccountScope(t *testing.T) {
 	resourceName := "harness_platform_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 			"null": {},
@@ -408,8 +408,8 @@ func TestAccResourceTemplate_AccountScopeInline(t *testing.T) {
 	resourceName := "harness_platform_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 			"null": {},
@@ -451,8 +451,8 @@ func TestAccResourceTemplate_DeleteUnderlyingResource(t *testing.T) {
 	resourceName := "harness_platform_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceTemplateProjectScopeInline(id, name),
@@ -1583,9 +1583,9 @@ func TestAccTemplateImport_ProjectScope_StableVersion(t *testing.T) {
 	resourceName := "harness_platform_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccTemplateDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccTemplateDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				// Create only v1 (stable) — single resource avoids ImportStateVerify confusion
@@ -1622,9 +1622,9 @@ func TestAccTemplateImport_ProjectScope_NonStableVersion(t *testing.T) {
 	resourceName := "harness_platform_template.test_v2"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccTemplateDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccTemplateDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				// Create v1 (stable) and v2 (non-stable)
@@ -1670,9 +1670,9 @@ func TestAccTemplateImport_OrgScope_StableVersion(t *testing.T) {
 	resourceName := "harness_platform_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccTemplateDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccTemplateDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTemplateImportOrgSingleVersion(id, name, orgID, "v1", true),
@@ -1707,9 +1707,9 @@ func TestAccTemplateImport_OrgScope_NonStableVersion(t *testing.T) {
 	resourceName := "harness_platform_template.test_v2"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccTemplateDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccTemplateDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTemplateImportOrgTwoVersions(id, name, orgID, "v1", "v2", true),
@@ -1748,9 +1748,9 @@ func TestAccTemplateImport_AccountScope_StableVersion(t *testing.T) {
 	resourceName := "harness_platform_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccTemplateDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccTemplateDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTemplateImportAccountSingleVersion(id, name, "v1", true),
@@ -1778,9 +1778,9 @@ func TestAccTemplateImport_AccountScope_NonStableVersion(t *testing.T) {
 	resourceName := "harness_platform_template.test_v2"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccTemplateDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccTemplateDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTemplateImportAccountTwoVersions(id, name, "v1", "v2", true),
@@ -2097,8 +2097,8 @@ func TestAccResourceTemplate_OPAPolicyDenial(t *testing.T) {
 	name := id
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccResourceTemplateOPADenial(id, name, orgID, projectID),

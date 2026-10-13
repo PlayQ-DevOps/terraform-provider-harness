@@ -17,9 +17,9 @@ func TestAccSecretSSHKey_kerberos_keyFilePath(t *testing.T) {
 	resourceName := "harness_platform_secret_sshkey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_sshkey_kerberos_keyFilePath(id, name),
@@ -69,9 +69,9 @@ func TestAccSecretSSHKey_kerberos_keyFilePathProject(t *testing.T) {
 	resourceName := "harness_platform_secret_sshkey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -125,9 +125,9 @@ func TestAccSecretSSHKey_kerberos_keyFilePathOrg(t *testing.T) {
 	resourceName := "harness_platform_secret_sshkey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -180,9 +180,9 @@ func TestAccSecretSSHKey_kerberos_password(t *testing.T) {
 	resourceName := "harness_platform_secret_sshkey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_sshkey_kerberos_password(id, name),
@@ -230,9 +230,9 @@ func TestAccSecretSSHKey_kerberos_passwordProject(t *testing.T) {
 	resourceName := "harness_platform_secret_sshkey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -283,9 +283,9 @@ func TestAccSecretSSHKey_kerberos_passwordOrg(t *testing.T) {
 	resourceName := "harness_platform_secret_sshkey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -337,9 +337,9 @@ func TestAccSecretSSHKey_sshkey_sshReferenceCredential(t *testing.T) {
 	resourceName := "harness_platform_secret_sshkey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_sshkey_sshReferenceCredential(id, name),
@@ -385,9 +385,9 @@ func TestAccSecretSSHKey_sshkey_sshReferenceCredentialProject(t *testing.T) {
 	resourceName := "harness_platform_secret_sshkey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -437,9 +437,9 @@ func TestAccSecretSSHKey_sshkey_sshReferenceCredentialOrg(t *testing.T) {
 	resourceName := "harness_platform_secret_sshkey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -489,9 +489,9 @@ func TestAccSecretSSHKey_sshkey_sshPathCredential(t *testing.T) {
 	resourceName := "harness_platform_secret_sshkey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_sshkey_sshPathCredential(id, name),
@@ -541,9 +541,9 @@ func TestAccSecretSSHKey_sshkey_sshPathCredentialProject(t *testing.T) {
 	resourceName := "harness_platform_secret_sshkey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -597,9 +597,9 @@ func TestAccSecretSSHKey_sshkey_sshPathCredentialOrg(t *testing.T) {
 	resourceName := "harness_platform_secret_sshkey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -653,9 +653,9 @@ func TestAccSecretSSHKey_sshkey_sshPassword(t *testing.T) {
 	resourceName := "harness_platform_secret_sshkey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSecret_sshkey_sshPassword(id, name),
@@ -701,9 +701,9 @@ func TestAccSecretSSHKey_sshkey_sshPasswordProject(t *testing.T) {
 	resourceName := "harness_platform_secret_sshkey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -753,9 +753,9 @@ func TestAccSecretSSHKey_sshkey_sshPasswordOrg(t *testing.T) {
 	resourceName := "harness_platform_secret_sshkey.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecretDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecretDestroy(resourceName),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},

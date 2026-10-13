@@ -17,9 +17,9 @@ func TestAccResourceAddUserToGroup(t *testing.T) {
 	resourceName := "harness_add_user_to_group.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccAddUserToGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccAddUserToGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceAddUserToGroup(groupName, "first"),

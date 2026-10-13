@@ -18,9 +18,9 @@ func TestAccResourceIdpScorecardCheck(t *testing.T) {
 	updatedName := id + "_updated"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccScorecardCheckDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccScorecardCheckDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceIdpScorecardCheck(id, id),

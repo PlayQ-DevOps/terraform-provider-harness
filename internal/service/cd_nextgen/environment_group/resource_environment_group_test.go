@@ -21,9 +21,9 @@ func TestAccResourceEnvironmentGroup(t *testing.T) {
 	updatedColor := "#0063F8"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccEnvironmentGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccEnvironmentGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceEnvironmentGroup(id, name, color),
@@ -63,9 +63,9 @@ func TestAccResourceEnvironmentGroupOrgLevel(t *testing.T) {
 	updatedColor := "#0063F8"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccEnvironmentGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccEnvironmentGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceEnvironmentGroupOrgLevel(id, name, color),
@@ -103,9 +103,9 @@ func TestAccResourceEnvironmentGroupAccountLevel(t *testing.T) {
 	updatedColor := "#0063F8"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccEnvironmentGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccEnvironmentGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceEnvironmentGroupAccountLevel(id, name, color),
@@ -177,9 +177,9 @@ func TestAccResourceEnvironmentGroupForceDelete(t *testing.T) {
 	resourceName := "harness_platform_environment_group.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccEnvironmentGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccEnvironmentGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceEnvironmentGroupForceDelete(id, name, color),

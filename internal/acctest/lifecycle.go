@@ -32,6 +32,16 @@ func OfflineFactories() map[string]func() (tfprotov5.ProviderServer, error) {
 	}
 }
 
+// LegacyFactories serves the SDK v2 provider with the pre-migration implementations of the
+// migrated types (provider.LegacySDKProvider), for RunMigration.
+func LegacyFactories() map[string]func() (tfprotov5.ProviderServer, error) {
+	return map[string]func() (tfprotov5.ProviderServer, error){
+		"harness": func() (tfprotov5.ProviderServer, error) {
+			return provider.LegacySDKProvider("test").GRPCProvider(), nil
+		},
+	}
+}
+
 // NewSession returns a provider session whose platform client talks to the fake without
 // retries, for unit tests that call a resource's CRUD functions directly.
 func NewSession(t testing.TB, f *fakeharness.Server) *internal.Session {

@@ -16,8 +16,8 @@ func TestAccDataSourceTemplateFilters(t *testing.T) {
 	resourceName := "data.harness_platform_template_filters.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceTemplateFilters(id, name),
@@ -43,8 +43,8 @@ func TestAccDataSourceTemplateFiltersOrgLevel(t *testing.T) {
 	resourceName := "data.harness_platform_template_filters.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceTemplateFiltersOrgLevel(id, name),

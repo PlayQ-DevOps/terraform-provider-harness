@@ -20,8 +20,8 @@ func TestAccResourceFMEApiKey_basic(t *testing.T) {
 	res := "harness_fme_api_key.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFMEApiKey(id, envName, keyName, "server_side"),
@@ -84,8 +84,8 @@ func TestAccResourceFMEApiKey_clientSide(t *testing.T) {
 	res := "harness_fme_api_key.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFMEApiKey(id, envName, keyName, "client_side"),

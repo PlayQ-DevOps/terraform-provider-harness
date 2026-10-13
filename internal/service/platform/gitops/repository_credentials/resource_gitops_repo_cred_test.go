@@ -21,9 +21,9 @@ func TestAccResourceGitopsRepoCred(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resourceName := "harness_platform_gitops_repo_cred.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsRepoCredDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsRepoCredDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsRepoCredAccountLevel(id, accountId, agentId),
@@ -47,7 +47,7 @@ func TestAccResourceGitopsRepoCred(t *testing.T) {
 	//resourceName = "harness_platform_gitops_repo_cred.test"
 	//resource.Test(t, resource.TestCase{
 	//	PreCheck:          func() { acctest.TestAccPreCheck(t) },
-	//	ProviderFactories: acctest.ProviderFactories,
+	//	ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 	//	CheckDestroy:      testAccResourceGitopsRepoCredDestroy(resourceName),
 	//	Steps: []resource.TestStep{
 	//		{
@@ -77,9 +77,9 @@ func TestAccResourceGitopsRepoCred_IdentifierForceNew(t *testing.T) {
 	resourceName := "harness_platform_gitops_repo_cred.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsRepoCredDestroyByIdentifier(newId, agentId),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsRepoCredDestroyByIdentifier(newId, agentId),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsRepoCredAccountLevel(id, accountId, agentId),

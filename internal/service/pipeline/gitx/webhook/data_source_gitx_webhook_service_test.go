@@ -13,8 +13,8 @@ func TestDataSourceGitxWebhookProjectLevel(t *testing.T) {
 	resourceName := "data.harness_platform_gitx_webhook.test"
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		//CheckDestroy:      testAccResourceGitopsRepositoryDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
@@ -32,8 +32,8 @@ func TestDataSourceGitxWebhookAccLevel(t *testing.T) {
 	resourceName := "data.harness_platform_gitx_webhook.test"
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testDataSourceGitXAccLevel(id, id),
@@ -50,8 +50,8 @@ func TestDataSourceGitxWebhookOrgLevel(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
 	resourceName := "harness_platform_gitx_webhook.test"
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testDataSourceGitXOrgLevel(id, id),

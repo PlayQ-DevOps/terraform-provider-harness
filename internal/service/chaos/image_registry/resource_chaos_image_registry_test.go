@@ -17,9 +17,9 @@ func TestAccResourceChaosImageRegistry(t *testing.T) {
 	resourceName := "harness_chaos_image_registry.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosImageRegistryDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosImageRegistryDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosImageRegistryConfigBasic(rName, id, "docker.io", "test-account"),
@@ -42,9 +42,9 @@ func TestAccResourceChaosImageRegistry_Update(t *testing.T) {
 	resourceName := "harness_chaos_image_registry.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosImageRegistryDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosImageRegistryDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosImageRegistryConfigBasic(rName, id, "docker.io", "test-account"),
@@ -72,9 +72,9 @@ func TestAccResourceChaosImageRegistry_Import(t *testing.T) {
 	resourceName := "harness_chaos_image_registry.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosImageRegistryDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosImageRegistryDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosImageRegistryConfigBasic(rName, id, "docker.io", "test-account"),
@@ -114,9 +114,9 @@ func TestAccResourceChaosImageRegistry_WithCustomImages(t *testing.T) {
 	resourceName := "harness_chaos_image_registry.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosImageRegistryDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosImageRegistryDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosImageRegistryWithCustomImages(rName, id, "docker.io", "test-account"),

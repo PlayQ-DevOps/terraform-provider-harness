@@ -58,8 +58,8 @@ func TestAccDataSourceUserProjectLevel(t *testing.T) {
 	resourceName := "data.harness_platform_user.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceUserProjectLevel(id, name, email),
@@ -100,8 +100,8 @@ func TestAccDataSourceUserAccountLevel(t *testing.T) {
 	resourceName := "data.harness_platform_user.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceUserAccountLevel(id, name, email),
@@ -142,8 +142,8 @@ func TestAccDataSourceUserOrgLevel(t *testing.T) {
 	resourceName := "data.harness_platform_user.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceUserOrgLevel(id, name, email),

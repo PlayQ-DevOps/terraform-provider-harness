@@ -46,9 +46,9 @@ func TestAccResourceUserGroup(t *testing.T) {
 	resourceName := "harness_platform_usergroup.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserGroup(id, name),
@@ -83,9 +83,9 @@ func TestProjectResourceUserGroup(t *testing.T) {
 	resourceName := "harness_platform_usergroup.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectResourceUserGroup(id, name),
@@ -120,9 +120,9 @@ func TestOrgResourceUserGroup(t *testing.T) {
 	resourceName := "harness_platform_usergroup.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgResourceUserGroup(id, name),
@@ -175,8 +175,8 @@ func TestAccResourceUserGroup_emails(t *testing.T) {
 	resourceName := "harness_platform_usergroup.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		//CheckDestroy:      testAccUserGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
@@ -223,9 +223,9 @@ func TestAccResourceUserGroup_userIds(t *testing.T) {
 	resourceName := "harness_platform_usergroup.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserGroup_userIds(id, name),
@@ -288,9 +288,9 @@ func TestProjectResourceUserGroup_emails(t *testing.T) {
 	resourceName := "harness_platform_usergroup.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectResourceUserGroup_emails(id, name),
@@ -348,9 +348,9 @@ func TestOrgResourceUserGroup_emails(t *testing.T) {
 	resourceName := "harness_platform_usergroup.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserGroupDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgResourceUserGroup_emails(id, name),
@@ -388,8 +388,8 @@ func TestAccResourceUserGroup_DeleteUnderlyingResource(t *testing.T) {
 	resourceName := "harness_platform_usergroup.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectResourceUserGroup(id, name),

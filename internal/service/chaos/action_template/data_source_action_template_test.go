@@ -22,9 +22,9 @@ func TestAccDataSourceActionTemplate_byIdentity(t *testing.T) {
 	resourceName := "data.harness_chaos_action_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccActionTemplateDestroy,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccActionTemplateDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceActionTemplate_byIdentity(name),
@@ -44,9 +44,9 @@ func TestAccDataSourceActionTemplate_byName(t *testing.T) {
 	resourceName := "data.harness_chaos_action_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccActionTemplateDestroy,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccActionTemplateDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceActionTemplate_byName(name),

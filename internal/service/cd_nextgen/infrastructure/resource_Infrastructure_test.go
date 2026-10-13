@@ -21,9 +21,9 @@ func TestAccResourceInfrastructure(t *testing.T) {
 	resourceName := "harness_platform_infrastructure.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccInfrastructureDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccInfrastructureDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceInfrastructure(id, name),
@@ -61,9 +61,9 @@ func TestAccResourceInfrastructureForceDelete(t *testing.T) {
 	resourceName := "harness_platform_infrastructure.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccInfrastructureDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccInfrastructureDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceInfrastructureForceDelete(id, name),
@@ -98,9 +98,9 @@ func TestAccResourceMultipleInfrastructure(t *testing.T) {
 	resourceName2 := "harness_platform_infrastructure.test2"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccInfrastructureDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccInfrastructureDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceMultipleInfrastructure(id, name, id2, name2),
@@ -144,9 +144,9 @@ func TestAccResourceInfrastructureAccountLevel(t *testing.T) {
 	resourceName := "harness_platform_infrastructure.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccInfrastructureDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccInfrastructureDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceInfrastructureAccountLevel(id, name),
@@ -180,9 +180,9 @@ func TestAccResourceInfrastructureAccountLevelForceDelete(t *testing.T) {
 	resourceName := "harness_platform_infrastructure.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccInfrastructureDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccInfrastructureDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceInfrastructureAccountLevelForceDelete(id, name),
@@ -212,9 +212,9 @@ func TestAccResourceInfrastructureOrgLevel(t *testing.T) {
 	resourceName := "harness_platform_infrastructure.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccInfrastructureDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccInfrastructureDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceInfrastructureOrgLevel(id, name),
@@ -251,9 +251,9 @@ func TestAccResourceInfrastructureOrgLevelForceDelete(t *testing.T) {
 	resourceName := "harness_platform_infrastructure.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccInfrastructureDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccInfrastructureDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceInfrastructureOrgLevelForceDelete(id, name),
@@ -282,8 +282,8 @@ func TestAccResourceInfrastructure_DeleteUnderlyingResource(t *testing.T) {
 	resourceName := "harness_platform_infrastructure.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceInfrastructure(id, name),
@@ -319,9 +319,9 @@ func TestResourceRemoteInfrastructure(t *testing.T) {
 	resourceName := "harness_platform_infrastructure.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccInfrastructureDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccInfrastructureDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testResourceRemoteInfrastructure(id, name),

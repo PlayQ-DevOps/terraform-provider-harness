@@ -16,8 +16,8 @@ func TestAccDataSourceEnvironment(t *testing.T) {
 	resourceName := "data.harness_platform_environment.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceEnvironment(id, name),
@@ -39,8 +39,8 @@ func TestAccDataSourceEnvironmentByName(t *testing.T) {
 	resourceName := "data.harness_platform_environment.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceEnvironmentByName(id, name),
@@ -62,8 +62,8 @@ func TestAccDataSourceEnvironmentAtAccountLevel(t *testing.T) {
 	resourceName := "data.harness_platform_environment.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceEnvironmentAccountLevel(id, name),
@@ -83,8 +83,8 @@ func TestAccDataSourceEnvironmentAtOrgLevel(t *testing.T) {
 	resourceName := "data.harness_platform_environment.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceEnvironmentOrgLevel(id, name),
@@ -104,8 +104,8 @@ func TestDataSourceRemoteEnvironment(t *testing.T) {
 	resourceName := "data.harness_platform_environment.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testSourceRemoteEnvironment(id, name),

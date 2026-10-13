@@ -18,9 +18,9 @@ func TestAccResourceChaosSecurityGovernanceRule(t *testing.T) {
 	conditionResourceName := "harness_chaos_security_governance_condition_v3.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecurityGovernanceRuleDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecurityGovernanceRuleDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosSecurityGovernanceRuleConfig(rName, id, "Kubernetes"),
@@ -49,9 +49,9 @@ func TestAccResourceChaosSecurityGovernanceRule_Update(t *testing.T) {
 	resourceName := "harness_chaos_security_governance_rule_v3.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccSecurityGovernanceRuleDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccSecurityGovernanceRuleDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosSecurityGovernanceRuleConfig(rName, id, "Kubernetes"),

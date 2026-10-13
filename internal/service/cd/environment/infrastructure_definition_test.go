@@ -20,9 +20,9 @@ func TestAccResourceInfrastructureDefinition_RenameCloudProvider(t *testing.T) {
 	resourceCPName := "harness_cloudprovider_kubernetes.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccInfraDefDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccInfraDefDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccInfraDefK8s_Rename_CloudProvider(expectedName, expectedName),

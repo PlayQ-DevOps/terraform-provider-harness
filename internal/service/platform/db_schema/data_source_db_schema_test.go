@@ -16,8 +16,8 @@ func TestAccDataSourceDBSchema(t *testing.T) {
 	resourceName := "data.harness_platform_db_schema.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBSchema(id, name),
@@ -39,8 +39,8 @@ func TestAccDataSourceDBSchemaForFlywayMigrationType(t *testing.T) {
 	resourceName := "data.harness_platform_db_schema.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBSchemaForFlywayMigrationType(id, name),
@@ -62,8 +62,8 @@ func TestAccDataSourceDBSchemaArtifactory(t *testing.T) {
 	resourceName := "data.harness_platform_db_schema.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBSchemaArtifactory(id, name),
@@ -84,8 +84,8 @@ func TestAccDataSourceDBSchemaWithChangelogScript(t *testing.T) {
 	resourceName := "data.harness_platform_db_schema.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBSchemaWithChangelogScript(id, name),
@@ -107,8 +107,8 @@ func TestAccDataSourceDBSchemaWithChangelogScriptForFlywayMigrationType(t *testi
 	resourceName := "data.harness_platform_db_schema.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBSchemaWithChangelogScriptForFlywayMigrationType(id, name),
@@ -130,8 +130,8 @@ func TestAccDataSourceDBSchemaHarnessCodeRepo(t *testing.T) {
 	resourceName := "data.harness_platform_db_schema.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBSchemaHarnessCodeRepo(id, name),
@@ -154,8 +154,8 @@ func TestAccDataSourceDBSchemaWithUsePercona(t *testing.T) {
 	resourceName := "data.harness_platform_db_schema.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBSchemaWithUsePercona(id, name),

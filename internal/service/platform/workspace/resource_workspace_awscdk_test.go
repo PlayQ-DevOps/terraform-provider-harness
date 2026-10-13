@@ -17,9 +17,9 @@ func TestAccResourceWorkspace_AwsCdkPython(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceWorkspaceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceWorkspaceAwsCdkPython(id, name),
@@ -62,9 +62,9 @@ func TestAccResourceWorkspace_AwsCdkTypescript(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceWorkspaceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceWorkspaceAwsCdkTypescript(id, name),
@@ -96,9 +96,9 @@ func TestAccResourceWorkspace_AwsCdkUpdate(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceWorkspaceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceWorkspaceAwsCdkWithVersion(id, name, "3.13", "25.3"),
@@ -137,9 +137,9 @@ func TestAccResourceWorkspace_AwsCdkWithConnectors(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceWorkspaceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceWorkspaceAwsCdkWithConnectors(id, name),

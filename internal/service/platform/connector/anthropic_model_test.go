@@ -114,7 +114,7 @@ func delegateSelectorCount(csv string) int {
 
 func TestResourceConnectorAnthropicModel_TokenAuthWithVertexBlock(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: `
@@ -141,7 +141,7 @@ resource "harness_platform_connector_anthropic_model" "test" {
 
 func TestResourceConnectorAnthropicModel_VertexAuthWithTokenBlock(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: `
@@ -166,7 +166,7 @@ resource "harness_platform_connector_anthropic_model" "test" {
 
 func TestResourceConnectorAnthropicModel_BedrockAuthWithCloudProviderBlock(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: `
@@ -192,7 +192,7 @@ resource "harness_platform_connector_anthropic_model" "test" {
 
 func TestResourceConnectorAnthropicModel_CloudProviderAuthWithBedrockBlock(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: `
@@ -234,9 +234,9 @@ func TestAccResourceConnectorAnthropicModel_Token(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorAnthropicModel_Token(id, name, delegateHCL, tokenRef),
@@ -290,9 +290,9 @@ func TestAccResourceConnectorAnthropicModel_BedrockApiKey(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorAnthropicModel_BedrockApiKey(id, name, delegateHCL, bedrockApiKeyRef, bedrockRegion),
@@ -347,9 +347,9 @@ func TestAccResourceConnectorAnthropicModel_CloudProvider(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorAnthropicModel_CloudProvider(id, name, delegateHCL, cloudProviderType, cloudConnectorRef),
@@ -408,9 +408,9 @@ func TestOrgResourceConnectorAnthropicModel_Token(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorAnthropicModel_OrgToken(id, name, orgID, delegateHCL, tokenRef),
@@ -472,9 +472,9 @@ func TestOrgResourceConnectorAnthropicModel_BedrockApiKey(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorAnthropicModel_OrgBedrockApiKey(id, name, orgID, delegateHCL, bedrockApiKeyRef, bedrockRegion),
@@ -537,9 +537,9 @@ func TestOrgResourceConnectorAnthropicModel_CloudProvider(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorAnthropicModel_OrgCloudProvider(id, name, orgID, delegateHCL, cloudProviderType, cloudConnectorRef),
@@ -606,9 +606,9 @@ func TestProjectResourceConnectorAnthropicModel_Token(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorAnthropicModel_ProjectToken(id, name, orgID, projectID, delegateHCL, tokenRef),
@@ -675,9 +675,9 @@ func TestProjectResourceConnectorAnthropicModel_BedrockApiKey(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorAnthropicModel_ProjectBedrockApiKey(id, name, orgID, projectID, delegateHCL, bedrockApiKeyRef, bedrockRegion),
@@ -745,9 +745,9 @@ func TestProjectResourceConnectorAnthropicModel_CloudProvider(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorAnthropicModel_ProjectCloudProvider(id, name, orgID, projectID, delegateHCL, cloudProviderType, cloudConnectorRef),
@@ -1038,8 +1038,8 @@ func TestUnitAccResourceConnectorAnthropicModel_Token(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -1086,8 +1086,8 @@ func TestUnitAccResourceConnectorAnthropicModel_BedrockApiKey(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -1135,8 +1135,8 @@ func TestUnitAccResourceConnectorAnthropicModel_CloudProvider(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -1184,8 +1184,8 @@ func TestUnitAccResourceConnectorAnthropicModel_Vertex(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -1238,8 +1238,8 @@ func TestUnitOrgResourceConnectorAnthropicModel_Token(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -1281,8 +1281,8 @@ func TestUnitOrgResourceConnectorAnthropicModel_BedrockApiKey(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -1325,8 +1325,8 @@ func TestUnitOrgResourceConnectorAnthropicModel_CloudProvider(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -1369,8 +1369,8 @@ func TestUnitOrgResourceConnectorAnthropicModel_Vertex(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -1418,8 +1418,8 @@ func TestUnitProjectResourceConnectorAnthropicModel_Token(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -1462,8 +1462,8 @@ func TestUnitProjectResourceConnectorAnthropicModel_BedrockApiKey(t *testing.T) 
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -1507,8 +1507,8 @@ func TestUnitProjectResourceConnectorAnthropicModel_CloudProvider(t *testing.T) 
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -1552,8 +1552,8 @@ func TestUnitProjectResourceConnectorAnthropicModel_Vertex(t *testing.T) {
 	resourceName := "harness_platform_connector_anthropic_model.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},

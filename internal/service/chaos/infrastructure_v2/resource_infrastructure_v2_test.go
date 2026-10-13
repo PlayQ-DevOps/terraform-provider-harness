@@ -44,9 +44,9 @@ func TestAccResourceChaosInfrastructureV2_basic(t *testing.T) {
 	resourceName := "harness_chaos_infrastructure_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosInfrastructureV2Destroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosInfrastructureV2Destroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosInfrastructureV2ConfigBasic(rName, id, "KUBERNETESV2", "NAMESPACE"),
@@ -80,9 +80,9 @@ func TestAccResourceChaosInfrastructureV2_Update(t *testing.T) {
 	resourceName := "harness_chaos_infrastructure_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosInfrastructureV2Destroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosInfrastructureV2Destroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosInfrastructureV2ConfigBasic(rName, id, "KUBERNETESV2", "NAMESPACE"),
@@ -122,9 +122,9 @@ func TestAccResourceChaosInfrastructureV2_Resources(t *testing.T) {
 	resourceName := "harness_chaos_infrastructure_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosInfrastructureV2Destroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosInfrastructureV2Destroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosInfrastructureV2ConfigResources(rName, id, "KUBERNETESV2", "NAMESPACE"),
@@ -154,9 +154,9 @@ func TestAccResourceChaosInfrastructureV2_KubernetesType(t *testing.T) {
 	resourceName := "harness_chaos_infrastructure_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosInfrastructureV2Destroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosInfrastructureV2Destroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosInfrastructureV2ConfigBasic(rName, id, "KUBERNETESV2", "NAMESPACE"),
@@ -176,8 +176,8 @@ func TestAccResourceChaosInfrastructureV2_Import(t *testing.T) {
 	resourceName := "harness_chaos_infrastructure_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosInfrastructureV2ConfigBasic(rName, id, "KUBERNETESV2", "NAMESPACE"),

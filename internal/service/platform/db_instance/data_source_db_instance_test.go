@@ -16,8 +16,8 @@ func TestAccDataSourceDBInstance(t *testing.T) {
 	resourceName := "data.harness_platform_db_instance.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBInstance(id, name),
@@ -127,8 +127,8 @@ func TestAccDataSourceDBInstanceWithCommitSha(t *testing.T) {
 	resourceName := "data.harness_platform_db_instance.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBInstanceWithCommitSha(id, name),
@@ -150,8 +150,8 @@ func TestAccDataSourceDBInstanceWithGitTag(t *testing.T) {
 	resourceName := "data.harness_platform_db_instance.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBInstanceWithGitTag(id, name),
@@ -173,8 +173,8 @@ func TestAccDataSourceDBInstanceWithSubstituteProps(t *testing.T) {
 	resourceName := "data.harness_platform_db_instance.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBInstanceWithSubstituteProps(id, name),

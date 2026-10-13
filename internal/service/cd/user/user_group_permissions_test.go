@@ -36,8 +36,8 @@ func TestAccResourceUserGroupPermissions_AccountPermissions(t *testing.T) {
 				Name: expectedName,
 			})
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserGroupPermissionsDestroy(resourceName),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserGroupPermissionsDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserGroupPermissions_AccountPermissions(expectedName),
@@ -71,7 +71,7 @@ func TestAccResourceUserGroupPermissions_DeleteUnderlyingResource(t *testing.T) 
 				Name: expectedName,
 			})
 		},
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserGroupPermissions_AccountPermissions(expectedName),
@@ -119,8 +119,8 @@ func TestAccResourceUserGroupPermissions_AppPermissions(t *testing.T) {
 				Name: expectedName,
 			})
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserGroupPermissionsDestroy(resourceName),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserGroupPermissionsDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserGroupPermissionsAppPermissions(expectedName),

@@ -113,8 +113,8 @@ func TestResourceVMRuleCrossAccountHTTP(t *testing.T) {
 	resourceName := "harness_autostopping_rule_vm.xacct"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testVMCrossAccountHTTP(name, env, true),
@@ -144,8 +144,8 @@ func TestResourceVMRuleCrossAccountTCP(t *testing.T) {
 	resourceName := "harness_autostopping_rule_vm.xacct"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testVMCrossAccountTCP(name, env, true),

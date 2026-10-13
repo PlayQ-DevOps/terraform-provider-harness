@@ -20,9 +20,9 @@ func TestAccResourcePipeline_TagsWithColons(t *testing.T) {
 	resourceName := "harness_platform_pipeline.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPipelineDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPipelineDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineWithComplexTags(id, name),
@@ -51,9 +51,9 @@ func TestAccResourcePipeline_TagsWithHarnessExpressions(t *testing.T) {
 	resourceName := "harness_platform_pipeline.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPipelineDestroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPipelineDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineWithHarnessExpressions(id, name),

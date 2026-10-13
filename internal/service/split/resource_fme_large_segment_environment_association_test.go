@@ -20,8 +20,8 @@ func TestAccResourceFMELargeSegmentEnvironmentAssociation_basic(t *testing.T) {
 	var envID string
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFMELargeSegmentEnvironmentAssociation(id, envName, lsName),
