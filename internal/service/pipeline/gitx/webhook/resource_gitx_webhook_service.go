@@ -26,6 +26,7 @@ func ResourceWebhook() *schema.Resource {
 				Description: "GitX webhook identifier.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"name": {
 				Description: "GitX webhook name",

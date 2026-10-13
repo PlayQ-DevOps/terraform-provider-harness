@@ -28,16 +28,19 @@ func ResourceChaosInfrastructure() *schema.Resource {
 				Description: "Identifier of the organization in which the chaos infrastructure is configured.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Identifier of the project in which the chaos infrastructure is configured.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"identifier": {
 				Description: "Identifier of the chaos infrastructure.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"name": {
 				Description: "Name of the chaos infrastructure.",
@@ -53,6 +56,7 @@ func ResourceChaosInfrastructure() *schema.Resource {
 				Description: "Environment ID of the chaos infrastructure.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"namespace": {
 				Description: "Namespace of the chaos infrastructure.",

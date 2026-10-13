@@ -37,8 +37,5 @@ resource "harness_platform_environment" "test" {
 			}
 		},
 		Drift: func(obj map[string]any) { obj["description"] = "changed outside Terraform" },
-		KnownFailing: map[string]string{
-			acctest.CellScopeChange: "#1347: org_id and project_id are planned as in-place updates until FORK-3.1 marks them ForceNew",
-		},
 	})
 }

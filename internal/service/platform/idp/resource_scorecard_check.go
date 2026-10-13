@@ -175,7 +175,7 @@ func ResourceScorecardCheck() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
-		Schema:        scorecardCheckSchema(false),
+		Schema:        helpers.WithIdentity(scorecardCheckSchema(false), "identifier"),
 		CustomizeDiff: resourceScorecardCheckCustomizeDiff,
 	}
 }

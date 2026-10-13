@@ -24,7 +24,7 @@ func ResourceEnvironmentBlueprint() *schema.Resource {
 		DeleteContext: resourceEnvironmentBlueprintDelete,
 		Importer:      blueprintImporter,
 		Schema: map[string]*schema.Schema{
-			"identifier": helpers.GetIdentifierSchema(helpers.SchemaFlagTypes.Required),
+			"identifier": helpers.Identity(helpers.GetIdentifierSchema(helpers.SchemaFlagTypes.Required)),
 			"version": {
 				Type:        schema.TypeString,
 				Description: "Version of the catalog entity",

@@ -28,16 +28,19 @@ func ResourceSloService() *schema.Resource {
 				Description: "Identifier of the organization in which the SLO is configured.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Identifier of the project in which the SLO is configured.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"identifier": {
 				Description: "Identifier of the SLO.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"request": {
 				Description: "Request for creating or updating SLO.",

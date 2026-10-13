@@ -31,11 +31,13 @@ func ResourceInfrastructure() *schema.Resource {
 				Description: "Identifier of the Infrastructure.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"env_id": {
 				Description: "Environment Identifier.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"type": {
 				Description: fmt.Sprintf("Type of Infrastructure. Valid values are %s.", strings.Join(nextgen.InfrastructureTypeValues, ", ")),

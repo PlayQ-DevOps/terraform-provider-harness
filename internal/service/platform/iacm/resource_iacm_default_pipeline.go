@@ -38,13 +38,13 @@ func ResourceIacmDefaultPipeline() *schema.Resource {
 				Description: "The provisioner associated with this default.",
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    false,
+				ForceNew:    true,
 			},
 			"operation": {
 				Description: "The operation associated with this default.",
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    false,
+				ForceNew:    true,
 			},
 			"pipeline": {
 				Description: "The pipeline associated with this default.",

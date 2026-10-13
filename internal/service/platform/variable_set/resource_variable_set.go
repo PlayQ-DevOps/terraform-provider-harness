@@ -35,11 +35,13 @@ func ResourceVariableSet() *schema.Resource {
 				Description: "Organization identifier of the organization the Variable Set resides in.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project identifier of the project the Variable Set resides in.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"name": {
 				Description: "Name of the Variable Set.",

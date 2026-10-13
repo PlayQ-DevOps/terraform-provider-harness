@@ -27,14 +27,17 @@ func ResourceCentralNotificationChannel() *schema.Resource {
 			"identifier": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"org": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"name": {
 				Type:     schema.TypeString,

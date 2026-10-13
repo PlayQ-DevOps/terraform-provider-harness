@@ -36,7 +36,7 @@ func ResourceEnvironmentClustersMapping() *schema.Resource {
 			Upgrade: upgradeEnvironmentClustersMappingV0,
 		}},
 
-		Schema: environmentClustersMappingSchema(),
+		Schema: helpers.WithIdentity(environmentClustersMappingSchema(), "env_id", "org_id", "project_id"),
 	}
 	return resource
 }

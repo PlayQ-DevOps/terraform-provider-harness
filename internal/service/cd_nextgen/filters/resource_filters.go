@@ -27,6 +27,7 @@ func ResourceFilters() *schema.Resource {
 				Description: "Unique identifier of the resource",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"name": {
 				Description: "Name of the Filter",
@@ -38,16 +39,19 @@ func ResourceFilters() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"Connector", "DelegateProfile", "Delegate", "EnvironmentGroup", "FileStore", "Environment"}, false),
+				ForceNew:     true,
 			},
 			"org_id": {
 				Description: "organization Identifier for the Entity",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "project Identifier for the Entity",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"filter_properties": {
 				Description: "Properties of the filter entity defined in Harness.",

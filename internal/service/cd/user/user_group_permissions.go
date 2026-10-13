@@ -26,6 +26,7 @@ func ResourceUserGroupPermissions() *schema.Resource {
 				Description: "Unique identifier of the user group.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"account_permissions": getUserGroupAccountPermissionsSchema(),
 			"app_permissions":     getUserGroupAppPermissionsSchema(),

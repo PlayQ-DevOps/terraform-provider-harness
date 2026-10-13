@@ -27,6 +27,7 @@ func ResourceDBInstance() *schema.Resource {
 				Description: "The identifier of the parent database schema",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"branch": {
 				Description:   "The branch of changeSet repository",

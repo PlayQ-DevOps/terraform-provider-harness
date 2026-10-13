@@ -29,16 +29,19 @@ func ResourceEnvironmentServiceOverrides() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 			},
 			"service_id": {
 				Description: "The service ID to which the overrides applies.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"env_id": {
 				Description: "The env ID to which the overrides associated.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"yaml": {
 				Description:      "Environment Service Overrides YAML." + helpers.Descriptions.YamlText.String(),
@@ -153,4 +156,5 @@ func readEnvironmentServiceOverrides(d *schema.ResourceData, so *nextgen.Service
 func SetScopedResourceSchemaForServiceOverride(s map[string]*schema.Schema) {
 	s["project_id"] = helpers.GetProjectIdSchema(helpers.SchemaFlagTypes.Optional)
 	s["org_id"] = helpers.GetOrgIdSchema(helpers.SchemaFlagTypes.Optional)
+	helpers.MarkIdentity(s, "org_id", "project_id")
 }

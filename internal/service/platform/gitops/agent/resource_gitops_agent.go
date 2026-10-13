@@ -2,7 +2,6 @@ package agent
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
@@ -21,34 +20,6 @@ func ResourceGitopsAgent() *schema.Resource {
 		UpdateContext: resourceGitopsAgentUpdate,
 		DeleteContext: resourceGitopsAgentDelete,
 		Importer:      helpers.MultiLevelResourceImporter,
-		CustomizeDiff: func(ctx context.Context, diff *schema.ResourceDiff, i interface{}) error {
-			var e error
-			if diff.HasChange("project_id") && diff.Id() != "" {
-				e = fmt.Errorf("field 'project_id' cannot be changed after the resource is created")
-			}
-			if diff.HasChange("org_id") && diff.Id() != "" {
-				if e != nil {
-					e = fmt.Errorf("field 'org_id' cannot be changed after the resource is created:%w", e)
-				} else {
-					e = fmt.Errorf("field 'org_id' cannot be changed after the resource is created")
-				}
-			}
-			if diff.HasChange("identifier") && diff.Id() != "" {
-				if e != nil {
-					e = fmt.Errorf("field 'identifier' cannot be changed after the resource is created:%v", e)
-				} else {
-					e = fmt.Errorf("field 'identifier' cannot be changed after the resource is created")
-				}
-			}
-			if diff.HasChange("metadata.0.existing_installation") && diff.Id() != "" {
-				if e != nil {
-					e = fmt.Errorf("field 'metadata.existing_installation' cannot be changed after the agent is created:%w", e)
-				} else {
-					e = fmt.Errorf("field 'metadata.existing_installation' cannot be changed after the agent is created")
-				}
-			}
-			return e
-		},
 
 		Schema: map[string]*schema.Schema{
 			"account_id": {
@@ -62,16 +33,19 @@ func ResourceGitopsAgent() *schema.Resource {
 				Description: "Organization identifier of the GitOps agent.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project identifier of the GitOps agent.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"identifier": {
 				Description: "Identifier of the GitOps agent.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"name": {
 				Description: "Name of the GitOps agent.",
@@ -123,6 +97,7 @@ func ResourceGitopsAgent() *schema.Resource {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     false,
+							ForceNew:    true,
 						},
 					}},
 			},

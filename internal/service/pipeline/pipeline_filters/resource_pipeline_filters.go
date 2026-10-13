@@ -28,6 +28,7 @@ func ResourcePipelineFilters() *schema.Resource {
 				Description: "Unique identifier of the resource.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"name": {
 				Description: "Name of the pipeline filters.",
@@ -39,16 +40,19 @@ func ResourcePipelineFilters() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"PipelineSetup", "PipelineExecution", "Deployment", "Template", "EnvironmentGroup", "Environment"}, false),
+				ForceNew:     true,
 			},
 			"org_id": {
 				Description: "Organization Identifier for the Entity.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project Identifier for the Entity.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"filter_properties": {
 				Description: "Properties of the filters entity defined in Harness.",

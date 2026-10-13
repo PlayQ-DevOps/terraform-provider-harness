@@ -48,7 +48,7 @@ func ResourceServiceDiscoveryAgent() *schema.Resource {
 		// 	StateContext: resourceServiceDiscoveryAgentImport,
 		// },
 		Importer: MultiLevelResourceImporter,
-		Schema:   AgentResourceSchema(),
+		Schema:   helpers.WithIdentity(AgentResourceSchema(), "environment_identifier", "infra_identifier", "org_identifier", "project_identifier"),
 	}
 }
 

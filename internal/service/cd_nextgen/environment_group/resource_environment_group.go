@@ -28,16 +28,19 @@ func ResourceEnvironmentGroup() *schema.Resource {
 				Description: "identifier of the environment group.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"org_id": {
 				Description: "org_id of the environment group.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "project_id of the environment group.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"color": {
 				Description: "Color of the environment group.",

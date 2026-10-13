@@ -53,8 +53,5 @@ resource "harness_platform_connector_github" "test" {
 				resource.TestCheckResourceAttr("harness_platform_connector_github.test", "credentials.0.http.0.username", "octocat"),
 			}
 		},
-		KnownFailing: map[string]string{
-			acctest.CellScopeChange: "#1347 / FORK-3.1: org_id and project_id are not ForceNew, so a scope change is planned as an in-place update that the API rejects",
-		},
 	})
 }

@@ -46,9 +46,9 @@ func ResourceEnvironment() *schema.Resource {
 			Delete: schema.DefaultTimeout(60 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
-			"identifier": helpers.GetIdentifierSchema(helpers.SchemaFlagTypes.Required),
-			"org_id":     helpers.GetOrgIdSchema(helpers.SchemaFlagTypes.Required),
-			"project_id": helpers.GetProjectIdSchema(helpers.SchemaFlagTypes.Required),
+			"identifier": helpers.Identity(helpers.GetIdentifierSchema(helpers.SchemaFlagTypes.Required)),
+			"org_id":     helpers.Identity(helpers.GetOrgIdSchema(helpers.SchemaFlagTypes.Required)),
+			"project_id": helpers.Identity(helpers.GetProjectIdSchema(helpers.SchemaFlagTypes.Required)),
 			"name":       helpers.GetNameSchema(helpers.SchemaFlagTypes.Optional),
 			"owner": {
 				Type:        schema.TypeString,

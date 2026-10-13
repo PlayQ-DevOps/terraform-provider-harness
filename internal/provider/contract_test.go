@@ -9,11 +9,13 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
 	"testing"
 
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -38,7 +40,8 @@ const (
 	checkImporterMissing = "C1_importer_missing"
 	// C2: importers use StateContext; the deprecated State field is not used.
 	checkImporterDeprecated = "C2_importer_deprecated_state"
-	// C3: identity and scope attributes (identifier, org_id, project_id) are ForceNew when
+	// C3: identity and scope attributes (identifier, org_id, project_id, and every part of the
+	// import ID) are ForceNew when
 	// settable, because Harness cannot move or rename an object; a change must replace it.
 	checkMutableIdentity = "C3_identity_not_forcenew"
 	// C4: client-side intent flags (force_delete, upsert, ...) are plain Optional booleans:
@@ -167,7 +170,19 @@ func checkResource(t *testing.T, rep *contractReport, name string, r *schema.Res
 			}
 		}
 	}
-	for _, attr := range identityAttrs {
+	// Identity: the attributes every resource addresses an object with, plus every part of
+	// its import ID (an importer built from a helpers.ImportSpec).
+	identity := append([]string{}, identityAttrs...)
+	if r.Importer != nil {
+		if spec, ok := helpers.ImportSpecOf(r.Importer); ok {
+			for _, part := range spec.Parts {
+				if part != "" && !slices.Contains(identity, part) {
+					identity = append(identity, part)
+				}
+			}
+		}
+	}
+	for _, attr := range identity {
 		if s, ok := r.Schema[attr]; ok && (s.Required || s.Optional) && !s.ForceNew {
 			rep.add(checkMutableIdentity, name+"."+attr)
 		}

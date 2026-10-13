@@ -25,6 +25,7 @@ func ResourcePipelineCentralNotificationRule() *schema.Resource {
 			"identifier": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"name": {
 				Type:     schema.TypeString,

@@ -25,35 +25,6 @@ func ResourceGitopsApplication() *schema.Resource {
 		DeleteContext: resourceGitopsApplicationDelete,
 		Importer:      helpers.GitopsAgentApplicationImporter,
 
-		CustomizeDiff: func(ctx context.Context, diff *schema.ResourceDiff, i interface{}) error {
-			var e error
-			if diff.HasChange("project_id") && diff.Id() != "" {
-				e = fmt.Errorf("field 'project_id' cannot be changed after the resource is created")
-			}
-			if diff.HasChange("org_id") && diff.Id() != "" {
-				if e != nil {
-					e = fmt.Errorf("field 'org_id' cannot be changed after the resource is created:%w", e)
-				} else {
-					e = fmt.Errorf("field 'org_id' cannot be changed after the resource is created")
-				}
-			}
-			if diff.HasChange("agent_id") && diff.Id() != "" {
-				if e != nil {
-					e = fmt.Errorf("field 'agent_id' cannot be changed after the resource is created:%v", e)
-				} else {
-					e = fmt.Errorf("field 'agent_id' cannot be changed after the resource is created")
-				}
-			}
-			if diff.HasChange("name") && diff.Id() != "" {
-				if e != nil {
-					e = fmt.Errorf("field 'name' cannot be changed after the resource is created:%w", e)
-				} else {
-					e = fmt.Errorf("field 'name' cannot be changed after the resource is created")
-				}
-			}
-			return e
-		},
-
 		Schema: map[string]*schema.Schema{
 			"account_id": {
 				Description: "Account identifier of the GitOps application.",
@@ -66,11 +37,13 @@ func ResourceGitopsApplication() *schema.Resource {
 				Description: "Organization identifier of the GitOps application.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project identifier of the GitOps application.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"identifier": {
 				Description: "Identifier of the GitOps application.",
@@ -81,11 +54,13 @@ func ResourceGitopsApplication() *schema.Resource {
 					// Implement logic to suppress the diff here
 					return true
 				},
+				ForceNew: true,
 			},
 			"agent_id": {
 				Description: "Agent identifier of the GitOps application.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"cluster_id": {
 				Description: "Cluster identifier of the GitOps application.",
@@ -167,6 +142,7 @@ func ResourceGitopsApplication() *schema.Resource {
 				Description: "Name of the GitOps application.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"skip_repo_validation": {
 				Description:   "Indicates if the GitOps application should skip validate repository definition exists.",

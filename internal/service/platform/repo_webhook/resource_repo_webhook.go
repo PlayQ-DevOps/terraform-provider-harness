@@ -21,10 +21,11 @@ func ResourceRepoWebhook() *schema.Resource {
 		DeleteContext: resourceRepoWebhookDelete,
 		Importer:      helpers.RepoRuleResourceImporter,
 
-		Schema: createSchema(),
+		Schema: helpers.WithIdentity(createSchema(), "identifier", "org_id", "project_id", "repo_identifier"),
 	}
 
 	helpers.SetMultiLevelDatasourceSchemaWithoutCommonFields(resource.Schema)
+	helpers.MarkIdentity(resource.Schema, "org_id", "project_id")
 
 	return resource
 }

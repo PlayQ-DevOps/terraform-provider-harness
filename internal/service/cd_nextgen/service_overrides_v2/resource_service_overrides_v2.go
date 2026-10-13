@@ -64,6 +64,7 @@ func ResourceServiceOverrides() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 			},
 			"is_force_import": {
 				Description: "force import override from remote even if same file path already exist",
@@ -398,6 +399,7 @@ func readImportServiceOverridesV2(d *schema.ResourceData, so *nextgen.ServiceOve
 func SetScopedResourceSchemaForServiceOverride(s map[string]*schema.Schema) {
 	s["project_id"] = helpers.GetProjectIdSchema(helpers.SchemaFlagTypes.Optional)
 	s["org_id"] = helpers.GetOrgIdSchema(helpers.SchemaFlagTypes.Optional)
+	helpers.MarkIdentity(s, "org_id", "project_id")
 }
 
 func getSvcOverrideParams(d *schema.ResourceData) *nextgen.ServiceOverridesApiGetServiceOverridesV2Opts {

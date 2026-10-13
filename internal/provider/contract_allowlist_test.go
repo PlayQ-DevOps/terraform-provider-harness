@@ -8,6 +8,9 @@ package provider_test
 // Pre-existing violations that are debt rather than decisions live in the generated
 // contract_baseline_test.go instead.
 var contractAllowlist = map[string]map[string]string{
+	checkMutableIdentity: {
+		"harness_platform_environment_clusters_mapping.identifier": "a label with no meaning to the API; the mapping is identified by its environment, which is ForceNew",
+	},
 	checkImporterMissing: {
 		"harness_time_sleep":                "no remote object exists; there is nothing to import",
 		"harness_platform_trigger_pipeline": "one-shot action resource that runs a pipeline execution; nothing to import",

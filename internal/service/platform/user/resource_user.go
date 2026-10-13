@@ -33,12 +33,14 @@ func ResourceUser() *schema.Resource {
 				Description: "Organization identifier of the user.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description:  "Project identifier of the user.",
 				Type:         schema.TypeString,
 				Optional:     true,
 				RequiredWith: []string{"org_id"},
+				ForceNew:     true,
 			},
 			"name": {
 				Description: "Name of the user.",
@@ -49,6 +51,7 @@ func ResourceUser() *schema.Resource {
 				Description: "The email of the user.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"disabled": {
 				Description: "Whether or not the user account is disabled.",

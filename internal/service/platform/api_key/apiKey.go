@@ -29,11 +29,13 @@ func ResourceApiKey() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"USER", "SERVICE_ACCOUNT"}, false),
+				ForceNew:     true,
 			},
 			"parent_id": {
 				Description: "Parent Entity Identifier of the API Key",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"default_time_to_expire_token": {
 				Description: "Default expiration time of the Token within API Key",

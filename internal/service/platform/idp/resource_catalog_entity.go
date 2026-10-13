@@ -39,7 +39,7 @@ func ResourceCatalogEntity() *schema.Resource {
 		DeleteContext: resourceCatalogEntityDelete,
 		Importer:      entityImporter,
 		Schema: map[string]*schema.Schema{
-			"identifier": helpers.GetIdentifierSchema(helpers.SchemaFlagTypes.Required),
+			"identifier": helpers.Identity(helpers.GetIdentifierSchema(helpers.SchemaFlagTypes.Required)),
 			"kind": {
 				Type:        schema.TypeString,
 				Description: "Kind of the catalog entity",
@@ -49,8 +49,8 @@ func ResourceCatalogEntity() *schema.Resource {
 					"component", "group", "user", "workflow", "resource", "system",
 				}, false),
 			},
-			"org_id":     helpers.GetOrgIdSchema(helpers.SchemaFlagTypes.Optional),
-			"project_id": helpers.GetProjectIdSchema(helpers.SchemaFlagTypes.Optional),
+			"org_id":     helpers.Identity(helpers.GetOrgIdSchema(helpers.SchemaFlagTypes.Optional)),
+			"project_id": helpers.Identity(helpers.GetProjectIdSchema(helpers.SchemaFlagTypes.Optional)),
 			"yaml": {
 				Type:             schema.TypeString,
 				Description:      "YAML definition of the catalog entity",

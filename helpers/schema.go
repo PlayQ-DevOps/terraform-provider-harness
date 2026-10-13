@@ -43,10 +43,6 @@ func GetIdentifierSchema(flag SchemaFlagType) *schema.Schema {
 		Type:        schema.TypeString,
 	}
 
-	if flag == SchemaFlagTypes.Required {
-		s.ForceNew = true
-	}
-
 	SetSchemaFlagType(s, flag)
 
 	return s
@@ -58,10 +54,6 @@ func GetProjectIdSchema(flag SchemaFlagType) *schema.Schema {
 		Type:        schema.TypeString,
 	}
 
-	if flag == SchemaFlagTypes.Required {
-		s.ForceNew = true
-	}
-
 	SetSchemaFlagType(s, flag)
 	return s
 }
@@ -70,10 +62,6 @@ func GetOrgIdSchema(flag SchemaFlagType) *schema.Schema {
 	s := &schema.Schema{
 		Description: "Unique identifier of the organization.",
 		Type:        schema.TypeString,
-	}
-
-	if flag == SchemaFlagTypes.Required {
-		s.ForceNew = true
 	}
 
 	SetSchemaFlagType(s, flag)
@@ -105,6 +93,7 @@ func SetCommonResourceSchema(s map[string]*schema.Schema) {
 	s["description"] = GetDescriptionSchema(SchemaFlagTypes.Optional)
 	s["name"] = GetNameSchema(SchemaFlagTypes.Required)
 	s["tags"] = GetTagsSchema(SchemaFlagTypes.Optional)
+	MarkIdentity(s, "identifier")
 }
 
 // SetCommonDataSourceSchema sets the default schema objects used for most data sources.
@@ -158,12 +147,14 @@ func SetOptionalOrgAndProjectLevelDataSourceSchema(s map[string]*schema.Schema) 
 func SetOrgLevelResourceSchema(s map[string]*schema.Schema) {
 	SetCommonResourceSchema(s)
 	s["org_id"] = GetOrgIdSchema(SchemaFlagTypes.Required)
+	MarkIdentity(s, "org_id")
 }
 
 // SetProjectLevelResourceSchema sets the default schema objects used for project level resources.
 func SetProjectLevelResourceSchema(s map[string]*schema.Schema) {
 	SetOrgLevelResourceSchema(s)
 	s["project_id"] = GetProjectIdSchema(SchemaFlagTypes.Required)
+	MarkIdentity(s, "project_id")
 }
 
 func SetMultiLevelResourceSchema(s map[string]*schema.Schema) {
@@ -171,6 +162,7 @@ func SetMultiLevelResourceSchema(s map[string]*schema.Schema) {
 	s["org_id"] = GetOrgIdSchema(SchemaFlagTypes.Optional)
 	s["project_id"] = GetProjectIdSchema(SchemaFlagTypes.Optional)
 	s["project_id"].RequiredWith = []string{"org_id"}
+	MarkIdentity(s, "org_id", "project_id")
 }
 
 func SetMultiLevelDatasourceSchema(s map[string]*schema.Schema) {

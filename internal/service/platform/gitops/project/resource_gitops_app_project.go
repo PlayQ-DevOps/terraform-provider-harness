@@ -57,6 +57,7 @@ func ResourceProject() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 			},
 			"upsert": {
 				Description: "Indicates if the argo project should be updated if existing and inserted if not.",

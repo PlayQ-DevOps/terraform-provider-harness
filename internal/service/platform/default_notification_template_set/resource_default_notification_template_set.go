@@ -29,6 +29,7 @@ func ResourceDefaultNotificationTemplateSet() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Identifier of Default Notification Template Set",
+				ForceNew:    true,
 			},
 			"description": {
 				Type:        schema.TypeString,

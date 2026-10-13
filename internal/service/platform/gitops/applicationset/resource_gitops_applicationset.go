@@ -79,16 +79,19 @@ func ResourceGitopsApplicationSet() *schema.Resource {
 				Description: "Organization identifier of the GitOps applicationset.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project identifier of the GitOps applicationset.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"agent_id": {
 				Description: "Agent identifier of the GitOps applicationset.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"upsert": {
 				Description: "Indicates if the GitOps application should be updated if existing and inserted if not.",

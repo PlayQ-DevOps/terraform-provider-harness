@@ -26,6 +26,7 @@ func ResourceManualFreeze() *schema.Resource {
 				Description: "Identifier of the freeze",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"description": {
 				Description: "Description of the freeze",
@@ -41,11 +42,13 @@ func ResourceManualFreeze() *schema.Resource {
 				Description: "Organization identifier of the freeze",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project identifier of the freeze",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"tags": {
 				Description: "Tags associated with the freeze",

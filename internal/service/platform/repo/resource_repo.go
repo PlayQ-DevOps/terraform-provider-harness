@@ -24,10 +24,11 @@ func ResourceRepo() *schema.Resource {
 		DeleteContext: resourceRepoDelete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
-		Schema: createSchema(),
+		Schema: helpers.WithIdentity(createSchema(), "identifier", "org_id", "project_id"),
 	}
 
 	helpers.SetMultiLevelDatasourceSchemaWithoutCommonFields(resource.Schema)
+	helpers.MarkIdentity(resource.Schema, "org_id", "project_id")
 
 	return resource
 }

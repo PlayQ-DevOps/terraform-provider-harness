@@ -27,6 +27,7 @@ func ResourceTriggers() *schema.Resource {
 				Description: "Identifier of the target pipeline",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"ignore_error": {
 				Description: "ignore error default false",

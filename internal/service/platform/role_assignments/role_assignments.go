@@ -28,6 +28,7 @@ func ResourceRoleAssignments() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 			},
 			"resource_group_identifier": {
 				Description: "Resource group identifier.",
@@ -106,11 +107,13 @@ func ResourceRoleAssignments() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Project Identifier",
+				ForceNew:    true,
 			},
 			"org_id": {
 				Description: "Org identifier.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 		},
 	}

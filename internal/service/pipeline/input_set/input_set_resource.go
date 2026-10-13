@@ -30,6 +30,7 @@ func ResourceInputSet() *schema.Resource {
 				Description: "Identifier of the pipeline",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"yaml": {
 				Description: "Input Set YAML." + helpers.Descriptions.YamlText.String(),

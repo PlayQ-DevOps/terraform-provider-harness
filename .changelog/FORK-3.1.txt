@@ -1,0 +1,9 @@
+```release-note:breaking-change
+provider: changing the identity of a resource (its `identifier`, `org_id`, `project_id`, or any other part of its import ID such as `env_id`, `pipeline_id`, `agent_id`, `repo_identifier`, `environment`, the template `version`) now plans a replacement instead of an in-place update that the Harness API rejected or silently ignored (#1347, #975, #1342). Review plans that move or rename objects: Terraform will destroy and recreate them.
+```
+```release-note:bug
+resource/harness_platform_gitops_agent, resource/harness_platform_gitops_applications, resource/harness_platform_template: the plan-time errors that refused identity changes are replaced by the replacement plan above; the agent's `metadata.existing_installation` also forces a replacement.
+```
+```release-note:note
+data sources no longer carry `ForceNew` on their lookup attributes.
+```

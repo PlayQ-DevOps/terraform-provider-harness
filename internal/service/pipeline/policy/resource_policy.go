@@ -34,6 +34,7 @@ func ResourcePolicy() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Computed:    false,
+				ForceNew:    true,
 			},
 			"rego": {
 				Description: "Rego code for the policy.",

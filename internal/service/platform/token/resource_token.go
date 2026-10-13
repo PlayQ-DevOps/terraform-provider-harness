@@ -28,17 +28,20 @@ func ResourceToken() *schema.Resource {
 				Description: "Identifier of the API Key",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"apikey_type": {
 				Description:  "Type of the API Key",
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"USER", "SERVICE_ACCOUNT"}, false),
+				ForceNew:     true,
 			},
 			"parent_id": {
 				Description: "Parent Entity Identifier of the API Key",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"account_id": {
 				Description: "Account Identifier for the Entity",

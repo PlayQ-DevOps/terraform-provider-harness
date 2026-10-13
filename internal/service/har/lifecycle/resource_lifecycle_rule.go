@@ -18,7 +18,7 @@ func ResourceLifecycleRule() *schema.Resource {
 		CreateContext: resourceLifecycleRuleCreate,
 		UpdateContext: resourceLifecycleRuleUpdate,
 		DeleteContext: resourceLifecycleRuleDelete,
-		Schema:        resourceLifecycleRuleSchema(false),
+		Schema:        helpers.WithIdentity(resourceLifecycleRuleSchema(false), "org_id", "project_id"),
 		Importer: &schema.ResourceImporter{
 			StateContext: resourceLifecycleRuleImport,
 		},
