@@ -76,6 +76,7 @@ func DataSourceToken() *schema.Resource {
 				Description: "Encoded password of the Token",
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 			},
 		},
 	}

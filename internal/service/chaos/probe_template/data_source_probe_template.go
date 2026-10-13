@@ -33,12 +33,14 @@ func DataSourceProbeTemplate() *schema.Resource {
 // schema drifts out of sync with the resource.
 func dataSourceProbeTemplateSchema() map[string]*schema.Schema {
 	dsSchema := resourceProbeTemplateSchema()
+	for _, s := range dsSchema {
+		s.ForceNew = false // a data source only looks an object up; nothing is replaced
+	}
 
 	// Lookup by identity (recommended) or name; both optional + computed.
 	dsSchema["identity"].Required = false
 	dsSchema["identity"].Optional = true
 	dsSchema["identity"].Computed = true
-	dsSchema["identity"].ForceNew = false
 
 	dsSchema["name"].Required = false
 	dsSchema["name"].Optional = true
@@ -47,7 +49,6 @@ func dataSourceProbeTemplateSchema() map[string]*schema.Schema {
 	// hub_identity is required so we know which hub to search.
 	dsSchema["hub_identity"].Required = true
 	dsSchema["hub_identity"].Optional = false
-	dsSchema["hub_identity"].ForceNew = false
 
 	// type is read from the API, not supplied by the user.
 	dsSchema["type"].Required = false

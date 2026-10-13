@@ -83,9 +83,10 @@ func ResourceToken() *schema.Resource {
 				Optional:    true,
 			},
 			"encoded_password": {
-				Description: "Encoded password of the Token",
+				Description: "Encoded password of the Token. The provider does not refresh it from Harness.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				Sensitive:   true,
 			},
 			"value": {
 				Description: "Value of the Token",
@@ -276,7 +277,6 @@ func readToken(d *schema.ResourceData, token *nextgen.Token) {
 	d.Set("org_id", token.OrgIdentifier)
 	d.Set("email", token.Email)
 	d.Set("username", token.Username)
-	d.Set("encodedPassword", token.EncodedPassword)
 }
 
 // MultiLevelResourceImporter: [<org_id>/[<project_id>/]]<parent_id>/<apikey_id>/<apikey_type>/<identifier>.

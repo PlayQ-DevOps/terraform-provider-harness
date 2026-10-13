@@ -120,7 +120,7 @@ var uncheckedSetBaseline = map[string]int{
 	"internal/service/platform/service_account":                   8,
 	"internal/service/platform/setting":                           10,
 	"internal/service/platform/slo":                               3,
-	"internal/service/platform/token":                             17,
+	"internal/service/platform/token":                             16,
 	"internal/service/platform/user":                              6,
 	"internal/service/platform/usergroup":                         35,
 	"internal/service/platform/variable_set":                      9,

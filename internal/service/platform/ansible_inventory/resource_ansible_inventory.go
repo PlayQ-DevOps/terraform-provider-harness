@@ -47,6 +47,7 @@ func inventorySchema(dataSource bool) map[string]*schema.Schema {
 	if dataSource {
 		inventoryType.Required = false
 		inventoryType.Computed = true
+		inventoryType.ForceNew = false
 		inventoryType.ValidateFunc = nil
 	}
 

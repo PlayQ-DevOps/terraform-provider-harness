@@ -26,6 +26,9 @@ func DataSourceActionTemplate() *schema.Resource {
 func dataSourceActionTemplateSchema() map[string]*schema.Schema {
 	// Start with the resource schema
 	dsSchema := resourceActionTemplateSchema()
+	for _, s := range dsSchema {
+		s.ForceNew = false // a data source only looks an object up; nothing is replaced
+	}
 
 	// Make identity and hub_identity optional for data source (can lookup by name)
 	dsSchema["identity"].Required = false

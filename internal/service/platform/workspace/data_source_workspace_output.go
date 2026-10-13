@@ -15,7 +15,6 @@ func DataSourceWorkspaceOutput() *schema.Resource {
 		Description: "Data source for retrieving workspace outputs.",
 
 		ReadContext: resourceWorkspaceOutputRead,
-		Importer:    helpers.ProjectResourceImporter,
 
 		Schema: map[string]*schema.Schema{
 			"identifier": {

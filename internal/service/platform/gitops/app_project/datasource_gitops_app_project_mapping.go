@@ -16,7 +16,6 @@ func DatasourceGitopsAppProjectMapping() *schema.Resource {
 		Description: "Resource for managing the Harness GitOps Application Project Mappings.",
 
 		ReadContext: datasourceGitopsAppProjectMappingRead,
-		Importer:    helpers.GitopsAppProjectMappingImporter,
 
 		Schema: map[string]*schema.Schema{
 			"account_id": {

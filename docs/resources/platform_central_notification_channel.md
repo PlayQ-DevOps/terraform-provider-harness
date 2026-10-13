@@ -40,7 +40,7 @@ Resource for managing Harness Notification Channels.
 
 Optional:
 
-- `api_key` (String)
+- `api_key` (String, Sensitive)
 - `datadog_urls` (List of String)
 - `delegate_selectors` (List of String)
 - `email_ids` (List of String)

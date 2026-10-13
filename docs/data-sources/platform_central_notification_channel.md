@@ -40,7 +40,7 @@ Data source for retrieving a central notification channel in Harness.
 
 Optional:
 
-- `api_key` (String) API key for the webhook or integration.
+- `api_key` (String, Sensitive) API key for the webhook or integration.
 - `datadog_urls` (List of String) List of Datadog webhook URLs.
 - `delegate_selectors` (List of String) List of delegate selectors to use for sending notifications.
 - `email_ids` (List of String) List of email addresses to notify.

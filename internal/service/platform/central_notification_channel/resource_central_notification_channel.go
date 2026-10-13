@@ -84,8 +84,9 @@ func ResourceCentralNotificationChannel() *schema.Resource {
 						"datadog_urls":                stringListSchema(),
 						"delegate_selectors":          stringListSchema(),
 						"api_key": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:      schema.TypeString,
+							Optional:  true,
+							Sensitive: true,
 						},
 						"execute_on_delegate": {
 							Type:     schema.TypeBool,

@@ -50,7 +50,6 @@ func DataSourceOverrides() *schema.Resource {
 			"identifier": {
 				Description: "The identifier of the override entity.",
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Required:    true,
 			},
 			"git_details": {

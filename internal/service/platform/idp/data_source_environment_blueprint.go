@@ -21,7 +21,6 @@ func DataSourceEnvironmentBlueprint() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Version of the environment blueprint",
 				Required:    true,
-				ForceNew:    true,
 			},
 			"yaml": {
 				Computed:    true,

@@ -22,7 +22,6 @@ func DataSourceCatalogEntity() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Kind of the catalog entity",
 				Required:    true,
-				ForceNew:    true,
 				ValidateFunc: validation.StringInSlice([]string{
 					"EnvironmentBlueprint", "Environment", "Component", "Group", "User", "Workflow", "Resource", "System",
 				}, true),

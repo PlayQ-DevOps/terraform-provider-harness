@@ -28,7 +28,6 @@ func DataSourceEnvironment() *schema.Resource {
 			"blueprint_identifier": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				ForceNew:    true,
 				Description: "Blueprint to base the environment on",
 			},
 			"blueprint_version": {

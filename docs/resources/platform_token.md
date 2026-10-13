@@ -63,7 +63,7 @@ resource "harness_platform_token" "test" {
 
 - `description` (String) Description of the resource.
 - `email` (String) Email Id of the user who created the Token
-- `encoded_password` (String) Encoded password of the Token
+- `encoded_password` (String, Sensitive) Encoded password of the Token. The provider does not refresh it from Harness.
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.
 - `scheduled_expire_time` (Number) Scheduled expiry time in milliseconds
