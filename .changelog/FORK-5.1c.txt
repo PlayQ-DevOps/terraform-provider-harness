@@ -1,3 +1,0 @@
-```release-note:note
-resource/harness_platform_connector_artifactory, resource/harness_platform_connector_azure_artifacts, resource/harness_platform_connector_docker, resource/harness_platform_connector_helm, resource/harness_platform_connector_jenkins, resource/harness_platform_connector_nexus, resource/harness_platform_connector_oci_helm (and their data sources): served by the terraform-plugin-framework half of the provider, with the same state upgrade, identity import and defaults handling as the other migrated connectors.
-```

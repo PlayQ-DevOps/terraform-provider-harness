@@ -1,6 +1,0 @@
-```release-note:bug
-resource/harness_platform_idp_catalog_entity, resource/harness_platform_idp_environment: after a create or update the entity is read back with backoff for up to 60 seconds while the catalog still reports it missing, and if it still cannot be read back the resource keeps its ID so the next `terraform apply` retries, instead of failing with "Provider produced inconsistent result after apply" (#1385).
-```
-```release-note:bug
-resource/harness_platform_workspace, resource/harness_platform_variable_set, resource/harness_platform_infra_module, resource/harness_platform_infra_provider, resource/harness_platform_iacm_default_pipeline: the read that follows a create or update no longer discards its diagnostics, so a failed read-back is reported instead of leaving stale or empty state.
-```

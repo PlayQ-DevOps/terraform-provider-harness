@@ -1,3 +1,0 @@
-```release-note:bug
-gitops_resoruces - update GitOps resources schema to limit the number of blocks that can be configured for single fields
-```

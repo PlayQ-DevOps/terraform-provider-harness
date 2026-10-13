@@ -1,3 +1,0 @@
-```release-note:enhancement
-harness_platform_template - Added support to update stable version of a template via terraform
-```

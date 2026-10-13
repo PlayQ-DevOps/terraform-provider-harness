@@ -1,9 +1,0 @@
-```release-note:bug
-provider: `terraform import` no longer crashes the plugin on a malformed import ID (too few or too many `/`-separated segments, or an empty segment) for any resource; the importer now reports the accepted formats instead.
-```
-```release-note:bug
-harness_platform_pipeline: pipelines stored in Git can be imported from a branch whose name contains `/` (`<org_id>/<project_id>/<identifier>/<branch>`, e.g. `.../feature/x`).
-```
-```release-note:note
-harness_platform_har_registry, harness_platform_har_lifecycle_rule, harness_platform_infra_provider_version, harness_platform_infra_provider_version_file, harness_platform_infra_provider_version_publish, harness_platform_idp_plugin: the importer no longer calls the API itself; Terraform reads the resource immediately after import as usual, so a non-existent object is reported by `terraform import` the same way as for every other resource.
-```

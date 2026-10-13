@@ -1,6 +1,0 @@
-```release-note:bug
-resource/harness_platform_central_notification_channel, resource/harness_platform_token: `channel.api_key` and `encoded_password` are sensitive, so plans and state output no longer print them (the matching data source attributes too).
-```
-```release-note:note
-data sources have the shape of a data source: no importer (`harness_platform_workspace_output`, `harness_platform_gitops_app_project_mapping`) and no `ForceNew` flags (chaos action and probe templates, IDP catalog entity, environment and blueprint, IaCM default pipeline and ansible inventory, overrides, service overrides v2, dashboards, infra module testing, HAR registry, GitX webhook). `data.harness_platform_gitx_webhook` no longer requires `name`; its `description` and `tags` are read-only.
-```

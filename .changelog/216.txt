@@ -1,3 +1,0 @@
-```release-note:bug
-resource/harness_platform_environment_clusters_mapping: Fix added correct batch cluster API.
-```

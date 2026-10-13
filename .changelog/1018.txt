@@ -1,3 +1,0 @@
-```release-note:bug
-harness_platform_connector_gcp: fixed the documentation for the `gcp` connector
-```

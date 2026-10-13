@@ -1,6 +1,0 @@
-```release-note:bug
-provider: resource reads now refresh state from the API instead of echoing the configuration, so drift is visible in `terraform plan`: the environment description and YAML (the YAML attribute is now also computed, so a configuration without it reads the generated YAML), environment group YAML, the scope of notification channels and rules, the connector reference and store type of git-backed pipelines, input sets, templates and IDP catalog entities (the configured values are kept only when the API omits them), chaos experiment tags (tags added or removed outside Terraform now show up), and the FME traffic type. Inputs the API never reports back (commit message, base branch, template comments, import flags) are kept in state deliberately and documented as such.
-```
-```release-note:note
-resource/harness_platform_pipeline: the `template_applied` flag is no longer written back to state by reads; it stays exactly as configured.
-```

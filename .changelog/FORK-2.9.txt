@@ -1,3 +1,0 @@
-```release-note:enhancement
-provider: resource logging goes through the Terraform plugin logger (tflog) instead of the standard library logger, so `TF_LOG=DEBUG` shows the provider's messages with their request context and the levels ([DEBUG], [WARN], [ERROR]) are honoured; 219 log calls were converted.
-```

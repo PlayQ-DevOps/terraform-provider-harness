@@ -1,3 +1,0 @@
-```release-note:bug
-resource/harness_platform_monitored_service: Fields template_ref and version_label shouldn't be required for harness_platform_monitored_service.
-```

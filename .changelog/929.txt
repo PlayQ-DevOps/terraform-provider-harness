@@ -1,3 +1,0 @@
-```release-note:enhancement
-harness_platform_environment: Added supprt for creating/Updating remote Environment and import from git for Environment.
-```

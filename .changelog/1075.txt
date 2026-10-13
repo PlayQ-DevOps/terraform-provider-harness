@@ -1,3 +1,0 @@
-```release-note:new-resource
-harness_governance_rule_set - Added Governance Rule Set resource in Harness terraform provider
-```

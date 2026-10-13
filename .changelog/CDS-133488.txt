@@ -1,3 +1,0 @@
-```release-note:new-ephemeral-resource
-harness_platform_gitops_agent_token
-```

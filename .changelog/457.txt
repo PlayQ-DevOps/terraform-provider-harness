@@ -1,4 +1,0 @@
-```release-note:bug
-harness_platform_template: Fixed import.
-harness_platform_pipeline: Fixed import.
-```

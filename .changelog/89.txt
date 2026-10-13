@@ -1,3 +1,0 @@
-```release-note:bug
-Fixes issue with config-as-code secret references.
-```

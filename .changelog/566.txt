@@ -1,3 +1,0 @@
-```release-note:enhancement
-examples/resources/harness_platform_template/ - updated the remote template example
-```

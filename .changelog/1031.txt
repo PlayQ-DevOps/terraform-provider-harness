@@ -1,3 +1,0 @@
-```release-note:enhancement
-harness_platform_resource_group: Added Support for tag/tags in resource_group's attribute filter
-```

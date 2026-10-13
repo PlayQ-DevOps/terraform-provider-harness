@@ -1,3 +1,0 @@
-```release-note:new-resource
-resource/harness_platform_connector_pdc: Added Pdc connector resource.
-```

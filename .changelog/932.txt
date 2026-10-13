@@ -1,3 +1,0 @@
-```release-note:new-data-source
-resource/harness_platform_project_list: to get list of projects .
-```

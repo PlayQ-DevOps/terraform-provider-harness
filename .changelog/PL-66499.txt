@@ -1,3 +1,0 @@
-```release-note:new-resource
-harness_platform_setting - Added resource to manage account, organization and project default settings (NG settings API).
-```

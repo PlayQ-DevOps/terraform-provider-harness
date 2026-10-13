@@ -1,3 +1,0 @@
-```release-note:bug
-resource/harness_platform_template: Fixing the update flow for templates
-```

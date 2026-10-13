@@ -1,3 +1,0 @@
-```release-note:new-resource
-harness_platform_connector_rancher - Added a Rancher connector to the Harness Terraform provider.
-```

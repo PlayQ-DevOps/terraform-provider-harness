@@ -1,3 +1,0 @@
-```release-note:bug
-Fixed issue with serializing encrypted text references with environment variable overrides.
-```

@@ -1,3 +1,0 @@
-```release-note:new-resource
-platform_connector_azure_cloud_cost - Added azure cloud cost connector resource in Harness terraform provider
-```

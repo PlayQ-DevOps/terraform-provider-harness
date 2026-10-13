@@ -1,3 +1,0 @@
-```release-note:note
-resource/harness_platform_organization, resource/harness_platform_project, data-source/harness_platform_organization, data-source/harness_platform_project, data-source/harness_platform_project_list: reimplemented on terraform-plugin-framework. Existing state is upgraded in place (schema version 1): attributes that were never set, which the old implementation stored as `""` or `[]`, are now null, and the first plan after upgrading is empty. The two resources support import by resource identity (`identifier`, plus `org_id` for projects) with Terraform 1.12 or later.
-```

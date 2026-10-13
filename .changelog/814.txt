@@ -1,3 +1,0 @@
-```release-note:bug
-resource/monitored_service - Added missing examples for monitored service with thresholds and NewRelic health source.
-```

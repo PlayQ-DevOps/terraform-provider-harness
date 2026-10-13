@@ -1,3 +1,0 @@
-```release-note:bug
-resource/delegate_approval: Force new resource when `delegate_id` or `approve` fields change.
-```

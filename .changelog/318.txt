@@ -1,3 +1,0 @@
-```release-note:bug
-resource/harness_platform_pipeline: Fix error propagation from api
-```

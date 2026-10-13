@@ -1,9 +1,0 @@
-```release-note:bug
-provider: a resource that was deleted outside Terraform is now removed from state on refresh (so the next plan recreates it) for every Harness API, regardless of how the API reports the missing object (any HTTP 404, including HTML or empty bodies, GitOps gateway bodies and Harness envelopes on other status codes). Previously only the nextgen client with two specific body codes was handled, other bodies crashed the plugin, and the HAR, IDP, Code and Service Discovery clients could never clear state.
-```
-```release-note:bug
-harness_platform_pipeline, harness_platform_template, harness_platform_input_set, harness_platform_triggers, harness_platform_manual_freeze: a transport failure or exhausted retry during refresh no longer crashes the plugin with a nil pointer dereference.
-```
-```release-note:bug
-harness_platform_provider: a malformed delegate_selectors value no longer terminates the whole plugin process.
-```

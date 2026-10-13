@@ -1,3 +1,0 @@
-```release-note:bug
-harness_platform_policy: Fixed the import logic.
-```

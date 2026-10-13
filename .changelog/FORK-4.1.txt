@@ -1,3 +1,0 @@
-```release-note:note
-provider: the provider is served as a mux of the SDK v2 provider and a terraform-plugin-framework provider. Existing resources and data sources are unchanged; new resources are written against the framework, and ephemeral resources (Terraform 1.10 or later) are now possible.
-```

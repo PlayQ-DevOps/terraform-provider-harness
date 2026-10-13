@@ -1,3 +1,0 @@
-```release-note:bug
-Added configuration for auto generating the changelog
-```

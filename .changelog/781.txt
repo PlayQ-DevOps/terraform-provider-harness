@@ -1,3 +1,0 @@
-```release-note:enhancement
-Allow for tags to be included in feature flags
-```

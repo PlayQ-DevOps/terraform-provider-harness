@@ -1,3 +1,0 @@
-```release-note:enhancement
-resource/harness_user_group: Update filters field in workflo, enviroments ,pipeline object in user group to be optional.
-```

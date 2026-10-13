@@ -1,3 +1,0 @@
-```release-note:bug
-resource/harness_platform_environment_service_overrides: Fix import flow
-```
