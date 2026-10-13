@@ -31,8 +31,8 @@ func resp(status int) *http.Response {
 	return &http.Response{StatusCode: status, Status: fmt.Sprintf("%d %s", status, http.StatusText(status))}
 }
 
-func swagger(status int, body string) (error, *http.Response) {
-	return fakeSwaggerErr{msg: fmt.Sprintf("%d %s", status, http.StatusText(status)), body: body}, resp(status)
+func swagger(status int, body string) (*http.Response, error) {
+	return resp(status), fakeSwaggerErr{msg: fmt.Sprintf("%d %s", status, http.StatusText(status)), body: body}
 }
 
 func TestClassify(t *testing.T) {
@@ -126,7 +126,7 @@ func TestClassify(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			err, rs := tc.err, tc.resp
 			if body, ok := bodies[tc.name]; ok {
-				err, rs = swagger(tc.status, body)
+				rs, err = swagger(tc.status, body)
 			}
 			var got Classified
 			func() {
@@ -187,15 +187,15 @@ func TestDescribe(t *testing.T) {
 	if d := Describe(Classify(nil, nil)); d != "" {
 		t.Errorf("Describe(None) = %q, want empty", d)
 	}
-	err, rs := swagger(401, `{"message":"Invalid API key"}`)
+	rs, err := swagger(401, `{"message":"Invalid API key"}`)
 	if d := Describe(Classify(err, rs)); !strings.Contains(d, "platform_api_key") || !strings.Contains(d, "Invalid API key") {
 		t.Errorf("401 description lacks hint or message: %q", d)
 	}
-	err, rs = swagger(403, `{"message":"nope"}`)
+	rs, err = swagger(403, `{"message":"nope"}`)
 	if d := Describe(Classify(err, rs)); !strings.Contains(d, "required permission") {
 		t.Errorf("403 description lacks hint: %q", d)
 	}
-	err, rs = swagger(502, `<html>Bad Gateway</html>`)
+	rs, err = swagger(502, `<html>Bad Gateway</html>`)
 	if d := Describe(Classify(err, rs)); !strings.Contains(d, "non-JSON response") || !strings.Contains(d, "HARNESS_ENDPOINT") {
 		t.Errorf("non-JSON description lacks endpoint hint: %q", d)
 	}
@@ -206,22 +206,22 @@ func TestDescribe(t *testing.T) {
 }
 
 func TestGitRewrite(t *testing.T) {
-	err, rs := swagger(400, `{"message":"No connector found with identifier account.github in scope"}`)
+	rs, err := swagger(400, `{"message":"No connector found with identifier account.github in scope"}`)
 	if msg, ok := GitRewrite(Classify(err, rs), "account.github", "repo"); !ok || !strings.Contains(msg, "Invalid connector reference: account.github") {
 		t.Errorf("connector rewrite = %q, %v", msg, ok)
 	}
-	err, rs = swagger(400, `{"message":"Please check the requested file path in repo myrepo"}`)
+	rs, err = swagger(400, `{"message":"Please check the requested file path in repo myrepo"}`)
 	if msg, ok := GitRewrite(Classify(err, rs), "account.github", "myrepo"); !ok || !strings.Contains(msg, "Invalid repository name: myrepo") {
 		t.Errorf("repo rewrite = %q, %v", msg, ok)
 	}
-	err, rs = swagger(404, `{"message":"No connector found with identifier account.github"}`)
+	rs, err = swagger(404, `{"message":"No connector found with identifier account.github"}`)
 	if _, ok := GitRewrite(Classify(err, rs), "account.github", "repo"); ok {
 		t.Errorf("rewrite must only apply to HTTP 400")
 	}
 }
 
 func TestPredicates(t *testing.T) {
-	err, rs := swagger(500, `{"code":"CHAOS_ERR","message":"no matching infra found for the experiment"}`)
+	rs, err := swagger(500, `{"code":"CHAOS_ERR","message":"no matching infra found for the experiment"}`)
 	c := Classify(err, rs)
 	if !StatusIs(404, 500)(c) || StatusIs(404)(c) {
 		t.Error("StatusIs")

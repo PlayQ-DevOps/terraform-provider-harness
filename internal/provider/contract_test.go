@@ -163,7 +163,7 @@ func checkResource(t *testing.T, rep *contractReport, name string, r *schema.Res
 	t.Helper()
 	if r.Importer == nil {
 		rep.add(checkImporterMissing, name)
-	} else if r.Importer.StateContext == nil && r.Importer.State != nil {
+	} else if r.Importer.StateContext == nil && r.Importer.State != nil { //nolint:staticcheck // C2 looks for the deprecated State field on purpose
 		rep.add(checkImporterDeprecated, name)
 	}
 	if r.Importer != nil {
@@ -427,8 +427,8 @@ func importerPanics(t *testing.T, r *schema.Resource, id string) (panicked bool)
 	switch {
 	case r.Importer.StateContext != nil:
 		_, _ = r.Importer.StateContext(context.Background(), d, &internal.Session{})
-	case r.Importer.State != nil:
-		_, _ = r.Importer.State(d, &internal.Session{})
+	case r.Importer.State != nil: //nolint:staticcheck // C10 must also probe importers that still use the deprecated State
+		_, _ = r.Importer.State(d, &internal.Session{}) //nolint:staticcheck // see above
 	}
 	return false
 }

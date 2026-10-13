@@ -52,7 +52,7 @@ type sdkCase struct {
 	status      int
 	contentType string
 	body        string
-	call        func(srv *httptest.Server) (error, *http.Response)
+	call        func(srv *httptest.Server) (*http.Response, error)
 	kind        Kind
 	code        string
 	message     string
@@ -72,7 +72,7 @@ func runSDKCases(t *testing.T, cases []sdkCase) {
 						t.Fatalf("SDK call panicked: %v", r)
 					}
 				}()
-				err, rs = tc.call(srv)
+				rs, err = tc.call(srv)
 			}()
 			if err == nil {
 				t.Fatalf("expected an error from the SDK for HTTP %d", tc.status)
@@ -106,10 +106,10 @@ func runSDKCases(t *testing.T, cases []sdkCase) {
 }
 
 func TestClassifySDK_Nextgen(t *testing.T) {
-	call := func(srv *httptest.Server) (error, *http.Response) {
+	call := func(srv *httptest.Server) (*http.Response, error) {
 		c := nextgen.NewAPIClient(&nextgen.Configuration{BasePath: srv.URL, AccountId: "acct", ApiKey: "key", HTTPClient: noRetry()})
 		_, rs, err := c.ConnectorsApi.GetConnector(context.Background(), "acct", "conn", &nextgen.ConnectorsApiGetConnectorOpts{})
-		return err, rs
+		return rs, err
 	}
 	runSDKCases(t, []sdkCase{
 		{name: "404 entity not found", status: 404, contentType: "application/json", body: `{"status":"ERROR","code":"ENTITY_NOT_FOUND","message":"Connector conn not found"}`, call: call, kind: NotFound, code: "ENTITY_NOT_FOUND", message: "Connector conn not found"},
@@ -141,10 +141,10 @@ func TestClassifySDK_NextgenTransport(t *testing.T) {
 }
 
 func TestClassifySDK_OpenAPI(t *testing.T) {
-	call := func(srv *httptest.Server) (error, *http.Response) {
+	call := func(srv *httptest.Server) (*http.Response, error) {
 		c := openapi.NewAPIClient(&openapi.Configuration{BasePath: srv.URL, AccountId: "acct", HTTPClient: noRetry()})
 		_, rs, err := c.PipelinesApi.GetPipeline(context.Background(), "org", "proj", "pipe", &openapi.PipelinesApiGetPipelineOpts{})
-		return err, rs
+		return rs, err
 	}
 	runSDKCases(t, []sdkCase{
 		{name: "404", status: 404, contentType: "application/json", body: `{"message":"Pipeline with identifier pipe not found"}`, call: call, kind: NotFound, message: "Pipeline with identifier pipe not found"},
@@ -154,10 +154,10 @@ func TestClassifySDK_OpenAPI(t *testing.T) {
 }
 
 func TestClassifySDK_HAR(t *testing.T) {
-	call := func(srv *httptest.Server) (error, *http.Response) {
+	call := func(srv *httptest.Server) (*http.Response, error) {
 		c := har.NewAPIClient(&har.Configuration{BasePath: srv.URL, HTTPClient: noRetry()})
 		_, rs, err := c.RegistriesApi.GetRegistry(context.Background(), "acct/reg")
-		return err, rs
+		return rs, err
 	}
 	runSDKCases(t, []sdkCase{
 		{name: "404", status: 404, contentType: "application/json", body: `{"code":"NOT_FOUND","message":"registry not found"}`, call: call, kind: NotFound, code: "NOT_FOUND", message: "registry not found"},
@@ -166,10 +166,10 @@ func TestClassifySDK_HAR(t *testing.T) {
 }
 
 func TestClassifySDK_IDP(t *testing.T) {
-	call := func(srv *httptest.Server) (error, *http.Response) {
+	call := func(srv *httptest.Server) (*http.Response, error) {
 		c := idp.NewAPIClient(&idp.Configuration{BasePath: srv.URL, HTTPClient: noRetry()})
 		_, rs, err := c.EntitiesApi.GetEntity(context.Background(), "account", "component", "svc", &idp.EntitiesApiGetEntityOpts{})
-		return err, rs
+		return rs, err
 	}
 	runSDKCases(t, []sdkCase{
 		{name: "404", status: 404, contentType: "application/json", body: `{"message":"entity not found"}`, call: call, kind: NotFound, message: "entity not found"},
@@ -178,10 +178,10 @@ func TestClassifySDK_IDP(t *testing.T) {
 }
 
 func TestClassifySDK_Code(t *testing.T) {
-	call := func(srv *httptest.Server) (error, *http.Response) {
+	call := func(srv *httptest.Server) (*http.Response, error) {
 		c := code.NewAPIClient(&code.Configuration{BasePath: srv.URL, HTTPClient: noRetry()})
 		_, rs, err := c.WebhookApi.GetWebhook(context.Background(), "acct", "repo", "hook", &code.WebhookApiGetWebhookOpts{})
-		return err, rs
+		return rs, err
 	}
 	runSDKCases(t, []sdkCase{
 		{name: "404", status: 404, contentType: "application/json", body: `{"message":"Not Found"}`, call: call, kind: NotFound},
@@ -191,10 +191,10 @@ func TestClassifySDK_Code(t *testing.T) {
 }
 
 func TestClassifySDK_Chaos(t *testing.T) {
-	call := func(srv *httptest.Server) (error, *http.Response) {
+	call := func(srv *httptest.Server) (*http.Response, error) {
 		c := chaos.NewAPIClient(&chaos.Configuration{BasePath: srv.URL, HTTPClient: srv.Client()})
 		_, rs, err := c.DefaultApi.GetChaosV2Experiment(context.Background(), "acct", "org", "proj", "exp")
-		return err, rs
+		return rs, err
 	}
 	runSDKCases(t, []sdkCase{
 		{name: "404", status: 404, contentType: "application/json", body: `{"code":"E404","description":"experiment exp not found","message":"not found"}`, call: call, kind: NotFound, message: "experiment exp not found"},
@@ -203,10 +203,10 @@ func TestClassifySDK_Chaos(t *testing.T) {
 }
 
 func TestClassifySDK_DBOps(t *testing.T) {
-	call := func(srv *httptest.Server) (error, *http.Response) {
+	call := func(srv *httptest.Server) (*http.Response, error) {
 		c := dbops.NewAPIClient(&dbops.Configuration{BasePath: srv.URL, HTTPClient: srv.Client()})
 		_, rs, err := c.DatabaseSchemaApi.V1GetProjDbSchema(context.Background(), "org", "proj", "schema", &dbops.DatabaseSchemaApiV1GetProjDbSchemaOpts{})
-		return err, rs
+		return rs, err
 	}
 	runSDKCases(t, []sdkCase{
 		{name: "404", status: 404, contentType: "application/json", body: `{"message":"schema not found"}`, call: call, kind: NotFound, message: "schema not found"},
@@ -215,10 +215,10 @@ func TestClassifySDK_DBOps(t *testing.T) {
 }
 
 func TestClassifySDK_PolicyMgmt(t *testing.T) {
-	call := func(srv *httptest.Server) (error, *http.Response) {
+	call := func(srv *httptest.Server) (*http.Response, error) {
 		c := policymgmt.NewAPIClient(&policymgmt.Configuration{BasePath: srv.URL, HTTPClient: noRetry()})
 		_, rs, err := c.PoliciesApi.PoliciesFind(context.Background(), "pol", &policymgmt.PoliciesApiPoliciesFindOpts{})
-		return err, rs
+		return rs, err
 	}
 	runSDKCases(t, []sdkCase{
 		{name: "404 goa", status: 404, contentType: "application/json", body: `{"name":"not_found","id":"x","message":"policy not found","temporary":false,"timeout":false,"fault":false}`, call: call, kind: NotFound, code: "not_found", message: "policy not found"},
@@ -227,10 +227,10 @@ func TestClassifySDK_PolicyMgmt(t *testing.T) {
 }
 
 func TestClassifySDK_ServiceDiscovery(t *testing.T) {
-	call := func(srv *httptest.Server) (error, *http.Response) {
+	call := func(srv *httptest.Server) (*http.Response, error) {
 		c := svcdiscovery.NewAPIClient(&svcdiscovery.Configuration{BasePath: srv.URL, HTTPClient: srv.Client()})
 		_, rs, err := c.AgentApi.GetAgent(context.Background(), "agent", "acct", "env", &svcdiscovery.AgentApiGetAgentOpts{})
-		return err, rs
+		return rs, err
 	}
 	runSDKCases(t, []sdkCase{
 		{name: "404", status: 404, contentType: "application/json", body: `{"description":"agent not found","message":"not found"}`, call: call, kind: NotFound, message: "agent not found"},

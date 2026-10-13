@@ -64,17 +64,20 @@ func TestAccSkipIfNotAcc(t *testing.T) {
 
 func TestAccPreCheck(t *testing.T) {
 	t.Helper()
-	if os.Getenv(resource.EnvTfAcc) != "" {
-		var missing []string
-		if helpers.EnvVars.AccountId.Get() == "" {
-			missing = append(missing, helpers.EnvVars.AccountId.String())
-		}
-		if helpers.EnvVars.PlatformApiKey.Get() == "" && helpers.EnvVars.ApiKey.Get() == "" {
-			missing = append(missing, helpers.EnvVars.PlatformApiKey.String()+" (or "+helpers.EnvVars.ApiKey.String()+" for FirstGen resources)")
-		}
-		if len(missing) > 0 {
-			t.Fatalf("TF_ACC is set, so this acceptance test would run against the live Harness API, but required configuration is missing: %s", strings.Join(missing, ", "))
-		}
+	// A test that calls this outside resource.Test (the FirstGen delegate tests start a
+	// Docker container first) must not reach the live API, or Docker, without TF_ACC.
+	if os.Getenv(resource.EnvTfAcc) == "" {
+		t.Skipf("acceptance test: set %s=1 and the HARNESS_* variables to run it against the live Harness API", resource.EnvTfAcc)
+	}
+	var missing []string
+	if helpers.EnvVars.AccountId.Get() == "" {
+		missing = append(missing, helpers.EnvVars.AccountId.String())
+	}
+	if helpers.EnvVars.PlatformApiKey.Get() == "" && helpers.EnvVars.ApiKey.Get() == "" {
+		missing = append(missing, helpers.EnvVars.PlatformApiKey.String()+" (or "+helpers.EnvVars.ApiKey.String()+" for FirstGen resources)")
+	}
+	if len(missing) > 0 {
+		t.Fatalf("TF_ACC is set, so this acceptance test would run against the live Harness API, but required configuration is missing: %s", strings.Join(missing, ", "))
 	}
 	TestAccConfigureProvider()
 }

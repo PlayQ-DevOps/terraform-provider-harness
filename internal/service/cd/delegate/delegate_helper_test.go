@@ -3,6 +3,7 @@ package delegate_test
 import (
 	"context"
 	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -55,6 +56,11 @@ func createDelegateContainer(t *testing.T, name string, pullImage bool) *graphql
 }
 
 func deleteDelegate(t *testing.T, name string) {
+	// The delegate exists only when the acceptance test ran; a skipped test has nothing
+	// to delete (and no Docker to talk to).
+	if os.Getenv("TF_ACC") == "" {
+		return
+	}
 	c := acctest.TestAccProvider.Meta().(*internal.Session).CDClient
 	delegate, err := c.DelegateClient.GetDelegateByName(name)
 	require.NoError(t, err, "Failed to get delegate: %s", err)

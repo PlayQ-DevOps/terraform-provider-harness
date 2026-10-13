@@ -19,9 +19,8 @@ func TestAccDataSourceDelegate_hostname(t *testing.T) {
 	delegateName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_delegate.test"
 
-	defer deleteDelegate(t, delegateName)
-
 	acctest.TestAccPreCheck(t)
+	defer deleteDelegate(t, delegateName)
 	pullDelegateImage(context.Background(), &delegate.DockerDelegateConfig{})
 	delegate := createDelegateContainer(t, delegateName, false)
 
@@ -47,9 +46,8 @@ func TestAccDataSourceDelegate_name(t *testing.T) {
 	delegateName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(4))
 	resourceName := "data.harness_delegate.test"
 
-	defer deleteDelegate(t, delegateName)
-
 	acctest.TestAccPreCheck(t)
+	defer deleteDelegate(t, delegateName)
 	pullDelegateImage(context.Background(), &delegate.DockerDelegateConfig{})
 	delegate := createDelegateContainer(t, delegateName, false)
 
