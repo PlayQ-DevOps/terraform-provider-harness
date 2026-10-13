@@ -9,7 +9,6 @@ import (
 	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
@@ -22,33 +21,7 @@ func ResourceConnectorAzureKeyVault() *schema.Resource {
 		UpdateContext: resourceConnectorAzureKeyVaultCreateOrUpdate,
 		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
-		CustomizeDiff: customdiff.All(
-			func(ctx context.Context, d *schema.ResourceDiff, meta interface{}) error {
-				useMSI := d.Get("use_managed_identity").(bool)
-				if useMSI {
-					msiType, ok := d.GetOk("azure_managed_identity_type")
-					if !ok || msiType.(string) == "" {
-						return fmt.Errorf("\"azure_managed_identity_type\" is required when \"use_managed_identity\" is true")
-					}
-					if msiType.(string) == "UserAssignedManagedIdentity" {
-						if v, ok := d.GetOk("managed_client_id"); !ok || v.(string) == "" {
-							return fmt.Errorf("\"managed_client_id\" is required when \"azure_managed_identity_type\" is \"UserAssignedManagedIdentity\"")
-						}
-					}
-				} else {
-					if v, ok := d.GetOk("client_id"); !ok || v.(string) == "" {
-						return fmt.Errorf("\"client_id\" is required when \"use_managed_identity\" is not set")
-					}
-					if v, ok := d.GetOk("tenant_id"); !ok || v.(string) == "" {
-						return fmt.Errorf("\"tenant_id\" is required when \"use_managed_identity\" is not set")
-					}
-					if v, ok := d.GetOk("secret_key"); !ok || v.(string) == "" {
-						return fmt.Errorf("\"secret_key\" is required when \"use_managed_identity\" is not set")
-					}
-				}
-				return nil
-			},
-		),
+		CustomizeDiff: validateAzureKeyVaultAuth,
 
 		Schema: map[string]*schema.Schema{
 			"client_id": {
@@ -228,5 +201,41 @@ func readConnectorAzureKeyVault(d *schema.ResourceData, connector *nextgen.Conne
 	d.Set("managed_client_id", connector.AzureKeyVault.ManagedClientId)
 	d.Set("enable_purge", connector.AzureKeyVault.EnablePurge)
 
+	return nil
+}
+
+func validateAzureKeyVaultAuth(_ context.Context, d *schema.ResourceDiff, _ interface{}) error {
+	return checkAzureKeyVaultAuth(d)
+}
+
+// checkAzureKeyVaultAuth validates the authentication attributes against use_managed_identity;
+// it reads the configuration through Get and GetOk so both the SDK v2 CustomizeDiff and the
+// framework definition can run it.
+func checkAzureKeyVaultAuth(d interface {
+	Get(string) interface{}
+	GetOk(string) (interface{}, bool)
+}) error {
+	useMSI := d.Get("use_managed_identity").(bool)
+	if useMSI {
+		msiType, ok := d.GetOk("azure_managed_identity_type")
+		if !ok || msiType.(string) == "" {
+			return fmt.Errorf("\"azure_managed_identity_type\" is required when \"use_managed_identity\" is true")
+		}
+		if msiType.(string) == "UserAssignedManagedIdentity" {
+			if v, ok := d.GetOk("managed_client_id"); !ok || v.(string) == "" {
+				return fmt.Errorf("\"managed_client_id\" is required when \"azure_managed_identity_type\" is \"UserAssignedManagedIdentity\"")
+			}
+		}
+	} else {
+		if v, ok := d.GetOk("client_id"); !ok || v.(string) == "" {
+			return fmt.Errorf("\"client_id\" is required when \"use_managed_identity\" is not set")
+		}
+		if v, ok := d.GetOk("tenant_id"); !ok || v.(string) == "" {
+			return fmt.Errorf("\"tenant_id\" is required when \"use_managed_identity\" is not set")
+		}
+		if v, ok := d.GetOk("secret_key"); !ok || v.(string) == "" {
+			return fmt.Errorf("\"secret_key\" is required when \"use_managed_identity\" is not set")
+		}
+	}
 	return nil
 }
