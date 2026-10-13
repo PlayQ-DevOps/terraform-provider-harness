@@ -86,7 +86,7 @@ Rules for the SDK v2 code that remains (fixes only): error handling goes through
 - Run `make test` before pushing (offline, needs a Terraform CLI)
 - Follow the reference implementations and the helper packages instead of copying code
 - Use descriptive commit messages with Jira ticket references
-- Run `make docs` after modifying resource schemas to regenerate documentation
+- Run `make docs` after modifying resource schemas, examples or templates to regenerate documentation; hand-written page prose lives in `templates/<kind>/<name>.md.tmpl`, examples in `examples/`
 - Use `make dev-setup` when setting up the development environment for the first time
 
 ## DON'Ts
@@ -96,6 +96,7 @@ Rules for the SDK v2 code that remains (fixes only): error handling goes through
 - Never run `make sweep` without explicit confirmation - it destroys test resources and can be dangerous if misconfigured
 - Never skip code quality checks before committing
 - Never modify generated documentation files in `docs/` directly - regenerate with `make docs`
+- Never put prose into a generated page; put it in its template under `templates/` and regenerate
 - Never add a resource or data source to the SDK v2 maps in `provider.go`; write it on the framework
 - Never use `resource.UnitTest` for a test that reaches the real API
 
@@ -135,7 +136,7 @@ terraform-provider-harness/
 ├── helpers/                # Helpers for the SDK v2 resources (schema, lifecycle, importer, tags, config)
 ├── docs/                   # Generated Terraform documentation
 ├── examples/               # Example Terraform configurations
-├── templates/              # Documentation templates
+├── templates/              # Documentation templates: index, guides, and per-page templates that keep hand-written prose
 ├── scripts/                # Build and utility scripts
 └── .changelog/             # Changelog entries for releases
 ```
