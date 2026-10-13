@@ -2,8 +2,9 @@ package cloudprovider
 
 import (
 	"context"
-	"log"
 	"strings"
+
+	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/cd"
 	"github.com/harness/harness-go-sdk/harness/cd/cac"
@@ -11,6 +12,7 @@ import (
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/service/cd/usagescope"
 	"github.com/harness/terraform-provider-harness/internal/utils"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -256,12 +258,11 @@ func resourceCloudProviderK8sRead(ctx context.Context, d *schema.ResourceData, m
 	}
 	cp := &cac.KubernetesCloudProvider{}
 	id := d.Id()
-
-	log.Printf("[DEBUG] Terraform: Reading Kubernetes cloud provider %s", id)
+	tflog.Debug(ctx, fmt.Sprintf("Terraform: Reading Kubernetes cloud provider %s", id))
 	if err := c.ConfigAsCodeClient.GetCloudProviderById(id, cp); err != nil {
 		return helpers.HandleRead(ctx, d, err, nil)
 	} else if cp.IsEmpty() {
-		log.Printf("[DEBUG] Terraform: Could not find cloud provider %s. Marking as new resource", id)
+		tflog.Debug(ctx, fmt.Sprintf("Terraform: Could not find cloud provider %s. Marking as new resource", id))
 		d.SetId("")
 
 		return nil
@@ -294,15 +295,15 @@ func resourceCloudProviderK8sCreateOrUpdate(ctx context.Context, d *schema.Resou
 	var err error
 
 	if d.IsNewResource() {
-		log.Printf("[DEBUG] Terraform: Creating Kubernetes cloud provider %s", d.Get("name"))
+		tflog.Debug(ctx, fmt.Sprintf("Terraform: Creating Kubernetes cloud provider %s", d.Get("name")))
 		input = cac.NewEntity(cac.ObjectTypes.KubernetesCloudProvider).(*cac.KubernetesCloudProvider)
 	} else {
-		log.Printf("[DEBUG] Terraform: Updating Kubernetes cloud provider %s", d.Get("name"))
+		tflog.Debug(ctx, fmt.Sprintf("Terraform: Updating Kubernetes cloud provider %s", d.Get("name")))
 		input = &cac.KubernetesCloudProvider{}
 		if err = c.ConfigAsCodeClient.GetCloudProviderById(d.Id(), input); err != nil {
 			return diag.FromErr(err)
 		} else if input.IsEmpty() {
-			log.Printf("[DEBUG] Terraform: Could not find cloud provider. Marking as new resource.")
+			tflog.Debug(ctx, "Terraform: Could not find cloud provider. Marking as new resource.")
 			d.SetId("")
 			d.MarkNewResource()
 			return nil

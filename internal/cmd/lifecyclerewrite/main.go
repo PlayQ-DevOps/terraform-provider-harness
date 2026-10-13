@@ -4,7 +4,7 @@
 // function. It also removes d.MarkNewResource() calls in Read/Delete functions (they are
 // no-ops there) and the always-false `if &x == nil { ... }` checks.
 //
-// Usage: go run ./internal/cmd/lifecyclerewrite [-dry] [-fromerr] [-local names] [-dsnotfound] [-nilclear] <dir>...
+// Usage: go run ./internal/cmd/lifecyclerewrite [-dry] [-fromerr] [-local names] [-dsnotfound] [-nilclear] [-tflog] <dir>...
 //
 //   - -local a,b: package-local `a(err, resp)` error helpers (the IaCM parseError copies)
 //     are rewritten by role like the old wrappers; the family-specific
@@ -56,7 +56,58 @@ var (
 	localNames = flag.String("local", "", "comma-separated names of package-local `name(err, resp)` error helpers to rewrite by role like the old wrappers")
 	dsNotFound = flag.Bool("dsnotfound", false, "in data-source functions, turn `d.SetId(\"\"); return nil` into a not-found error")
 	nilClear   = flag.Bool("nilclear", false, "in read functions, turn `if x == nil { d.SetId(\"\"); return nil }` into helpers.ReadMissing")
+	tflogMode  = flag.Bool("tflog", false, "in functions that have a context.Context parameter, turn log.Printf/Println/Print into tflog calls (the [LEVEL] prefix picks the level)")
 )
+
+const tflogImport = "github.com/hashicorp/terraform-plugin-log/tflog"
+
+var logLevels = []struct{ prefix, level string }{
+	{"[TRACE]", "Trace"}, {"[DEBUG]", "Debug"}, {"[INFO]", "Info"}, {"[WARN]", "Warn"}, {"[WARNING]", "Warn"}, {"[ERROR]", "Error"},
+}
+
+// rewriteLogCall turns log.Printf("[DEBUG] x %s", a) into tflog.Debug(ctx, fmt.Sprintf("x %s", a)).
+// It reports whether fmt is now needed.
+func rewriteLogCall(call *ast.CallExpr, sel *ast.SelectorExpr, ctx string) (needFmt bool, level string, ok bool) {
+	if len(call.Args) == 0 {
+		return false, "", false
+	}
+	level = "Debug"
+	var msg ast.Expr
+	if lit, isLit := call.Args[0].(*ast.BasicLit); isLit && lit.Kind == token.STRING {
+		s, err := strconv.Unquote(lit.Value)
+		if err != nil {
+			return false, "", false
+		}
+		for _, l := range logLevels {
+			if strings.HasPrefix(strings.ToUpper(s), l.prefix) {
+				s = strings.TrimLeft(s[len(l.prefix):], " ")
+				level = l.level
+				break
+			}
+		}
+		s = strings.TrimRight(s, "\n")
+		switch {
+		case sel.Sel.Name == "Printf" && len(call.Args) > 1:
+			msg = &ast.CallExpr{Fun: selector("fmt", "Sprintf"), Args: append([]ast.Expr{strLit(s)}, call.Args[1:]...)}
+			needFmt = true
+		case len(call.Args) > 1:
+			msg = &ast.CallExpr{Fun: selector("fmt", "Sprint"), Args: append([]ast.Expr{strLit(s + " ")}, call.Args[1:]...)}
+			needFmt = true
+		default:
+			msg = strLit(s)
+		}
+	} else {
+		fn := "Sprint"
+		if sel.Sel.Name == "Printf" {
+			fn = "Sprintf"
+		}
+		msg = &ast.CallExpr{Fun: selector("fmt", fn), Args: call.Args}
+		needFmt = true
+	}
+	call.Fun = selector("tflog", level)
+	call.Args = []ast.Expr{ident(ctx), msg}
+	return needFmt, level, true
+}
 
 type stats struct {
 	rewritten  map[string]int
@@ -349,6 +400,8 @@ func rewriteFile(path string, st *stats, locals map[string]bool) error {
 	changed := false
 	needContext := false
 	needHelpers := false
+	needTflog := false
+	needFmt := false
 
 	for _, decl := range file.Decls {
 		fn, ok := decl.(*ast.FuncDecl)
@@ -358,6 +411,32 @@ func rewriteFile(path string, st *stats, locals map[string]bool) error {
 		r := roleOf(path, fn)
 		where := fmt.Sprintf("%s:%s", path, fn.Name.Name)
 		dName := dataName(fn)
+
+		// 0. log.Print* -> tflog in functions that carry a context.
+		if *tflogMode {
+			if ctx := ctxName(fn); ctx != "" {
+				ast.Inspect(fn.Body, func(n ast.Node) bool {
+					call, ok := n.(*ast.CallExpr)
+					if !ok {
+						return true
+					}
+					sel, ok := call.Fun.(*ast.SelectorExpr)
+					if !ok {
+						return true
+					}
+					if x, ok := sel.X.(*ast.Ident); !ok || x.Name != "log" || (sel.Sel.Name != "Printf" && sel.Sel.Name != "Println" && sel.Sel.Name != "Print") {
+						return true
+					}
+					if fmtNeeded, level, ok := rewriteLogCall(call, sel, ctx); ok {
+						needTflog = true
+						needFmt = needFmt || fmtNeeded
+						st.rewritten["log.Print* -> tflog."+level]++
+						changed = true
+					}
+					return true
+				})
+			}
+		}
 
 		// 1. Rewrite helper calls.
 		ast.Inspect(fn.Body, func(n ast.Node) bool {
@@ -582,6 +661,12 @@ func rewriteFile(path string, st *stats, locals map[string]bool) error {
 	}
 	if needHelpers {
 		ensureImport(file, helpersImport)
+	}
+	if needTflog {
+		ensureImport(file, tflogImport)
+	}
+	if needFmt {
+		ensureImport(file, "fmt")
 	}
 	var buf bytes.Buffer
 	if err := format.Node(&buf, fset, file); err != nil {

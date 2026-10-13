@@ -3,13 +3,13 @@ package security_governance_v3
 import (
 	"context"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -68,8 +68,7 @@ func resourceChaosSecurityGovernanceConditionV3Create(ctx context.Context, d *sc
 		MachineSpec: condition.MachineSpec,
 		Tags:        condition.Tags,
 	}
-
-	log.Printf("[DEBUG] Creating chaos security governance condition: %s (org: %s, project: %s)", conditionID, orgID, projectID)
+	tflog.Debug(ctx, fmt.Sprintf("Creating chaos security governance condition: %s (org: %s, project: %s)", conditionID, orgID, projectID))
 
 	_, httpResp, err := c.CreateconditionApi.CreateCondition(ctx, req, c.AccountId, &chaos.CreateconditionApiCreateConditionOpts{
 		OrganizationIdentifier: optional.NewString(orgID),
@@ -90,8 +89,7 @@ func resourceChaosSecurityGovernanceConditionV3Read(ctx context.Context, d *sche
 	orgID := d.Get("org_id").(string)
 	projectID := d.Get("project_id").(string)
 	conditionID := d.Id()
-
-	log.Printf("[DEBUG] Reading chaos security governance condition: %s", conditionID)
+	tflog.Debug(ctx, fmt.Sprintf("Reading chaos security governance condition: %s", conditionID))
 
 	resp, httpResp, err := c.GetconditionApi.GetCondition(ctx, c.AccountId, conditionID, &chaos.GetconditionApiGetConditionOpts{
 		OrganizationIdentifier: optional.NewString(orgID),
@@ -116,8 +114,7 @@ func resourceChaosSecurityGovernanceConditionV3Update(ctx context.Context, d *sc
 	conditionID := d.Id()
 
 	body := buildConditionV3(d, conditionID)
-
-	log.Printf("[DEBUG] Updating chaos security governance condition: %s", conditionID)
+	tflog.Debug(ctx, fmt.Sprintf("Updating chaos security governance condition: %s", conditionID))
 
 	_, httpResp, err := c.UpdateconditionApi.UpdateCondition(ctx, body, c.AccountId, conditionID, &chaos.UpdateconditionApiUpdateConditionOpts{
 		OrganizationIdentifier: optional.NewString(orgID),
@@ -136,8 +133,7 @@ func resourceChaosSecurityGovernanceConditionV3Delete(ctx context.Context, d *sc
 	orgID := d.Get("org_id").(string)
 	projectID := d.Get("project_id").(string)
 	conditionID := d.Id()
-
-	log.Printf("[DEBUG] Deleting chaos security governance condition: %s", conditionID)
+	tflog.Debug(ctx, fmt.Sprintf("Deleting chaos security governance condition: %s", conditionID))
 
 	_, httpResp, err := c.DeleteconditionApi.DeleteCondition(ctx, c.AccountId, conditionID, &chaos.DeleteconditionApiDeleteConditionOpts{
 		OrganizationIdentifier: optional.NewString(orgID),

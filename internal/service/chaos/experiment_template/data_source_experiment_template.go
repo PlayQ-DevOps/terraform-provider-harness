@@ -3,12 +3,12 @@ package experiment_template
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -487,8 +487,9 @@ func dataSourceExperimentTemplateRead(ctx context.Context, d *schema.ResourceDat
 
 	// Check if identity is provided
 	if identity, ok := d.GetOk("identity"); ok {
-		// Lookup by identity (direct API call)
-		log.Printf("[DEBUG] Looking up experiment template by identity: %s", identity.(string))
+		tflog.
+			// Lookup by identity (direct API call)
+			Debug(ctx, fmt.Sprintf("Looking up experiment template by identity: %s", identity.(string)))
 
 		opts := &chaos.ExperimenttemplateApiGetExperimentTemplateOpts{}
 		opts.HubIdentity = optional.NewString(hubIdentity)
@@ -501,8 +502,9 @@ func dataSourceExperimentTemplateRead(ctx context.Context, d *schema.ResourceDat
 		}
 		template = &resp
 	} else if name, ok := d.GetOk("name"); ok {
-		// Lookup by name (list and filter)
-		log.Printf("[DEBUG] Looking up experiment template by name: %s", name.(string))
+		tflog.
+			// Lookup by name (list and filter)
+			Debug(ctx, fmt.Sprintf("Looking up experiment template by name: %s", name.(string)))
 
 		opts := &chaos.ExperimenttemplateApiListExperimentTemplateOpts{}
 		opts.HubIdentity = optional.NewString(hubIdentity)

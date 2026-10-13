@@ -3,7 +3,6 @@ package fault_template
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -11,6 +10,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -209,7 +209,7 @@ func dataSourceFaultTemplateRead(ctx context.Context, d *schema.ResourceData, me
 	// If identity is provided, fetch directly (RECOMMENDED)
 	if identity, ok := d.GetOk("identity"); ok {
 		identityStr := identity.(string)
-		log.Printf("[DEBUG] Fetching fault template by identity: %s", identityStr)
+		tflog.Debug(ctx, fmt.Sprintf("Fetching fault template by identity: %s", identityStr))
 
 		// Retry logic to handle eventual consistency issues
 		var resp chaos.ChaosfaulttemplateGetFaultTemplateResponse
@@ -221,7 +221,7 @@ func dataSourceFaultTemplateRead(ctx context.Context, d *schema.ResourceData, me
 		if v, ok := d.GetOk("revision"); ok && v.(string) != "" {
 			revision = v.(string)
 		}
-		log.Printf("[DEBUG] Using revision: %s", revision)
+		tflog.Debug(ctx, fmt.Sprintf("Using revision: %s", revision))
 
 		maxRetries := 5
 		for i := 0; i < maxRetries; i++ {
@@ -243,8 +243,9 @@ func dataSourceFaultTemplateRead(ctx context.Context, d *schema.ResourceData, me
 			}
 
 			// Wait before retrying (exponential backoff: 1s, 2s, 4s, 8s, 16s)
-			waitTime := (1 << i) // 2^i seconds
-			log.Printf("[DEBUG] Fault template not found yet, retrying in %d seconds (attempt %d/%d)", waitTime, i+1, maxRetries)
+			waitTime := (1 << i)
+			tflog. // 2^i seconds
+				Debug(ctx, fmt.Sprintf("Fault template not found yet, retrying in %d seconds (attempt %d/%d)", waitTime, i+1, maxRetries))
 			select {
 			case <-ctx.Done():
 				return diag.Errorf("context cancelled while waiting for fault template")
@@ -267,7 +268,7 @@ func dataSourceFaultTemplateRead(ctx context.Context, d *schema.ResourceData, me
 	} else if name, ok := d.GetOk("name"); ok {
 		// If name is provided, list and filter
 		nameStr := name.(string)
-		log.Printf("[DEBUG] Fetching fault template by name: %s", nameStr)
+		tflog.Debug(ctx, fmt.Sprintf("Fetching fault template by name: %s", nameStr))
 
 		// Retry logic to handle eventual consistency issues with ListFaultTemplate
 		var foundTemplate *chaos.ChaosfaulttemplateChaosFaultTemplate
@@ -309,7 +310,7 @@ func dataSourceFaultTemplateRead(ctx context.Context, d *schema.ResourceData, me
 
 			// Wait before retrying (exponential backoff: 1s, 2s, 4s, 8s, 16s)
 			waitTime := (1 << i)
-			log.Printf("[DEBUG] Fault template with name %s not found yet, retrying in %d seconds (attempt %d/%d)", nameStr, waitTime, i+1, maxRetries)
+			tflog.Debug(ctx, fmt.Sprintf("Fault template with name %s not found yet, retrying in %d seconds (attempt %d/%d)", nameStr, waitTime, i+1, maxRetries))
 			select {
 			case <-ctx.Done():
 				return diag.Errorf("context cancelled while waiting for fault template")

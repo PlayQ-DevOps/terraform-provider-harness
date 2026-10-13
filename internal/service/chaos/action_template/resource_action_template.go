@@ -3,7 +3,6 @@ package action_template
 import (
 	"context"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -52,8 +52,7 @@ func resourceActionTemplateCreate(ctx context.Context, d *schema.ResourceData, m
 	projectID := d.Get("project_id").(string)
 	hubIdentity := d.Get("hub_identity").(string)
 	identity := d.Get("identity").(string)
-
-	log.Printf("[DEBUG] Creating action template with identity: %s in hub: %s", identity, hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Creating action template with identity: %s in hub: %s", identity, hubIdentity))
 
 	// Build the request
 	req := chaos.ChaosfaulttemplateActionTemplate{
@@ -98,14 +97,13 @@ func resourceActionTemplateCreate(ctx context.Context, d *schema.ResourceData, m
 	// Create the action template
 	resp, httpResp, err := c.DefaultApi.CreateActionTemplate(ctx, req, accountID, orgID, projectID)
 	if err != nil {
-		log.Printf("[ERROR] Failed to create action template: %v", err)
+		tflog.Error(ctx, fmt.Sprintf("Failed to create action template: %v", err))
 		if httpResp != nil {
-			log.Printf("[ERROR] HTTP Response: %+v", httpResp)
+			tflog.Error(ctx, fmt.Sprintf("HTTP Response: %+v", httpResp))
 		}
 		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
-
-	log.Printf("[DEBUG] Action template created successfully: %s", resp.Identity)
+	tflog.Debug(ctx, fmt.Sprintf("Action template created successfully: %s", resp.Identity))
 
 	// Set the ID
 	d.SetId(generateID(accountID, orgID, projectID, hubIdentity, resp.Identity))
@@ -127,8 +125,7 @@ func resourceActionTemplateRead(ctx context.Context, d *schema.ResourceData, met
 	if err != nil {
 		return diag.FromErr(err)
 	}
-
-	log.Printf("[DEBUG] Reading action template: %s from hub: %s", identity, hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Reading action template: %s from hub: %s", identity, hubIdentity))
 
 	// Get the action template
 	resp, httpResp, err := c.DefaultApi.GetActionTemplate(ctx, accountID, orgID, projectID, hubIdentity, identity, nil)
@@ -137,7 +134,7 @@ func resourceActionTemplateRead(ctx context.Context, d *schema.ResourceData, met
 	}
 
 	if resp.Data == nil {
-		log.Printf("[WARN] Action template data is nil, removing from state: %s", identity)
+		tflog.Warn(ctx, fmt.Sprintf("Action template data is nil, removing from state: %s", identity))
 		d.SetId("")
 		return nil
 	}
@@ -159,12 +156,11 @@ func resourceActionTemplateUpdate(ctx context.Context, d *schema.ResourceData, m
 	if err != nil {
 		return diag.FromErr(err)
 	}
-
-	log.Printf("[DEBUG] Updating action template: %s in hub: %s", identity, hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Updating action template: %s in hub: %s", identity, hubIdentity))
 
 	// Build the update request
 	newName := d.Get("name").(string)
-	log.Printf("[DEBUG] Updating name from state: %s", newName)
+	tflog.Debug(ctx, fmt.Sprintf("Updating name from state: %s", newName))
 
 	req := chaos.ChaosfaulttemplateActionTemplate{
 		Identity: identity,
@@ -204,10 +200,11 @@ func resourceActionTemplateUpdate(ctx context.Context, d *schema.ResourceData, m
 
 	// Build variables
 	buildVariables(d, &req)
+	tflog.
 
-	// Log the complete request for debugging
-	log.Printf("[DEBUG] Update request - Identity: %s, Name: %s, HubRef: %s", req.Identity, req.Name, req.HubRef)
-	log.Printf("[DEBUG] Update request - Description: %s, Tags: %v, Type: %s", req.Description, req.Tags, req.Type_)
+		// Log the complete request for debugging
+		Debug(ctx, fmt.Sprintf("Update request - Identity: %s, Name: %s, HubRef: %s", req.Identity, req.Name, req.HubRef))
+	tflog.Debug(ctx, fmt.Sprintf("Update request - Description: %s, Tags: %v, Type: %s", req.Description, req.Tags, req.Type_))
 
 	// Update the action template with isDefault=true (required for name updates to work)
 	opts := &chaos.DefaultApiUpdateActionTemplateOpts{
@@ -215,15 +212,14 @@ func resourceActionTemplateUpdate(ctx context.Context, d *schema.ResourceData, m
 	}
 	resp, httpResp, err := c.DefaultApi.UpdateActionTemplate(ctx, req, accountID, orgID, projectID, identity, opts)
 	if err != nil {
-		log.Printf("[ERROR] Failed to update action template: %v", err)
+		tflog.Error(ctx, fmt.Sprintf("Failed to update action template: %v", err))
 		if httpResp != nil {
-			log.Printf("[ERROR] HTTP Response: %+v", httpResp)
+			tflog.Error(ctx, fmt.Sprintf("HTTP Response: %+v", httpResp))
 		}
 		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
-
-	log.Printf("[DEBUG] Action template updated successfully: %s", identity)
-	log.Printf("[DEBUG] Update response - Name: %s, Identity: %s", resp.Name, resp.Identity)
+	tflog.Debug(ctx, fmt.Sprintf("Action template updated successfully: %s", identity))
+	tflog.Debug(ctx, fmt.Sprintf("Update response - Name: %s, Identity: %s", resp.Name, resp.Identity))
 
 	// Read back the updated resource
 	return resourceActionTemplateRead(ctx, d, meta)
@@ -242,16 +238,14 @@ func resourceActionTemplateDelete(ctx context.Context, d *schema.ResourceData, m
 	if err != nil {
 		return diag.FromErr(err)
 	}
-
-	log.Printf("[DEBUG] Deleting action template: %s from hub: %s", identity, hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Deleting action template: %s from hub: %s", identity, hubIdentity))
 
 	// Delete the action template
 	_, httpResp, err := c.DefaultApi.DeleteActionTemplate(ctx, accountID, orgID, projectID, hubIdentity, identity, nil)
 	if err != nil {
 		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
-
-	log.Printf("[DEBUG] Action template deleted successfully: %s", identity)
+	tflog.Debug(ctx, fmt.Sprintf("Action template deleted successfully: %s", identity))
 
 	d.SetId("")
 	return nil
@@ -305,8 +299,7 @@ func resourceActionTemplateImport(ctx context.Context, d *schema.ResourceData, m
 	}
 	d.Set("hub_identity", hubIdentity)
 	d.Set("identity", identity)
-
-	log.Printf("[DEBUG] Importing action template: %s from hub: %s (org: %s, project: %s)", identity, hubIdentity, orgID, projectID)
+	tflog.Debug(ctx, fmt.Sprintf("Importing action template: %s from hub: %s (org: %s, project: %s)", identity, hubIdentity, orgID, projectID))
 
 	// Read the resource
 	diags := resourceActionTemplateRead(ctx, d, meta)

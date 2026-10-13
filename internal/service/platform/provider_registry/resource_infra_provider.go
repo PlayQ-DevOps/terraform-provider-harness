@@ -2,11 +2,13 @@ package provider_registry
 
 import (
 	"context"
-	"log"
+
+	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -107,7 +109,7 @@ func resourceInfraProviderCreate(ctx context.Context, d *schema.ResourceData, m 
 	}
 	createProvider := buildCreateProviderRequestBody(d)
 	providerType := d.Get("type").(string)
-	log.Printf("[DEBUG] Creating provider with type %s and body %v", providerType, createProvider)
+	tflog.Debug(ctx, fmt.Sprintf("Creating provider with type %s and body %v", providerType, createProvider))
 	provRes, httpRes, err := c.ProviderRegistryApi.ProviderRegistryCreateProvider(ctx, createProvider, c.AccountId, providerType)
 
 	if err != nil {

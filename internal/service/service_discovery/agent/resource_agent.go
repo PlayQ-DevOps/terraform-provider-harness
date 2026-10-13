@@ -3,7 +3,6 @@ package agent
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/antihax/optional"
 	"github.com/google/uuid"
@@ -14,6 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	svcdiscovery "github.com/harness/harness-go-sdk/harness/svcdiscovery"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 // ResourceServiceDiscoveryAgent returns a new Terraform resource for Harness Service Discovery Agent
@@ -302,12 +302,12 @@ func resourceServiceDiscoveryAgentRead(ctx context.Context, d *schema.ResourceDa
 
 	// Handle installation details
 	if agent.InstallationDetails != nil {
-		log.Printf("[DEBUG] Raw installation details: %+v", agent.InstallationDetails)
+		tflog.Debug(ctx, fmt.Sprintf("Raw installation details: %+v", agent.InstallationDetails))
 		installationDetails, err := convert.FlattenInstallationDetails(agent.InstallationDetails)
 		if err != nil {
 			return diag.FromErr(fmt.Errorf("failed to flatten installation details: %w", err))
 		}
-		log.Printf("[DEBUG] Flattened installation details: %+v", installationDetails)
+		tflog.Debug(ctx, fmt.Sprintf("Flattened installation details: %+v", installationDetails))
 
 		// Only set if we have data
 		if len(installationDetails) > 0 {
@@ -383,7 +383,7 @@ func resourceServiceDiscoveryAgentUpdate(ctx context.Context, d *schema.Resource
 	// If config is explicitly provided in the update, use it
 	if d.HasChange("config") {
 		if v, ok := d.GetOk("config"); ok && len(v.([]interface{})) > 0 {
-			log.Printf("[DEBUG] Config provided in update: %+v", v)
+			tflog.Debug(ctx, fmt.Sprintf("Config provided in update: %+v", v))
 			config, err := convert.ExpandAgentConfig(v.([]interface{}))
 			if err != nil {
 				return diag.FromErr(err)
@@ -405,8 +405,7 @@ func resourceServiceDiscoveryAgentUpdate(ctx context.Context, d *schema.Resource
 	if v, ok := d.GetOk("project_identifier"); ok {
 		opts.ProjectIdentifier = optional.NewString(v.(string))
 	}
-
-	log.Printf("[DEBUG] Update agent request: %+v, opts: %+v, config: %+v", req, opts, req.Config)
+	tflog.Debug(ctx, fmt.Sprintf("Update agent request: %+v, opts: %+v, config: %+v", req, opts, req.Config))
 
 	// Update the agent
 	_, updateHttpResp, updateErr := c.AgentApi.UpdateAgent(ctx, req, accountIdentifier, environmentIdentifier,

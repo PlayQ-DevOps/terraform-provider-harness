@@ -3,8 +3,8 @@ package security_governance_v3
 import (
 	"context"
 	"fmt"
-	"log"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -42,8 +42,7 @@ func resourceChaosSecurityGovernanceConditionV3Import(ctx context.Context, d *sc
 	if err != nil {
 		return nil, err
 	}
-
-	log.Printf("[DEBUG] Importing chaos security governance condition: %s (org: %s, project: %s)", conditionID, orgID, projectID)
+	tflog.Debug(ctx, fmt.Sprintf("Importing chaos security governance condition: %s (org: %s, project: %s)", conditionID, orgID, projectID))
 
 	d.SetId(conditionID)
 	if err := d.Set("org_id", orgID); err != nil {

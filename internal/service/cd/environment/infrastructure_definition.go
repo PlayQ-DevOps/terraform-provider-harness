@@ -3,13 +3,13 @@ package environment
 import (
 	"context"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/cd/cac"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/utils"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -226,8 +226,7 @@ func resourceInfraDefinitionRead(ctx context.Context, d *schema.ResourceData, me
 	id := d.Get("id").(string)
 	appId := d.Get("app_id").(string)
 	envId := d.Get("env_id").(string)
-
-	log.Printf("[DEBUG] Terraform: Read infrastructure definition %s", id)
+	tflog.Debug(ctx, fmt.Sprintf("Terraform: Read infrastructure definition %s", id))
 	infraDef, err := c.CDClient.ConfigAsCodeClient.GetInfraDefinitionById(appId, envId, id)
 	if err != nil {
 		return helpers.HandleRead(ctx, d, err, nil)
@@ -247,8 +246,7 @@ func resourceInfraDefinitionDelete(ctx context.Context, d *schema.ResourceData, 
 	id := d.Get("id").(string)
 	appId := d.Get("app_id").(string)
 	envId := d.Get("env_id").(string)
-
-	log.Printf("[DEBUG] Terraform: Delete infrastructure definition %s", id)
+	tflog.Debug(ctx, fmt.Sprintf("Terraform: Delete infrastructure definition %s", id))
 	err := c.CDClient.ConfigAsCodeClient.DeleteInfraDefinition(appId, envId, id)
 	if err != nil {
 		return helpers.HandleDelete(ctx, d, err, nil)
@@ -264,13 +262,13 @@ func resourceInfraDefinitionCreateOrUpdate(ctx context.Context, d *schema.Resour
 	var err error
 
 	if d.IsNewResource() {
-		log.Printf("[DEBUG] Terraform: Create infrastructure definition %s", d.Get("name"))
+		tflog.Debug(ctx, fmt.Sprintf("Terraform: Create infrastructure definition %s", d.Get("name")))
 		input = cac.NewEntity(cac.ObjectTypes.InfrastructureDefinition).(*cac.InfrastructureDefinition)
 	} else {
 		id := d.Get("id").(string)
 		appId := d.Get("app_id").(string)
 		envId := d.Get("env_id").(string)
-		log.Printf("[DEBUG] Terraform: Updating infrastructure definition %s", d.Get("name"))
+		tflog.Debug(ctx, fmt.Sprintf("Terraform: Updating infrastructure definition %s", d.Get("name")))
 		input, err = c.CDClient.ConfigAsCodeClient.GetInfraDefinitionById(appId, envId, id)
 		if err != nil {
 			return diag.FromErr(err)

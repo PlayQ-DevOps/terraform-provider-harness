@@ -3,12 +3,12 @@ package chaos_hub_v2
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -47,8 +47,7 @@ func resourceChaosHubV2Create(ctx context.Context, d *schema.ResourceData, meta 
 	// Extract identifiers
 	orgID := d.Get("org_id").(string)
 	projectID := d.Get("project_id").(string)
-
-	log.Printf("[DEBUG] Creating chaos hub with identity: %s, name: %s", req.Identity, req.Name)
+	tflog.Debug(ctx, fmt.Sprintf("Creating chaos hub with identity: %s, name: %s", req.Identity, req.Name))
 
 	// Make the API call
 	resp, httpResp, err := c.DefaultApi.CreateChaosHub(
@@ -64,8 +63,7 @@ func resourceChaosHubV2Create(ctx context.Context, d *schema.ResourceData, meta 
 
 	// Set the ID to the hub identity
 	d.SetId(resp.Identity)
-
-	log.Printf("[DEBUG] Created chaos hub with identity: %s, hub_id: %s", resp.Identity, resp.HubId)
+	tflog.Debug(ctx, fmt.Sprintf("Created chaos hub with identity: %s, hub_id: %s", resp.Identity, resp.HubId))
 
 	return resourceChaosHubV2Read(ctx, d, meta)
 }
@@ -77,8 +75,7 @@ func resourceChaosHubV2Read(ctx context.Context, d *schema.ResourceData, meta in
 	hubIdentity := d.Id()
 	orgID := d.Get("org_id").(string)
 	projectID := d.Get("project_id").(string)
-
-	log.Printf("[DEBUG] Reading chaos hub with identity: %s", hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Reading chaos hub with identity: %s", hubIdentity))
 
 	// Get the hub using the REST API
 	hub, httpResp, err := c.DefaultApi.GetChaosHub(
@@ -116,8 +113,7 @@ func resourceChaosHubV2Update(ctx context.Context, d *schema.ResourceData, meta 
 
 	// Build the update request
 	req := buildUpdateChaosHubV2Request(d)
-
-	log.Printf("[DEBUG] Updating chaos hub with identity: %s", hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Updating chaos hub with identity: %s", hubIdentity))
 
 	// Update the hub using the REST API
 	hub, httpResp, err := c.DefaultApi.UpdateChaosHub(
@@ -131,8 +127,7 @@ func resourceChaosHubV2Update(ctx context.Context, d *schema.ResourceData, meta 
 	if err != nil {
 		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
-
-	log.Printf("[DEBUG] Updated chaos hub with identity: %s", hub.Identity)
+	tflog.Debug(ctx, fmt.Sprintf("Updated chaos hub with identity: %s", hub.Identity))
 
 	return resourceChaosHubV2Read(ctx, d, meta)
 }
@@ -144,8 +139,7 @@ func resourceChaosHubV2Delete(ctx context.Context, d *schema.ResourceData, meta 
 	hubIdentity := d.Id()
 	orgID := d.Get("org_id").(string)
 	projectID := d.Get("project_id").(string)
-
-	log.Printf("[DEBUG] Deleting chaos hub with identity: %s", hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Deleting chaos hub with identity: %s", hubIdentity))
 
 	_, httpResp, err := c.DefaultApi.DeleteHub(
 		ctx,
@@ -166,14 +160,13 @@ func resourceChaosHubV2Delete(ctx context.Context, d *schema.ResourceData, meta 
 		)
 		// If the helper cleared the state (SetId("")), we're done
 		if d.Id() == "" {
-			log.Printf("[DEBUG] Hub delete handled gracefully (API constraint): %s", hubIdentity)
+			tflog.Debug(ctx, fmt.Sprintf("Hub delete handled gracefully (API constraint): %s", hubIdentity))
 			return diags
 		}
 		// Otherwise, it's a real error
 		return diags
 	}
-
-	log.Printf("[DEBUG] Deleted chaos hub with identity: %s", hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Deleted chaos hub with identity: %s", hubIdentity))
 
 	// Clear the ID from state
 	d.SetId("")
@@ -214,8 +207,7 @@ func resourceChaosHubV2Import(ctx context.Context, d *schema.ResourceData, meta 
 		return nil, err
 	}
 	c, ctx := meta.(*internal.Session).GetChaosClientWithContext(ctx)
-
-	log.Printf("[DEBUG] Importing chaos hub with identity: %s, org: %s, project: %s", hubIdentity, orgID, projectID)
+	tflog.Debug(ctx, fmt.Sprintf("Importing chaos hub with identity: %s, org: %s, project: %s", hubIdentity, orgID, projectID))
 
 	// Set the ID in the format that our Read function expects
 	d.SetId(hubIdentity)
@@ -250,17 +242,16 @@ func resourceChaosHubV2Import(ctx context.Context, d *schema.ResourceData, meta 
 		}
 		return nil, fmt.Errorf("failed to get chaos hub details for identity: %s: %v", hubIdentity, err)
 	}
+	tflog.Debug(ctx, fmt.Sprintf("Found chaos hub: %+v", hub))
+	tflog.
 
-	log.Printf("[DEBUG] Found chaos hub: %+v", hub)
-
-	// Call the read function to populate the rest of the state
-	log.Printf("[DEBUG] Calling read function to populate state...")
+		// Call the read function to populate the rest of the state
+		Debug(ctx, "Calling read function to populate state...")
 	diags := resourceChaosHubV2Read(ctx, d, meta)
 	if diags.HasError() {
 		return nil, fmt.Errorf("error reading chaos hub: %v", diags)
 	}
-
-	log.Printf("[DEBUG] Successfully imported chaos hub: %s", d.Id())
+	tflog.Debug(ctx, fmt.Sprintf("Successfully imported chaos hub: %s", d.Id()))
 	return []*schema.ResourceData{d}, nil
 }
 

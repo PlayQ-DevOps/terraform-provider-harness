@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -81,7 +81,7 @@ func resourceInfraProviderVersionCreate(ctx context.Context, d *schema.ResourceD
 	version := d.Get("version").(string)
 
 	createVersion := buildCreateProviderVersionRequestBody(d)
-	log.Printf("[DEBUG] Creating provider version %s for provider %s with body %v", version, providerId, createVersion)
+	tflog.Debug(ctx, fmt.Sprintf("Creating provider version %s for provider %s with body %v", version, providerId, createVersion))
 
 	httpRes, err := c.ProviderRegistryApi.ProviderRegistryCreateProviderVersion(
 		ctx,
@@ -91,10 +91,10 @@ func resourceInfraProviderVersionCreate(ctx context.Context, d *schema.ResourceD
 	)
 
 	if err != nil {
-		log.Printf("[ERROR] Failed to create provider version: %v, HTTP Response: %+v", err, httpRes)
+		tflog.Error(ctx, fmt.Sprintf("Failed to create provider version: %v, HTTP Response: %+v", err, httpRes))
 		if httpRes != nil && httpRes.Body != nil {
 			bodyBytes, _ := io.ReadAll(httpRes.Body)
-			log.Printf("[ERROR] Response body: %s", string(bodyBytes))
+			tflog.Error(ctx, fmt.Sprintf("Response body: %s", string(bodyBytes)))
 		}
 		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
@@ -118,7 +118,7 @@ func resourceInfraProviderVersionDelete(ctx context.Context, d *schema.ResourceD
 	if err != nil {
 		// If we get a 400/409 error indicating the version is published and cannot be deleted
 		if httpRes != nil && (httpRes.StatusCode == 400 || httpRes.StatusCode == 409) {
-			log.Printf("[WARN] Version %s is published and cannot be deleted independently. It will be deleted when provider %s is deleted. Removing from state.", version, providerId)
+			tflog.Warn(ctx, fmt.Sprintf("Version %s is published and cannot be deleted independently. It will be deleted when provider %s is deleted. Removing from state.", version, providerId))
 			d.SetId("")
 			return nil
 		}
@@ -135,7 +135,7 @@ func resourceInfraProviderVersionUpdate(ctx context.Context, d *schema.ResourceD
 
 	if d.HasChanges("gpg_key_id", "protocols") {
 		updateVersion := buildUpdateProviderVersionRequestBody(d)
-		log.Printf("[DEBUG] Updating provider version %s for provider %s with body %v", version, providerId, updateVersion)
+		tflog.Debug(ctx, fmt.Sprintf("Updating provider version %s for provider %s with body %v", version, providerId, updateVersion))
 
 		httpRes, err := c.ProviderRegistryApi.ProviderRegistryUpdateProviderVersion(
 			ctx,

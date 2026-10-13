@@ -2,11 +2,13 @@ package module_registry
 
 import (
 	"context"
-	"log"
+
+	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -173,7 +175,7 @@ func resourceInfraModuleCreate(ctx context.Context, d *schema.ResourceData, m in
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	log.Printf("[DEBUG] Creating module with value %v", createModule)
+	tflog.Debug(ctx, fmt.Sprintf("Creating module with value %v", createModule))
 	modRes, httpRes, err := c.ModuleRegistryApi.ModuleRegistryCreateModule(ctx, createModule, c.AccountId)
 
 	if err != nil {

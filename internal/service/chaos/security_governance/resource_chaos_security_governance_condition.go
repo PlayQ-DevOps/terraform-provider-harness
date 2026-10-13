@@ -10,6 +10,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/chaos/graphql/model"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
@@ -368,8 +369,7 @@ func resourceChaosSecurityGovernanceConditionImport(ctx context.Context, d *sche
 	if projectID != "" {
 		identifiers.ProjectIdentifier = projectID
 	}
-
-	log.Printf("[DEBUG] Importing condition with id: %s, org: %s, project: %s", conditionID, orgID, projectID)
+	tflog.Debug(ctx, fmt.Sprintf("Importing condition with id: %s, org: %s, project: %s", conditionID, orgID, projectID))
 
 	// Get the condition by ID
 	condition, err := client.Get(ctx, identifiers, conditionID)

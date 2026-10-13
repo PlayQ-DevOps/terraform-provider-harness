@@ -2,7 +2,6 @@ package secrets
 
 import (
 	"context"
-	"log"
 	"strings"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/service/cd/usagescope"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -199,7 +199,7 @@ func resourceEncryptedTextDelete(ctx context.Context, d *schema.ResourceData, me
 		// on the secret isn't updated yet. For now I'm putting in a simple 5s retry which works for now.
 		// If it fails again we'll just assume it's actually still in use.
 		if strings.Contains(err.Error(), "still being used") {
-			log.Println("[WARN] Secret is still being used, cannot delete. Retrying in 5s...")
+			tflog.Warn(ctx, "Secret is still being used, cannot delete. Retrying in 5s...")
 			time.Sleep(time.Second * 5)
 			if err := c.CDClient.SecretClient.DeleteSecret(d.Get("id").(string), graphql.SecretTypes.EncryptedText); err != nil {
 				return helpers.HandleDelete(ctx, d, err, nil)

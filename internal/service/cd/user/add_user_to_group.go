@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/utils"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -49,14 +49,13 @@ func resourceAddUserToGroupCreate(ctx context.Context, d *schema.ResourceData, m
 	}
 	userId := d.Get("user_id").(string)
 	groupId := d.Get("group_id").(string)
-
-	log.Printf("[DEBUG] Check if user is already in group")
+	tflog.Debug(ctx, "Check if user is already in group")
 	ok, err := c.UserClient.IsUserInGroup(userId, groupId)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 	if !ok {
-		log.Printf("[DEBUG] User is not in group, adding user to group")
+		tflog.Debug(ctx, "User is not in group, adding user to group")
 		ok, err := c.UserClient.AddUserToGroup(userId, groupId)
 		if err != nil {
 			return diag.FromErr(err)
@@ -84,7 +83,7 @@ func resourceAddUserToGroupRead(ctx context.Context, d *schema.ResourceData, met
 		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if !ok {
-		log.Printf("[WARN] Removing from state because user %s is no longer in group %s", userId, groupId)
+		tflog.Warn(ctx, fmt.Sprintf("Removing from state because user %s is no longer in group %s", userId, groupId))
 		d.SetId("")
 		return nil
 	}

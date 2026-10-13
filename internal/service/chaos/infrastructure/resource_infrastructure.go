@@ -2,11 +2,13 @@ package infrastructure
 
 import (
 	"context"
-	"log"
+
+	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -197,7 +199,7 @@ func readInfraCreate(d *schema.ResourceData, infraResponse *chaos.InfraV2Registe
 
 func resourceChaosInfrastructureCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetChaosClientWithContext(ctx)
-	log.Printf("Debugging message: %v", c)
+	tflog.Debug(ctx, fmt.Sprintf("Debugging message: %v", c))
 
 	var accountIdentifier, orgIdentifier, projectIdentifier string
 	createInfraRequest := buildInfraCreateRequest(d)

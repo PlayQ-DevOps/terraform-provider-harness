@@ -2,11 +2,13 @@ package action_template
 
 import (
 	"context"
-	"log"
+
+	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -65,7 +67,7 @@ func dataSourceActionTemplateRead(ctx context.Context, d *schema.ResourceData, m
 	if identity, ok := d.GetOk("identity"); ok {
 		// Direct lookup by identity
 		identityStr := identity.(string)
-		log.Printf("[DEBUG] Looking up action template by identity: %s in hub: %s", identityStr, hubIdentity)
+		tflog.Debug(ctx, fmt.Sprintf("Looking up action template by identity: %s in hub: %s", identityStr, hubIdentity))
 
 		resp, httpResp, err := c.DefaultApi.GetActionTemplate(ctx, accountID, orgID, projectID, hubIdentity, identityStr, nil)
 		if err != nil {
@@ -83,7 +85,7 @@ func dataSourceActionTemplateRead(ctx context.Context, d *schema.ResourceData, m
 	// Lookup by name
 	if name, ok := d.GetOk("name"); ok {
 		nameStr := name.(string)
-		log.Printf("[DEBUG] Looking up action template by name: %s in hub: %s", nameStr, hubIdentity)
+		tflog.Debug(ctx, fmt.Sprintf("Looking up action template by name: %s in hub: %s", nameStr, hubIdentity))
 
 		// List action templates and find by name
 		opts := &chaos.DefaultApiListActionTemplateOpts{}

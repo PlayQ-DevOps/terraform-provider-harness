@@ -3,7 +3,6 @@ package template
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/harness/harness-openapi-go-client/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -566,7 +566,7 @@ func resourceTemplateDelete(ctx context.Context, d *schema.ResourceData, meta in
 	version := d.Get("version").(string)
 	var httpResp *http.Response
 	var err error
-	log.Printf("[DEBUG] Deleting template with identifier %s and version %s", id, version)
+	tflog.Debug(ctx, fmt.Sprintf("Deleting template with identifier %s and version %s", id, version))
 
 	if project_id != "" {
 		httpResp, err = c.ProjectTemplateApi.DeleteTemplateProject(ctx, project_id, id, org_id, version, &nextgen.ProjectTemplateApiDeleteTemplateProjectOpts{

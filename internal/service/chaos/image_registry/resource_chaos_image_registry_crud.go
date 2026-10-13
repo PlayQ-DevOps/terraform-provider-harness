@@ -3,12 +3,12 @@ package image_registry
 import (
 	"context"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/chaos/graphql/model"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -87,11 +87,11 @@ func resourceChaosImageRegistryCreate(ctx context.Context, d *schema.ResourceDat
 	// actually applied.
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key error") {
-			log.Printf("[WARN] Chaos image registry already exists, reconciling existing registry to configuration: %s", err)
+			tflog.Warn(ctx, fmt.Sprintf("Chaos image registry already exists, reconciling existing registry to configuration: %s", err))
 			d.SetId(generateID(identifiers, req.RegistryAccount))
 			return resourceChaosImageRegistryUpdate(ctx, d, meta)
 		}
-		log.Printf("[ERROR] Chaos image registry creation failed: %s", err)
+		tflog.Error(ctx, fmt.Sprintf("Chaos image registry creation failed: %s", err))
 		d.SetId("")
 		return helpers.HandleWrite(ctx, d, err, nil)
 	}
@@ -113,7 +113,7 @@ func resourceChaosImageRegistryRead(ctx context.Context, d *schema.ResourceData,
 	registry, err := c.ImageRegistryApi.Get(ctx, identifiers, infraID)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
-			log.Printf("[WARN] Chaos image registry not found: %s", err)
+			tflog.Warn(ctx, fmt.Sprintf("Chaos image registry not found: %s", err))
 			return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound())
 		}
 		return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound())

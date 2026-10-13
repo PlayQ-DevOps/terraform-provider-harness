@@ -2,12 +2,14 @@ package module_registry_testing
 
 import (
 	"context"
-	"log"
 	"strconv"
+
+	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -297,7 +299,7 @@ func resourceInfraModuleTestingCreate(ctx context.Context, d *schema.ResourceDat
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	log.Printf("[DEBUG] Enabling module testing with value %v", createModule)
+	tflog.Debug(ctx, fmt.Sprintf("Enabling module testing with value %v", createModule))
 	httpRes, err := c.ModuleRegistryApi.ModuleRegistryEnableTesting(ctx, createModule, c.AccountId, moduleId)
 
 	if err != nil {
@@ -360,7 +362,7 @@ func resourceInfraModuleTestingUpdate(ctx context.Context, d *schema.ResourceDat
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	log.Printf("[DEBUG] Updating module testing with value %v", updateModule)
+	tflog.Debug(ctx, fmt.Sprintf("Updating module testing with value %v", updateModule))
 	httpRes, err := c.ModuleRegistryApi.ModuleRegistryUpdateModuleTesting(ctx, updateModule, c.AccountId, moduleId)
 
 	if err != nil {

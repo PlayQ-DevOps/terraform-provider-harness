@@ -11,6 +11,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -48,17 +49,17 @@ func resourceExperimentTemplateCreate(ctx context.Context, d *schema.ResourceDat
 	projectID := d.Get("project_id").(string)
 	hubIdentity := d.Get("hub_identity").(string)
 	identity := d.Get("identity").(string)
-
-	log.Printf("[DEBUG] Creating experiment template: identity=%s, hub=%s", identity, hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Creating experiment template: identity=%s, hub=%s", identity, hubIdentity))
 
 	// Build the YAML manifest
 	manifest, err := buildExperimentTemplateManifest(d)
 	if err != nil {
 		return diag.FromErr(fmt.Errorf("failed to build experiment template manifest: %w", err))
 	}
+	tflog.
 
-	// Log the manifest for debugging
-	log.Printf("[DEBUG] Experiment template manifest:\n%s", manifest)
+		// Log the manifest for debugging
+		Debug(ctx, fmt.Sprintf("Experiment template manifest:\n%s", manifest))
 
 	// Create request
 	req := chaos.ChaosexperimenttemplateCreateExperimentTemplateRequest{
@@ -73,22 +74,21 @@ func resourceExperimentTemplateCreate(ctx context.Context, d *schema.ResourceDat
 
 	resp, httpResp, err := c.ExperimenttemplateApi.CreateExperimentTemplate(ctx, req, accountID, opts)
 	if err != nil {
-		log.Printf("[ERROR] Failed to create experiment template: %v", err)
+		tflog.Error(ctx, fmt.Sprintf("Failed to create experiment template: %v", err))
 		if httpResp != nil {
-			log.Printf("[ERROR] HTTP Status: %d", httpResp.StatusCode)
+			tflog.Error(ctx, fmt.Sprintf("HTTP Status: %d", httpResp.StatusCode))
 			// Try to read response body for better error message
 			if httpResp.Body != nil {
 				body := make([]byte, 1024)
 				n, _ := httpResp.Body.Read(body)
 				if n > 0 {
-					log.Printf("[ERROR] Response body: %s", string(body[:n]))
+					tflog.Error(ctx, fmt.Sprintf("Response body: %s", string(body[:n])))
 				}
 			}
 		}
 		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
-
-	log.Printf("[DEBUG] Experiment template created: %s", resp.Identity)
+	tflog.Debug(ctx, fmt.Sprintf("Experiment template created: %s", resp.Identity))
 
 	// Set ID: org_id/project_id/hub_identity/identity
 	d.SetId(fmt.Sprintf("%s/%s/%s/%s", orgID, projectID, hubIdentity, resp.Identity))
@@ -110,8 +110,7 @@ func resourceExperimentTemplateRead(ctx context.Context, d *schema.ResourceData,
 	projectID := parts[1]
 	hubIdentity := parts[2]
 	identity := parts[3]
-
-	log.Printf("[DEBUG] Reading experiment template: identity=%s, hub=%s", identity, hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Reading experiment template: identity=%s, hub=%s", identity, hubIdentity))
 
 	// Get experiment template
 	opts := &chaos.ExperimenttemplateApiGetExperimentTemplateOpts{}
@@ -146,8 +145,7 @@ func resourceExperimentTemplateUpdate(ctx context.Context, d *schema.ResourceDat
 	projectID := parts[1]
 	hubIdentity := parts[2]
 	identity := parts[3]
-
-	log.Printf("[DEBUG] Updating experiment template: identity=%s, hub=%s", identity, hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Updating experiment template: identity=%s, hub=%s", identity, hubIdentity))
 
 	// Build the YAML manifest
 	manifest, err := buildExperimentTemplateManifest(d)
@@ -168,11 +166,10 @@ func resourceExperimentTemplateUpdate(ctx context.Context, d *schema.ResourceDat
 
 	_, httpResp, err := c.ExperimenttemplateApi.UpdateExperimentTemplate(ctx, req, accountID, identity, opts)
 	if err != nil {
-		log.Printf("[ERROR] Failed to update experiment template: %v", err)
+		tflog.Error(ctx, fmt.Sprintf("Failed to update experiment template: %v", err))
 		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
-
-	log.Printf("[DEBUG] Experiment template updated: %s", identity)
+	tflog.Debug(ctx, fmt.Sprintf("Experiment template updated: %s", identity))
 
 	return resourceExperimentTemplateRead(ctx, d, meta)
 }
@@ -191,8 +188,7 @@ func resourceExperimentTemplateDelete(ctx context.Context, d *schema.ResourceDat
 	projectID := parts[1]
 	hubIdentity := parts[2]
 	identity := parts[3]
-
-	log.Printf("[DEBUG] Deleting experiment template: identity=%s, hub=%s", identity, hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Deleting experiment template: identity=%s, hub=%s", identity, hubIdentity))
 
 	// Delete experiment template
 	opts := &chaos.ExperimenttemplateApiDeleteExperimentTemplateOpts{}
@@ -204,8 +200,7 @@ func resourceExperimentTemplateDelete(ctx context.Context, d *schema.ResourceDat
 	if err != nil {
 		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
-
-	log.Printf("[DEBUG] Experiment template deleted: %s", identity)
+	tflog.Debug(ctx, fmt.Sprintf("Experiment template deleted: %s", identity))
 	return nil
 }
 

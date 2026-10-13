@@ -3,7 +3,6 @@ package security_governance_v3
 import (
 	"context"
 	"fmt"
-	"log"
 	"regexp"
 	"strings"
 	"time"
@@ -13,6 +12,7 @@ import (
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	hcty "github.com/hashicorp/go-cty/cty"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -250,8 +250,7 @@ func resourceChaosSecurityGovernanceRuleV3Create(ctx context.Context, d *schema.
 		Tags:         interfaceSliceToStringSlice(d.Get("tags").([]interface{})),
 		TimeWindows:  buildRuleTimeWindowsV3(d),
 	}
-
-	log.Printf("[DEBUG] Creating chaos security governance rule: %s (org: %s, project: %s)", ruleID, orgID, projectID)
+	tflog.Debug(ctx, fmt.Sprintf("Creating chaos security governance rule: %s (org: %s, project: %s)", ruleID, orgID, projectID))
 
 	_, httpResp, err := c.CreateruleApi.CreateRule(ctx, req, c.AccountId, &chaos.CreateruleApiCreateRuleOpts{
 		OrganizationIdentifier: optional.NewString(orgID),
@@ -272,8 +271,7 @@ func resourceChaosSecurityGovernanceRuleV3Read(ctx context.Context, d *schema.Re
 	orgID := d.Get("org_id").(string)
 	projectID := d.Get("project_id").(string)
 	ruleID := d.Id()
-
-	log.Printf("[DEBUG] Reading chaos security governance rule: %s", ruleID)
+	tflog.Debug(ctx, fmt.Sprintf("Reading chaos security governance rule: %s", ruleID))
 
 	resp, httpResp, err := c.GetruleApi.GetRule(ctx, c.AccountId, ruleID, &chaos.GetruleApiGetRuleOpts{
 		OrganizationIdentifier: optional.NewString(orgID),
@@ -307,8 +305,7 @@ func resourceChaosSecurityGovernanceRuleV3Update(ctx context.Context, d *schema.
 		Tags:         interfaceSliceToStringSlice(d.Get("tags").([]interface{})),
 		TimeWindows:  buildRuleTimeWindowsV3(d),
 	}
-
-	log.Printf("[DEBUG] Updating chaos security governance rule: %s", ruleID)
+	tflog.Debug(ctx, fmt.Sprintf("Updating chaos security governance rule: %s", ruleID))
 
 	_, httpResp, err := c.UpdateruleApi.UpdateRule(ctx, body, c.AccountId, ruleID, &chaos.UpdateruleApiUpdateRuleOpts{
 		OrganizationIdentifier: optional.NewString(orgID),
@@ -327,8 +324,7 @@ func resourceChaosSecurityGovernanceRuleV3Delete(ctx context.Context, d *schema.
 	orgID := d.Get("org_id").(string)
 	projectID := d.Get("project_id").(string)
 	ruleID := d.Id()
-
-	log.Printf("[DEBUG] Deleting chaos security governance rule: %s", ruleID)
+	tflog.Debug(ctx, fmt.Sprintf("Deleting chaos security governance rule: %s", ruleID))
 
 	_, httpResp, err := c.DeleteruleApi.DeleteRule(ctx, c.AccountId, ruleID, &chaos.DeleteruleApiDeleteRuleOpts{
 		OrganizationIdentifier: optional.NewString(orgID),

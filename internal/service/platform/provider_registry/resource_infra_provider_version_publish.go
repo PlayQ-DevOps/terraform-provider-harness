@@ -3,10 +3,10 @@ package provider_registry
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -75,8 +75,7 @@ func resourceInfraProviderVersionPublishCreate(ctx context.Context, d *schema.Re
 
 	providerId := d.Get("provider_id").(string)
 	version := d.Get("version").(string)
-
-	log.Printf("[DEBUG] Publishing provider version %s for provider %s", version, providerId)
+	tflog.Debug(ctx, fmt.Sprintf("Publishing provider version %s for provider %s", version, providerId))
 
 	httpRes, err := c.ProviderRegistryApi.ProviderRegistryPublishProviderVersion(
 		ctx,
@@ -96,9 +95,10 @@ func resourceInfraProviderVersionPublishCreate(ctx context.Context, d *schema.Re
 }
 
 func resourceInfraProviderVersionPublishDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	// Publishing is a one-way operation - once published, a version cannot be unpublished
-	// On delete, we just remove from state
-	log.Printf("[DEBUG] Removing published provider version from state (cannot unpublish)")
+	tflog.
+		// Publishing is a one-way operation - once published, a version cannot be unpublished
+		// On delete, we just remove from state
+		Debug(ctx, "Removing published provider version from state (cannot unpublish)")
 	d.SetId("")
 	return nil
 }

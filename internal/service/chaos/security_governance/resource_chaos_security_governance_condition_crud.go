@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"strings"
 	"time"
 
@@ -12,6 +11,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/chaos/graphql/model"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -102,13 +102,14 @@ func resourceChaosSecurityGovernanceConditionCreate(ctx context.Context, d *sche
 		Faults:   faults,
 	}
 	req.FaultSpec = faultSpecInput
+	tflog.
 
-	// Log the fault spec for debugging
-	log.Printf("[DEBUG] FaultSpecInput: %+v", faultSpecInput)
-	log.Printf("[DEBUG] FaultSpecInput.Operator: %v", faultSpecInput.Operator)
-	log.Printf("[DEBUG] Number of Faults: %d", len(faultSpecInput.Faults))
+		// Log the fault spec for debugging
+		Debug(ctx, fmt.Sprintf("FaultSpecInput: %+v", faultSpecInput))
+	tflog.Debug(ctx, fmt.Sprintf("FaultSpecInput.Operator: %v", faultSpecInput.Operator))
+	tflog.Debug(ctx, fmt.Sprintf("Number of Faults: %d", len(faultSpecInput.Faults)))
 	for i, f := range faultSpecInput.Faults {
-		log.Printf("[DEBUG] Fault %d: Type=%s, Name=%s", i, f.FaultType, f.Name)
+		tflog.Debug(ctx, fmt.Sprintf("Fault %d: Type=%s, Name=%s", i, f.FaultType, f.Name))
 	}
 
 	// Set K8s spec if provided
@@ -141,28 +142,30 @@ func resourceChaosSecurityGovernanceConditionCreate(ctx context.Context, d *sche
 
 		req.MachineSpec = expandMachineSpec(machineSpec)
 	}
+	tflog.
 
-	// Log the request for debugging
-	log.Printf("[DEBUG] Creating security governance condition with request: %+v", req)
-	log.Printf("[DEBUG] FaultSpec: %+v", req.FaultSpec)
+		// Log the request for debugging
+		Debug(ctx, fmt.Sprintf("Creating security governance condition with request: %+v", req))
+	tflog.Debug(ctx, fmt.Sprintf("FaultSpec: %+v", req.FaultSpec))
 	if req.FaultSpec != nil {
-		log.Printf("[DEBUG] FaultSpec.Operator: %v", req.FaultSpec.Operator)
-		log.Printf("[DEBUG] Number of Faults: %d", len(req.FaultSpec.Faults))
+		tflog.Debug(ctx, fmt.Sprintf("FaultSpec.Operator: %v", req.FaultSpec.Operator))
+		tflog.Debug(ctx, fmt.Sprintf("Number of Faults: %d", len(req.FaultSpec.Faults)))
 		for i, f := range req.FaultSpec.Faults {
-			log.Printf("[DEBUG] Fault %d: Type=%s, Name=%s", i, f.FaultType, f.Name)
+			tflog.Debug(ctx, fmt.Sprintf("Fault %d: Type=%s, Name=%s", i, f.FaultType, f.Name))
 		}
 	}
 
 	// Log the entire request for debugging
 	reqJSON, err := json.MarshalIndent(req, "", "  ")
 	if err != nil {
-		log.Printf("[WARN] Failed to marshal request to JSON: %v", err)
+		tflog.Warn(ctx, fmt.Sprintf("Failed to marshal request to JSON: %v", err))
 	} else {
-		log.Printf("[DEBUG] Create request: %s", string(reqJSON))
+		tflog.Debug(ctx, fmt.Sprintf("Create request: %s", string(reqJSON)))
 	}
+	tflog.
 
-	// Log the identifiers
-	log.Printf("[DEBUG] Identifiers: %+v", identifiersReq)
+		// Log the identifiers
+		Debug(ctx, fmt.Sprintf("Identifiers: %+v", identifiersReq))
 
 	// Create the condition
 	_, err = client.Create(ctx, identifiersReq, req)
@@ -186,8 +189,7 @@ func resourceChaosSecurityGovernanceConditionRead(ctx context.Context, d *schema
 	if accountID == "" {
 		return diag.Errorf("account ID must be configured in the provider")
 	}
-
-	log.Printf("[DEBUG] Reading security governance condition with ID: %s", d.Id())
+	tflog.Debug(ctx, fmt.Sprintf("Reading security governance condition with ID: %s", d.Id()))
 
 	// Parse the ID to get the condition ID and scope information
 	conditionID := d.Id()
@@ -210,33 +212,30 @@ func resourceChaosSecurityGovernanceConditionRead(ctx context.Context, d *schema
 	if identifiers.ProjectIdentifier != nil {
 		identifiersReq.ProjectIdentifier = *identifiers.ProjectIdentifier
 	}
-
-	log.Printf("[DEBUG] Getting condition with ID: %s, Account: %s, Org: %v, Project: %v",
-		conditionID,
+	tflog.Debug(ctx, fmt.Sprintf("Getting condition with ID: %s, Account: %s, Org: %v, Project: %v", conditionID,
 		identifiersReq.AccountIdentifier,
 		identifiersReq.OrgIdentifier,
-		identifiersReq.ProjectIdentifier)
+		identifiersReq.ProjectIdentifier))
 
 	// Get the condition
 	resp, err := client.Get(ctx, identifiersReq, conditionID)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") || strings.Contains(err.Error(), "no documents in result") {
-			log.Printf("[WARN] Condition %s not found, removing from state: %v", conditionID, err)
+			tflog.Warn(ctx, fmt.Sprintf("Condition %s not found, removing from state: %v", conditionID, err))
 			d.SetId("")
 			return nil
 		}
-		log.Printf("[ERROR] Failed to get condition %s: %v", conditionID, err)
+		tflog.Error(ctx, fmt.Sprintf("Failed to get condition %s: %v", conditionID, err))
 		return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound())
 	}
 
 	// The Get response should be a ConditionResponse
 	if resp == nil || resp.Condition == nil {
-		log.Printf("[WARN] Condition %s not found in response, removing from state", conditionID)
+		tflog.Warn(ctx, fmt.Sprintf("Condition %s not found in response, removing from state", conditionID))
 		d.SetId("")
 		return nil
 	}
-
-	log.Printf("[DEBUG] Successfully retrieved condition: %+v", resp.Condition)
+	tflog.Debug(ctx, fmt.Sprintf("Successfully retrieved condition: %+v", resp.Condition))
 
 	// The actual condition data is in the response
 	condition := resp.Condition
@@ -411,13 +410,14 @@ func resourceChaosSecurityGovernanceConditionUpdate(ctx context.Context, d *sche
 			Faults:   faults,
 		}
 		req.FaultSpec = faultSpecInput
+		tflog.
 
-		// Log the fault spec for debugging
-		log.Printf("[DEBUG] Update - FaultSpecInput: %+v", faultSpecInput)
-		log.Printf("[DEBUG] Update - FaultSpecInput.Operator: %v", faultSpecInput.Operator)
-		log.Printf("[DEBUG] Update - Number of Faults: %d", len(faultSpecInput.Faults))
+			// Log the fault spec for debugging
+			Debug(ctx, fmt.Sprintf("Update - FaultSpecInput: %+v", faultSpecInput))
+		tflog.Debug(ctx, fmt.Sprintf("Update - FaultSpecInput.Operator: %v", faultSpecInput.Operator))
+		tflog.Debug(ctx, fmt.Sprintf("Update - Number of Faults: %d", len(faultSpecInput.Faults)))
 		for i, f := range faultSpecInput.Faults {
-			log.Printf("[DEBUG] Update - Fault %d: Type=%s, Name=%s", i, f.FaultType, f.Name)
+			tflog.Debug(ctx, fmt.Sprintf("Update - Fault %d: Type=%s, Name=%s", i, f.FaultType, f.Name))
 		}
 	} else if existing.Condition.FaultSpec != nil {
 		// If fault_spec hasn't changed, use the existing one
@@ -550,7 +550,7 @@ func resourceChaosSecurityGovernanceConditionUpdate(ctx context.Context, d *sche
 }
 
 func resourceChaosSecurityGovernanceConditionDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	log.Printf("[DEBUG] Deleting security governance condition with ID: %s", d.Id())
+	tflog.Debug(ctx, fmt.Sprintf("Deleting security governance condition with ID: %s", d.Id()))
 
 	c := meta.(*internal.Session).ChaosClient
 	client := chaos.NewSecurityGovernanceConditionClient(c)
@@ -575,25 +575,22 @@ func resourceChaosSecurityGovernanceConditionDelete(ctx context.Context, d *sche
 	if identifiers.ProjectIdentifier != nil {
 		identifiersReq.ProjectIdentifier = *identifiers.ProjectIdentifier
 	}
-
-	log.Printf("[DEBUG] Deleting condition with ID: %s, Account: %s, Org: %v, Project: %v",
-		conditionID,
+	tflog.Debug(ctx, fmt.Sprintf("Deleting condition with ID: %s, Account: %s, Org: %v, Project: %v", conditionID,
 		identifiersReq.AccountIdentifier,
 		identifiersReq.OrgIdentifier,
-		identifiersReq.ProjectIdentifier)
+		identifiersReq.ProjectIdentifier))
 
 	// Delete the condition
 	_, err := client.Delete(ctx, identifiersReq, conditionID)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
-			log.Printf("[DEBUG] Condition %s not found, assuming it's already deleted", conditionID)
+			tflog.Debug(ctx, fmt.Sprintf("Condition %s not found, assuming it's already deleted", conditionID))
 			d.SetId("")
 			return nil
 		}
 		return helpers.HandleDelete(ctx, d, err, nil, helpers.GraphQLNotFound())
 	}
-
-	log.Printf("[DEBUG] Successfully deleted condition with ID: %s", conditionID)
+	tflog.Debug(ctx, fmt.Sprintf("Successfully deleted condition with ID: %s", conditionID))
 	d.SetId("")
 	return nil
 }

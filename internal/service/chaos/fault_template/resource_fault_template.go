@@ -10,6 +10,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"gopkg.in/yaml.v3"
@@ -94,15 +95,14 @@ func resourceFaultTemplateCreate(ctx context.Context, d *schema.ResourceData, me
 	if req.Spec == nil {
 		req.Spec = &chaos.FaulttemplateSpec{}
 	}
-
-	log.Printf("[DEBUG] Creating fault template: %s in hub: %s", req.Identity, hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Creating fault template: %s in hub: %s", req.Identity, hubIdentity))
 
 	// Create fault template
 	resp, httpResp, err := c.FaulttemplateApi.CreateFaultTemplate(ctx, req, accountID, orgID, projectID, hubIdentity, nil)
 	if err != nil {
-		log.Printf("[ERROR] Failed to create fault template: %v", err)
+		tflog.Error(ctx, fmt.Sprintf("Failed to create fault template: %v", err))
 		if httpResp != nil {
-			log.Printf("[ERROR] HTTP Status: %d", httpResp.StatusCode)
+			tflog.Error(ctx, fmt.Sprintf("HTTP Status: %d", httpResp.StatusCode))
 		}
 
 		// WORKAROUND: API returns 500 for duplicate key errors and other issues
@@ -116,7 +116,7 @@ func resourceFaultTemplateCreate(ctx context.Context, d *schema.ResourceData, me
 
 			checkResp, _, checkErr := c.FaulttemplateApi.GetFaultTemplate(ctx, accountID, orgID, projectID, hubIdentity, revision, identity, nil)
 			if checkErr == nil && checkResp.Data != nil {
-				log.Printf("[WARN] Resource already exists despite 500 error (likely duplicate key). Importing existing resource.")
+				tflog.Warn(ctx, "Resource already exists despite 500 error (likely duplicate key). Importing existing resource.")
 				d.SetId(fmt.Sprintf("%s/%s/%s/%s", orgID, projectID, hubIdentity, checkResp.Data.Identity))
 				return resourceFaultTemplateRead(ctx, d, meta)
 			}

@@ -3,13 +3,13 @@ package chaos_hub
 import (
 	"context"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/harness-go-sdk/harness/chaos/graphql/model"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -93,8 +93,7 @@ func resourceChaosHubSyncCreate(ctx context.Context, d *schema.ResourceData, met
 	}
 
 	d.SetId(hubID)
-
-	log.Printf("[DEBUG] Synced Chaos Hub %s with sync ID: %s", hubID, syncID)
+	tflog.Debug(ctx, fmt.Sprintf("Synced Chaos Hub %s with sync ID: %s", hubID, syncID))
 	return resourceChaosHubSyncRead(ctx, d, meta)
 }
 

@@ -2,13 +2,15 @@ package user
 
 import (
 	"context"
-	"log"
 	"strings"
+
+	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/cd/graphql"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/utils"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -90,7 +92,7 @@ func resourceUserCreate(ctx context.Context, d *schema.ResourceData, meta interf
 	if c == nil {
 		return diag.Errorf(utils.CDClientAPIKeyError)
 	}
-	log.Printf("[DEBUG] Creating user %s", d.Get("email").(string))
+	tflog.Debug(ctx, fmt.Sprintf("Creating user %s", d.Get("email").(string)))
 
 	input := &graphql.CreateUserInput{
 		Name:         d.Get("name").(string),
@@ -112,8 +114,7 @@ func resourceUserRead(ctx context.Context, d *schema.ResourceData, meta interfac
 		return diag.Errorf(utils.CDClientAPIKeyError)
 	}
 	email := d.Get("email").(string)
-
-	log.Printf("[DEBUG] Looking for user by email %s", email)
+	tflog.Debug(ctx, fmt.Sprintf("Looking for user by email %s", email))
 
 	user, err := c.UserClient.GetUserByEmail(email)
 	if err != nil {
@@ -146,7 +147,7 @@ func resourceUserUpdate(ctx context.Context, d *schema.ResourceData, meta interf
 	if c == nil {
 		return diag.Errorf(utils.CDClientAPIKeyError)
 	}
-	log.Printf("[DEBUG] Updating user %s", d.Id())
+	tflog.Debug(ctx, fmt.Sprintf("Updating user %s", d.Id()))
 
 	input := &graphql.UpdateUserInput{
 		Name: d.Get("name").(string),

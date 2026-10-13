@@ -10,6 +10,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/chaos/graphql/model"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -71,8 +72,7 @@ func resourceChaosHubImport(ctx context.Context, d *schema.ResourceData, meta in
 	if projectID != "" {
 		identifiers.ProjectIdentifier = projectID
 	}
-
-	log.Printf("[DEBUG] Importing hub with ID: %s, org: %s, project: %s", hubID, orgID, projectID)
+	tflog.Debug(ctx, fmt.Sprintf("Importing hub with ID: %s, org: %s, project: %s", hubID, orgID, projectID))
 
 	// Get the full hub details using the ID
 	hub, err := client.Get(ctx, identifiers, hubID)
@@ -214,13 +214,13 @@ func resourceChaosHubCreate(ctx context.Context, d *schema.ResourceData, meta in
 	}
 
 	d.SetId(hub.ID)
-	log.Printf("[DEBUG] Created Chaos Hub with ID: %s", d.Id())
+	tflog.Debug(ctx, fmt.Sprintf("Created Chaos Hub with ID: %s", d.Id()))
 
 	return resourceChaosHubRead(ctx, d, meta)
 }
 
 func resourceChaosHubRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	log.Printf("[DEBUG] Reading Chaos Hub with ID: %s", d.Id())
+	tflog.Debug(ctx, fmt.Sprintf("Reading Chaos Hub with ID: %s", d.Id()))
 
 	c := meta.(*internal.Session).ChaosClient
 
@@ -244,7 +244,7 @@ func resourceChaosHubRead(ctx context.Context, d *schema.ResourceData, meta inte
 	hub, err := hubClient.Get(ctx, modelIdentifiers, hubID)
 	if err != nil {
 		if strings.Contains(strings.ToLower(err.Error()), "not found") {
-			log.Printf("[WARN] Chaos Hub %s not found, removing from state", d.Id())
+			tflog.Warn(ctx, fmt.Sprintf("Chaos Hub %s not found, removing from state", d.Id()))
 			d.SetId("")
 			return nil
 		}
@@ -280,7 +280,7 @@ func resourceChaosHubRead(ctx context.Context, d *schema.ResourceData, meta inte
 }
 
 func resourceChaosHubUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	log.Printf("[DEBUG] Updating Chaos Hub with ID: %s", d.Id())
+	tflog.Debug(ctx, fmt.Sprintf("Updating Chaos Hub with ID: %s", d.Id()))
 
 	c := meta.(*internal.Session).ChaosClient
 	identifiers := getIdentifiers(d, c.AccountId)
@@ -375,7 +375,7 @@ func resourceChaosHubUpdate(ctx context.Context, d *schema.ResourceData, meta in
 
 	// Update the resource ID if the name has changed
 	if updatedHub.Name != currentHub.Name {
-		log.Printf("[DEBUG] Updating resource ID from %s to %s due to name change", d.Id(), updatedHub.ID)
+		tflog.Debug(ctx, fmt.Sprintf("Updating resource ID from %s to %s due to name change", d.Id(), updatedHub.ID))
 		d.SetId(updatedHub.ID)
 	}
 
@@ -383,18 +383,16 @@ func resourceChaosHubUpdate(ctx context.Context, d *schema.ResourceData, meta in
 }
 
 func resourceChaosHubDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	log.Printf("[DEBUG] Deleting Chaos Hub with ID: %s", d.Id())
+	tflog.Debug(ctx, fmt.Sprintf("Deleting Chaos Hub with ID: %s", d.Id()))
 
 	c := meta.(*internal.Session).ChaosClient
 
 	identifiers := getIdentifiers(d, c.AccountId)
 	hubID := d.Id()
-
-	log.Printf("[DEBUG] Parsed ID - Account: %s, Org: %v, Project: %v, HubID: %s",
-		identifiers.AccountIdentifier,
+	tflog.Debug(ctx, fmt.Sprintf("Parsed ID - Account: %s, Org: %v, Project: %v, HubID: %s", identifiers.AccountIdentifier,
 		identifiers.OrgIdentifier,
 		identifiers.ProjectIdentifier,
-		hubID)
+		hubID))
 
 	hubClient := chaos.NewChaosHubClient(c)
 
@@ -417,7 +415,7 @@ func resourceChaosHubDelete(ctx context.Context, d *schema.ResourceData, meta in
 		// If we get a "not found" error, the resource is already deleted
 		if strings.Contains(strings.ToLower(err.Error()), "not found") ||
 			strings.Contains(strings.ToLower(err.Error()), "no matching documents") {
-			log.Printf("[WARN] Chaos Hub %s not found, removing from state", d.Id())
+			tflog.Warn(ctx, fmt.Sprintf("Chaos Hub %s not found, removing from state", d.Id()))
 			d.SetId("")
 			return nil
 		}
@@ -435,7 +433,7 @@ func resourceChaosHubDelete(ctx context.Context, d *schema.ResourceData, meta in
 		// If we get a "not found" error, the resource might have been deleted out of band
 		if strings.Contains(strings.ToLower(err.Error()), "not found") ||
 			strings.Contains(strings.ToLower(err.Error()), "no matching documents") {
-			log.Printf("[WARN] Chaos Hub %s not found during deletion, removing from state", d.Id())
+			tflog.Warn(ctx, fmt.Sprintf("Chaos Hub %s not found during deletion, removing from state", d.Id()))
 			d.SetId("")
 			return nil
 		}

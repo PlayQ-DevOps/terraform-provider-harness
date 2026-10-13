@@ -2,13 +2,15 @@ package delegatetoken
 
 import (
 	"context"
-	"log"
 	"net/http"
+
+	"fmt"
 
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -133,7 +135,7 @@ func resourceDelegateTokenCreate(ctx context.Context, d *schema.ResourceData, me
 	resp, httpResp, err = c.DelegateTokenResourceApi.CreateDelegateToken(ctx, c.AccountId, delegateToken.Name, opts)
 
 	if err != nil && httpResp != nil {
-		log.Printf("[INFO] Failed to create delegate token %q. This may happen if a token with the same name already exists in the scope or was recently deleted (within the 30-day purge window). Enable Terraform debug logs to view the full API error response.", delegateToken.Name)
+		tflog.Info(ctx, fmt.Sprintf("Failed to create delegate token %q. This may happen if a token with the same name already exists in the scope or was recently deleted (within the 30-day purge window). Enable Terraform debug logs to view the full API error response.", delegateToken.Name))
 		return helpers.HandleWrite(ctx, d, err, httpResp)
 	} else if err != nil {
 		return helpers.HandleWrite(ctx, d, err, httpResp)
