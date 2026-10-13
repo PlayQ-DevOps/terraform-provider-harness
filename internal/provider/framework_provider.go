@@ -8,6 +8,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/utils"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connectors"
 	gitops_agent "github.com/harness/terraform-provider-harness/internal/service/platform/gitops/agent"
 	"github.com/harness/terraform-provider-harness/internal/service/platform/organization"
 	"github.com/harness/terraform-provider-harness/internal/service/platform/project"
@@ -159,18 +160,20 @@ func (p *frameworkProvider) Configure(ctx context.Context, req provider.Configur
 // Resources lists the framework resources. A type name served here must not also be in
 // the SDK v2 ResourcesMap; the mux reports duplicates.
 func (p *frameworkProvider) Resources(_ context.Context) []func() resource.Resource {
-	return []func() resource.Resource{
+	out := []func() resource.Resource{
 		organization.NewOrganizationResource,
 		project.NewProjectResource,
 	}
+	return append(out, connectors.Resources(ConnectorDefinitions())...)
 }
 
 func (p *frameworkProvider) DataSources(_ context.Context) []func() datasource.DataSource {
-	return []func() datasource.DataSource{
+	out := []func() datasource.DataSource{
 		organization.NewOrganizationDataSource,
 		project.NewProjectDataSource,
 		project.NewProjectListDataSource,
 	}
+	return append(out, connectors.DataSources(ConnectorDefinitions())...)
 }
 
 func (p *frameworkProvider) EphemeralResources(_ context.Context) []func() ephemeral.EphemeralResource {

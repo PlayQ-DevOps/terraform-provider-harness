@@ -363,6 +363,15 @@ func readConnectorBitbucket(d *schema.ResourceData, connector *nextgen.Connector
 }
 
 func validateBitbucketApiAuthentication(_ context.Context, d *schema.ResourceDiff, _ interface{}) error {
+	return checkBitbucketApiAuthentication(d)
+}
+
+// checkBitbucketApiAuthentication validates the api_authentication block against its
+// auth_type; it reads the configuration through GetOk so both the SDK v2 CustomizeDiff and
+// the framework definition can run it.
+func checkBitbucketApiAuthentication(d interface {
+	GetOk(string) (interface{}, bool)
+}) error {
 	raw, ok := d.GetOk("api_authentication")
 	if !ok {
 		return nil

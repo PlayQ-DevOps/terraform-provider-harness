@@ -83,7 +83,6 @@ import (
 	"github.com/harness/terraform-provider-harness/internal/service/cd/yamlconfig"
 	cdng_connector_artifactRepositories "github.com/harness/terraform-provider-harness/internal/service/cd_nextgen/connector/artifactRepositories"
 	cdng_connector_cloudProviders "github.com/harness/terraform-provider-harness/internal/service/cd_nextgen/connector/cloudProviders"
-	cdng_connector_codeRepositories "github.com/harness/terraform-provider-harness/internal/service/cd_nextgen/connector/codeRepositories"
 	cdng_environment "github.com/harness/terraform-provider-harness/internal/service/cd_nextgen/environment"
 	cdng_environment_group "github.com/harness/terraform-provider-harness/internal/service/cd_nextgen/environment_group"
 	cdng_environment_service_overrides "github.com/harness/terraform-provider-harness/internal/service/cd_nextgen/environment_service_overrides"
@@ -223,8 +222,6 @@ func Provider(version string) func() *schema.Provider {
 				"harness_platform_connector_anthropic_model":          connector.DatasourceConnectorAnthropicModel(),
 				"harness_platform_connector_awscc":                    connector.DatasourceConnectorAwsCC(),
 				"harness_platform_connector_awskms":                   pl_secretManagers.DatasourceConnectorAwsKms(),
-				"harness_platform_connector_azure_repo":               cdng_connector_codeRepositories.DatasourceConnectorAzureRepo(),
-				"harness_platform_connector_bitbucket":                cdng_connector_codeRepositories.DatasourceConnectorBitbucket(),
 				"harness_platform_connector_customhealthsource":       connector.DatasourceConnectorCustomHealthSource(),
 				"harness_platform_connector_datadog":                  connector.DatasourceConnectorDatadog(),
 				"harness_platform_connector_docker":                   cdng_connector_artifactRepositories.DatasourceConnectorDocker(),
@@ -234,9 +231,6 @@ func Provider(version string) func() *schema.Provider {
 				"harness_platform_connector_gcp_kms":                  pl_secretManagers.DatasourceConnectorGcpKms(),
 				"harness_platform_connector_gcp_secret_manager":       pl_secretManagers.DatasourceConnectorGcpSM(),
 				"harness_platform_gcp_projects":                       connector.DataSourceGcpProjects(),
-				"harness_platform_connector_git":                      cdng_connector_codeRepositories.DatasourceConnectorGit(),
-				"harness_platform_connector_github":                   cdng_connector_codeRepositories.DatasourceConnectorGithub(),
-				"harness_platform_connector_gitlab":                   cdng_connector_codeRepositories.DatasourceConnectorGitlab(),
 				"harness_platform_connector_helm":                     cdng_connector_artifactRepositories.DatasourceConnectorHelm(),
 				"harness_platform_connector_oci_helm":                 cdng_connector_artifactRepositories.DatasourceConnectorOciHelm(),
 				"harness_platform_connector_jira":                     connector.DatasourceConnectorJira(),
@@ -436,8 +430,6 @@ func Provider(version string) func() *schema.Provider {
 				"harness_platform_connector_anthropic_model":             connector.ResourceConnectorAnthropicModel(),
 				"harness_platform_connector_awscc":                       connector.ResourceConnectorAwsCC(),
 				"harness_platform_connector_awskms":                      pl_secretManagers.ResourceConnectorAwsKms(),
-				"harness_platform_connector_azure_repo":                  cdng_connector_codeRepositories.ResourceConnectorAzureRepo(),
-				"harness_platform_connector_bitbucket":                   cdng_connector_codeRepositories.ResourceConnectorBitbucket(),
 				"harness_platform_connector_customhealthsource":          connector.ResourceConnectorCustomHealthSource(),
 				"harness_platform_connector_datadog":                     connector.ResourceConnectorDatadog(),
 				"harness_platform_connector_docker":                      cdng_connector_artifactRepositories.ResourceConnectorDocker(),
@@ -446,9 +438,6 @@ func Provider(version string) func() *schema.Provider {
 				"harness_platform_connector_gcp":                         cdng_connector_cloudProviders.ResourceConnectorGcp(),
 				"harness_platform_connector_gcp_kms":                     pl_secretManagers.ResourceConnectorGcpKms(),
 				"harness_platform_connector_gcp_secret_manager":          pl_secretManagers.ResourceConnectorGCPSecretManager(),
-				"harness_platform_connector_git":                         cdng_connector_codeRepositories.ResourceConnectorGit(),
-				"harness_platform_connector_github":                      cdng_connector_codeRepositories.ResourceConnectorGithub(),
-				"harness_platform_connector_gitlab":                      cdng_connector_codeRepositories.ResourceConnectorGitlab(),
 				"harness_platform_connector_helm":                        cdng_connector_artifactRepositories.ResourceConnectorHelm(),
 				"harness_platform_connector_oci_helm":                    cdng_connector_artifactRepositories.ResourceConnectorOciHelm(),
 				"harness_platform_connector_jira":                        connector.ResourceConnectorJira(),

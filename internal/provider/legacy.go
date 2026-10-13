@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connectors"
 	"github.com/harness/terraform-provider-harness/internal/service/platform/organization"
 	"github.com/harness/terraform-provider-harness/internal/service/platform/project"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -17,5 +18,11 @@ func LegacySDKProvider(version string) *schema.Provider {
 	p.DataSourcesMap["harness_platform_organization"] = organization.LegacyDataSourceOrganization()
 	p.DataSourcesMap["harness_platform_project"] = project.LegacyDataSourceProject()
 	p.DataSourcesMap["harness_platform_project_list"] = project.LegacyDataSourceProjectList()
+	for name, r := range connectors.LegacyResources(ConnectorDefinitions()) {
+		p.ResourcesMap[name] = r
+	}
+	for name, ds := range connectors.LegacyDataSources(ConnectorDefinitions()) {
+		p.DataSourcesMap[name] = ds
+	}
 	return p
 }
