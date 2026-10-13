@@ -14,6 +14,14 @@ import (
 )
 
 func validateAnthropicModelAuthConfig(_ context.Context, d *schema.ResourceDiff, _ interface{}) error {
+	return checkAnthropicModelAuthConfig(d)
+}
+
+// checkAnthropicModelAuthConfig validates the auth block against its auth_type; it reads the configuration
+// through GetOk so both the SDK v2 CustomizeDiff and the framework definition can run it.
+func checkAnthropicModelAuthConfig(d interface {
+	GetOk(string) (interface{}, bool)
+}) error {
 	auth, ok := d.GetOk("auth")
 	if !ok {
 		return nil

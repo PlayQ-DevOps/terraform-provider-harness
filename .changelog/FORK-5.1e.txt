@@ -1,0 +1,3 @@
+```release-note:note
+resource/harness_platform_connector_anthropic_model, appdynamics, awscc, azure_cloud_cost, customhealthsource, datadog, dynatrace, elasticsearch, gcp_cloud_cost, jdbc, jira, kubernetes_cloud_cost, newrelic, openai_model, pagerduty, prometheus, service_now, splunk, sumologic (and their data sources): served by the terraform-plugin-framework half of the provider, with the same state upgrade, identity import and defaults handling as the other migrated connectors. Every `harness_platform_connector_*` resource is now served this way; `data.harness_platform_gcp_projects` stays as it was.
+```

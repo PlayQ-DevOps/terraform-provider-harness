@@ -279,6 +279,14 @@ func readConnectorOpenAIModel(d *schema.ResourceData, connector *nextgen.Connect
 }
 
 func validateOpenAIModelAuthConfig(_ context.Context, d *schema.ResourceDiff, _ interface{}) error {
+	return checkOpenAIModelAuthConfig(d)
+}
+
+// checkOpenAIModelAuthConfig validates the auth block against its auth_type; it reads the configuration
+// through GetOk so both the SDK v2 CustomizeDiff and the framework definition can run it.
+func checkOpenAIModelAuthConfig(d interface {
+	GetOk(string) (interface{}, bool)
+}) error {
 	auth, ok := d.GetOk("auth")
 	if !ok {
 		return nil

@@ -31,6 +31,9 @@ type Definition struct {
 	DataSource func() *sdkschema.Resource
 	// Build fills the type-specific part of a connector from the configuration.
 	Build func(d *sdkschema.ResourceData) *nextgen.ConnectorInfo
+	// BuildErr is Build for a type whose build can fail (an unsupported auth method); used
+	// when Build is nil.
+	BuildErr func(d *sdkschema.ResourceData) (*nextgen.ConnectorInfo, error)
 	// Read writes the type-specific part of a connector into the state.
 	Read func(d *sdkschema.ResourceData, conn *nextgen.ConnectorInfo) error
 	// Validate checks the configuration as a whole (what the SDK v2 resource did in

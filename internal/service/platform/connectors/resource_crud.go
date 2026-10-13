@@ -25,7 +25,16 @@ func (r *connectorResource) write(ctx context.Context, plan, prior tftypes.Value
 		diags.AddError("Preparing the connector failed", err.Error())
 		return
 	}
-	conn := r.def.Build(d)
+	var conn *nextgen.ConnectorInfo
+	if r.def.Build != nil {
+		conn = r.def.Build(d)
+	} else {
+		conn, err = r.def.BuildErr(d)
+		if err != nil {
+			diags.AddError("Invalid connector configuration", err.Error())
+			return
+		}
+	}
 	buildCommon(d, conn)
 	c, ctx := r.session.GetPlatformClientWithContext(ctx)
 	var out nextgen.ResponseDtoConnectorResponse

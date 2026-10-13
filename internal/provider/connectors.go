@@ -4,6 +4,7 @@ import (
 	"github.com/harness/terraform-provider-harness/internal/service/cd_nextgen/connector/artifactRepositories"
 	"github.com/harness/terraform-provider-harness/internal/service/cd_nextgen/connector/cloudProviders"
 	"github.com/harness/terraform-provider-harness/internal/service/cd_nextgen/connector/codeRepositories"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector"
 	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/secretManagers"
 	"github.com/harness/terraform-provider-harness/internal/service/platform/connectors"
 )
@@ -17,5 +18,6 @@ func ConnectorDefinitions() []connectors.Definition {
 	defs = append(defs, cloudProviders.Definitions()...)
 	defs = append(defs, artifactRepositories.Definitions()...)
 	defs = append(defs, secretManagers.Definitions()...)
+	defs = append(defs, connector.Definitions()...)
 	return defs
 }
