@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/antihax/optional"
 	"github.com/google/uuid"
@@ -54,46 +53,8 @@ func ResourceServiceDiscoveryAgent() *schema.Resource {
 	}
 }
 
-var MultiLevelResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		partCount := len(parts)
-
-		// Handle format: org_id/project_id/environment_identifier/infra_identifier
-		if partCount == 4 {
-			d.SetId(parts[3]) // infra_identifier
-			d.Set("org_identifier", parts[0])
-			d.Set("project_identifier", parts[1])
-			d.Set("environment_identifier", parts[2])
-			d.Set("infra_identifier", parts[3])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		// Original handling for other formats
-		isAccountConnector := partCount == 2
-		isOrgConnector := partCount == 3
-
-		if isAccountConnector {
-			d.SetId(parts[1])
-			d.Set("environment_identifier", parts[0])
-			d.Set("infra_identifier", parts[1])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		if isOrgConnector {
-			d.SetId(parts[2])
-			d.Set("org_identifier", parts[0])
-			d.Set("environment_identifier", parts[1])
-			d.Set("infra_identifier", parts[2])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		return nil, fmt.Errorf("invalid import format. Expected one of:\n" +
-			"- <environment_identifier>/<infra_identifier> (account level)\n" +
-			"- <org_id>/<environment_identifier>/<infra_identifier> (org level)\n" +
-			"- <org_id>/<project_id>/<environment_identifier>/<infra_identifier> (project level)")
-	},
-}
+// MultiLevelResourceImporter: [<org_identifier>/[<project_identifier>/]]<environment_identifier>/<infra_identifier>.
+var MultiLevelResourceImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org_identifier", "project_identifier", "environment_identifier", "infra_identifier"}, OptionalPrefix: 2})
 
 // validateAgentInput validates the required fields for agent operations
 func validateAgentInput(d *schema.ResourceData) diag.Diagnostics {

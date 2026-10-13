@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/cd/cac"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -214,18 +215,8 @@ func ResourceInfraDefinition() *schema.Resource {
 				ExactlyOneOf:  infraDetailTypes,
 			},
 		},
-		Importer: &schema.ResourceImporter{
-			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
-				// <app_id>/<env_id>/<id>
-				parts := strings.Split(d.Id(), "/")
-
-				d.Set("app_id", parts[0])
-				d.Set("env_id", parts[1])
-				d.SetId(parts[2])
-
-				return []*schema.ResourceData{d}, nil
-			},
-		},
+		// <app_id>/<env_id>/<id>
+		Importer: helpers.NewImporter(helpers.ImportSpec{Parts: []string{"app_id", "env_id", ""}}),
 	}
 }
 

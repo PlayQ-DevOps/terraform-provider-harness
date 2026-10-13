@@ -20,9 +20,7 @@ func ResourceAMIService() *schema.Resource {
 
 		Schema: commonServiceSchema(),
 
-		Importer: &schema.ResourceImporter{
-			State: serviceStateImporter,
-		},
+		Importer: serviceImporter,
 	}
 }
 

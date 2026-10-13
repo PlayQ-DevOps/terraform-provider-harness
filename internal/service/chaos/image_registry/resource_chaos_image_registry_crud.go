@@ -266,7 +266,10 @@ func resourceChaosImageRegistryImport(ctx context.Context, d *schema.ResourceDat
 //
 // A single segment (account scope) is intentionally rejected.
 func parseImageRegistryImportID(id string) (orgID, projectID, infraID string, err error) {
-	parts := strings.Split(id, "/")
+	parts, err := helpers.SplitImportID(id, 2, 3)
+	if err != nil {
+		return "", "", "", err
+	}
 	switch len(parts) {
 	case 2:
 		return parts[0], parts[1], "", nil

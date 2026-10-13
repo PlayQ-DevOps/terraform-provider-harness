@@ -2,9 +2,9 @@ package environment
 
 import (
 	"context"
-	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/cd/cac"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -80,16 +80,8 @@ func ResourceEnvironment() *schema.Resource {
 			},
 		},
 
-		Importer: &schema.ResourceImporter{
-			State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-				// <app_id>/<env_id>
-				parts := strings.Split(d.Id(), "/")
-				d.Set("app_id", parts[0])
-				d.SetId(parts[1])
-
-				return []*schema.ResourceData{d}, nil
-			},
-		},
+		// <app_id>/<env_id>
+		Importer: helpers.NewImporter(helpers.ImportSpec{Parts: []string{"app_id", ""}}),
 	}
 }
 

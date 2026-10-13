@@ -720,10 +720,9 @@ func catalogEntityScope(orgId optional.String, projectId optional.String) string
 }
 
 func catalogEntityInfoFromImportID(id string) (catalogEntityInfo, error) {
-	parts := strings.Split(id, "/")
-
-	if len(parts) < 2 || len(parts) > 4 {
-		return catalogEntityInfo{}, fmt.Errorf("invalid import ID format: %s. Expected: <kind>/<identifier>, <org>/<kind>/<identifier>, or <org>/<project>/<kind>/<identifier>", id)
+	parts, err := helpers.SplitImportID(id, 2, 4)
+	if err != nil {
+		return catalogEntityInfo{}, fmt.Errorf("invalid import ID format: %w; expected <kind>/<identifier>, <org>/<kind>/<identifier>, or <org>/<project>/<kind>/<identifier>", err)
 	}
 
 	catalogInfo := catalogEntityInfo{
@@ -854,7 +853,7 @@ func buildGitUpdateDetails(d *schema.ResourceData) *idp.GitUpdateDetails {
 }
 
 var entityImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+	StateContext: func(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 		// Expected format: <kind>/<identifier>, <org>/<kind>/<identifier>, or <org>/<project>/<kind>/<identifier>
 		// If account-level: <kind>/<identifier>
 		info, err := catalogEntityInfoFromImportID(d.Id())
@@ -862,7 +861,7 @@ var entityImporter = &schema.ResourceImporter{
 			return nil, err
 		}
 
-		c, ctx := meta.(*internal.Session).GetIDPClientWithContext(context.Background())
+		c, ctx := meta.(*internal.Session).GetIDPClientWithContext(ctx)
 
 		resp, _, err := getCatalogEntity(ctx, c, info)
 		if err != nil {

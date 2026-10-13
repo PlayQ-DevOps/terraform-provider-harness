@@ -22,7 +22,10 @@ func resourceChaosHubImport(ctx context.Context, d *schema.ResourceData, meta in
 	// 2. Org level: "org-id/hub-id"
 	// 3. Project level: "org-id/project-id/hub-id"
 	importID := d.Id()
-	parts := strings.Split(importID, "/")
+	parts, err := helpers.SplitImportID(importID, 1, 3)
+	if err != nil {
+		return nil, err
+	}
 
 	var hubID, orgID, projectID string
 

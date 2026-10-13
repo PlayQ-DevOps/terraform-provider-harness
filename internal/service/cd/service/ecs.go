@@ -18,9 +18,7 @@ func ResourceECSService() *schema.Resource {
 		UpdateContext: resourceECSServiceCreateOrUpdate,
 		DeleteContext: resourceServiceDelete,
 		Schema:        commonServiceSchema(),
-		Importer: &schema.ResourceImporter{
-			State: serviceStateImporter,
-		},
+		Importer:      serviceImporter,
 	}
 }
 

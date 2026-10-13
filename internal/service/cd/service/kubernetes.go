@@ -29,9 +29,7 @@ func ResourceKubernetesService() *schema.Resource {
 		UpdateContext: resourceKubernetesServiceCreateOrUpdate,
 		DeleteContext: resourceServiceDelete,
 		Schema:        k8sSchema,
-		Importer: &schema.ResourceImporter{
-			State: serviceStateImporter,
-		},
+		Importer:      serviceImporter,
 	}
 }
 

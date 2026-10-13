@@ -3,7 +3,6 @@ package lifecycle
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/har"
 	"github.com/harness/terraform-provider-harness/helpers"
@@ -95,15 +94,10 @@ func resourceLifecycleRuleDelete(ctx context.Context, d *schema.ResourceData, me
 }
 
 func resourceLifecycleRuleImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	id := d.Id()
-	if id == "" {
-		return nil, fmt.Errorf("import ID cannot be empty")
-	}
-
 	// Format: accountId/ruleId or accountId/orgId/ruleId or accountId/orgId/projectId/ruleId
-	parts := strings.Split(id, "/")
-	if len(parts) < 2 {
-		return nil, fmt.Errorf("invalid import ID format. Expected: accountId/ruleId or accountId/orgId/ruleId or accountId/orgId/projectId/ruleId")
+	parts, err := helpers.SplitImportID(d.Id(), 2, 4)
+	if err != nil {
+		return nil, fmt.Errorf("%w; expected accountId/ruleId, accountId/orgId/ruleId or accountId/orgId/projectId/ruleId", err)
 	}
 
 	ruleId := parts[len(parts)-1]
@@ -119,11 +113,6 @@ func resourceLifecycleRuleImport(ctx context.Context, d *schema.ResourceData, me
 	case 4:
 		d.Set("org_id", parts[1])
 		d.Set("project_id", parts[2])
-	}
-
-	diags := resourceLifecycleRuleRead(ctx, d, meta)
-	if diags.HasError() {
-		return nil, fmt.Errorf("failed to read lifecycle rule '%s': %v", ruleId, diags)
 	}
 
 	return []*schema.ResourceData{d}, nil

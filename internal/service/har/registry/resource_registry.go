@@ -330,9 +330,9 @@ func resourceRegistryImport(ctx context.Context, d *schema.ResourceData, meta in
 		return nil, fmt.Errorf("import ID cannot be empty")
 	}
 
-	parts := strings.Split(id, "/")
-	if len(parts) < 2 {
-		return nil, fmt.Errorf("invalid import ID format. Expected: accountId/registry-name or accountId/orgId/projectId/registry-name")
+	parts, err := helpers.SplitImportID(id, 2, 4)
+	if err != nil {
+		return nil, fmt.Errorf("%w; expected accountId/registry-name, accountId/orgId/registry-name or accountId/orgId/projectId/registry-name", err)
 	}
 
 	for i, part := range parts {
@@ -348,11 +348,6 @@ func resourceRegistryImport(ctx context.Context, d *schema.ResourceData, meta in
 	d.Set("space_ref", spaceRef)
 	d.Set("parent_ref", spaceRef)
 	d.SetId(identifier)
-
-	diags := resourceRegistryRead(ctx, d, meta)
-	if diags.HasError() {
-		return nil, fmt.Errorf("failed to read registry '%s' at '%s': %v", identifier, spaceRef, diags)
-	}
 
 	return []*schema.ResourceData{d}, nil
 }

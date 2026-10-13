@@ -29,9 +29,7 @@ func ResourceWinRMService() *schema.Resource {
 		UpdateContext: resourceWinRMServiceCreateOrUpdate,
 		DeleteContext: resourceServiceDelete,
 		Schema:        sshSchema,
-		Importer: &schema.ResourceImporter{
-			State: serviceStateImporter,
-		},
+		Importer:      serviceImporter,
 	}
 }
 

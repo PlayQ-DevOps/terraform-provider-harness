@@ -223,20 +223,15 @@ func resourceInfraProviderVersionFileDelete(ctx context.Context, d *schema.Resou
 }
 
 func resourceInfraProviderVersionFileImport(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
-	parts := strings.Split(d.Id(), "/")
-	if len(parts) != 3 {
-		return nil, fmt.Errorf("invalid import ID format, expected: provider_id/version/filename")
+	parts, err := helpers.SplitImportID(d.Id(), 3, 3)
+	if err != nil {
+		return nil, fmt.Errorf("%w; expected provider_id/version/filename", err)
 	}
 
 	d.Set("provider_id", parts[0])
 	d.Set("version", parts[1])
 	d.Set("filename", parts[2])
 	d.SetId(d.Id())
-
-	diags := resourceInfraProviderVersionFileRead(ctx, d, m)
-	if diags.HasError() {
-		return nil, fmt.Errorf("failed to read provider version file: %v", diags)
-	}
 
 	return []*schema.ResourceData{d}, nil
 }

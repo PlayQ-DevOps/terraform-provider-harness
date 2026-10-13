@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/cd/graphql"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -30,12 +31,7 @@ func ResourceUserGroupPermissions() *schema.Resource {
 			"app_permissions":     getUserGroupAppPermissionsSchema(),
 		},
 
-		Importer: &schema.ResourceImporter{
-			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
-				d.Set("user_group_id", d.Id())
-				return []*schema.ResourceData{d}, nil
-			},
-		},
+		Importer: helpers.NewImporter(helpers.ImportSpec{Parts: []string{"user_group_id"}}),
 	}
 }
 

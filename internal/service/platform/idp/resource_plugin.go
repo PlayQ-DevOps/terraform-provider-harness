@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/idp"
 	"github.com/harness/terraform-provider-harness/helpers"
@@ -21,17 +22,11 @@ func ResourcePlugin() *schema.Resource {
 		DeleteContext: resourcePluginDelete,
 		Importer: &schema.ResourceImporter{
 			StateContext: func(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-				d.Set("identifier", d.Id())
-				c, ctx := meta.(*internal.Session).GetIDPClientWithContext(ctx)
-				resp, err := c.PluginAppConfigApi.GetPluginInfo(ctx, d.Id())
-				if err != nil {
-					return nil, fmt.Errorf("failed to read plugin for import: %w", err)
+				if strings.TrimSpace(d.Id()) == "" {
+					return nil, fmt.Errorf("import ID is empty; expected <identifier>")
 				}
-				if resp.Plugin == nil {
-					return nil, fmt.Errorf("plugin %s not found", d.Id())
-				}
-				if err := readPluginState(d, resp); err != nil {
-					return nil, fmt.Errorf("failed to read plugin state for import: %w", err)
+				if err := d.Set("identifier", d.Id()); err != nil {
+					return nil, err
 				}
 				return []*schema.ResourceData{d}, nil
 			},

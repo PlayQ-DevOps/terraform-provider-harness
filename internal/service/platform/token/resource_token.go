@@ -2,9 +2,7 @@ package token
 
 import (
 	"context"
-	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
@@ -278,45 +276,5 @@ func readToken(d *schema.ResourceData, token *nextgen.Token) {
 	d.Set("encodedPassword", token.EncodedPassword)
 }
 
-var MultiLevelResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-
-		partCount := len(parts)
-		isAccountToken := partCount == 4
-		isOrgToken := partCount == 5
-		isProjectToken := partCount == 6
-
-		if isAccountToken {
-			d.SetId(parts[3])
-			d.Set("parent_id", parts[0])
-			d.Set("apikey_id", parts[1])
-			d.Set("apikey_type", parts[2])
-			d.Set("identifier", parts[3])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		if isOrgToken {
-			d.SetId(parts[4])
-			d.Set("org_id", parts[0])
-			d.Set("parent_id", parts[1])
-			d.Set("apikey_id", parts[2])
-			d.Set("apikey_type", parts[3])
-			d.Set("identifier", parts[4])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		if isProjectToken {
-			d.SetId(parts[5])
-			d.Set("project_id", parts[1])
-			d.Set("org_id", parts[0])
-			d.Set("parent_id", parts[2])
-			d.Set("apikey_id", parts[3])
-			d.Set("apikey_type", parts[4])
-			d.Set("identifier", parts[5])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		return nil, fmt.Errorf("invalid identifier: %s", d.Id())
-	},
-}
+// MultiLevelResourceImporter: [<org_id>/[<project_id>/]]<parent_id>/<apikey_id>/<apikey_type>/<identifier>.
+var MultiLevelResourceImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org_id", "project_id", "parent_id", "apikey_id", "apikey_type", "identifier"}, OptionalPrefix: 2})

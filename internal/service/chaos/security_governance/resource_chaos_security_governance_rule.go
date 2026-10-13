@@ -614,7 +614,10 @@ func resourceChaosSecurityGovernanceRuleImport(ctx context.Context, d *schema.Re
 	// 2. Org level: "org_id/rule_id"
 	// 3. Project level: "org_id/project_id/rule_id"
 	importID := d.Id()
-	parts := strings.Split(importID, "/")
+	parts, err := helpers.SplitImportID(importID, 1, 3)
+	if err != nil {
+		return nil, err
+	}
 
 	var ruleID, orgID, projectID string
 

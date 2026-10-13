@@ -2,23 +2,16 @@ package service
 
 import (
 	"context"
-	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/cd/cac"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func serviceStateImporter(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
-	// <app_id>/<svc_id>
-	parts := strings.Split(d.Id(), "/")
-
-	d.Set("app_id", parts[0])
-	d.SetId(parts[1])
-
-	return []*schema.ResourceData{d}, nil
-}
+// serviceImporter: <app_id>/<svc_id>.
+var serviceImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"app_id", ""}})
 
 func resourceServiceDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c := meta.(*internal.Session)

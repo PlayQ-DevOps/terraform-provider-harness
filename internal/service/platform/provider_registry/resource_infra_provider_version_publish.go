@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -105,19 +104,14 @@ func resourceInfraProviderVersionPublishDelete(ctx context.Context, d *schema.Re
 }
 
 func resourceInfraProviderVersionPublishImport(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
-	parts := strings.Split(d.Id(), "/")
-	if len(parts) != 2 {
-		return nil, fmt.Errorf("invalid import ID format, expected: provider_id/version")
+	parts, err := helpers.SplitImportID(d.Id(), 2, 2)
+	if err != nil {
+		return nil, fmt.Errorf("%w; expected provider_id/version", err)
 	}
 
 	d.Set("provider_id", parts[0])
 	d.Set("version", parts[1])
 	d.SetId(d.Id())
-
-	diags := resourceInfraProviderVersionPublishRead(ctx, d, m)
-	if diags.HasError() {
-		return nil, fmt.Errorf("failed to read published provider version: %v", diags)
-	}
 
 	return []*schema.ResourceData{d}, nil
 }

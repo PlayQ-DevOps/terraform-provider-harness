@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/idp"
@@ -197,19 +196,18 @@ func readEnvironmentBlueprint(d *schema.ResourceData, entityVersion idp.EntityVe
 }
 
 var blueprintImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+	StateContext: func(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 		// Expected format: <identifier>/<version>
 		id := d.Id()
-		parts := strings.Split(id, "/")
-
-		if len(parts) != 2 {
-			return nil, fmt.Errorf("invalid import ID format: %s. Expected: <identifier>/<version>", id)
+		parts, err := helpers.SplitImportID(id, 2, 2)
+		if err != nil {
+			return nil, fmt.Errorf("%w; expected <identifier>/<version>", err)
 		}
 
 		identifier := parts[0]
 		version := parts[1]
 
-		c, ctx := meta.(*internal.Session).GetIDPClientWithContext(context.Background())
+		c, ctx := meta.(*internal.Session).GetIDPClientWithContext(ctx)
 
 		resp, _, err := c.EntitiesApi.GetEntityVersion(ctx, "account", environmentBlueprintKind, identifier, version, &idp.EntitiesApiGetEntityVersionOpts{
 			HarnessAccount: optional.NewString(c.AccountId),

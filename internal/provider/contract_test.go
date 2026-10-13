@@ -2,6 +2,7 @@ package provider_test
 
 import (
 	"bytes"
+	"context"
 	"flag"
 	"fmt"
 	"go/format"
@@ -9,9 +10,11 @@ import (
 	"path/filepath"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 	"testing"
 
+	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -56,11 +59,15 @@ const (
 	checkOptionalComputed = "C9_optional_computed_count"
 	// C12 (count ratchet): attributes without a Description per type may only decrease.
 	checkMissingDescription = "C12_missing_description_count"
+	// C10: an importer given a malformed ID returns an error; it never panics (index out of
+	// range on a short ID crashes the plugin during terraform import).
+	checkImporterPanics = "C10_importer_panics_on_malformed_id"
 )
 
 var (
-	identityAttrs = []string{"identifier", "org_id", "project_id"}
-	intentFlags   = map[string]bool{
+	identityAttrs      = []string{"identifier", "org_id", "project_id"}
+	malformedImportIDs = []string{"", "/", "a//b", "a/b/c/d/e/f/g/h"}
+	intentFlags        = map[string]bool{
 		"force_delete": true, "force_update": true, "upsert": true, "validate": true,
 		"template_applied": true, "import_from_git": true, "is_force_import": true,
 	}
@@ -152,6 +159,13 @@ func checkResource(t *testing.T, rep *contractReport, name string, r *schema.Res
 		rep.add(checkImporterMissing, name)
 	} else if r.Importer.StateContext == nil && r.Importer.State != nil {
 		rep.add(checkImporterDeprecated, name)
+	}
+	if r.Importer != nil {
+		for _, id := range malformedImportIDs {
+			if importerPanics(t, r, id) {
+				rep.add(checkImporterPanics, name+":"+strconv.Quote(id))
+			}
+		}
 	}
 	for _, attr := range identityAttrs {
 		if s, ok := r.Schema[attr]; ok && (s.Required || s.Optional) && !s.ForceNew {
@@ -372,4 +386,25 @@ func writeContractBaseline(t *testing.T, rep *contractReport) {
 	if err := os.WriteFile("contract_baseline_test.go", src, 0o644); err != nil {
 		t.Fatalf("write contract_baseline_test.go: %v", err)
 	}
+}
+
+// importerPanics runs the importer on id with an empty session and reports a panic. Importers
+// that need the API with a real session are expected to fail cleanly with the empty one; a
+// panic here is a panic during `terraform import` for users.
+func importerPanics(t *testing.T, r *schema.Resource, id string) (panicked bool) {
+	t.Helper()
+	defer func() {
+		if rec := recover(); rec != nil {
+			panicked = true
+		}
+	}()
+	d := schema.TestResourceDataRaw(t, r.Schema, map[string]interface{}{})
+	d.SetId(id)
+	switch {
+	case r.Importer.StateContext != nil:
+		_, _ = r.Importer.StateContext(context.Background(), d, &internal.Session{})
+	case r.Importer.State != nil:
+		_, _ = r.Importer.State(d, &internal.Session{})
+	}
+	return false
 }

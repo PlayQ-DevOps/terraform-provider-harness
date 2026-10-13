@@ -116,7 +116,12 @@ func (s ImportSpec) names(count int) []string {
 	n := len(s.Parts)
 	switch {
 	case s.OptionalPrefix > 0:
-		return s.Parts[n-count:]
+		// Omitted leading parts are the innermost scopes: "<id>", "<org>/<id>", "<org>/<project>/<id>".
+		mandatory := n - s.OptionalPrefix
+		present := count - mandatory
+		names := make([]string, 0, count)
+		names = append(names, s.Parts[:present]...)
+		return append(names, s.Parts[s.OptionalPrefix:]...)
 	case s.OptionalSuffix > 0:
 		return s.Parts[:count]
 	default:

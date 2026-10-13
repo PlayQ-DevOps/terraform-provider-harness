@@ -29,9 +29,7 @@ func ResourceSSHService() *schema.Resource {
 		UpdateContext: resourceSSHServiceCreateOrUpdate,
 		DeleteContext: resourceServiceDelete,
 		Schema:        sshSchema,
-		Importer: &schema.ResourceImporter{
-			State: serviceStateImporter,
-		},
+		Importer:      serviceImporter,
 	}
 }
 

@@ -266,14 +266,13 @@ func updateEnvironment(ctx context.Context, d *schema.ResourceData, meta interfa
 }
 
 var environmentImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+	StateContext: func(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 		// Expected format: <scope>/<identifier>
 		// Scope examples: "org.project"
 		id := d.Id()
-		parts := strings.Split(id, "/")
-
-		if len(parts) != 2 {
-			return nil, fmt.Errorf("invalid import ID format: %s. Expected: <scope>/<identifier>", id)
+		parts, err := helpers.SplitImportID(id, 2, 2)
+		if err != nil {
+			return nil, fmt.Errorf("%w; expected <scope>/<identifier>", err)
 		}
 
 		scope := parts[0]
@@ -288,7 +287,7 @@ var environmentImporter = &schema.ResourceImporter{
 		orgId = optional.NewString(scopeParts[0])
 		projectId = optional.NewString(scopeParts[1])
 
-		c, ctx := meta.(*internal.Session).GetIDPClientWithContext(context.Background())
+		c, ctx := meta.(*internal.Session).GetIDPClientWithContext(ctx)
 
 		resp, _, err := c.EntitiesApi.GetEntity(ctx, fmt.Sprintf("account.%s", scope), environmentKind, identifier, &idp.EntitiesApiGetEntityOpts{
 			OrgIdentifier:     orgId,

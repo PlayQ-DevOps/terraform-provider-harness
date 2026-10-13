@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/chaos"
@@ -185,7 +184,10 @@ func resourceChaosHubV2Delete(ctx context.Context, d *schema.ResourceData, meta 
 //  2. org_id/hub_identity                          (org scope)
 //  3. org_id/project_id/hub_identity              (project scope)
 func parseChaosHubV2ImportID(id string) (orgID, projectID, hubIdentity string, err error) {
-	parts := strings.Split(id, "/")
+	parts, err := helpers.SplitImportID(id, 1, 3)
+	if err != nil {
+		return "", "", "", err
+	}
 	switch len(parts) {
 	case 1:
 		hubIdentity = parts[0]
@@ -205,12 +207,11 @@ func parseChaosHubV2ImportID(id string) (orgID, projectID, hubIdentity string, e
 
 // resourceChaosHubV2Import handles the import of a chaos hub resource
 func resourceChaosHubV2Import(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	c, ctx := meta.(*internal.Session).GetChaosClientWithContext(ctx)
-
 	orgID, projectID, hubIdentity, err := parseChaosHubV2ImportID(d.Id())
 	if err != nil {
 		return nil, err
 	}
+	c, ctx := meta.(*internal.Session).GetChaosClientWithContext(ctx)
 
 	log.Printf("[DEBUG] Importing chaos hub with identity: %s, org: %s, project: %s", hubIdentity, orgID, projectID)
 

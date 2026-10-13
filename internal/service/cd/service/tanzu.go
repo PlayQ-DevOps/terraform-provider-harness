@@ -18,9 +18,7 @@ func ResourcePCFService() *schema.Resource {
 		UpdateContext: resourceTanzuServiceCreateOrUpdate,
 		DeleteContext: resourceServiceDelete,
 		Schema:        commonServiceSchema(),
-		Importer: &schema.ResourceImporter{
-			State: serviceStateImporter,
-		},
+		Importer:      serviceImporter,
 	}
 }
 

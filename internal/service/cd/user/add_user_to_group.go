@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"strings"
 
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -37,15 +37,8 @@ func ResourceAddUserToGroup() *schema.Resource {
 			},
 		},
 
-		Importer: &schema.ResourceImporter{
-			StateContext: func(ctx context.Context, d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
-				// <user_id>/<group_id>
-				parts := strings.Split(d.Id(), "/")
-				d.Set("user_id", parts[0])
-				d.Set("group_id", parts[1])
-				return []*schema.ResourceData{d}, nil
-			},
-		},
+		// <user_id>/<group_id>; the import ID stays the resource ID.
+		Importer: helpers.NewImporter(helpers.ImportSpec{Parts: []string{"user_id", "group_id"}, RawID: true}),
 	}
 }
 

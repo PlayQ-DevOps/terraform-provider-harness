@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -74,18 +74,17 @@ func ResourceIacmWorkspaceTemplate() *schema.Resource {
 // this resource is keyed on. The resource id mirrors what Create sets
 // (<template_id>/<workspace_id>) so imported and created state stay consistent.
 var resourceIacmWorkspaceTemplateImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		if len(parts) != 4 {
-			return nil, fmt.Errorf("invalid import id %q, expected format <org_id>/<project_id>/<template_id>/<workspace_id>", d.Id())
+	StateContext: func(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+		parts, err := helpers.SplitImportID(d.Id(), 4, 4)
+		if err != nil {
+			return nil, fmt.Errorf("%w; expected <org_id>/<project_id>/<template_id>/<workspace_id>", err)
 		}
-
-		d.Set("org_id", parts[0])
-		d.Set("project_id", parts[1])
-		d.Set("template_id", parts[2])
-		d.Set("workspace_id", parts[3])
+		for i, name := range []string{"org_id", "project_id", "template_id", "workspace_id"} {
+			if err := d.Set(name, parts[i]); err != nil {
+				return nil, err
+			}
+		}
 		d.SetId(fmt.Sprintf("%s/%s", parts[2], parts[3]))
-
 		return []*schema.ResourceData{d}, nil
 	},
 }
