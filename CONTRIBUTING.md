@@ -41,7 +41,7 @@ make tools       # installs the pinned Terraform CLI into $(go env GOPATH)/bin v
 | `make test-lifecycle` | the fake-backed lifecycle suites only | a Terraform CLI |
 | `make testacc` | acceptance tests against a live account (`TF_ACC=1`) | `HARNESS_ACCOUNT_ID`, `HARNESS_API_KEY`, `HARNESS_PLATFORM_API_KEY` |
 | `make check` | `fmt-check`, `vet`, `test-contract` | nothing |
-| `make lint` | golangci-lint (CI gates new issues only, `--new-from-rev`) | golangci-lint |
+| `make lint` | golangci-lint over the whole tree; gate a change on new issues only with `golangci-lint run --new-from-rev=main ./...` | golangci-lint |
 
 Acceptance tests use `resource.Test`, which skips when `TF_ACC` is unset, and
 `acctest.ProtoV5ProviderFactories`, which serves the muxed provider. `resource.UnitTest` is
@@ -140,8 +140,8 @@ scaffolds one. Each entry is one or more fenced blocks whose first line is
 ` ```release-note:<type> ` with a type from `scripts/check-changelog.sh` (`breaking-change`,
 `note`, `feature`, `new-resource`, `new-data-source`, `new-guide`, `new-ephemeral-resource`,
 `enhancement`, `bug`). `make changelog-check` validates the entries changed on your branch;
-`make changelog-check BASE=--all` validates every entry. CI runs the check on pull requests unless
-the `no-changelog` label is set.
+`make changelog-check BASE=--all` validates every entry. `NO_CHANGELOG=1` skips the check for a
+change without a user-facing effect.
 
 ## Documentation
 
@@ -157,7 +157,6 @@ and import sections; never edit a page under `docs/resources` or `docs/data-sour
 
 - Commit format: `type: [TICKET]: Description` (`feat`, `fix`, `chore`, `refactor`, `docs`, `test`;
   fork steps use `[FORK-<step>]`).
-- Run `make check` and `make test` before pushing. CI runs build, vet, formatting, lint on new
-  issues, the unit tests on Linux and Windows, the offline suites on Linux, the changelog
-  check and the docs job.
+- Run `make check`, `make test`, `make changelog-check` and the lint gate before pushing; the
+  pull-request CI is being adapted separately and does not run them yet.
 - Never force-push `main`, never commit credentials, never run `make sweep` without confirmation.

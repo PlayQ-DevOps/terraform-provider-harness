@@ -1,10 +1,10 @@
 # golangci-lint v2 configuration.
 #
-# Stage 1 (now): CI gates only issues introduced by a change (only-new-issues), while the
-# pre-existing findings are worked down phase by phase. errcheck deliberately ignores
-# schema.ResourceData.Set for now: ~2,000 call sites ignore its error today and they are
-# addressed by helpers.SetAll in a dedicated step; the AST ratchet in internal/lint keeps
-# that count from growing in the meantime.
+# Stage 1 (now): only the issues introduced by a change are gated (golangci-lint run
+# --new-from-rev=main ./...), while the pre-existing findings are worked down phase by
+# phase. errcheck deliberately ignores schema.ResourceData.Set for now: ~2,000 call sites
+# ignore its error today and they are addressed by helpers.SetAll in a dedicated step; the
+# AST ratchet in internal/lint keeps that count from growing in the meantime.
 version: "2"
 
 run:

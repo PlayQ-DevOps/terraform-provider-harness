@@ -5,10 +5,10 @@
 #   scripts/check-changelog.sh <base-ref>   # entries added/modified since <base-ref>...HEAD
 #   scripts/check-changelog.sh --all        # every entry in .changelog/
 #
-# A change set must add or modify at least one entry unless NO_CHANGELOG=1 (CI sets it
-# when the pull request carries the "no-changelog" label). Every checked entry must start
-# with a ```release-note:<type> fence whose type is one the changelog template renders;
-# any other type is silently dropped from CHANGELOG.md by changelog-build.
+# A change set must add or modify at least one entry unless NO_CHANGELOG=1 (a pull-request
+# check sets it when the pull request carries the "no-changelog" label). Every checked
+# entry must start with a ```release-note:<type> fence whose type is one the changelog
+# template renders; any other type is silently dropped from CHANGELOG.md by changelog-build.
 set -euo pipefail
 
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

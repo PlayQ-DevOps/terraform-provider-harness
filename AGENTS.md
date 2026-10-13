@@ -19,7 +19,7 @@ The provider is served as a **mux of two halves** (`internal/provider/mux.go`): 
 Three tiers, all driven by `go test`:
 
 - **`make test-unit`**: offline unit, contract and lint-ratchet tests (`go test -short ./...`); needs no Terraform CLI and no credentials.
-- **`make test`**: everything offline, including the fake-backed suites that drive real Terraform core against the in-process fake Harness API (`internal/fakeharness`); needs a Terraform CLI (`make tools` installs the pinned version) but no credentials. This is what CI runs.
+- **`make test`**: everything offline, including the fake-backed suites that drive real Terraform core against the in-process fake Harness API (`internal/fakeharness`); needs a Terraform CLI (`make tools` installs the pinned version) but no credentials. This is the gate for pull requests.
 - **`make testacc`**: acceptance tests against a live Harness account (`TF_ACC=1`, requires HARNESS_* environment variables). Acceptance tests use `resource.Test`, which skips when `TF_ACC` is unset, and `acctest.ProtoV5ProviderFactories` (the mux); never use `resource.UnitTest` for tests that reach the real API.
 
 Fake-backed suites (`internal/acctest`):
@@ -50,7 +50,7 @@ Acceptance tests create real resources in Harness. Required environment variable
 - **Format code**: `make fmt`
 - **Check formatting**: `make fmt-check`
 - **Run vet**: `make vet`
-- **Run linter**: `make lint` (golangci-lint; CI gates new issues only)
+- **Run linter**: `make lint` (golangci-lint over the whole tree; the pre-existing findings are being worked down, so gate a change on new issues only with `golangci-lint run --new-from-rev=main ./...`)
 - **Run all checks**: `make check` (fmt-check + vet + contract)
 
 ## Git Workflow
