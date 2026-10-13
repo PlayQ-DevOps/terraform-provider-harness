@@ -78,14 +78,9 @@ func datasourceGitopsAppProjectMappingRead(ctx context.Context, d *schema.Resour
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 	readAppProjectMapping(d, &resp)
 	return nil
 }

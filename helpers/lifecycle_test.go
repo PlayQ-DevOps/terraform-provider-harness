@@ -20,6 +20,15 @@ type bodyErr struct {
 func (e bodyErr) Error() string { return e.msg }
 func (e bodyErr) Body() []byte  { return []byte(e.body) }
 
+func newTestData(t *testing.T, id string) *schema.ResourceData {
+	t.Helper()
+	d := schema.TestResourceDataRaw(t, map[string]*schema.Schema{
+		"name": {Type: schema.TypeString, Optional: true},
+	}, map[string]interface{}{})
+	d.SetId(id)
+	return d
+}
+
 func gitData(t *testing.T) *schema.ResourceData {
 	t.Helper()
 	d := schema.TestResourceDataRaw(t, map[string]*schema.Schema{

@@ -67,7 +67,7 @@ func dataSourceInfraProviderSigningKeyRead(ctx context.Context, d *schema.Resour
 		nil,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleError(ctx, d, err, httpRes)
 	}
 
 	// Find the signing key by ID

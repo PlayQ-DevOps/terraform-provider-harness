@@ -202,7 +202,7 @@ func handleReadUserGroupV1(ctx context.Context, d *schema.ResourceData, meta int
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	emails, emails_present := d.GetOk("user_emails")
@@ -248,7 +248,7 @@ func resourceUserGroupCreateOrUpdate(ctx context.Context, d *schema.ResourceData
 		}
 
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 
 		if resp.Data == nil {
@@ -289,7 +289,7 @@ func resourceUserGroupCreateOrUpdate(ctx context.Context, d *schema.ResourceData
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -314,7 +314,7 @@ func resourceUserGroupDelete(ctx context.Context, d *schema.ResourceData, meta i
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

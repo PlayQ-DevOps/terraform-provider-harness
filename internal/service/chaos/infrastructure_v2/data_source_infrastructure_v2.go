@@ -224,7 +224,7 @@ func dataSourceChaosInfrastructureV2Read(ctx context.Context, d *schema.Resource
 		environmentID,
 	)
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	// Set the ID

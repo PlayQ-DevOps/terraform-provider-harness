@@ -73,7 +73,7 @@ func resourceCloudProviderAzureRead(ctx context.Context, d *schema.ResourceData,
 		return diag.FromErr(err)
 	} else if cp.IsEmpty() {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

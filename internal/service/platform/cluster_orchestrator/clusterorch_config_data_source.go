@@ -295,7 +295,7 @@ func resourceClusterOrchestratorConfigRead(ctx context.Context, d *schema.Resour
 	resp, httpResp, err := c.CloudCostClusterOrchestratorApi.ClusterOrchestratorDetails(ctx, c.AccountId, Identifier)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Response != nil {

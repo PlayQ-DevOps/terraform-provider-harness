@@ -93,13 +93,13 @@ func resourceRuleEnforcementReadDataSource(ctx context.Context, d *schema.Resour
 	resp, httpResp, err := c.RuleEnforcementApi.EnforcementDetails(ctx, c.AccountId, readRuleEnforcementRequest(id))
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if resp.Data != nil {
 		err := readRuleEnforcementResponse(d, resp.Data)
 		if err != nil {
-			return helpers.HandleReadApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 	}
 

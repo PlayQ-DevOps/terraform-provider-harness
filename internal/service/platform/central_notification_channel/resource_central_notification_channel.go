@@ -147,7 +147,7 @@ func resourceCentralNotificationChannelCreate(ctx context.Context, d *schema.Res
 			})
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	d.SetId(resp.Identifier)
 	return readCentralNotificationChannel(accountID, d, resp)
@@ -181,7 +181,7 @@ func resourceCentralNotificationChannelRead(ctx context.Context, d *schema.Resou
 	}
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readCentralNotificationChannel(accountID, d, resp)
@@ -220,7 +220,7 @@ func resourceCentralNotificationChannelUpdate(ctx context.Context, d *schema.Res
 			})
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	d.SetId(resp.Identifier)
 	return readCentralNotificationChannel(accountID, d, resp)
@@ -252,7 +252,7 @@ func resourceCentralNotificationChannelDelete(ctx context.Context, d *schema.Res
 			})
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

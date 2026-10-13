@@ -76,7 +76,7 @@ func resourceEnvironmentBlueprintRead(ctx context.Context, d *schema.ResourceDat
 			httpResp.StatusCode = 404
 		}
 
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readEnvironmentBlueprint(d, resp)
@@ -130,7 +130,7 @@ func resourceEnvironmentBlueprintCreateOrUpdate(ctx context.Context, d *schema.R
 		})
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readEnvironmentBlueprint(d, resp)
@@ -168,14 +168,14 @@ func resourceEnvironmentBlueprintDelete(ctx context.Context, d *schema.ResourceD
 				})
 				if delErr != nil {
 					fmt.Printf("Error deleting parent entity after version deletion: %+v\n", delErr)
-					return helpers.HandleApiError(delErr, d, httpResp)
+					return helpers.HandleDelete(ctx, d, delErr, httpResp)
 				}
 				d.SetId("")
 				return nil
 			}
 		}
 
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

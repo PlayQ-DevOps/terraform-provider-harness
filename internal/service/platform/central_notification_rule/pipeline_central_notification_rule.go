@@ -185,7 +185,7 @@ func resourcePipelineCentralNotificationRuleCreate(ctx context.Context, d *schem
 		})
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	d.SetId(resp.Identifier)
@@ -220,7 +220,7 @@ func resourcePipelineCentralNotificationRuleRead(ctx context.Context, d *schema.
 			})
 	}
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readPipelineCentralNotificationRule(accountID, d, resp)
@@ -262,7 +262,7 @@ func resourcePipelineCentralNotificationRuleUpdate(ctx context.Context, d *schem
 			})
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	return readPipelineCentralNotificationRule(accountID, d, resp)
@@ -295,7 +295,7 @@ func resourcePipelineCentralNotificationRuleDelete(ctx context.Context, d *schem
 			})
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return readPipelineCentralNotificationRule(accountID, d, resp)

@@ -63,7 +63,7 @@ func dataSourceGcpProjectsRead(ctx context.Context, d *schema.ResourceData, meta
 	// Parameters: routingId, accountIdentifier, connectorRef (path), opts (optional query params)
 	resp, httpResp, err := c.GcpProjectsApi.GetGcpProjects(ctx, c.AccountId, c.AccountId, connectorRef, opts)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	// Check if response data is nil

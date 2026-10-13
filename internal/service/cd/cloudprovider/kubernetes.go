@@ -263,7 +263,7 @@ func resourceCloudProviderK8sRead(ctx context.Context, d *schema.ResourceData, m
 	} else if cp.IsEmpty() {
 		log.Printf("[DEBUG] Terraform: Could not find cloud provider %s. Marking as new resource", id)
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

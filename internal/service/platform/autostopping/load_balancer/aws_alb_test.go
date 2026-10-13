@@ -37,7 +37,7 @@ func TestResourceAwsALB(t *testing.T) {
 // the next refresh treats the GET as "not found" (HTTP 404 + ENTITY_NOT_FOUND)
 // and re-plans a create instead of erroring out.
 //
-// Regression test for CCM-32336. The provider's helpers.HandleReadApiError clears
+// Regression test for CCM-32336. The provider's helpers.HandleRead clears
 // state on 404 + ENTITY_NOT_FOUND so terraform plan reports a recreate.
 func TestAccResourceAwsALB_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 	name := fmt.Sprintf("terr-c336alb-%s", randAlnum(5))

@@ -67,7 +67,7 @@ func resourceInfraProviderSigningKeyRead(ctx context.Context, d *schema.Resource
 	c, ctx := m.(*internal.Session).GetPlatformClientWithContext(ctx)
 	id := d.Id()
 	if id == "" {
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -78,7 +78,7 @@ func resourceInfraProviderSigningKeyRead(ctx context.Context, d *schema.Resource
 		nil,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleRead(ctx, d, err, httpRes)
 	}
 
 	// Find the signing key by ID

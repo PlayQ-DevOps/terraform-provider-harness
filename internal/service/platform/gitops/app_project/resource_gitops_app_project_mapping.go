@@ -80,14 +80,9 @@ func resourceGitopsAppProjectMappingCreate(ctx context.Context, d *schema.Resour
 	resp, httpResp, err := c.ProjectMappingsApi.AppProjectMappingServiceCreateV2(ctx, *createAppProjectMappingRequest, agentIdentifier)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 	readAppProjectMapping(d, &resp)
 	return nil
 }
@@ -111,14 +106,9 @@ func resourceGitopsAppProjectMappingRead(ctx context.Context, d *schema.Resource
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 	readAppProjectMapping(d, &resp)
 	return nil
 }
@@ -131,14 +121,9 @@ func resourceGitopsAppProjectMappingUpdate(ctx context.Context, d *schema.Resour
 	resp, httpResp, err := c.ProjectMappingsApi.AppProjectMappingServiceUpdateV2(ctx, *updateAppProjectMappingRequest, agentIdentifier, identifier)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 	readAppProjectMapping(d, &resp)
 	return nil
 }
@@ -155,7 +140,7 @@ func resourceGitopsAppProjectMappingDelete(ctx context.Context, d *schema.Resour
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

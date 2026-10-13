@@ -28,7 +28,7 @@ func dataSourceScorecardCheckRead(ctx context.Context, d *schema.ResourceData, m
 		Custom:         optional.NewBool(true),
 	})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 	if err := readScorecardCheck(d, resp.CheckDetails); err != nil {
 		return diag.Errorf("failed to read IDP scorecard check from data source: %v", err)

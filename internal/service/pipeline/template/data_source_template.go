@@ -164,7 +164,7 @@ func dataTemplateRead(ctx context.Context, d *schema.ResourceData, meta interfac
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	readDataTemplate(d, resp)

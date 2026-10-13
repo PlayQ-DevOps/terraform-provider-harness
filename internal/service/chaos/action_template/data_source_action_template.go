@@ -72,7 +72,7 @@ func dataSourceActionTemplateRead(ctx context.Context, d *schema.ResourceData, m
 			if httpResp != nil && httpResp.StatusCode == 404 {
 				return diag.Errorf("action template with identity '%s' not found in hub '%s'", identityStr, hubIdentity)
 			}
-			return helpers.HandleChaosReadApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 
 		if resp.Data == nil {
@@ -92,7 +92,7 @@ func dataSourceActionTemplateRead(ctx context.Context, d *schema.ResourceData, m
 		opts := &chaos.DefaultApiListActionTemplateOpts{}
 		resp, httpResp, err := c.DefaultApi.ListActionTemplate(ctx, accountID, orgID, projectID, hubIdentity, 0, 100, nameStr, opts)
 		if err != nil {
-			return helpers.HandleChaosReadApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 
 		if httpResp != nil && httpResp.StatusCode != 200 {

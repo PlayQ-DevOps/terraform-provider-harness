@@ -42,6 +42,9 @@ provider "harness" {
 ### Optional
 
 - `account_id` (String) The Harness account id. This can also be set using the `HARNESS_ACCOUNT_ID` environment variable.
-- `api_key` (String) The Harness API key. This can also be set using the `HARNESS_API_KEY` environment variable. For more information to create an API key in FirstGen, see https://docs.harness.io/article/smloyragsm-api-keys#create_an_api_key.
+- `api_key` (String, Sensitive) The Harness API key. This can also be set using the `HARNESS_API_KEY` environment variable. For more information to create an API key in FirstGen, see https://docs.harness.io/article/smloyragsm-api-keys#create_an_api_key.
 - `endpoint` (String) The URL of the Harness API endpoint. The default is `https://app.harness.io/gateway`. This can also be set using the `HARNESS_ENDPOINT` environment variable.
-- `platform_api_key` (String) The API key for the Harness next gen platform. This can also be set using the `HARNESS_PLATFORM_API_KEY` environment variable. For more information to create an API key in NextGen, see https://docs.harness.io/article/tdoad7xrh9-add-and-manage-api-keys.
+- `fme_admin_api_endpoint` (String) The URL of the Harness FME admin API endpoint. When unset, it is derived from the Harness API endpoint. This can also be set using the `FME_ADMIN_API_ENDPOINT` environment variable.
+- `max_retries` (Number) Maximum number of retries for a request that fails with a retryable error: HTTP 429, HTTP 503 with a Retry-After header, and (for idempotent requests only, never for POST/PUT) other 5xx responses, HTTP 408 and network failures. Defaults to `5`. This can also be set using the `HARNESS_MAX_RETRIES` environment variable.
+- `platform_api_key` (String, Sensitive) The API key for the Harness next gen platform. This can also be set using the `HARNESS_PLATFORM_API_KEY` environment variable. For more information to create an API key in NextGen, see https://docs.harness.io/article/tdoad7xrh9-add-and-manage-api-keys.
+- `request_timeout` (Number) Timeout in seconds for a single request attempt to the Harness API. Defaults to `120`. This can also be set using the `HARNESS_REQUEST_TIMEOUT` environment variable.

@@ -2,8 +2,9 @@ package ff_api_key
 
 import (
 	"context"
-	"github.com/harness/terraform-provider-harness/internal/service/platform/feature_flag"
 	"net/http"
+
+	"github.com/harness/terraform-provider-harness/internal/service/platform/feature_flag"
 
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
@@ -102,7 +103,7 @@ func resourceFFApiKeyRead(ctx context.Context, d *schema.ResourceData, meta inte
 
 	id := d.Id()
 	if id == "" {
-		d.MarkNewResource()
+
 		return nil
 	}
 

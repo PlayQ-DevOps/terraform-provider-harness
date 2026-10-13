@@ -112,12 +112,12 @@ func dataSourceDashboardRead(ctx context.Context, d *schema.ResourceData, meta i
 	dashboard = resp.Resource
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if dashboard == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

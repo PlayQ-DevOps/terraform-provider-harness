@@ -71,7 +71,7 @@ func resourceFolderRead(ctx context.Context, d *schema.ResourceData, meta interf
 			d.SetId("")
 			return nil
 		}
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Resource == nil {
@@ -94,7 +94,7 @@ func resourceFolderUpdate(ctx context.Context, d *schema.ResourceData, meta inte
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readFolder(d, resp.Resource)
@@ -112,7 +112,7 @@ func resourceFolderCreate(ctx context.Context, d *schema.ResourceData, meta inte
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readFolder(d, resp.Resource)
@@ -129,7 +129,7 @@ func resourceFolderDelete(ctx context.Context, d *schema.ResourceData, meta inte
 		AccountId: optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

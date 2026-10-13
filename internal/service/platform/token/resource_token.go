@@ -113,7 +113,7 @@ func resourceTokenRead(ctx context.Context, d *schema.ResourceData, meta interfa
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if len(resp.Data.Content) == 0 {
@@ -150,7 +150,7 @@ func resourceTokenCreateOrUpdate(ctx context.Context, d *schema.ResourceData, me
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -177,7 +177,7 @@ func resourceTokenDelete(ctx context.Context, d *schema.ResourceData, meta inter
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

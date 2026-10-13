@@ -150,3 +150,30 @@ func ReadMissing(ctx context.Context, d *schema.ResourceData, what string) diag.
 	d.SetId("")
 	return nil
 }
+
+// MessageContains matches when the message contains any phrase (case-insensitive). Unlike
+// apierr.MessageHasPhrase it accepts any phrase length; it exists so call sites migrated
+// mechanically keep their historical matching until each is narrowed by hand.
+func MessageContains(phrases ...string) apierr.Predicate {
+	return func(c apierr.Classified) bool {
+		msg := strings.ToLower(c.Message)
+		for _, p := range phrases {
+			if p != "" && strings.Contains(msg, strings.ToLower(p)) {
+				return true
+			}
+		}
+		return false
+	}
+}
+
+// GracefulNotFound treats a response with the given status whose message contains one of
+// the phrases as "gone" (chaos APIs answer 500 for some missing objects).
+func GracefulNotFound(status int, phrases ...string) ReadOption {
+	return NotFoundWhen(apierr.And(apierr.StatusIs(status), MessageContains(phrases...)))
+}
+
+// GraphQLNotFound treats a chaos GraphQL error mentioning "not found" as "gone". Prefer a
+// phrase that names the object (for example "hub not found") where the API provides one.
+func GraphQLNotFound() ReadOption {
+	return NotFoundWhen(MessageContains("not found"))
+}

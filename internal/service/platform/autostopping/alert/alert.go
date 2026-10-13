@@ -187,7 +187,7 @@ func alertReadByID(ctx context.Context, d *schema.ResourceData, meta interface{}
 
 	resp, httpResp, err := c.AutoStoppingAlertsApi.GetAlert(ctx, c.AccountId, id, c.AccountId)
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Response == nil {
@@ -209,7 +209,7 @@ func resourceAlertCreate(ctx context.Context, d *schema.ResourceData, meta inter
 
 	createResp, httpResp, err := c.AutoStoppingAlertsApi.CreateAlert(ctx, *req, c.AccountId, c.AccountId)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	d.SetId(createResp.Response)
@@ -226,7 +226,7 @@ func resourceAlertUpdate(ctx context.Context, d *schema.ResourceData, meta inter
 
 	_, httpResp, err := c.AutoStoppingAlertsApi.UpdateAlert(ctx, *updateReq, c.AccountId, c.AccountId)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	return resourceAlertRead(ctx, d, meta)
@@ -238,7 +238,7 @@ func resourceAlertDelete(ctx context.Context, d *schema.ResourceData, meta inter
 	id := d.Id()
 	_, httpResp, err := c.AutoStoppingAlertsApi.DeleteAlert(ctx, c.AccountId, id, c.AccountId)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

@@ -131,7 +131,7 @@ func resourceAnsiblePlaybookRead(ctx context.Context, d *schema.ResourceData, me
 
 	resp, httpResp, err := c.AnsibleApi.AnsibleShowPlaybook(ctx, orgID, projectID, identifier, c.AccountId)
 	if err != nil {
-		return helpers.HandleIacmReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	return readPlaybook(d, &resp)

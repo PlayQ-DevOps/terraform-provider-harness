@@ -74,7 +74,7 @@ func dataSourceProbeTemplateRead(ctx context.Context, d *schema.ResourceData, me
 
 		resp, httpResp, apiErr := c.DefaultApi.GetProbeTemplate(ctx, accountID, orgID, projectID, hubIdentity, identityStr, nil)
 		if apiErr != nil {
-			return helpers.HandleChaosReadApiError(apiErr, d, httpResp)
+			return helpers.HandleError(ctx, d, apiErr, httpResp)
 		}
 
 		if resp.Data == nil {
@@ -93,7 +93,7 @@ func dataSourceProbeTemplateRead(ctx context.Context, d *schema.ResourceData, me
 
 		resp, httpResp, apiErr := c.DefaultApi.ListProbeTemplate(ctx, accountID, orgID, projectID, hubIdentity, 0, 100, nameStr, nil)
 		if apiErr != nil {
-			return helpers.HandleChaosReadApiError(apiErr, d, httpResp)
+			return helpers.HandleError(ctx, d, apiErr, httpResp)
 		}
 
 		if resp.Data == nil || len(resp.Data) == 0 {

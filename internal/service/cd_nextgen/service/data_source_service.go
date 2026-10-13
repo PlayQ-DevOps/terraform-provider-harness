@@ -81,7 +81,7 @@ func dataSourceServiceRead(ctx context.Context, d *schema.ResourceData, meta int
 			LoadFromFallbackBranch: helpers.BuildFieldBool(d, "git_details.0.load_from_fallback_branch"),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 		svc = resp.Data.Service
 	} else if name != "" {
@@ -94,12 +94,12 @@ func dataSourceServiceRead(ctx context.Context, d *schema.ResourceData, meta int
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if svc == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

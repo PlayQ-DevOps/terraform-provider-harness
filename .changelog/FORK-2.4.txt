@@ -1,0 +1,6 @@
+```release-note:bug
+provider: every resource now applies the same lifecycle semantics to API errors: a missing object is removed from state on read (so the next plan recreates it) and is a successful delete, while create and update errors never touch state and explain not-found (missing scope or parent) and conflict (already exists; import it) cases. Previously 35 resources failed `terraform plan` after an out-of-band delete and about 185 failed `terraform destroy` when the object was already gone.
+```
+```release-note:note
+Data sources no longer silently return an empty result when the object is missing on some code paths; a missing object is an error, as for every other data source.
+```

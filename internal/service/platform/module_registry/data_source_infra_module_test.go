@@ -2,10 +2,11 @@ package module_registry_test
 
 import (
 	"fmt"
-	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"strings"
 	"testing"
+
+	"github.com/harness/terraform-provider-harness/internal/acctest"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccDataSourceInfraModule(t *testing.T) {

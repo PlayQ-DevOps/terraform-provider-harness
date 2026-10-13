@@ -4,13 +4,14 @@ import (
 	"context"
 	"net/http"
 
+	"log"
+
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"log"
 )
 
 func ResourceResourceGroup() *schema.Resource {
@@ -156,7 +157,7 @@ func resourceResourceGroupRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -191,7 +192,7 @@ func resourceResourceGroupCreateOrUpdate(ctx context.Context, d *schema.Resource
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readResourceGroup(d, resp.Data.ResourceGroup)
@@ -208,7 +209,7 @@ func resourceResourceGroupDelete(ctx context.Context, d *schema.ResourceData, me
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

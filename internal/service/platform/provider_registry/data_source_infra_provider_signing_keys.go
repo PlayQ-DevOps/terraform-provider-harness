@@ -75,7 +75,7 @@ func dataSourceInfraProviderSigningKeysRead(ctx context.Context, d *schema.Resou
 		nil,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleError(ctx, d, err, httpRes)
 	}
 	readSigningKeysList(d, resp)
 	return nil

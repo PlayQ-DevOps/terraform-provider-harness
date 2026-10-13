@@ -51,7 +51,7 @@ func dataSourceMonitoredServiceRead(ctx context.Context, d *schema.ResourceData,
 	resp, httpResp, err := c.MonitoredServiceApi.GetMonitoredService(ctx, identifier, accountIdentifier, orgIdentifier, projectIdentifier)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	readMonitoredService(d, &resp.Data)

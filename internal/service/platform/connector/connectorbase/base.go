@@ -28,7 +28,7 @@ func Read(ctx context.Context, d *schema.ResourceData, meta interface{}, connTyp
 
 	resp, httpResp, err := c.ConnectorsApi.GetConnector(ctx, c.AccountId, id, readOpts(d))
 	if err != nil {
-		return nil, helpers.HandleReadApiError(err, d, httpResp)
+		return nil, helpers.HandleRead(ctx, d, err, httpResp)
 	}
 	if resp.Data == nil || resp.Data.Connector == nil {
 		return nil, helpers.ReadMissing(ctx, d, "connector "+id)
@@ -54,7 +54,7 @@ func DataRead(ctx context.Context, d *schema.ResourceData, meta interface{}, con
 
 	resp, httpResp, err := c.ConnectorsApi.GetConnector(ctx, c.AccountId, id, readOpts(d))
 	if err != nil {
-		return nil, helpers.HandleApiError(err, d, httpResp)
+		return nil, helpers.HandleRead(ctx, d, err, httpResp)
 	}
 	if resp.Data == nil || resp.Data.Connector == nil {
 		return nil, diag.Errorf("connector %s was not found", id)
@@ -108,7 +108,7 @@ func CreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{
 	}
 
 	if err != nil {
-		return nil, helpers.HandleApiError(err, d, httpResp)
+		return nil, helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil || resp.Data.Connector == nil {
@@ -134,7 +134,7 @@ func Delete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.
 		ForceDelete:       helpers.BuildFieldBool(d, "force_delete")})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

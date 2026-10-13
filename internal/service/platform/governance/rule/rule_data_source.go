@@ -52,7 +52,7 @@ func resourceRuleReadDataSource(ctx context.Context, d *schema.ResourceData, met
 	resp, httpResp, err := c.RuleApi.GetPolicies(ctx, readRuleRequest(id), c.AccountId, nil)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if resp.Data != nil {
@@ -64,7 +64,7 @@ func resourceRuleReadDataSource(ctx context.Context, d *schema.ResourceData, met
 
 		err := readRuleResponse(d, resp.Data)
 		if err != nil {
-			return helpers.HandleReadApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 	}
 

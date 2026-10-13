@@ -356,7 +356,7 @@ func resourceChaosSecurityGovernanceRuleCreate(ctx context.Context, d *schema.Re
 
 	accountID := c.AccountId
 	if accountID == "" {
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("account ID must be configured in the provider"), d, "create_chaos_security_governance_rule")
+		return helpers.HandleWrite(ctx, d, fmt.Errorf("account ID must be configured in the provider"), nil)
 	}
 
 	identifiers := getRuleIdentifiers(d, accountID)
@@ -373,12 +373,12 @@ func resourceChaosSecurityGovernanceRuleCreate(ctx context.Context, d *schema.Re
 
 	resp, err := client.Create(ctx, identifiers, *ruleInput)
 	if err != nil {
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("failed to create security governance rule (account: %s, org: %s, project: %s): %v",
+		return helpers.HandleWrite(ctx, d, fmt.Errorf("failed to create security governance rule (account: %s, org: %s, project: %s): %v",
 			identifiers.AccountIdentifier,
 			identifiers.OrgIdentifier,
 			identifiers.ProjectIdentifier,
 			err,
-		), d, "create_chaos_security_governance_rule")
+		), nil)
 	}
 
 	log.Printf("[DEBUG] Created rule with response: %+v", resp)
@@ -416,7 +416,7 @@ func resourceChaosSecurityGovernanceRuleRead(ctx context.Context, d *schema.Reso
 	ruleID := d.Id()
 	accountID := c.AccountId
 	if accountID == "" {
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("account ID must be configured in the provider"), d, "read_chaos_security_governance_rule")
+		return helpers.HandleRead(ctx, d, fmt.Errorf("account ID must be configured in the provider"), nil, helpers.GraphQLNotFound())
 	}
 	identifiers := getRuleIdentifiers(d, accountID)
 
@@ -432,7 +432,7 @@ func resourceChaosSecurityGovernanceRuleRead(ctx context.Context, d *schema.Reso
 			d.SetId("")
 			return nil
 		}
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("failed to read security governance rule: %v", err), d, "read_chaos_security_governance_rule")
+		return helpers.HandleRead(ctx, d, fmt.Errorf("failed to read security governance rule: %v", err), nil, helpers.GraphQLNotFound())
 	}
 
 	if resp == nil || resp.Rule == nil {
@@ -579,7 +579,7 @@ func resourceChaosSecurityGovernanceRuleUpdate(ctx context.Context, d *schema.Re
 
 	_, err = client.Update(ctx, identifiers, *ruleInput)
 	if err != nil {
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("failed to update security governance rule: %v", err), d, "update_chaos_security_governance_rule")
+		return helpers.HandleWrite(ctx, d, fmt.Errorf("failed to update security governance rule: %v", err), nil)
 	}
 
 	return resourceChaosSecurityGovernanceRuleRead(ctx, d, meta)
@@ -601,7 +601,7 @@ func resourceChaosSecurityGovernanceRuleDelete(ctx context.Context, d *schema.Re
 
 	_, err := client.Delete(ctx, identifiers, ruleID)
 	if err != nil {
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("failed to delete security governance rule: %v", err), d, "delete_chaos_security_governance_rule")
+		return helpers.HandleDelete(ctx, d, fmt.Errorf("failed to delete security governance rule: %v", err), nil, helpers.GraphQLNotFound())
 	}
 
 	d.SetId("")

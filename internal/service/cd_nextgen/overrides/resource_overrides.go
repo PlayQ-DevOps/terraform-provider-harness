@@ -182,14 +182,14 @@ func resourceOverridesRead(ctx context.Context, d *schema.ResourceData, meta int
 
 	resp, httpResp, err := c.OverridesApi.GetOverrides(ctx, identifier, c.AccountId, svcGetParams)
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// GET call for service environment override returns a 200 ok for empty list.
 	// Hence specifically marking the resource as new, instead of in L#91
-	if &resp == nil || resp.Data == nil {
+	if resp.Data == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -224,12 +224,12 @@ func resourceOverridesCreateOrUpdate(ctx context.Context, d *schema.ResourceData
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if (&resp == nil || resp.Data == nil) && !d.Get("import_from_git").(bool) {
+	if resp.Data == nil && !d.Get("import_from_git").(bool) {
 		d.SetId("")
 		d.MarkNewResource()
 		return nil
@@ -253,7 +253,7 @@ func resourceOverridesDelete(ctx context.Context, d *schema.ResourceData, meta i
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

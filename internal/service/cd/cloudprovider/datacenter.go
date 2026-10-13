@@ -41,7 +41,7 @@ func resourceCloudProviderDataCenterRead(ctx context.Context, d *schema.Resource
 		return diag.FromErr(err)
 	} else if cp.IsEmpty() {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

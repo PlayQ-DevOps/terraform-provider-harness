@@ -100,7 +100,7 @@ func dataSourceSettingRead(ctx context.Context, d *schema.ResourceData, meta int
 	// Make the API call
 	resp, httpResp, err := c.SettingApi.GetSetting(ctx, accountID, opts)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	// Set the ID and settings

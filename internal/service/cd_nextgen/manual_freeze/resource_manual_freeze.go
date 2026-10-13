@@ -178,7 +178,7 @@ func resourceManualFreezeRead(ctx context.Context, d *schema.ResourceData, meta 
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -218,7 +218,7 @@ func resourceManualFreezeCreateOrUpdate(ctx context.Context, d *schema.ResourceD
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// The create/update methods don't return the upcoming windows in the response, so we need to query for it again.
@@ -241,7 +241,7 @@ func resourceManualFreezeDelete(ctx context.Context, d *schema.ResourceData, met
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

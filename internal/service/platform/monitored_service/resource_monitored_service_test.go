@@ -2,8 +2,9 @@ package monitored_service_test
 
 import (
 	"fmt"
-	"github.com/antihax/optional"
 	"testing"
+
+	"github.com/antihax/optional"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"

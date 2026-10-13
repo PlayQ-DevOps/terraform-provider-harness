@@ -102,7 +102,7 @@ func dataSourceWorkspacesRead(ctx context.Context, d *schema.ResourceData, meta 
 
 	workspaces, httpResp, err := findWorkspaces(ctx, orgID, projectID, c.AccountId, c.WorkspaceApi, searchTerm, limit)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	var (

@@ -103,13 +103,13 @@ func dataSourceTokenRead(ctx context.Context, d *schema.ResourceData, meta inter
 			Identifiers:       optional.NewInterface(id),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 		tokenList := resp.Data.Content
 
 		if tokenList == nil || len(tokenList) == 0 {
 			d.SetId("")
-			d.MarkNewResource()
+
 			return nil
 		} else {
 			token = tokenList[0].Token

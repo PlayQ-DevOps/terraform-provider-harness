@@ -100,7 +100,7 @@ func resourceEnvironmentRead(ctx context.Context, d *schema.ResourceData, meta i
 		return diag.FromErr(err)
 	} else if env == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

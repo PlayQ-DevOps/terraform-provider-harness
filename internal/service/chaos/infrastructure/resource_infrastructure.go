@@ -99,10 +99,10 @@ func resourceChaosInfrastructureRead(ctx context.Context, d *schema.ResourceData
 	if err != nil {
 		if err.Error() == "404 Not Found" {
 			d.SetId("")
-			d.MarkNewResource()
+
 			return nil
 		}
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 	readChaosInfrastructure(d, resp)
 
@@ -124,7 +124,7 @@ func resourceChaosInfrastructureUpdate(ctx context.Context, d *schema.ResourceDa
 	_, httpRespUpdate, errUpdate := c.ChaosSdkApi.UpdateInfraV2(ctx, *updateInfraRequest, accountIdentifier, orgIdentifier, projectIdentifier, &chaos.ChaosSdkApiUpdateInfraV2Opts{})
 
 	if errUpdate != nil {
-		return helpers.HandleChaosApiError(errUpdate, d, httpRespUpdate)
+		return helpers.HandleWrite(ctx, d, errUpdate, httpRespUpdate)
 	}
 	readInfraUpdate(d, updateInfraRequest.Identity, updateInfraRequest.EnvironmentID)
 	return nil
@@ -185,7 +185,7 @@ func resourceChaosInfrastructureDelete(ctx context.Context, d *schema.ResourceDa
 	_, httpResp, err := c.ChaosSdkApi.DeleteInfraV2(ctx, identifier, environmentID, accountIdentifier, orgIdentifier, projectIdentifier)
 
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -218,7 +218,7 @@ func resourceChaosInfrastructureCreate(ctx context.Context, d *schema.ResourceDa
 
 	resp, httpRespUpdate, errUpdate := c.ChaosSdkApi.RegisterInfraV2(ctx, createInfraRequest, accountIdentifier, orgIdentifier, projectIdentifier, &chaos.ChaosSdkApiRegisterInfraV2Opts{})
 	if errUpdate != nil {
-		return helpers.HandleChaosApiError(errUpdate, d, httpRespUpdate)
+		return helpers.HandleWrite(ctx, d, errUpdate, httpRespUpdate)
 	}
 	readInfraCreate(d, &resp, createInfraRequest.EnvironmentID)
 	defer httpRespUpdate.Body.Close()

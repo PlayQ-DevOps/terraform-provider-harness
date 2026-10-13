@@ -110,7 +110,7 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta i
 	// In case the application was deleted since the state was lst updated.
 	if app == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

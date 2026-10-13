@@ -220,7 +220,7 @@ func dataSourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta 
 		)
 
 		if err != nil {
-			return helpers.HandleChaosReadApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 
 		// Set ID
@@ -249,7 +249,7 @@ func dataSourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta 
 		)
 
 		if err != nil {
-			return helpers.HandleChaosReadApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 
 		if len(resp.Data) == 0 {
@@ -276,7 +276,7 @@ func dataSourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta 
 		)
 
 		if err != nil {
-			return helpers.HandleChaosReadApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 
 		d.SetId(fmt.Sprintf("%s/%s/%s", orgID, projectID, fullExperiment.Identity))

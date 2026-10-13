@@ -116,7 +116,7 @@ func resourceEnvironmentRead(ctx context.Context, d *schema.ResourceData, meta i
 		HarnessAccount:    optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if err := readEnvironment(d, resp); err != nil {
@@ -138,7 +138,7 @@ func resourceEnvironmentUpdateOrCreate(ctx context.Context, d *schema.ResourceDa
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	resourceEnvironmentRead(ctx, d, meta)
@@ -174,7 +174,7 @@ func resourceEnvironmentDelete(ctx context.Context, d *schema.ResourceData, meta
 			return nil
 		}
 
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

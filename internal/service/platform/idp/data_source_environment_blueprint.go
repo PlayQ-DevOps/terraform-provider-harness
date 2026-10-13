@@ -63,7 +63,7 @@ func dataSourceEnvironmentBlueprintRead(ctx context.Context, d *schema.ResourceD
 		HarnessAccount: optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	readEnvironmentBlueprint(d, resp)

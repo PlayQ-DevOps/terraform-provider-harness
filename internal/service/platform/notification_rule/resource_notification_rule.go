@@ -121,7 +121,7 @@ func resourceNotificationRuleCreate(ctx context.Context, d *schema.ResourceData,
 			Body: optional.NewInterface(createNotificationRuleRequest),
 		})
 	if errCreate != nil {
-		return helpers.HandleApiError(errCreate, d, httpRespCreate)
+		return helpers.HandleWrite(ctx, d, errCreate, httpRespCreate)
 	}
 
 	readNotificationRule(d, &respCreate.Resource)
@@ -143,19 +143,14 @@ func resourceNotificationRuleRead(ctx context.Context, d *schema.ResourceData, m
 	if err != nil {
 		if err.Error() == "404 Not Found" || err.Error() == "400 Bad Request" {
 			d.SetId("")
-			d.MarkNewResource()
+
 			return nil
 		}
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 
 	readNotificationRule(d, &resp.Resource)
 	return nil
@@ -184,7 +179,7 @@ func resourceNotificationRuleUpdate(ctx context.Context, d *schema.ResourceData,
 		})
 
 	if errCreate != nil {
-		return helpers.HandleApiError(errCreate, d, httpRespCreate)
+		return helpers.HandleWrite(ctx, d, errCreate, httpRespCreate)
 	}
 
 	readNotificationRule(d, &respCreate.Resource)
@@ -204,7 +199,7 @@ func resourceNotificationRuleDelete(ctx context.Context, d *schema.ResourceData,
 	}
 	_, httpResp, err := c.SrmNotificationApiService.DeleteSrmNotification(ctx, accountIdentifier, orgIdentifier, projectIdentifier, identifier)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

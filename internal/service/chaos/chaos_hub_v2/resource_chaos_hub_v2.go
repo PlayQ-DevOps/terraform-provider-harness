@@ -59,7 +59,7 @@ func resourceChaosHubV2Create(ctx context.Context, d *schema.ResourceData, meta 
 		projectID,
 	)
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Set the ID to the hub identity
@@ -91,10 +91,11 @@ func resourceChaosHubV2Read(ctx context.Context, d *schema.ResourceData, meta in
 	if err != nil {
 		// Use graceful destroy handling for hub read errors
 		// This handles 404 and certain 500 errors (resource not found/inconsistent state)
-		return helpers.HandleChaosReadApiErrorWithGracefulDestroy(err, d, httpResp, []string{
+		return helpers.HandleRead(ctx, d, err, httpResp, helpers.GracefulNotFound(500, []string{
 			"hub not found",
 			"no matching hub",
-		})
+		}...),
+		)
 	}
 
 	// Set the resource data
@@ -128,7 +129,7 @@ func resourceChaosHubV2Update(ctx context.Context, d *schema.ResourceData, meta 
 		hubIdentity,
 	)
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	log.Printf("[DEBUG] Updated chaos hub with identity: %s", hub.Identity)
@@ -158,10 +159,11 @@ func resourceChaosHubV2Delete(ctx context.Context, d *schema.ResourceData, meta 
 	if err != nil {
 		// Handle graceful errors during delete (API constraints)
 		// Only handle "at least one hub required" - template errors should fail properly
-		diags := helpers.HandleChaosReadApiErrorWithGracefulDestroy(err, d, httpResp, []string{
+		diags := helpers.HandleDelete(ctx, d, err, httpResp, helpers.GracefulNotFound(500, []string{
 			"at least one hub is required",
 			"at least one hub required",
-		})
+		}...),
+		)
 		// If the helper cleared the state (SetId("")), we're done
 		if d.Id() == "" {
 			log.Printf("[DEBUG] Hub delete handled gracefully (API constraint): %s", hubIdentity)

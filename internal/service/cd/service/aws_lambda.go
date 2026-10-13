@@ -35,7 +35,7 @@ func resourceAWSLambdaServiceRead(ctx context.Context, d *schema.ResourceData, m
 		return diag.FromErr(err)
 	} else if svc == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

@@ -54,7 +54,7 @@ func resourceClusterOrchestratorRead(ctx context.Context, d *schema.ResourceData
 			clearClusterOrchestratorFromState(d)
 			return nil
 		}
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Response == nil {

@@ -127,12 +127,12 @@ func resourceUserRead(ctx context.Context, d *schema.ResourceData, meta interfac
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if &resp == nil || resp.Data == nil || resp.Data.Empty || len(resp.Data.Content) == 0 {
+	if resp.Data == nil || resp.Data.Empty || len(resp.Data.Content) == 0 {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -178,7 +178,7 @@ func resourceUserCreateOrUpdate(ctx context.Context, d *schema.ResourceData, met
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if addUsersResp.Data != nil {
@@ -202,10 +202,10 @@ func resourceUserCreateOrUpdate(ctx context.Context, d *schema.ResourceData, met
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
-	if &resp == nil || resp.Data == nil || resp.Data.Empty || len(resp.Data.Content) == 0 {
+	if resp.Data == nil || resp.Data.Empty || len(resp.Data.Content) == 0 {
 		return diag.Errorf("no user found with email %s", email)
 	}
 
@@ -242,7 +242,7 @@ func resourceUserDelete(ctx context.Context, d *schema.ResourceData, meta interf
 	_, httpResp, err := c.UserApi.RemoveUser(ctx, uuid, c.AccountId, removeUserOpts)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

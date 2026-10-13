@@ -95,12 +95,12 @@ func resourceCCMFiltersRead(ctx context.Context, d *schema.ResourceData, meta in
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -126,7 +126,7 @@ func resourceCCMFiltersCreateOrUpdate(ctx context.Context, d *schema.ResourceDat
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readCCMFilter(d, resp.Data)
@@ -145,7 +145,7 @@ func resourceCCMFiltersDelete(ctx context.Context, d *schema.ResourceData, meta 
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

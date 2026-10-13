@@ -125,7 +125,7 @@ func resourceApplicationGitSyncRead(ctx context.Context, d *schema.ResourceData,
 
 	if app == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

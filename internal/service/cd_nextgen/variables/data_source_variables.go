@@ -102,7 +102,7 @@ func dataSourceVariablesRead(ctx context.Context, d *schema.ResourceData, meta i
 			"id":    id,
 			"error": err.Error(),
 		})
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if variable == nil {

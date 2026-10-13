@@ -60,7 +60,7 @@ func resourceClusterOrchestratorCreate(ctx context.Context, d *schema.ResourceDa
 	resp, httpResp, err = c.CloudCostClusterOrchestratorApi.CreateClusterOrchestrator(ctx, c.AccountId, body)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Response != nil {
@@ -82,7 +82,7 @@ func resourceClusterOrchestratorDelete(ctx context.Context, d *schema.ResourceDa
 			d.SetId("")
 			return nil
 		}
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

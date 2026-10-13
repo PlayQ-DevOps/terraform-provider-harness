@@ -49,7 +49,7 @@ func resourceRepoRead(ctx context.Context, d *schema.ResourceData, meta interfac
 		},
 	)
 	if err != nil {
-		return helpers.HandleCodeReadApiError(err, d, resp)
+		return helpers.HandleRead(ctx, d, err, resp)
 	}
 
 	readRepo(d, &repo, orgID.Value(), projectID.Value())
@@ -118,7 +118,7 @@ func resourceRepoCreateOrUpdate(
 		)
 	}
 	if err != nil {
-		return helpers.HandleCodeApiError(err, d, resp)
+		return helpers.HandleWrite(ctx, d, err, resp)
 	}
 
 	// If import is in progress, wait for it to complete
@@ -151,7 +151,7 @@ func resourceRepoDelete(
 		},
 	)
 	if err != nil {
-		return helpers.HandleCodeApiError(err, d, resp)
+		return helpers.HandleDelete(ctx, d, err, resp)
 	}
 
 	return nil

@@ -97,7 +97,7 @@ func resourceTemplateFiltersRead(ctx context.Context, d *schema.ResourceData, me
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readTemplateFilter(d, resp.Data)
@@ -122,7 +122,7 @@ func resourceTemplateFiltersCreateOrUpdate(ctx context.Context, d *schema.Resour
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readTemplateFilter(d, resp.Data)
@@ -141,7 +141,7 @@ func resourceTemplateFiltersDelete(ctx context.Context, d *schema.ResourceData, 
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

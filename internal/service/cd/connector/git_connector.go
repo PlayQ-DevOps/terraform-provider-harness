@@ -137,7 +137,7 @@ func resourceGitConnectorRead(ctx context.Context, d *schema.ResourceData, meta 
 		return diag.FromErr(err)
 	} else if conn == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

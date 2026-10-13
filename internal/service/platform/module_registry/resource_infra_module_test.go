@@ -2,12 +2,13 @@ package module_registry_test
 
 import (
 	"fmt"
+	"strings"
+	"testing"
+
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
-	"strings"
-	"testing"
 )
 
 func TestAccResourceModule(t *testing.T) {

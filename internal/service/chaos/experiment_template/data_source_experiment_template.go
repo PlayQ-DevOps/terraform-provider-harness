@@ -497,7 +497,7 @@ func dataSourceExperimentTemplateRead(ctx context.Context, d *schema.ResourceDat
 
 		resp, httpResp, apiErr := c.ExperimenttemplateApi.GetExperimentTemplate(ctx, accountID, identity.(string), opts)
 		if apiErr != nil {
-			return helpers.HandleChaosReadApiError(apiErr, d, httpResp)
+			return helpers.HandleError(ctx, d, apiErr, httpResp)
 		}
 		template = &resp
 	} else if name, ok := d.GetOk("name"); ok {
@@ -511,7 +511,7 @@ func dataSourceExperimentTemplateRead(ctx context.Context, d *schema.ResourceDat
 
 		listResp, httpResp, apiErr := c.ExperimenttemplateApi.ListExperimentTemplate(ctx, accountID, opts)
 		if apiErr != nil {
-			return helpers.HandleChaosReadApiError(apiErr, d, httpResp)
+			return helpers.HandleError(ctx, d, apiErr, httpResp)
 		}
 
 		// Find template by name
@@ -535,7 +535,7 @@ func dataSourceExperimentTemplateRead(ctx context.Context, d *schema.ResourceDat
 
 		resp, httpResp, apiErr := c.ExperimenttemplateApi.GetExperimentTemplate(ctx, accountID, found.Identity, opts2)
 		if apiErr != nil {
-			return helpers.HandleChaosReadApiError(apiErr, d, httpResp)
+			return helpers.HandleError(ctx, d, apiErr, httpResp)
 		}
 		template = &resp
 	} else {

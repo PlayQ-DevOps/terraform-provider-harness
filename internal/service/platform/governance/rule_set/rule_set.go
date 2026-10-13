@@ -63,7 +63,7 @@ func resourceRuleSetRead(ctx context.Context, d *schema.ResourceData, meta inter
 	resp, httpResp, err := c.RuleSetsApi.ListRuleSets(ctx, readRuleSetRequest(id), c.AccountId)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data != nil {
@@ -75,7 +75,7 @@ func resourceRuleSetRead(ctx context.Context, d *schema.ResourceData, meta inter
 
 		err := readRuleSetResponse(d, resp.Data)
 		if err != nil {
-			return helpers.HandleReadApiError(err, d, httpResp)
+			return helpers.HandleRead(ctx, d, err, httpResp)
 		}
 	}
 
@@ -117,7 +117,7 @@ func resourceRuleSetCreateOrUpdate(ctx context.Context, d *schema.ResourceData, 
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data != nil {
@@ -164,7 +164,7 @@ func resourceRuleDelete(ctx context.Context, d *schema.ResourceData, meta interf
 	_, httpResp, err := c.RuleSetsApi.DeleteRuleSet(ctx, c.AccountId, id)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

@@ -233,7 +233,7 @@ func resourceInfraDefinitionRead(ctx context.Context, d *schema.ResourceData, me
 		return diag.FromErr(err)
 	} else if infraDef == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

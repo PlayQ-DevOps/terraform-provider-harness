@@ -155,7 +155,7 @@ func TestAccResourceVMRule_DryRunFalseOnUpdate(t *testing.T) {
 //
 // Regression test for CCM-32336. The bug was that the lwd GET rule API returned
 // HTTP 500 (`Error finding service by id ... : <nil>`) for a deleted rule;
-// the provider only handles 404 + ENTITY_NOT_FOUND in helpers.HandleReadApiError.
+// the provider only handles 404 + ENTITY_NOT_FOUND in helpers.HandleRead.
 // The fix changes the API to return 404 with body `{"code": "ENTITY_NOT_FOUND", ...}`
 // so terraform plan no longer fails on missing rules.
 func TestAccResourceECSRule_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {

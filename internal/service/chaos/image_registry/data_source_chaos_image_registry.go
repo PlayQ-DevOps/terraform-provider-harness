@@ -144,7 +144,7 @@ func dataSourceChaosImageRegistryRead(ctx context.Context, d *schema.ResourceDat
 	if d.Get("check_override").(bool) {
 		response, err := c.ImageRegistryApi.CheckOverride(ctx, identifiers, infraID)
 		if err != nil {
-			return helpers.HandleChaosGraphQLError(err, d, "check_override_image_registry")
+			return helpers.HandleError(ctx, d, err, nil)
 		}
 
 		d.Set("override_blocked_by_scope", response.OverrideBlockedByScope)
@@ -158,7 +158,7 @@ func dataSourceChaosImageRegistryRead(ctx context.Context, d *schema.ResourceDat
 	// Otherwise, use the standard Get API
 	registry, err := c.ImageRegistryApi.Get(ctx, identifiers, infraID)
 	if err != nil {
-		return helpers.HandleChaosGraphQLReadError(err, d, "get_image_registry")
+		return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound())
 	}
 
 	return setImageRegistryData(d, registry, identifiers)

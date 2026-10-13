@@ -62,7 +62,7 @@ func resourceIPAllowlistRead(ctx context.Context, d *schema.ResourceData, meta i
 
 	id := d.Id()
 	if id == "" {
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -70,7 +70,7 @@ func resourceIPAllowlistRead(ctx context.Context, d *schema.ResourceData, meta i
 		HarnessAccount: optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.IpAllowlistConfig == nil {
@@ -106,7 +106,7 @@ func resourceIPAllowlistCreateOrUpdate(ctx context.Context, d *schema.ResourceDa
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.IpAllowlistConfig == nil {
@@ -130,7 +130,7 @@ func resourceIPAllowlistDelete(ctx context.Context, d *schema.ResourceData, meta
 		HarnessAccount: optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

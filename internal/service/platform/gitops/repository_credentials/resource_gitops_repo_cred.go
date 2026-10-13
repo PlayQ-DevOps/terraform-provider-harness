@@ -269,15 +269,11 @@ func resourceGitopsRepoCredCreate(ctx context.Context, d *schema.ResourceData, m
 		})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	if helpers.WoActive(d, "creds.0.password_wo", "creds.0.password_wo_version") {
 		resp.RepoCreds.Password = ""
 	} else if attr, ok := d.GetOk("creds.0.password"); ok {
@@ -344,15 +340,10 @@ func resourceGitopsRepoCredUpdate(ctx context.Context, d *schema.ResourceData, m
 		})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 
 	if helpers.WoActive(d, "creds.0.password_wo", "creds.0.password_wo_version") {
 		resp.RepoCreds.Password = ""
@@ -400,16 +391,11 @@ func resourceGitopsRepoCredRead(ctx context.Context, d *schema.ResourceData, met
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 
 	if helpers.WoActive(d, "creds.0.password_wo", "creds.0.password_wo_version") {
 		resp.RepoCreds.Password = ""
@@ -471,7 +457,7 @@ func resourceGitopsRepoCredDelete(ctx context.Context, d *schema.ResourceData, m
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

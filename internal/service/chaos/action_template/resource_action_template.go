@@ -102,7 +102,7 @@ func resourceActionTemplateCreate(ctx context.Context, d *schema.ResourceData, m
 		if httpResp != nil {
 			log.Printf("[ERROR] HTTP Response: %+v", httpResp)
 		}
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	log.Printf("[DEBUG] Action template created successfully: %s", resp.Identity)
@@ -138,7 +138,7 @@ func resourceActionTemplateRead(ctx context.Context, d *schema.ResourceData, met
 			d.SetId("")
 			return nil
 		}
-		return helpers.HandleChaosReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -224,7 +224,7 @@ func resourceActionTemplateUpdate(ctx context.Context, d *schema.ResourceData, m
 		if httpResp != nil {
 			log.Printf("[ERROR] HTTP Response: %+v", httpResp)
 		}
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	log.Printf("[DEBUG] Action template updated successfully: %s", identity)
@@ -258,7 +258,7 @@ func resourceActionTemplateDelete(ctx context.Context, d *schema.ResourceData, m
 			d.SetId("")
 			return nil
 		}
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	log.Printf("[DEBUG] Action template deleted successfully: %s", identity)

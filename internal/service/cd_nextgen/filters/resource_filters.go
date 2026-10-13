@@ -98,12 +98,12 @@ func resourceFiltersRead(ctx context.Context, d *schema.ResourceData, meta inter
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -129,7 +129,7 @@ func resourceFiltersCreateOrUpdate(ctx context.Context, d *schema.ResourceData, 
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readFilter(d, resp.Data)
@@ -148,7 +148,7 @@ func resourceFilterDelete(ctx context.Context, d *schema.ResourceData, meta inte
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

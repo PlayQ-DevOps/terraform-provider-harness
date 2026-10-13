@@ -25,7 +25,7 @@ func resourceSecretReadBase(ctx context.Context, d *schema.ResourceData, meta in
 
 	resp, httpResp, err := c.SecretsApi.GetSecretV2(ctx, id, c.AccountId, getReadSecretOpts(d))
 	if err != nil {
-		return nil, helpers.HandleReadApiError(err, d, httpResp)
+		return nil, helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -73,7 +73,7 @@ func resourceSecretCreateOrUpdateBase(ctx context.Context, d *schema.ResourceDat
 	}
 
 	if err != nil {
-		return nil, helpers.HandleApiError(err, d, httpResp)
+		return nil, helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil || resp.Data.Secret == nil {
@@ -113,7 +113,7 @@ func resourceSecretDelete(ctx context.Context, d *schema.ResourceData, meta inte
 		ForceDelete:       BuildFieldBool(d, "force_delete"),
 	})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

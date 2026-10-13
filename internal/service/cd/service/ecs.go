@@ -35,7 +35,7 @@ func resourceECSServiceRead(ctx context.Context, d *schema.ResourceData, meta in
 		return diag.FromErr(err)
 	} else if svc == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

@@ -127,7 +127,7 @@ func resourceRoleAssignmentsRead(ctx context.Context, d *schema.ResourceData, me
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -161,7 +161,7 @@ func resourceRoleAssignmentsCreateorUpdate(ctx context.Context, d *schema.Resour
 		})
 
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 
 		resp, httpResp, err = c.RoleAssignmentsApi.PostRoleAssignment(ctx, *roleAssignment, c.AccountId, &nextgen.RoleAssignmentsApiPostRoleAssignmentOpts{
@@ -171,7 +171,7 @@ func resourceRoleAssignmentsCreateorUpdate(ctx context.Context, d *schema.Resour
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	ReadRoleAssignments(d, resp.Data.RoleAssignment)
@@ -188,7 +188,7 @@ func resourceRoleAssignmentsDelete(ctx context.Context, d *schema.ResourceData, 
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

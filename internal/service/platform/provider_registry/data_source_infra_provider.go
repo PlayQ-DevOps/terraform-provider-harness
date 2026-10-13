@@ -87,7 +87,7 @@ func dataSourceInfraProviderRead(ctx context.Context, d *schema.ResourceData, m 
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleError(ctx, d, err, httpRes)
 	}
 	readProvider(d, &resp)
 	return nil

@@ -386,14 +386,14 @@ func dataSourceGitopsClusterRead(ctx context.Context, d *schema.ResourceData, me
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
 	if resp.Cluster == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 	setClusterDetails(d, &resp)

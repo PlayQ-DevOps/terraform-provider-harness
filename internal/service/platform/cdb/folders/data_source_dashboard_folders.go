@@ -77,7 +77,7 @@ func dataSourceFoldersListRead(ctx context.Context, d *schema.ResourceData, meta
 	allFolders, httpResp, err := listDashboardFolders(c)
 	if err != nil {
 		if httpResp != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 		return diag.FromErr(fmt.Errorf("failed to list dashboard folders: %w", err))
 	}

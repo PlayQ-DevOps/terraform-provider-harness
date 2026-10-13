@@ -65,13 +65,13 @@ func dataSourceApiKeyRead(ctx context.Context, d *schema.ResourceData, meta inte
 			ProjectIdentifier: helpers.BuildField(d, "project_id"),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 		apiKey = resp.Data.ApiKey
 
 		if apiKey == nil {
 			d.SetId("")
-			d.MarkNewResource()
+
 			return nil
 		}
 	} else {

@@ -177,7 +177,7 @@ func dataSourceChaosSecurityGovernanceRuleRead(ctx context.Context, d *schema.Re
 					},
 				}
 			}
-			return helpers.HandleChaosGraphQLReadError(err, d, "read_chaos_security_governance_rule")
+			return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound())
 		}
 		if resp == nil || resp.Rule == nil {
 			d.SetId("")
@@ -201,7 +201,7 @@ func dataSourceChaosSecurityGovernanceRuleRead(ctx context.Context, d *schema.Re
 
 		rules, err := securityGovernanceRuleClient.List(ctx, identifiers, model.ListRuleRequest{})
 		if err != nil {
-			return helpers.HandleChaosGraphQLReadError(err, d, "read_chaos_security_governance_rule")
+			return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound())
 		}
 
 		var found bool
@@ -232,7 +232,7 @@ func dataSourceChaosSecurityGovernanceRuleRead(ctx context.Context, d *schema.Re
 
 	// Set the attributes
 	if err := setRuleAttributes(d, &model.RuleResponse{Rule: rule}, accountID); err != nil {
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("failed to set rule attributes: %w", err), d, "read_chaos_security_governance_rule")
+		return helpers.HandleError(ctx, d, fmt.Errorf("failed to set rule attributes: %w", err), nil)
 	}
 
 	return nil

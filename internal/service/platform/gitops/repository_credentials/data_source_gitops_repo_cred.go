@@ -139,16 +139,12 @@ func dataSourceGitopsRepoCredRead(ctx context.Context, d *schema.ResourceData, m
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	setGitopsRepositoriesCredential(d, &resp)
 	return nil
 }

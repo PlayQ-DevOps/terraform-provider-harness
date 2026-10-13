@@ -73,7 +73,7 @@ func resourceInfraProviderVersionFileRead(ctx context.Context, d *schema.Resourc
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleRead(ctx, d, err, httpRes)
 	}
 
 	// Check if file exists in the provider's metadata
@@ -84,7 +84,7 @@ func resourceInfraProviderVersionFileRead(ctx context.Context, d *schema.Resourc
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleRead(ctx, d, err, httpRes)
 	}
 
 	// Find the version and check if file exists

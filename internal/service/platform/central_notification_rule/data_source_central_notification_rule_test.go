@@ -2,9 +2,10 @@ package central_notification_rule_test
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )

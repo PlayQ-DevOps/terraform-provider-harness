@@ -46,7 +46,7 @@ func resourceWinRMServiceRead(ctx context.Context, d *schema.ResourceData, meta 
 		return diag.FromErr(err)
 	} else if svc == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

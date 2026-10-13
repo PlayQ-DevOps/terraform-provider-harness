@@ -192,7 +192,7 @@ func resourceEnvironmentRead(ctx context.Context, d *schema.ResourceData, meta i
 	resp, httpResp, err := c.EnvironmentsApi.GetEnvironmentV2(ctx, d.Id(), c.AccountId, envParams)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readEnvironment(d, resp.Data.Environment)
@@ -243,7 +243,7 @@ func resourceEnvironmentCreateOrUpdate(ctx context.Context, d *schema.ResourceDa
 	}
 
 	if err != nil {
-		return helpers.HandleGitApiErrorWithResourceData(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	if d.Get("git_details.0.import_from_git").(bool) {
@@ -261,7 +261,7 @@ func resourceEnvironmentCreateOrUpdate(ctx context.Context, d *schema.ResourceDa
 			resp, httpResp, err = c.EnvironmentsApi.GetEnvironmentV2(ctx, d.Id(), c.AccountId, envParams)
 
 			if err != nil {
-				return helpers.HandleReadApiError(err, d, httpResp)
+				return helpers.HandleWrite(ctx, d, err, httpResp)
 			}
 		}
 		if resp.Data == nil || resp.Data.Environment == nil {
@@ -290,7 +290,7 @@ func resourceEnviornmentEditGitDetails(ctx context.Context, c *nextgen.APIClient
 	resp, httpResp, err := c.EnvironmentsApi.EditGitDetailsForEnviornment(ctx, c.AccountId, org_id, project_id, id, gitDetails)
 
 	if err != nil {
-		return helpers.HandleGitApiErrorWithResourceData(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -313,7 +313,7 @@ func resourceEnvironmentDelete(ctx context.Context, d *schema.ResourceData, meta
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

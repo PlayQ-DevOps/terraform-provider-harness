@@ -132,16 +132,11 @@ func resourceGitopsGnupgCreate(ctx context.Context, d *schema.ResourceData, meta
 		})
 
 	if errCreate != nil {
-		return helpers.HandleApiError(errCreate, d, httpRespCreate)
+		return helpers.HandleWrite(ctx, d, errCreate, httpRespCreate)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &respCreate == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 
 	readGnupgKeyCreate(d, &respCreate, accountIdentifier, agentIdentifier, orgIdentifier, projectIdentifier)
 	return nil
@@ -166,16 +161,12 @@ func resourceGitopsGnupgRead(ctx context.Context, d *schema.ResourceData, meta i
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	readGnupgKey(d, &resp, c.AccountId, agentIdentifier, orgIdentifier, projectIdentifier)
 	return nil
 }
@@ -201,7 +192,7 @@ func resourceGitopsGnupgDelete(ctx context.Context, d *schema.ResourceData, meta
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

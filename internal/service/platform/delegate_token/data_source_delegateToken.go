@@ -91,7 +91,7 @@ func dataSourceDelegateTokenRead(ctx context.Context, d *schema.ResourceData, me
 			Status:            helpers.BuildField(d, "token_status"),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 		if resp.Resource != nil && len(resp.Resource) > 0 {
 			delegateToken = &resp.Resource[0]
@@ -99,7 +99,7 @@ func dataSourceDelegateTokenRead(ctx context.Context, d *schema.ResourceData, me
 
 		if delegateToken == nil {
 			d.SetId("")
-			d.MarkNewResource()
+
 			return nil
 		}
 	} else {

@@ -81,7 +81,7 @@ func dataSourceFolderRead(ctx context.Context, d *schema.ResourceData, meta inte
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if folder == nil {

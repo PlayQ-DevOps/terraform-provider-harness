@@ -154,15 +154,11 @@ func resourceGitopsAgentCreate(ctx context.Context, d *schema.ResourceData, meta
 	resp, httpResp, err := c.AgentApi.AgentServiceForServerCreate(ctx, *createAgentRequest)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	readAgent(d, &resp)
 	return nil
 }
@@ -177,17 +173,17 @@ func resourceGitopsAgentRead(ctx context.Context, d *schema.ResourceData, meta i
 	})
 
 	if err != nil && httpResp != nil && httpResp.StatusCode != 404 {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 	if err != nil && httpResp == nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil || (httpResp != nil && httpResp.StatusCode == 404) {
+	if httpResp != nil && httpResp.StatusCode == 404 {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 	readAgent(d, &resp)
@@ -238,15 +234,11 @@ func resourceGitopsAgentUpdate(ctx context.Context, d *schema.ResourceData, meta
 	resp, httpResp, err := c.AgentApi.AgentServiceForServerUpdate(ctx, *updateAgentRequest, agentIdentifier)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	readAgent(d, &resp)
 	return nil
 }
@@ -262,7 +254,7 @@ func resourceGitopsAgentDelete(ctx context.Context, d *schema.ResourceData, meta
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

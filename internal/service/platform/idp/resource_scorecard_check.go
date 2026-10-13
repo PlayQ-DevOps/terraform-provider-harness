@@ -232,7 +232,7 @@ func resourceScorecardCheckRead(ctx context.Context, d *schema.ResourceData, met
 			d.SetId("")
 			return nil
 		}
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if err := readScorecardCheck(d, resp.CheckDetails); err != nil {

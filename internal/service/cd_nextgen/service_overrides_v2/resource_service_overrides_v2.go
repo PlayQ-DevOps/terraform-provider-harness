@@ -182,14 +182,14 @@ func resourceServiceOverridesV2Read(ctx context.Context, d *schema.ResourceData,
 
 	resp, httpResp, err := c.ServiceOverridesApi.GetServiceOverridesV2(ctx, identifier, c.AccountId, svcGetParams)
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// GET call for service environment override returns a 200 ok for empty list.
 	// Hence specifically marking the resource as new, instead of in L#91
-	if &resp == nil || resp.Data == nil {
+	if resp.Data == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -240,7 +240,7 @@ func resourceServiceOverridesV2CreateOrUpdate(ctx context.Context, d *schema.Res
 	}
 
 	if err != nil {
-		return helpers.HandleGitApiErrorWithResourceData(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
@@ -258,7 +258,7 @@ func resourceServiceOverridesV2CreateOrUpdate(ctx context.Context, d *schema.Res
 			svcGetParams := getSvcOverrideParams(d)
 			resp, httpResp, err = c.ServiceOverridesApi.GetServiceOverridesV2(ctx, id, c.AccountId, svcGetParams)
 			if err != nil {
-				return helpers.HandleApiError(err, d, httpResp)
+				return helpers.HandleWrite(ctx, d, err, httpResp)
 			}
 		}
 		readServiceOverridesV2(d, resp.Data)
@@ -290,7 +290,7 @@ func resourceServiceOverridesEditGitDetails(ctx context.Context, c *nextgen.APIC
 	resp, httpResp, err := c.ServiceOverridesApi.EditGitDetialsForServiceOverridesV2(ctx, c.AccountId, org_id, project_id, id, gitUpdateRequest)
 
 	if err != nil {
-		return helpers.HandleGitApiErrorWithResourceData(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	d.SetId(resp.Data.Identifier)
@@ -308,7 +308,7 @@ func resourceServiceOverridesV2Delete(ctx context.Context, d *schema.ResourceDat
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

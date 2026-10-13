@@ -314,7 +314,7 @@ func resourceWorkspaceRead(ctx context.Context, d *schema.ResourceData, meta int
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 	id := d.Id()
 	if id == "" {
-		d.MarkNewResource()
+
 	}
 	resp, httpResp, err := c.WorkspaceApi.WorkspacesShowWorkspace(
 		ctx,
@@ -326,10 +326,10 @@ func resourceWorkspaceRead(ctx context.Context, d *schema.ResourceData, meta int
 	if err != nil {
 		if httpResp != nil && httpResp.StatusCode == 404 {
 			d.SetId("")
-			d.MarkNewResource()
+
 			return nil
 		}
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readWorkspace(d, &resp)

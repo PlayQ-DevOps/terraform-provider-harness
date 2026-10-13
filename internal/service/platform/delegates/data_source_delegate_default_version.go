@@ -66,7 +66,7 @@ func dataSourceDelegateDefaultVersionRead(ctx context.Context, d *schema.Resourc
 		tflog.Error(ctx, "Error retrieving latest supported delegate version", map[string]interface{}{
 			"error": err,
 		})
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if resp.Resource.LatestSupportedVersion == "" {

@@ -135,14 +135,14 @@ func dataSourceGitopsAgentRead(ctx context.Context, d *schema.ResourceData, meta
 	})
 
 	if err != nil && (httpResp == nil || httpResp.StatusCode != 404) {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil || httpResp.StatusCode == 404 {
+	if httpResp.StatusCode == 404 {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 	readAgent(d, &resp)

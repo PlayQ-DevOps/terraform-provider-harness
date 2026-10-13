@@ -138,7 +138,7 @@ func resourceExperimentCreate(ctx context.Context, d *schema.ResourceData, meta 
 	)
 
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Extract experiment ID from response (CRITICAL: Use Id, not Identity)
@@ -196,7 +196,7 @@ func resourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta in
 	)
 
 	if err != nil {
-		return helpers.HandleChaosReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Check if experiment is soft-deleted
@@ -383,7 +383,7 @@ func resourceExperimentDelete(ctx context.Context, d *schema.ResourceData, meta 
 	)
 
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	d.SetId("")

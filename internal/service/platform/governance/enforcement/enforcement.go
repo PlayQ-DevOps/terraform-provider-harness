@@ -124,13 +124,13 @@ func resourceRuleEnforcementRead(ctx context.Context, d *schema.ResourceData, me
 	resp, httpResp, err := c.RuleEnforcementApi.EnforcementDetails(ctx, c.AccountId, readRuleEnforcementRequest(id))
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data != nil {
 		err := readRuleEnforcementResponse(d, resp.Data)
 		if err != nil {
-			return helpers.HandleReadApiError(err, d, httpResp)
+			return helpers.HandleRead(ctx, d, err, httpResp)
 		}
 	}
 
@@ -159,7 +159,7 @@ func resourceRuleEnforcementCreateOrUpdate(ctx context.Context, d *schema.Resour
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data != nil {
@@ -177,7 +177,7 @@ func resourceRuleEnforcementDelete(ctx context.Context, d *schema.ResourceData, 
 	_, httpResp, err := c.RuleEnforcementApi.DeleteRuleEnforcement(ctx, c.AccountId, id)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

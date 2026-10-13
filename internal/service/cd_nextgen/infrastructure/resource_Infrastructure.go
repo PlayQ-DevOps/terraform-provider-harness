@@ -206,7 +206,7 @@ func resourceInfrastructureRead(ctx context.Context, d *schema.ResourceData, met
 	resp, httpResp, err := c.InfrastructuresApi.GetInfrastructure(ctx, d.Id(), c.AccountId, env_id, infraParams)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readInfrastructure(d, resp.Data)
@@ -258,7 +258,7 @@ func resourceInfrastructureCreateOrUpdate(ctx context.Context, d *schema.Resourc
 	}
 
 	if err != nil {
-		return helpers.HandleGitApiErrorWithResourceData(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	if d.Get("git_details.0.import_from_git").(bool) {
@@ -277,7 +277,7 @@ func resourceInfrastructureCreateOrUpdate(ctx context.Context, d *schema.Resourc
 			resp, httpResp, err = c.InfrastructuresApi.GetInfrastructure(ctx, d.Id(), c.AccountId, env_id, infraParams)
 
 			if err != nil {
-				return helpers.HandleReadApiError(err, d, httpResp)
+				return helpers.HandleWrite(ctx, d, err, httpResp)
 			}
 		}
 		if resp.Data == nil || resp.Data.Infrastructure == nil {
@@ -307,7 +307,7 @@ func resourceInfrastructureEditGitDetails(ctx context.Context, c *nextgen.APICli
 	resp, httpResp, err := c.InfrastructuresApi.EditGitDetailsForInfrastructure(ctx, c.AccountId, org_id, project_id, env_id, id, gitDetails)
 
 	if err != nil {
-		return helpers.HandleGitApiErrorWithResourceData(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -332,7 +332,7 @@ func resourceInfrastructureDelete(ctx context.Context, d *schema.ResourceData, m
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

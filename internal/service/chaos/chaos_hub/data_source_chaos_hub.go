@@ -121,7 +121,7 @@ func dataSourceChaosHubRead(ctx context.Context, d *schema.ResourceData, meta in
 	hubClient := chaos.NewChaosHubClient(c)
 	hubs, err := hubClient.List(ctx, identifiers)
 	if err != nil {
-		return helpers.HandleChaosGraphQLReadError(err, d, "list_chaos_hubs")
+		return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound())
 	}
 
 	targetName := d.Get("name").(string)
@@ -135,10 +135,12 @@ func dataSourceChaosHubRead(ctx context.Context, d *schema.ResourceData, meta in
 	}
 
 	if foundHub == nil {
-		return helpers.HandleChaosGraphQLReadError(fmt.Errorf("chaos hub with name '%s' not found", targetName), d, "get_chaos_hub")
+		return helpers.HandleRead(ctx, d, fmt.Errorf("chaos hub with name '%s' not found", targetName), nil, helpers.GraphQLNotFound(
+
+		// Convert model.IdentifiersRequest to ScopedIdentifiersRequest for generateID
+		))
 	}
 
-	// Convert model.IdentifiersRequest to ScopedIdentifiersRequest for generateID
 	scopedIdentifiers := ScopedIdentifiersRequest{
 		AccountIdentifier: identifiers.AccountIdentifier,
 	}

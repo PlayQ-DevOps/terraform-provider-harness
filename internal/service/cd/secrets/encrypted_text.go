@@ -84,7 +84,7 @@ func resourceEncryptedTextRead(ctx context.Context, d *schema.ResourceData, meta
 		return diag.FromErr(err)
 	} else if secret == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

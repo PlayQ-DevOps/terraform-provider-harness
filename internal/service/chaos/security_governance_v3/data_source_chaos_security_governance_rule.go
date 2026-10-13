@@ -61,7 +61,7 @@ func dataSourceChaosSecurityGovernanceRuleV3Read(ctx context.Context, d *schema.
 		ProjectIdentifier:      optional.NewString(projectID),
 	})
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	d.SetId(ruleID)
@@ -89,7 +89,7 @@ func resolveRuleV3ID(ctx context.Context, c *chaos.APIClient, d *schema.Resource
 		Limit:                  optional.NewInt32(100),
 	})
 	if err != nil {
-		return "", helpers.HandleChaosApiError(err, d, httpResp)
+		return "", helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	for _, item := range listResp.Rules {

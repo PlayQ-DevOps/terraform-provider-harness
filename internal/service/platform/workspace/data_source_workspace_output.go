@@ -66,7 +66,7 @@ func resourceWorkspaceOutputRead(ctx context.Context, d *schema.ResourceData, me
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 	id := d.Id()
 	if id == "" {
-		d.MarkNewResource()
+
 	}
 	resp, httpResp, err := c.WorkspaceApi.WorkspacesListResources(
 		ctx,
@@ -76,7 +76,7 @@ func resourceWorkspaceOutputRead(ctx context.Context, d *schema.ResourceData, me
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 	readOutputs(d, &resp)
 	return nil

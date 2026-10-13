@@ -258,7 +258,7 @@ func resourceChaosSecurityGovernanceRuleV3Create(ctx context.Context, d *schema.
 		ProjectIdentifier:      optional.NewString(projectID),
 	})
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	d.SetId(ruleID)
@@ -280,10 +280,11 @@ func resourceChaosSecurityGovernanceRuleV3Read(ctx context.Context, d *schema.Re
 		ProjectIdentifier:      optional.NewString(projectID),
 	})
 	if err != nil {
-		return helpers.HandleChaosReadApiErrorWithGracefulDestroy(err, d, httpResp, []string{
+		return helpers.HandleRead(ctx, d, err, httpResp, helpers.GracefulNotFound(500, []string{
 			"not found",
 			"no documents in result",
-		})
+		}...),
+		)
 	}
 
 	return setRuleV3Data(d, &resp, orgID, projectID)
@@ -314,7 +315,7 @@ func resourceChaosSecurityGovernanceRuleV3Update(ctx context.Context, d *schema.
 		ProjectIdentifier:      optional.NewString(projectID),
 	})
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	return resourceChaosSecurityGovernanceRuleV3Read(ctx, d, meta)
@@ -334,10 +335,11 @@ func resourceChaosSecurityGovernanceRuleV3Delete(ctx context.Context, d *schema.
 		ProjectIdentifier:      optional.NewString(projectID),
 	})
 	if err != nil {
-		diags := helpers.HandleChaosReadApiErrorWithGracefulDestroy(err, d, httpResp, []string{
+		diags := helpers.HandleDelete(ctx, d, err, httpResp, helpers.GracefulNotFound(500, []string{
 			"not found",
 			"no documents in result",
-		})
+		}...),
+		)
 		if d.Id() == "" {
 			return diags
 		}

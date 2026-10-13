@@ -2,10 +2,11 @@ package slo_test
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/antihax/optional"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/stretchr/testify/require"
-	"testing"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"

@@ -98,14 +98,14 @@ func resourceEnvironmentClustersMappingRead(ctx context.Context, d *schema.Resou
 	resp, httpResp, err := c.ClustersApi.GetClusterList(ctx, c.AccountId, envId, clustersApiGetClusterListOpts)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
 	if resp.Data == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -126,7 +126,7 @@ func resourceEnvironmentClustersMappingDelete(ctx context.Context, d *schema.Res
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -145,7 +145,7 @@ func resourceEnvironmentClustersMappingClusterLink(ctx context.Context, d *schem
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// only resource id needs to be set since api from sdk doesn't return any other information during batch link clusters

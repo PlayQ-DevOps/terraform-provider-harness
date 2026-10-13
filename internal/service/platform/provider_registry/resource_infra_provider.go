@@ -90,7 +90,7 @@ func resourceInfraProviderRead(ctx context.Context, d *schema.ResourceData, m in
 	c, ctx := m.(*internal.Session).GetPlatformClientWithContext(ctx)
 	id := d.Id()
 	if id == "" {
-		d.MarkNewResource()
+
 	}
 	resp, httpRes, err := c.ProviderRegistryApi.ProviderRegistryGetProvider(
 		ctx,
@@ -98,7 +98,7 @@ func resourceInfraProviderRead(ctx context.Context, d *schema.ResourceData, m in
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleRead(ctx, d, err, httpRes)
 	}
 	readProvider(d, &resp)
 	return nil

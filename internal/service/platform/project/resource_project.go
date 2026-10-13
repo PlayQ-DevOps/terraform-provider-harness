@@ -56,7 +56,7 @@ func resourceProjectRead(ctx context.Context, d *schema.ResourceData, meta inter
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil || resp.Data.Project == nil {
@@ -88,7 +88,7 @@ func resourceProjectCreateOrUpdate(ctx context.Context, d *schema.ResourceData, 
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readProject(d, resp.Data.Project)
@@ -101,7 +101,7 @@ func resourceProjectDelete(ctx context.Context, d *schema.ResourceData, meta int
 
 	_, httpResp, err := c.ProjectApi.DeleteProject(ctx, d.Id(), c.AccountId, &nextgen.ProjectApiDeleteProjectOpts{OrgIdentifier: optional.NewString(d.Get("org_id").(string))})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

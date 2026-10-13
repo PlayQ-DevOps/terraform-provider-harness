@@ -381,15 +381,10 @@ func resourceGitopsApplicationsetCreate(ctx context.Context, d *schema.ResourceD
 		AgentIdentifier:   optional.NewString(agentIdentifier),
 	})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 
 	err = setApplicationSet(d, &resp)
 	if err != nil {
@@ -426,16 +421,11 @@ func resourceGitopsApplicationsetRead(ctx context.Context, d *schema.ResourceDat
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 
 	err = setApplicationSet(d, &resp)
 	if err != nil {
@@ -473,16 +463,11 @@ func resourceGitopsApplicationsetUpdate(ctx context.Context, d *schema.ResourceD
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 
 	err = setApplicationSet(d, &resp)
 	if err != nil {
@@ -516,7 +501,7 @@ func resourceGitopsApplicationsetDelete(ctx context.Context, d *schema.ResourceD
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

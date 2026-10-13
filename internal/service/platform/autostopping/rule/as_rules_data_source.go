@@ -70,7 +70,7 @@ func readAutoStopRules(ctx context.Context, d *schema.ResourceData, meta interfa
 
 	resp, httpResp, err := c.CloudCostAutoStoppingRulesApi.ListAutoStoppingRules(ctx, c.AccountId, c.AccountId)
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	kindFilter := ""

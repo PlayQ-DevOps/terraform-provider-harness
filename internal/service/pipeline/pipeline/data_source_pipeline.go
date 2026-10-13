@@ -124,7 +124,7 @@ func dataSourcePipelineRead(ctx context.Context, d *schema.ResourceData, meta in
 	)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	readPipeline(d, resp, org_id, project_id, template_applied, store_type, base_branch, commit_message, connector_ref)

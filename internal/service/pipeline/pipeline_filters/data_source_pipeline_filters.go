@@ -275,12 +275,12 @@ func dataSourcePipelineFiltersRead(ctx context.Context, d *schema.ResourceData, 
 	}
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if filter == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

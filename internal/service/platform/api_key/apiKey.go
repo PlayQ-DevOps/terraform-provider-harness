@@ -66,7 +66,7 @@ func resourceApiKeyRead(ctx context.Context, d *schema.ResourceData, meta interf
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readApiKey(d, resp.Data.ApiKey)
@@ -91,7 +91,7 @@ func resourceApiKeyCreateOrUpdate(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -117,7 +117,7 @@ func resourceApiKeyDelete(ctx context.Context, d *schema.ResourceData, meta inte
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

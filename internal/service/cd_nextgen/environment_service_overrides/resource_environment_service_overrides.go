@@ -66,12 +66,12 @@ func resourceEnvironmentServiceOverridesRead(ctx context.Context, d *schema.Reso
 		})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil || len(resp.Data.Content) == 0 {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -93,12 +93,12 @@ func resourceEnvironmentServiceOverridesCreateOrUpdate(ctx context.Context, d *s
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil || resp.Data == nil {
+	if resp.Data == nil {
 		d.SetId("")
 		d.MarkNewResource()
 		return nil
@@ -123,7 +123,7 @@ func resourceEnvironmentServiceOverridesDelete(ctx context.Context, d *schema.Re
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

@@ -14,7 +14,7 @@ import (
 // across all CCM cloud-cost connectors. The bug class is: a NextGen GET
 // endpoint returning HTTP 500 for a deleted entity caused terraform plan to
 // fail with "giving up after 11 attempt(s)". The connector Read() routes
-// through helpers.HandleReadApiError which clears state on
+// through helpers.HandleRead which clears state on
 // 404 + ENTITY_NOT_FOUND, so once the GET returns 404 the provider re-plans
 // a create instead of erroring.
 //

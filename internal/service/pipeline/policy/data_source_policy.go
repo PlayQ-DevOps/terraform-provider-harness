@@ -57,13 +57,13 @@ func dataSourceProjectRead(ctx context.Context, d *schema.ResourceData, meta int
 		return diag.FromErr(errors.New("identifier must be specified"))
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	bla := policymgmt.Policy{}
 	if policy == bla {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

@@ -2,9 +2,10 @@ package featureflagtargetgroup_test
 
 import (
 	"fmt"
-	featureflagtargetgroup "github.com/harness/terraform-provider-harness/internal/service/platform/feature_flag_target_group"
 	"reflect"
 	"testing"
+
+	featureflagtargetgroup "github.com/harness/terraform-provider-harness/internal/service/platform/feature_flag_target_group"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"

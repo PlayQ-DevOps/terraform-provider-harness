@@ -298,7 +298,7 @@ func resourceFeatureFlagRead(ctx context.Context, d *schema.ResourceData, meta i
 
 	id := d.Id()
 	if id == "" {
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -320,7 +320,7 @@ func resourceFeatureFlagRead(ctx context.Context, d *schema.ResourceData, meta i
 
 		if err != nil {
 			if httpResp != nil && httpResp.StatusCode == 404 {
-				d.MarkNewResource()
+
 				d.SetId("")
 				return nil
 			}
@@ -684,5 +684,5 @@ func HandleCFApiError(err error, d *schema.ResourceData, httpResp *http.Response
 			return diag.Errorf("%s", cfError.Message)
 		}
 	}
-	return helpers.HandleApiError(err, d, httpResp)
+	return helpers.HandleError(context.TODO(), d, err, httpResp)
 }

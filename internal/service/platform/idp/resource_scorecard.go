@@ -244,7 +244,7 @@ func resourceScorecardRead(ctx context.Context, d *schema.ResourceData, meta int
 			d.SetId("")
 			return nil
 		}
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if err := readScorecard(d, resp); err != nil {
@@ -288,7 +288,7 @@ func resourceScorecardDelete(ctx context.Context, d *schema.ResourceData, meta i
 		if isNotFoundError(err) {
 			return nil
 		}
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

@@ -284,7 +284,7 @@ func resourceTemplateRead(ctx context.Context, d *schema.ResourceData, meta inte
 	}
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readTemplate(d, resp, comments.Value(), store_type, base_branch, commit_message, connector_ref)
@@ -427,7 +427,7 @@ func resourceTemplateCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 				}
 			}
 			if err != nil {
-				return helpers.HandleApiError(err, d, httpResp)
+				return helpers.HandleWrite(ctx, d, err, httpResp)
 			}
 		}
 
@@ -453,7 +453,7 @@ func resourceTemplateCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if isOPADeniedResponse(template_id, resp) {
@@ -505,7 +505,7 @@ func resourceTemplateCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readTemplate(d, respGet, comments, store_type, base_branch, commit_message, connector_ref)
@@ -589,7 +589,7 @@ func resourceTemplateDelete(ctx context.Context, d *schema.ResourceData, meta in
 
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

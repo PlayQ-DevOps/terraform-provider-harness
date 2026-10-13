@@ -92,12 +92,12 @@ func dataSourcePipelineListRead(ctx context.Context, d *schema.ResourceData, met
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if pipelines == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

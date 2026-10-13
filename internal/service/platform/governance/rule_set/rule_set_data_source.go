@@ -55,7 +55,7 @@ func resourceRuleSetReadDataSource(ctx context.Context, d *schema.ResourceData, 
 	resp, httpResp, err := c.RuleSetsApi.ListRuleSets(ctx, readRuleSetRequest(id), c.AccountId)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if resp.Data != nil {
@@ -67,7 +67,7 @@ func resourceRuleSetReadDataSource(ctx context.Context, d *schema.ResourceData, 
 
 		err := readRuleSetResponse(d, resp.Data)
 		if err != nil {
-			return helpers.HandleReadApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 	}
 

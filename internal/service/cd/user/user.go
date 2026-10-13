@@ -121,7 +121,7 @@ func resourceUserRead(ctx context.Context, d *schema.ResourceData, meta interfac
 
 	if user == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

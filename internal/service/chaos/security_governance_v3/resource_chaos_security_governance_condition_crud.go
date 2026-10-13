@@ -76,7 +76,7 @@ func resourceChaosSecurityGovernanceConditionV3Create(ctx context.Context, d *sc
 		ProjectIdentifier:      optional.NewString(projectID),
 	})
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	d.SetId(conditionID)
@@ -98,10 +98,11 @@ func resourceChaosSecurityGovernanceConditionV3Read(ctx context.Context, d *sche
 		ProjectIdentifier:      optional.NewString(projectID),
 	})
 	if err != nil {
-		return helpers.HandleChaosReadApiErrorWithGracefulDestroy(err, d, httpResp, []string{
+		return helpers.HandleRead(ctx, d, err, httpResp, helpers.GracefulNotFound(500, []string{
 			"not found",
 			"no documents in result",
-		})
+		}...),
+		)
 	}
 
 	return setConditionV3Data(d, &resp, orgID, projectID)
@@ -123,7 +124,7 @@ func resourceChaosSecurityGovernanceConditionV3Update(ctx context.Context, d *sc
 		ProjectIdentifier:      optional.NewString(projectID),
 	})
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	return resourceChaosSecurityGovernanceConditionV3Read(ctx, d, meta)
@@ -144,10 +145,11 @@ func resourceChaosSecurityGovernanceConditionV3Delete(ctx context.Context, d *sc
 	})
 	if err != nil {
 		// Treat a missing condition as already deleted.
-		return helpers.HandleChaosReadApiErrorWithGracefulDestroy(err, d, httpResp, []string{
+		return helpers.HandleDelete(ctx, d, err, httpResp, helpers.GracefulNotFound(500, []string{
 			"not found",
 			"no documents in result",
-		})
+		}...),
+		)
 	}
 
 	d.SetId("")

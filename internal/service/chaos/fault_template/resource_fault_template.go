@@ -122,7 +122,7 @@ func resourceFaultTemplateCreate(ctx context.Context, d *schema.ResourceData, me
 			}
 		}
 
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Set ID: org_id/project_id/hub_identity/identity
@@ -154,7 +154,7 @@ func resourceFaultTemplateRead(ctx context.Context, d *schema.ResourceData, meta
 	// Get fault template with the revision from state
 	resp, httpResp, err := c.FaulttemplateApi.GetFaultTemplate(ctx, c.AccountId, orgID, projectID, hubIdentity, revision, identity, nil)
 	if err != nil {
-		return helpers.HandleChaosReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Set Phase 1 fields from response
@@ -216,7 +216,7 @@ func resourceFaultTemplateUpdate(ctx context.Context, d *schema.ResourceData, me
 	// duplicate-key 500, so updates must use UpdateFaultTemplate.
 	_, httpResp, err := c.FaulttemplateApi.UpdateFaultTemplate(ctx, req, c.AccountId, orgID, projectID, hubIdentity, identity, nil)
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	return resourceFaultTemplateRead(ctx, d, meta)
@@ -239,7 +239,7 @@ func resourceFaultTemplateDelete(ctx context.Context, d *schema.ResourceData, me
 	// Delete fault template
 	_, httpResp, err := c.FaulttemplateApi.DeleteFaultTemplate(ctx, c.AccountId, orgID, projectID, hubIdentity, identity, nil)
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	d.SetId("")

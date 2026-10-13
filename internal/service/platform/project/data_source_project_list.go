@@ -91,12 +91,12 @@ func dataSourceProjectListRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if projects == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

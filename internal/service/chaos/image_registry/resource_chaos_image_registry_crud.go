@@ -93,7 +93,7 @@ func resourceChaosImageRegistryCreate(ctx context.Context, d *schema.ResourceDat
 		}
 		log.Printf("[ERROR] Chaos image registry creation failed: %s", err)
 		d.SetId("")
-		return helpers.HandleChaosGraphQLError(err, d, "create_image_registry")
+		return helpers.HandleWrite(ctx, d, err, nil)
 	}
 
 	d.SetId(generateID(identifiers, req.RegistryAccount))
@@ -114,9 +114,9 @@ func resourceChaosImageRegistryRead(ctx context.Context, d *schema.ResourceData,
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
 			log.Printf("[WARN] Chaos image registry not found: %s", err)
-			return helpers.HandleChaosGraphQLReadError(err, d, "get_image_registry")
+			return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound())
 		}
-		return helpers.HandleChaosGraphQLReadError(err, d, "get_image_registry")
+		return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound())
 	}
 
 	d.SetId(generateID(identifiers, registry.RegistryAccount))
@@ -221,7 +221,7 @@ func resourceChaosImageRegistryUpdate(ctx context.Context, d *schema.ResourceDat
 		},
 	)
 	if err != nil {
-		return helpers.HandleChaosGraphQLError(err, d, "update_image_registry")
+		return helpers.HandleWrite(ctx, d, err, nil)
 	}
 
 	return resourceChaosImageRegistryRead(ctx, d, meta)

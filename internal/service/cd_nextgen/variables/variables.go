@@ -98,7 +98,7 @@ func resourceVariablesRead(ctx context.Context, d *schema.ResourceData, meta int
 			"id":    id,
 			"error": err.Error(),
 		})
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil || resp.Data.Variable == nil {
@@ -134,7 +134,7 @@ func resourceVariablesCreateOrUpdate(ctx context.Context, d *schema.ResourceData
 			"id":    id,
 			"error": err.Error(),
 		})
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil || resp.Data.Variable == nil {
@@ -171,7 +171,7 @@ func resourceVariablesDelete(ctx context.Context, d *schema.ResourceData, meta i
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

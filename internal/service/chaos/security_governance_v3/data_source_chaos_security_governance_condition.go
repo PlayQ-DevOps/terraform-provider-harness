@@ -87,7 +87,7 @@ func dataSourceChaosSecurityGovernanceConditionV3Read(ctx context.Context, d *sc
 		ProjectIdentifier:      optional.NewString(projectID),
 	})
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	d.SetId(conditionID)
@@ -115,7 +115,7 @@ func resolveConditionV3ID(ctx context.Context, c *chaos.APIClient, d *schema.Res
 		Limit:                  optional.NewInt32(100),
 	})
 	if err != nil {
-		return "", helpers.HandleChaosApiError(err, d, httpResp)
+		return "", helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	for _, item := range listResp.Conditions {

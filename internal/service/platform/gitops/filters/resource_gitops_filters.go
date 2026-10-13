@@ -100,7 +100,7 @@ func resourceGitOpsFiltersRead(ctx context.Context, d *schema.ResourceData, meta
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	d.SetId(resp.Identifier)
@@ -152,7 +152,7 @@ func resourceGitOpsFiltersCreateOrUpdate(ctx context.Context, d *schema.Resource
 		})
 
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 
 		d.SetId(resp.Identifier)
@@ -166,7 +166,7 @@ func resourceGitOpsFiltersCreateOrUpdate(ctx context.Context, d *schema.Resource
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Read the updated resource to get all properties
@@ -187,7 +187,7 @@ func resourceGitOpsFiltersDelete(ctx context.Context, d *schema.ResourceData, me
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

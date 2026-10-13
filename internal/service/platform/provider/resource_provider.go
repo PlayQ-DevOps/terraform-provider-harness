@@ -121,7 +121,7 @@ func resourceProviderRead(ctx context.Context, d *schema.ResourceData, meta inte
 	resp, httpResp, err := c.ProviderApi.GetProvider(ctx, id, c.AccountId)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readProvider(d, resp.Data)
@@ -144,7 +144,7 @@ func resourceProviderCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 		resp, httpResp, err = c.ProviderApi.CreateProvider(ctx, c.AccountId, &providerParams)
 
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 
 		readCreateProvider(d, resp.Data)
@@ -155,7 +155,7 @@ func resourceProviderCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 		resp, httpResp, err = c.ProviderApi.UpdateProvider(ctx, id, c.AccountId, &providerParams)
 
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 
 		readUpdateProvider(d, resp.Data)
@@ -169,7 +169,7 @@ func resourceProviderDelete(ctx context.Context, d *schema.ResourceData, meta in
 
 	resp, httpResp, err := c.ProviderApi.DeleteProvider(ctx, d.Id(), c.AccountId)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	readDeleteProvider(d, resp.Data)

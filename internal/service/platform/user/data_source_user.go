@@ -77,12 +77,12 @@ func dataSourceUserRead(ctx context.Context, d *schema.ResourceData, meta interf
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
-	if &resp == nil || resp.Data == nil || resp.Data.Empty || len(resp.Data.Content) == 0 {
+	if resp.Data == nil || resp.Data.Empty || len(resp.Data.Content) == 0 {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

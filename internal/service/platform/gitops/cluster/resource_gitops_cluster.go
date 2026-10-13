@@ -528,7 +528,7 @@ func resourceGitopsClusterCreate(ctx context.Context, d *schema.ResourceData, me
 		})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
@@ -568,14 +568,14 @@ func resourceGitopsClusterRead(ctx context.Context, d *schema.ResourceData, meta
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
 	if resp.Cluster == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -617,7 +617,7 @@ func resourceGitopsClusterUpdate(ctx context.Context, d *schema.ResourceData, me
 		})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
@@ -665,7 +665,7 @@ func resourceGitopsClusterDelete(ctx context.Context, d *schema.ResourceData, me
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

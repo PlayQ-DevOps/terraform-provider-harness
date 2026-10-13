@@ -2,6 +2,7 @@ package applications
 
 import (
 	"context"
+
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
@@ -1156,16 +1157,12 @@ func datasourceGitopsApplicationRead(ctx context.Context, d *schema.ResourceData
 		QueryRepo: optional.NewString(repoIdentifier),
 	})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	err = setApplication(d, &resp)
 	if err != nil {
 		return diag.FromErr(err)

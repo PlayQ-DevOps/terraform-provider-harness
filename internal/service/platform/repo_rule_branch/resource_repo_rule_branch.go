@@ -49,7 +49,7 @@ func resourceRepoBranchRuleRead(ctx context.Context, d *schema.ResourceData, met
 		},
 	)
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, resp)
+		return helpers.HandleRead(ctx, d, err, resp)
 	}
 
 	readRepoBranchRule(d, &rule, orgID.Value(), projectID.Value(), repoIdentifier)
@@ -72,7 +72,7 @@ func resourceRepoBranchRuleCreateOrUpdate(
 	repoIdentifier := d.Get("repo_identifier").(string)
 	body, err := buildRepoBranchRuleBody(d)
 	if err != nil {
-		return helpers.HandleApiError(err, d, nil)
+		return helpers.HandleWrite(ctx, d, err, nil)
 	}
 	// determine what type of write the change requires
 	if id != "" {
@@ -102,7 +102,7 @@ func resourceRepoBranchRuleCreateOrUpdate(
 		)
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, resp)
+		return helpers.HandleWrite(ctx, d, err, resp)
 	}
 
 	readRepoBranchRule(d, &rule, orgID.Value(), projectID.Value(), repoIdentifier)
@@ -127,7 +127,7 @@ func resourceRepoBranchRuleDelete(
 		},
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, resp)
+		return helpers.HandleDelete(ctx, d, err, resp)
 	}
 
 	return nil

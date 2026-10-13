@@ -35,7 +35,7 @@ func resourceAWSCodeDeployServiceRead(ctx context.Context, d *schema.ResourceDat
 		return diag.FromErr(err)
 	} else if svc == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

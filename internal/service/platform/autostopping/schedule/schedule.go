@@ -466,7 +466,7 @@ func saveSchedule(c *nextgen.APIClient, ctx context.Context, d *schema.ResourceD
 	}
 	createdSchdule, resp, err := c.CloudCostAutoStoppingFixedSchedulesApi.CreateAutoStoppingSchedules(ctx, c.AccountId, c.AccountId, createScheduleReq)
 	if err != nil || createdSchdule.Response == nil {
-		return helpers.HandleApiError(err, d, resp)
+		return helpers.HandleWrite(ctx, d, err, resp)
 	}
 	d.SetId(strconv.Itoa(int(createdSchdule.Response.Id)))
 	return readSchedule(ctx, d, meta)
@@ -481,7 +481,7 @@ func deleteSchedule(ctx context.Context, d *schema.ResourceData, meta interface{
 	}
 	_, httpRep, err := c.CloudCostAutoStoppingFixedSchedulesApi.DeleteAutoStoppingFixedSchedule(ctx, c.AccountId, scheduleID, c.AccountId)
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpRep)
+		return helpers.HandleDelete(ctx, d, err, httpRep)
 	}
 	return nil
 }
@@ -497,7 +497,7 @@ func readSchedule(ctx context.Context, d *schema.ResourceData, meta interface{})
 
 	resp, httpResp, err := c.CloudCostAutoStoppingFixedSchedulesApi.GetFixedSchedule(ctx, c.AccountId, float32(scheduleID), c.AccountId)
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 	if resp.Response == nil {
 		d := diag.Diagnostic{

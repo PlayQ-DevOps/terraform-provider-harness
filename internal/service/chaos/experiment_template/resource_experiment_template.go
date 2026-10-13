@@ -85,7 +85,7 @@ func resourceExperimentTemplateCreate(ctx context.Context, d *schema.ResourceDat
 				}
 			}
 		}
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	log.Printf("[DEBUG] Experiment template created: %s", resp.Identity)
@@ -126,7 +126,7 @@ func resourceExperimentTemplateRead(ctx context.Context, d *schema.ResourceData,
 			d.SetId("")
 			return nil
 		}
-		return helpers.HandleChaosReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Set data from response
@@ -174,7 +174,7 @@ func resourceExperimentTemplateUpdate(ctx context.Context, d *schema.ResourceDat
 	_, httpResp, err := c.ExperimenttemplateApi.UpdateExperimentTemplate(ctx, req, accountID, identity, opts)
 	if err != nil {
 		log.Printf("[ERROR] Failed to update experiment template: %v", err)
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	log.Printf("[DEBUG] Experiment template updated: %s", identity)
@@ -211,7 +211,7 @@ func resourceExperimentTemplateDelete(ctx context.Context, d *schema.ResourceDat
 			log.Printf("[WARN] Experiment template already deleted: %s", identity)
 			return nil
 		}
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	log.Printf("[DEBUG] Experiment template deleted: %s", identity)

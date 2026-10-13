@@ -136,7 +136,7 @@ func dataSourceDBSchemaRead(ctx context.Context, d *schema.ResourceData, meta in
 	dbSchema, httpResp, err = c.DatabaseSchemaApi.V1GetProjDbSchema(ctx, d.Get("org_id").(string), d.Get("project_id").(string), id, &localVarOptionals)
 
 	if err != nil {
-		return helpers.HandleDBOpsApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	readDataSourceDBSchema(d, &dbSchema)

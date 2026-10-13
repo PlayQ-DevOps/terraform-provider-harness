@@ -363,7 +363,7 @@ func handleIDPApiError(err error, d *schema.ResourceData, httpResp *http.Respons
 		return diag.Errorf("%s", msg)
 	}
 
-	return helpers.HandleApiError(err, d, httpResp)
+	return helpers.HandleError(context.TODO(), d, err, httpResp)
 }
 
 func handleIDPWriteApiError(terraformType string, err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
@@ -386,7 +386,7 @@ func handleIDPReadApiError(err error, d *schema.ResourceData, httpResp *http.Res
 		return diag.Errorf("%s", msg)
 	}
 
-	return helpers.HandleReadApiError(err, d, httpResp)
+	return helpers.HandleRead(context.TODO(), d, err, httpResp)
 }
 
 func idpAPIErrorMessage(err error) string {
@@ -447,7 +447,7 @@ func resourceCatalogEntityUpdateGitMetadata(ctx context.Context, c *idp.APIClien
 		ProjectIdentifier: info.ProjectId,
 	})
 	if err != nil {
-		return helpers.HandleGitApiErrorWithResourceData(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	return nil

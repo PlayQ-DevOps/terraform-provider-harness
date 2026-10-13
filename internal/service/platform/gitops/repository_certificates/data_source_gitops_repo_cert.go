@@ -57,7 +57,7 @@ func dataSourceGitopsRepoCertRead(ctx context.Context, d *schema.ResourceData, m
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	setGitopsRepositoriesCertificates(d, &resp, c.AccountId, agentIdentifier)

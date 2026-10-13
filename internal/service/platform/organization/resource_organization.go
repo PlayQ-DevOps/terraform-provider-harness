@@ -36,14 +36,14 @@ func resourceOrganizationRead(ctx context.Context, d *schema.ResourceData, meta 
 
 	id := d.Id()
 	if id == "" {
-		d.MarkNewResource()
+
 		return nil
 	}
 
 	resp, httpResp, err := c.OrganizationApi.GetOrganization(ctx, d.Id(), c.AccountId)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readOrganization(d, resp.Data.Organization)
@@ -68,7 +68,7 @@ func resourceOrganizationCreateOrUpdate(ctx context.Context, d *schema.ResourceD
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readOrganization(d, resp.Data.Organization)
@@ -81,7 +81,7 @@ func resourceOrganizationDelete(ctx context.Context, d *schema.ResourceData, met
 
 	_, httpResp, err := c.OrganizationApi.DeleteOrganization(ctx, d.Id(), c.AccountId, nil)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

@@ -2,9 +2,10 @@ package feature_flag_target
 
 import (
 	"context"
-	"github.com/harness/terraform-provider-harness/internal/service/platform/feature_flag"
 	"net/http"
 	"time"
+
+	"github.com/harness/terraform-provider-harness/internal/service/platform/feature_flag"
 
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
@@ -97,7 +98,7 @@ func resourceFeatureFlagTargetRead(ctx context.Context, d *schema.ResourceData, 
 	id := d.Id()
 
 	if id == "" {
-		d.MarkNewResource()
+
 		return nil
 	}
 

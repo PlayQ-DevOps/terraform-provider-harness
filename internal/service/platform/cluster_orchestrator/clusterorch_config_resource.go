@@ -407,7 +407,7 @@ func resourceClusterOrchestratorConfigCreateOrUpdate(ctx context.Context, d *sch
 	resp, httpResp, err = c.CloudCostClusterOrchestratorApi.UpdateClusterOrchestratorConfig(ctx, c.AccountId, orchID, body)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if !resp.Success {
@@ -426,7 +426,7 @@ func resourceClusterOrchestratorConfigCreateOrUpdate(ctx context.Context, d *sch
 func updateClusterOrchestratorStatus(ctx context.Context, c *nextgen.APIClient, orchID string, disabled bool) diag.Diagnostics {
 	_, httpResp, err := c.CloudCostClusterOrchestratorApi.ToggleClusterOrchestratorState(ctx, c.AccountId, orchID, disabled)
 	if err != nil {
-		return helpers.HandleApiError(err, nil, httpResp)
+		return helpers.HandleWrite(ctx, nil, err, httpResp)
 	}
 	return nil
 }

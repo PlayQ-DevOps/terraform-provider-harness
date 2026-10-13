@@ -18,7 +18,7 @@ import (
 //
 // Regression test for CCM-32336 (the bug class is: a NextGen GET endpoint
 // returning HTTP 500 for a deleted entity causes terraform plan to fail).
-// The CCM filter resource Read() routes through helpers.HandleReadApiError
+// The CCM filter resource Read() routes through helpers.HandleRead
 // which clears state on 404 + ENTITY_NOT_FOUND.
 func TestAccResourceCCMFilters_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))

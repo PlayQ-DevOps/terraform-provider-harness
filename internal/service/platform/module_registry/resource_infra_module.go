@@ -155,7 +155,7 @@ func resourceInfraModuleRead(ctx context.Context, d *schema.ResourceData, m inte
 	c, ctx := m.(*internal.Session).GetPlatformClientWithContext(ctx)
 	id := d.Id()
 	if id == "" {
-		d.MarkNewResource()
+
 	}
 	resp, httpRes, err := c.ModuleRegistryApi.ModuleRegistryListModulesById(
 		ctx,
@@ -163,7 +163,7 @@ func resourceInfraModuleRead(ctx context.Context, d *schema.ResourceData, m inte
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleRead(ctx, d, err, httpRes)
 	}
 	readModule(d, &resp)
 	return nil

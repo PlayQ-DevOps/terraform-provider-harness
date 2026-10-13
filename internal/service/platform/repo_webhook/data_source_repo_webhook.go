@@ -40,7 +40,7 @@ func dataSourceRepoWebhookRead(ctx context.Context, d *schema.ResourceData, meta
 		},
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, resp)
+		return helpers.HandleError(ctx, d, err, resp)
 	}
 
 	readRepoWebhook(d, &rule, orgID.Value(), projectID.Value(), repoIdentifier)

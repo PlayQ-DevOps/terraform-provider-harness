@@ -46,7 +46,7 @@ func resourceKubernetesServiceKubernetesRead(ctx context.Context, d *schema.Reso
 		return diag.FromErr(err)
 	} else if svc == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

@@ -57,7 +57,7 @@ func dataSourceInfraProviderVersionRead(ctx context.Context, d *schema.ResourceD
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleError(ctx, d, err, httpRes)
 	}
 
 	d.SetId(fmt.Sprintf("%s/%s", providerId, version))

@@ -34,7 +34,7 @@ func TestResourceVMRule(t *testing.T) {
 // next refresh treats the GET as "not found" and re-plans a create instead of
 // erroring out with "giving up after 11 attempt(s)".
 //
-// Regression test for CCM-32336. helpers.HandleReadApiError clears state on
+// Regression test for CCM-32336. helpers.HandleRead clears state on
 // 404 + ENTITY_NOT_FOUND so terraform plan reports a recreate.
 func TestAccResourceSchedule_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 	suffix := strings.ToLower(utils.RandStringBytes(5))

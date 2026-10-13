@@ -107,7 +107,7 @@ func resourceCloudProviderAwsRead(ctx context.Context, d *schema.ResourceData, m
 		return diag.FromErr(err)
 	} else if cp.IsEmpty() {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

@@ -51,7 +51,7 @@ func dataSourceSloRead(ctx context.Context, d *schema.ResourceData, meta interfa
 	resp, httpResp, err := c.SloApi.GetServiceLevelObjectiveNg(ctx, accountIdentifier, orgIdentifier, projectIdentifier, identifier)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	readSlo(d, &resp.Resource)

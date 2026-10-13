@@ -68,7 +68,7 @@ func resourceInfraProviderVersionRead(ctx context.Context, d *schema.ResourceDat
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleRead(ctx, d, err, httpRes)
 	}
 	readProviderVersion(d, &resp, providerId, version)
 	return nil

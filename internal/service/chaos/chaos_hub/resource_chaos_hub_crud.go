@@ -210,7 +210,7 @@ func resourceChaosHubCreate(ctx context.Context, d *schema.ResourceData, meta in
 		},
 	)
 	if err != nil {
-		return helpers.HandleChaosGraphQLError(err, d, "create_chaos_hub")
+		return helpers.HandleWrite(ctx, d, err, nil)
 	}
 
 	d.SetId(hub.ID)
@@ -248,7 +248,7 @@ func resourceChaosHubRead(ctx context.Context, d *schema.ResourceData, meta inte
 			d.SetId("")
 			return nil
 		}
-		return helpers.HandleChaosGraphQLReadError(err, d, "get_chaos_hub")
+		return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound())
 	}
 
 	d.Set("name", hub.Name)
@@ -304,10 +304,12 @@ func resourceChaosHubUpdate(ctx context.Context, d *schema.ResourceData, meta in
 	// Get the current state
 	currentHub, err := hubClient.Get(ctx, modelIdentifiers, hubID)
 	if err != nil {
-		return helpers.HandleChaosGraphQLReadError(err, d, "get_chaos_hub")
+		return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound(
+
+		// Initialize request with required fields
+		))
 	}
 
-	// Initialize request with required fields
 	req := &model.ChaosHubRequest{
 		HubName:     d.Get("name").(string),
 		RepoBranch:  d.Get("repo_branch").(string),
@@ -368,7 +370,7 @@ func resourceChaosHubUpdate(ctx context.Context, d *schema.ResourceData, meta in
 	)
 
 	if err != nil {
-		return helpers.HandleChaosGraphQLError(err, d, "update_chaos_hub")
+		return helpers.HandleWrite(ctx, d, err, nil)
 	}
 
 	// Update the resource ID if the name has changed
@@ -419,7 +421,7 @@ func resourceChaosHubDelete(ctx context.Context, d *schema.ResourceData, meta in
 			d.SetId("")
 			return nil
 		}
-		return helpers.HandleChaosGraphQLReadError(err, d, "get_chaos_hub_for_deletion")
+		return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound())
 	}
 
 	// If we get here, the hub exists, so proceed with deletion
@@ -437,11 +439,11 @@ func resourceChaosHubDelete(ctx context.Context, d *schema.ResourceData, meta in
 			d.SetId("")
 			return nil
 		}
-		return helpers.HandleChaosGraphQLError(err, d, "delete_chaos_hub")
+		return helpers.HandleDelete(ctx, d, err, nil, helpers.GraphQLNotFound())
 	}
 
 	if !deleted {
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("failed to delete chaos hub: unknown error"), d, "delete_chaos_hub")
+		return helpers.HandleDelete(ctx, d, fmt.Errorf("failed to delete chaos hub: unknown error"), nil, helpers.GraphQLNotFound())
 	}
 
 	// Clear the ID from state

@@ -61,7 +61,7 @@ func resourceRolesRead(ctx context.Context, d *schema.ResourceData, meta interfa
 	resp, httpResp, err := c.RolesApi.GetRole(ctx, id, rolesApiGetRoleOpts)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readRoles(d, resp.Data.Role)
@@ -94,7 +94,7 @@ func resourceRolesCreateOrUpdate(ctx context.Context, d *schema.ResourceData, me
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readRoles(d, resp.Data.Role)
@@ -111,7 +111,7 @@ func resourceRolesDelete(ctx context.Context, d *schema.ResourceData, meta inter
 		ProjectIdentifier: helpers.BuildField(d, "project_id"),
 	})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

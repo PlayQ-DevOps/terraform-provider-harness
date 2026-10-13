@@ -99,7 +99,7 @@ func TestAccResourceRuleEnforcement(t *testing.T) {
 // create instead of erroring out with "giving up after 11 attempt(s)".
 //
 // Regression test for CCM-32336. The enforcement Read() routes through
-// helpers.HandleReadApiError which clears state on 404 + ENTITY_NOT_FOUND.
+// helpers.HandleRead which clears state on 404 + ENTITY_NOT_FOUND.
 func TestAccResourceRuleEnforcement_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	resourceName := "harness_governance_rule_enforcement.test"

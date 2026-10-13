@@ -196,7 +196,7 @@ func resourceUserGroupRead(ctx context.Context, d *schema.ResourceData, meta int
 
 	if userGroup == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

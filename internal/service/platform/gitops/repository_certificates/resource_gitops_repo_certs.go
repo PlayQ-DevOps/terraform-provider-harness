@@ -167,15 +167,11 @@ func resourceGitopsRepoCertsCreateOrUpdate(ctx context.Context, d *schema.Resour
 		})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	setGitopsRepositoriesCertificates(d, &resp, accountIdentifier, agentIdentifier)
 	return nil
 }
@@ -191,16 +187,12 @@ func resourceGitopsRepoCertsRead(ctx context.Context, d *schema.ResourceData, me
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	setGitopsRepositoriesCertificates(d, &resp, c.AccountId, agentIdentifier)
 	return nil
 }
@@ -217,7 +209,7 @@ func resourceGitopsRepoCertsDelete(ctx context.Context, d *schema.ResourceData, 
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

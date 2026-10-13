@@ -4,6 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"time"
+
 	"github.com/antihax/optional"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
@@ -12,10 +17,6 @@ import (
 	"github.com/harness/terraform-provider-harness/internal/service/platform/feature_flag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"io"
-	"log"
-	"net/http"
-	"time"
 )
 
 // ResourceFeatureFlagTargetGroup ...
@@ -176,7 +177,7 @@ func resourceFeatureFlagTargetGroupRead(ctx context.Context, d *schema.ResourceD
 
 	id := d.Id()
 	if id == "" {
-		d.MarkNewResource()
+
 		return nil
 	}
 

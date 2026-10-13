@@ -491,7 +491,7 @@ func resourceGitOpsRepositoryCreate(ctx context.Context, d *schema.ResourceData,
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
@@ -559,13 +559,13 @@ func resourceGitOpsRepositoryRead(ctx context.Context, d *schema.ResourceData, m
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
 	if resp.Repository == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 	if helpers.WoActive(d, "repo.0.password_wo", "repo.0.password_wo_version") {
@@ -648,7 +648,7 @@ func resourceGitOpsRepositoryUpdate(ctx context.Context, d *schema.ResourceData,
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
@@ -721,7 +721,7 @@ func resourceGitOpsRepositoryDelete(ctx context.Context, d *schema.ResourceData,
 		ForceDelete:       optional.NewBool(force_delete),
 	})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765

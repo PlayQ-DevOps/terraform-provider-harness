@@ -183,7 +183,7 @@ func resourceServiceDiscoveryAgentCreate(ctx context.Context, d *schema.Resource
 	// Create the agent
 	agent, httpResp, err := c.AgentApi.CreateAgent(ctx, req, accountIdentifier, opts)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Set the ID and read back the agent
@@ -226,7 +226,7 @@ func resourceServiceDiscoveryAgentRead(ctx context.Context, d *schema.ResourceDa
 	)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Set the basic fields
@@ -372,7 +372,7 @@ func resourceServiceDiscoveryAgentUpdate(ctx context.Context, d *schema.Resource
 		readOpts,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Prepare the update request with the current config
@@ -413,7 +413,7 @@ func resourceServiceDiscoveryAgentUpdate(ctx context.Context, d *schema.Resource
 	_, updateHttpResp, updateErr := c.AgentApi.UpdateAgent(ctx, req, accountIdentifier, environmentIdentifier,
 		agentIdentity, opts)
 	if updateErr != nil {
-		return helpers.HandleApiError(updateErr, d, updateHttpResp)
+		return helpers.HandleWrite(ctx, d, updateErr, updateHttpResp)
 	}
 
 	// Read back the agent
@@ -466,7 +466,7 @@ func resourceServiceDiscoveryAgentDelete(ctx context.Context, d *schema.Resource
 			d.SetId("")
 			return nil
 		}
-		return helpers.HandleApiError(getErr, d, getHttpResp)
+		return helpers.HandleDelete(ctx, d, getErr, getHttpResp)
 	}
 
 	// Delete the agent
@@ -484,7 +484,7 @@ func resourceServiceDiscoveryAgentDelete(ctx context.Context, d *schema.Resource
 			d.SetId("")
 			return nil
 		}
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	// Clear the ID to remove from state

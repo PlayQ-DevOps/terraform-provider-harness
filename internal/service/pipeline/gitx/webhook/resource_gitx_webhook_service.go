@@ -109,7 +109,7 @@ func resourceWebhookCreate(ctx context.Context, d *schema.ResourceData, meta int
 			Body:           optional.NewInterface(payload),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 
 	} else if len(orgIdentifier) > 0 && projectIdentifier == "" {
@@ -118,7 +118,7 @@ func resourceWebhookCreate(ctx context.Context, d *schema.ResourceData, meta int
 			Body:           optional.NewInterface(payload),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 	} else {
 		_, httpResp, err := c.GitXWebhooksApiService.CreateGitxWebhook(ctx, &nextgen.GitXWebhooksApiCreateGitxWebhookOpts{
@@ -126,7 +126,7 @@ func resourceWebhookCreate(ctx context.Context, d *schema.ResourceData, meta int
 			Body:           optional.NewInterface(payload),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 	}
 
@@ -155,11 +155,11 @@ func resourceWebhookRead(ctx context.Context, d *schema.ResourceData, meta inter
 			HarnessAccount: optional.NewString(c.AccountId),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleRead(ctx, d, err, httpResp)
 		}
 		if len(resp.WebhookIdentifier) <= 0 {
 			d.SetId("")
-			d.MarkNewResource()
+
 			return nil
 		}
 		setWebhookUpdateDetails(d, c.AccountId, orgIdentifier, projectIdentifier, &resp)
@@ -169,11 +169,11 @@ func resourceWebhookRead(ctx context.Context, d *schema.ResourceData, meta inter
 			HarnessAccount: optional.NewString(c.AccountId),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleRead(ctx, d, err, httpResp)
 		}
 		if len(resp.WebhookIdentifier) <= 0 {
 			d.SetId("")
-			d.MarkNewResource()
+
 			return nil
 		}
 		setWebhookUpdateDetails(d, c.AccountId, orgIdentifier, projectIdentifier, &resp)
@@ -182,11 +182,11 @@ func resourceWebhookRead(ctx context.Context, d *schema.ResourceData, meta inter
 			HarnessAccount: optional.NewString(c.AccountId),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleRead(ctx, d, err, httpResp)
 		}
 		if len(resp.WebhookIdentifier) <= 0 {
 			d.SetId("")
-			d.MarkNewResource()
+
 			return nil
 		}
 		setWebhookUpdateDetails(d, c.AccountId, orgIdentifier, projectIdentifier, &resp)
@@ -246,7 +246,7 @@ func resourceWebhookUpdate(ctx context.Context, d *schema.ResourceData, meta int
 			Body:           optional.NewInterface(payload),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 
 	} else if len(orgIdentifier) > 0 && projectIdentifier == "" {
@@ -255,7 +255,7 @@ func resourceWebhookUpdate(ctx context.Context, d *schema.ResourceData, meta int
 			Body:           optional.NewInterface(payload),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 	} else {
 		_, httpResp, err := c.GitXWebhooksApiService.UpdateGitxWebhook(ctx, webhook_identifier, &nextgen.GitXWebhooksApiUpdateGitxWebhookOpts{
@@ -263,7 +263,7 @@ func resourceWebhookUpdate(ctx context.Context, d *schema.ResourceData, meta int
 			Body:           optional.NewInterface(payload),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 	}
 
@@ -291,7 +291,7 @@ func resourceWebhookDelete(ctx context.Context, d *schema.ResourceData, meta int
 			HarnessAccount: optional.NewString(c.AccountId),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleDelete(ctx, d, err, httpResp)
 		}
 
 	} else if len(orgIdentifier) > 0 {
@@ -299,14 +299,14 @@ func resourceWebhookDelete(ctx context.Context, d *schema.ResourceData, meta int
 			HarnessAccount: optional.NewString(c.AccountId),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleDelete(ctx, d, err, httpResp)
 		}
 	} else {
 		httpResp, err := c.GitXWebhooksApiService.DeleteGitxWebhook(ctx, webhook_identifier, &nextgen.GitXWebhooksApiDeleteGitxWebhookOpts{
 			HarnessAccount: optional.NewString(c.AccountId),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleDelete(ctx, d, err, httpResp)
 		}
 	}
 

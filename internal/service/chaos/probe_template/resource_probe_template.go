@@ -104,7 +104,7 @@ func resourceProbeTemplateCreate(ctx context.Context, d *schema.ResourceData, me
 	// Create the probe template
 	resp, httpResp, err := c.DefaultApi.CreateProbeTemplate(ctx, req, accountID, orgID, projectID)
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Set the ID
@@ -147,7 +147,7 @@ func resourceProbeTemplateRead(ctx context.Context, d *schema.ResourceData, meta
 			d.SetId("")
 			return nil
 		}
-		return helpers.HandleChaosReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -224,7 +224,7 @@ func resourceProbeTemplateUpdate(ctx context.Context, d *schema.ResourceData, me
 	}
 	_, httpResp, err := c.DefaultApi.UpdateProbeTemplate(ctx, req, accountID, orgID, projectID, identity, opts)
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	log.Printf("[DEBUG] Updated probe template: %s", identity)
@@ -255,7 +255,7 @@ func resourceProbeTemplateDelete(ctx context.Context, d *schema.ResourceData, me
 			log.Printf("[WARN] Probe template not found during delete: %s", identity)
 			return nil
 		}
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	log.Printf("[DEBUG] Deleted probe template: %s", identity)

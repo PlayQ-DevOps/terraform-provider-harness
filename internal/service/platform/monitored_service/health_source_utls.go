@@ -3,8 +3,9 @@ package monitored_service
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"strconv" //this package is used to convert the data type
+
+	"github.com/harness/harness-go-sdk/harness/nextgen"
 )
 
 func getAppDynamicsHealthSource(hs map[string]interface{}) nextgen.AppDynamicsHealthSource {

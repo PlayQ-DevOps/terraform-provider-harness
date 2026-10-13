@@ -245,7 +245,7 @@ func resourceInfraModuleTestingRead(ctx context.Context, d *schema.ResourceData,
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleRead(ctx, d, err, httpRes)
 	}
 	readModule(d, &resp)
 	return nil

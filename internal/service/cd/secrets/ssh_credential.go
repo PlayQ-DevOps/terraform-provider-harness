@@ -245,7 +245,7 @@ func resourceSSHCredentialRead(ctx context.Context, d *schema.ResourceData, meta
 
 	if cred == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

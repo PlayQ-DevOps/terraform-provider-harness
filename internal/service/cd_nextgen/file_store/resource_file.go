@@ -154,7 +154,7 @@ func resourceFileStoreNodeFileRead(ctx context.Context, d *schema.ResourceData, 
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -167,7 +167,7 @@ func resourceFileStoreNodeFileRead(ctx context.Context, d *schema.ResourceData, 
 		ProjectIdentifier: helpers.BuildField(d, projectId),
 	})
 	if downloadErr != nil {
-		return helpers.HandleReadApiError(downloadErr, d, downloadResp)
+		return helpers.HandleRead(ctx, d, downloadErr, downloadResp)
 	}
 
 	contentStr = optional.NewInterface(bodyContent)
@@ -188,21 +188,21 @@ func resourceFileStoreNodeFileCreateOrUpdate(ctx context.Context, d *schema.Reso
 	if id == "" {
 		createRequest, internalErr := buildFileStoreApiFileCreateRequest(d)
 		if internalErr != nil {
-			return helpers.HandleApiError(internalErr, d, httpResp)
+			return helpers.HandleWrite(ctx, d, internalErr, httpResp)
 		}
 		fileContent = createRequest.Content
 		resp, httpResp, err = c.FileStoreApi.Create(ctx, c.AccountId, createRequest)
 	} else {
 		updateRequest, internalErr := buildFileStoreApiFileUpdateRequest(d)
 		if internalErr != nil {
-			return helpers.HandleApiError(internalErr, d, httpResp)
+			return helpers.HandleWrite(ctx, d, internalErr, httpResp)
 		}
 		fileContent = updateRequest.Content
 		resp, httpResp, err = c.FileStoreApi.Update(ctx, c.AccountId, id, updateRequest)
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readFileNode(d, resp.Data, fileContent)
@@ -219,7 +219,7 @@ func resourceFileStoreNodeFileDelete(ctx context.Context, d *schema.ResourceData
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

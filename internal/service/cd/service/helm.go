@@ -35,7 +35,7 @@ func resourceHelmServiceRead(ctx context.Context, d *schema.ResourceData, meta i
 		return diag.FromErr(err)
 	} else if svc == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

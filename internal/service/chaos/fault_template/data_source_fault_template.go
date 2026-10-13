@@ -235,7 +235,7 @@ func dataSourceFaultTemplateRead(ctx context.Context, d *schema.ResourceData, me
 			// If this is the last retry, return the error
 			if i == maxRetries-1 {
 				if apiErr != nil {
-					return helpers.HandleChaosReadApiError(apiErr, d, httpResp.(*http.Response))
+					return helpers.HandleError(ctx, d, apiErr, httpResp.(*http.Response))
 				}
 				if resp.Data == nil {
 					return diag.Errorf("fault template not found: %s", identityStr)
@@ -296,7 +296,7 @@ func dataSourceFaultTemplateRead(ctx context.Context, d *schema.ResourceData, me
 			// If this is the last retry, return the error
 			if i == maxRetries-1 {
 				if apiErr != nil {
-					return helpers.HandleChaosReadApiError(apiErr, d, httpResp)
+					return helpers.HandleError(ctx, d, apiErr, httpResp)
 				}
 				if foundTemplate == nil {
 					totalFound := 0

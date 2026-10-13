@@ -84,7 +84,7 @@ func resourceEnvironmentGroupRead(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 	envGroup = resp.Data.EnvGroup
 	// Soft delete lookup error handling
@@ -119,7 +119,7 @@ func resourceEnvironmentGroupCreateOrUpdate(ctx context.Context, d *schema.Resou
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil || resp.Data.EnvGroup == nil {
@@ -143,7 +143,7 @@ func resourceEnvironmentGroupDelete(ctx context.Context, d *schema.ResourceData,
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

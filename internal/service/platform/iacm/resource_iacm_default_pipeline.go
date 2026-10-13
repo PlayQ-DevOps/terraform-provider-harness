@@ -64,7 +64,7 @@ func resourceIacmDefaultPipelineRead(ctx context.Context, d *schema.ResourceData
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 	id := d.Id()
 	if id == "" {
-		d.MarkNewResource()
+
 	}
 	defaultPipelines, httpResp, err := c.SettingsApi.SettingsListDefaultPipelines(
 		ctx,
@@ -74,7 +74,7 @@ func resourceIacmDefaultPipelineRead(ctx context.Context, d *schema.ResourceData
 		nil,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 	for _, defaultPipeline := range defaultPipelines {
 		if defaultPipeline.Provisioner == d.Get("provisioner_type").(string) &&

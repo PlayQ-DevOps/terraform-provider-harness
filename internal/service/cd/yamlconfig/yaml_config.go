@@ -77,7 +77,7 @@ func resourceYamlConfigRead(ctx context.Context, d *schema.ResourceData, meta in
 		return diag.FromErr(err)
 	} else if entity == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

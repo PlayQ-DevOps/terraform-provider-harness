@@ -84,7 +84,7 @@ func dataSourceInfraProviderVersionsRead(ctx context.Context, d *schema.Resource
 		providerType,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleError(ctx, d, err, httpRes)
 	}
 	readProviderVersionsList(d, resp, account, providerType)
 	return nil

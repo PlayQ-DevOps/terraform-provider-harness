@@ -35,7 +35,7 @@ func resourceLifecycleRuleRead(ctx context.Context, d *schema.ResourceData, meta
 
 	resp, httpResp, err := c.LifecycleApi.GetLifecycleRule(ctx, accountId, orgId, projectId, ruleId)
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readLifecycleRule(d, &resp)
@@ -53,7 +53,7 @@ func resourceLifecycleRuleCreate(ctx context.Context, d *schema.ResourceData, me
 
 	resp, httpResp, err := c.LifecycleApi.CreateLifecycleRule(ctx, accountId, orgId, projectId, body)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readLifecycleRule(d, &resp)
@@ -72,7 +72,7 @@ func resourceLifecycleRuleUpdate(ctx context.Context, d *schema.ResourceData, me
 
 	resp, httpResp, err := c.LifecycleApi.UpdateLifecycleRule(ctx, accountId, orgId, projectId, ruleId, body)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readLifecycleRule(d, &resp)
@@ -87,7 +87,7 @@ func resourceLifecycleRuleDelete(ctx context.Context, d *schema.ResourceData, me
 
 	httpResp, err := c.LifecycleApi.DeleteLifecycleRule(ctx, accountId, ruleId)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

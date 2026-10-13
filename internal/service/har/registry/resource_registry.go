@@ -223,7 +223,7 @@ func resourceRegistryRead(ctx context.Context, d *schema.ResourceData, meta inte
 	resp, httpResp, err := c.RegistriesApi.GetRegistry(ctx, registryRef)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readRegistry(d, resp.Data)
@@ -261,7 +261,7 @@ func resourceRegistryCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 			Body: optional.NewInterface(registry), SpaceRef: optional.NewString(spaceRef),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 
 		// TODO: remove once AR Create-API firewallMode persistence (AH-3528) is deployed to all regions.
@@ -275,7 +275,7 @@ func resourceRegistryCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 					Body: optional.NewInterface(registry),
 				})
 				if err != nil {
-					return helpers.HandleApiError(err, d, httpResp)
+					return helpers.HandleWrite(ctx, d, err, httpResp)
 				}
 			}
 		}
@@ -285,7 +285,7 @@ func resourceRegistryCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 			Body: optional.NewInterface(registry),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 	}
 
@@ -317,7 +317,7 @@ func resourceRegistryDelete(ctx context.Context, d *schema.ResourceData, meta in
 	_, httpResp, err := c.RegistriesApi.DeleteRegistry(ctx, registryRef)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

@@ -58,7 +58,7 @@ func resourceInfraProviderVersionPublishRead(ctx context.Context, d *schema.Reso
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleRead(ctx, d, err, httpRes)
 	}
 
 	// If we can read the version, consider it published

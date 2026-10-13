@@ -35,7 +35,7 @@ func resourceASRuleRead(ctx context.Context, d *schema.ResourceData, meta interf
 	}
 	resp, httpResp, err := c.CloudCostAutoStoppingRulesV2Api.GetAutoStoppingRuleV2(ctx, c.AccountId, ruleId, c.AccountId)
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Response != nil {
@@ -118,7 +118,7 @@ func dataSourceRuleReadByIdOrName(ctx context.Context, d *schema.ResourceData, m
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 	resp, httpResp, err := c.CloudCostAutoStoppingRulesApi.ListAutoStoppingRules(ctx, c.AccountId, c.AccountId)
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	var matched []nextgen.Service
@@ -198,7 +198,7 @@ func resourceASRuleCreateOrUpdate(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Response != nil {
@@ -218,7 +218,7 @@ func resourceASRuleDelete(ctx context.Context, d *schema.ResourceData, meta inte
 	}
 	httpResp, err := c.CloudCostAutoStoppingRulesApi.DeleteAutoStoppingRule(ctx, ruleId, c.AccountId, c.AccountId)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

@@ -2,10 +2,11 @@ package service_overrides_v2_test
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"testing"
 )
 
 func TestAccDataSourceServiceOverrides(t *testing.T) {

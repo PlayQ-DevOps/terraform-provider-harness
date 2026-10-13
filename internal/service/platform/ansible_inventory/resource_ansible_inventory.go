@@ -319,7 +319,7 @@ func resourceAnsibleInventoryRead(ctx context.Context, d *schema.ResourceData, m
 		nil,
 	)
 	if err != nil {
-		return helpers.HandleIacmReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	return readInventory(d, &resp)
