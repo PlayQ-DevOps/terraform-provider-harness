@@ -13,6 +13,7 @@ func TestLifecycle_Organization(t *testing.T) {
 	acctest.RunLifecycle(t, acctest.Lifecycle{
 		ResourceType: "harness_platform_organization",
 		Kind:         fakeharness.KindOrganization,
+		Drift:        func(obj map[string]any) { obj["description"] = "changed outside Terraform" },
 		Scope:        acctest.ScopeAccount,
 		Config: func(p acctest.LifecycleParams) string {
 			return fmt.Sprintf(`

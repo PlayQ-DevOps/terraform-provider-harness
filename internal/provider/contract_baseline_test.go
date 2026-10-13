@@ -473,7 +473,7 @@ var contractBaselineCounts = map[string]map[string]int{
 		"harness_platform_connector_vault":                2,
 		"harness_platform_dashboards":                     5,
 		"harness_platform_delegatetoken":                  4,
-		"harness_platform_environment":                    21,
+		"harness_platform_environment":                    22,
 		"harness_platform_environment_group":              2,
 		"harness_platform_environment_service_overrides":  1,
 		"harness_platform_feature_flag":                   4,

@@ -406,9 +406,9 @@ func readInfrastructure(d *schema.ResourceData, infra *nextgen.InfrastructureRes
 	d.Set("deployment_type", infra.Infrastructure.DeploymentType)
 	d.Set("yaml", infra.Infrastructure.Yaml)
 
-	var store_type = helpers.BuildField(d, "git_details.0.store_type")
-	var base_branch = helpers.BuildField(d, "git_details.0.base_branch")
-	var commit_message = helpers.BuildField(d, "git_details.0.commit_message")
+	var store_type = helpers.ConfigOnly(d, "git_details.0.store_type")
+	var base_branch = helpers.ConfigOnly(d, "git_details.0.base_branch")
+	var commit_message = helpers.ConfigOnly(d, "git_details.0.commit_message")
 	var connector_ref = infra.Infrastructure.ConnectorRef
 
 	if infra.Infrastructure.EntityGitDetails != nil {

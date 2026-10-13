@@ -358,10 +358,10 @@ func readCatalogEntity(d *schema.ResourceData, entity idp.EntityResponse) {
 	d.Set("project_id", entity.ProjectIdentifier)
 	d.Set("yaml", entity.Yaml)
 	if entity.GitDetails != nil {
-		storeType := helpers.BuildField(d, "git_details.0.store_type")
-		baseBranch := helpers.BuildField(d, "git_details.0.base_branch")
-		commitMessage := helpers.BuildField(d, "git_details.0.commit_message")
-		connectorRef := helpers.BuildField(d, "git_details.0.connector_ref")
+		storeType := helpers.ConfigOnly(d, "git_details.0.store_type")
+		baseBranch := helpers.ConfigOnly(d, "git_details.0.base_branch")
+		commitMessage := helpers.ConfigOnly(d, "git_details.0.commit_message")
+		connectorRef := helpers.ConfigOnly(d, "git_details.0.connector_ref")
 
 		d.Set("git_details", []any{readGitDetails(entity, storeType, baseBranch, commitMessage, connectorRef)})
 	} else {
@@ -377,7 +377,11 @@ func readGitDetails(entity idp.EntityResponse, store_type optional.String, base_
 		"last_commit_id": entity.GitDetails.CommitId,
 		"last_object_id": entity.GitDetails.ObjectId,
 	}
-	if store_type.IsSet() {
+	// Store type and connector reference come from the API; the configured values are kept
+	// only when the API omits them (Harness Code repositories have no connector).
+	if storeType := entity.GitDetails.StoreType; storeType != "" {
+		git_details["store_type"] = storeType
+	} else if store_type.IsSet() {
 		git_details["store_type"] = store_type.Value()
 	}
 	if base_branch.IsSet() {
@@ -386,12 +390,14 @@ func readGitDetails(entity idp.EntityResponse, store_type optional.String, base_
 	if commit_message.IsSet() {
 		git_details["commit_message"] = commit_message.Value()
 	}
-	if connector_ref.IsSet() {
-		git_details["connector_ref"] = connector_ref.Value()
+	connectorRef := entity.GitDetails.ConnectorRef
+	if connectorRef == "" && connector_ref.IsSet() {
+		connectorRef = connector_ref.Value()
 	}
-	if !connector_ref.IsSet() || connector_ref.Value() == "" {
-		git_details["is_harness_code_repo"] = true
+	if connectorRef != "" {
+		git_details["connector_ref"] = connectorRef
 	}
+	git_details["is_harness_code_repo"] = entity.GitDetails.IsHarnessCodeRepo || connectorRef == ""
 
 	return git_details
 }

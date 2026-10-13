@@ -13,6 +13,7 @@ func TestLifecycle_Pipeline(t *testing.T) {
 	acctest.RunLifecycle(t, acctest.Lifecycle{
 		ResourceType: "harness_platform_pipeline",
 		Kind:         fakeharness.KindPipeline,
+		Drift:        func(obj map[string]any) { obj["description"] = "changed outside Terraform" },
 		Scope:        acctest.ScopeProject,
 		Config: func(p acctest.LifecycleParams) string {
 			return fmt.Sprintf(`

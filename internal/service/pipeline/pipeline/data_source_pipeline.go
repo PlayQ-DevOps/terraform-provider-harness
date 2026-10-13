@@ -110,7 +110,6 @@ func dataSourcePipelineRead(ctx context.Context, d *schema.ResourceData, meta in
 	org_id := d.Get("org_id").(string)
 	project_id := d.Get("project_id").(string)
 	pipeline_id := d.Get("identifier").(string)
-	template_applied := d.Get("template_applied").(bool)
 	store_type := helpers.BuildField(d, "git_details.0.store_type")
 	base_branch := helpers.BuildField(d, "git_details.0.base_branch")
 	commit_message := helpers.BuildField(d, "git_details.0.commit_message")
@@ -127,7 +126,7 @@ func dataSourcePipelineRead(ctx context.Context, d *schema.ResourceData, meta in
 		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
-	readPipeline(d, resp, org_id, project_id, template_applied, store_type, base_branch, commit_message, connector_ref)
+	readPipeline(d, resp, org_id, project_id, store_type, base_branch, commit_message, connector_ref)
 
 	return nil
 }

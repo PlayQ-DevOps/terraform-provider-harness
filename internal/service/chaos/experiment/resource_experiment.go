@@ -214,20 +214,9 @@ func resourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta in
 	d.Set("name", experiment.Name)
 	d.Set("identity", experiment.Identity)
 	d.Set("description", experiment.Description)
-	if len(experiment.Tags) > 0 {
-		// Only preserve user-configured tags to prevent drift from API-added tags
-		configTags := d.Get("tags").(*schema.Set)
-
-		// During import, configTags will be empty, so preserve all tags
-		// During normal reads, filter to only user-configured tags
-		if configTags.Len() == 0 {
-			// Import scenario or no tags configured - preserve all API tags
-			d.Set("tags", flattenTags(experiment.Tags))
-		} else {
-			// Normal read - preserve only user-configured tags
-			d.Set("tags", flattenTagsPreserveConfig(experiment.Tags, configTags))
-		}
-	}
+	// Tags are refreshed from the API in full, so a tag added or removed outside Terraform
+	// shows up in the plan.
+	d.Set("tags", flattenTags(experiment.Tags))
 
 	// Infrastructure
 	d.Set("infra_id", experiment.InfraID)
@@ -442,21 +431,5 @@ func flattenTags(tags []string) *schema.Set {
 	for _, tag := range tags {
 		result = append(result, tag)
 	}
-	return schema.NewSet(schema.HashString, result)
-}
-
-// flattenTagsPreserveConfig preserves only user-configured tags from the API response
-// The API may add system-generated tags (e.g., "fault=<fault-identity>") which should not cause drift
-// This approach is robust against any future API changes that add new system tags
-func flattenTagsPreserveConfig(apiTags []string, configTags *schema.Set) *schema.Set {
-	result := make([]interface{}, 0, len(apiTags))
-
-	for _, tag := range apiTags {
-		// Only keep tags that were in the user's configuration
-		if configTags.Contains(tag) {
-			result = append(result, tag)
-		}
-	}
-
 	return schema.NewSet(schema.HashString, result)
 }

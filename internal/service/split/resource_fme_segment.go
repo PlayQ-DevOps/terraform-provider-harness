@@ -147,17 +147,12 @@ func resourceFMESegmentRead(ctx context.Context, d *schema.ResourceData, meta in
 	if err := d.Set("description", seg.Description); err != nil {
 		return helpers.HandleRead(ctx, d, err, nil)
 	}
-	switch {
-	case seg.TrafficType != nil && seg.TrafficType.ID != "":
+	if seg.TrafficType != nil && seg.TrafficType.ID != "" {
 		if err := d.Set("traffic_type_id", seg.TrafficType.ID); err != nil {
 			return helpers.HandleRead(ctx, d, err, nil)
 		}
-	default:
-		// Split list/get may omit trafficType; keep configured state.
-		if err := d.Set("traffic_type_id", d.Get("traffic_type_id")); err != nil {
-			return helpers.HandleRead(ctx, d, err, nil)
-		}
 	}
+
 	return nil
 }
 

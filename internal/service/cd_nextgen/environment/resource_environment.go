@@ -40,9 +40,10 @@ func ResourceEnvironment() *schema.Resource {
 				ValidateFunc: validation.StringInSlice(nextgen.EnvironmentTypeValues, false),
 			},
 			"yaml": {
-				Description:      "Environment YAML." + helpers.Descriptions.YamlText.String(),
+				Description:      "Environment YAML." + helpers.Descriptions.YamlText.String() + " When omitted, the YAML Harness generates is read into state.",
 				Type:             schema.TypeString,
 				Optional:         true,
+				Computed:         true,
 				DiffSuppressFunc: helpers.YamlDiffSuppressFunction,
 			},
 			"force_delete": {
@@ -382,30 +383,18 @@ func readEnvironment(d *schema.ResourceData, env *nextgen.EnvironmentResponseDet
 	d.Set("project_id", env.ProjectIdentifier)
 	d.Set("name", env.Name)
 	d.Set("color", env.Color)
-	if env.Description != "" {
-		d.Set("description", env.Description)
-	}
+	d.Set("description", env.Description)
 	d.Set("tags", helpers.FlattenTags(env.Tags))
 	d.Set("type", env.Type_.String())
-	if d.Get("yaml").(string) != "" {
-		d.Set("yaml", env.Yaml)
-	}
+	d.Set("yaml", env.Yaml)
 
-	var store_type = helpers.BuildField(d, "git_details.0.store_type")
-	var base_branch = helpers.BuildField(d, "git_details.0.base_branch")
-	var commit_message = helpers.BuildField(d, "git_details.0.commit_message")
+	// Inputs the API does not report back; see helpers.ConfigOnly.
+	var store_type = helpers.ConfigOnly(d, "git_details.0.store_type")
+	var base_branch = helpers.ConfigOnly(d, "git_details.0.base_branch")
+	var commit_message = helpers.ConfigOnly(d, "git_details.0.commit_message")
 	var connector_ref = env.ConnectorRef
-
-	var import_from_git bool
-	var is_force_import bool
-
-	if v, ok := d.GetOk("git_details.0.import_from_git"); ok {
-		import_from_git = v.(bool)
-	}
-
-	if v, ok := d.GetOk("git_details.0.is_force_import"); ok {
-		is_force_import = v.(bool)
-	}
+	import_from_git := helpers.ConfigOnlyBool(d, "git_details.0.import_from_git")
+	is_force_import := helpers.ConfigOnlyBool(d, "git_details.0.is_force_import")
 
 	if env.EntityGitDetails != nil {
 		gitDetails := readGitDetails(env, store_type, base_branch, commit_message, connector_ref)

@@ -234,11 +234,11 @@ func resourceTemplateRead(ctx context.Context, d *schema.ResourceData, meta inte
 	template_id := d.Id()
 	org_id := d.Get("org_id").(string)
 	project_id := d.Get("project_id").(string)
-	var comments = helpers.BuildField(d, "comments")
-	var store_type = helpers.BuildField(d, "git_details.0.store_type")
-	var base_branch = helpers.BuildField(d, "git_details.0.base_branch")
-	var commit_message = helpers.BuildField(d, "git_details.0.commit_message")
-	var connector_ref = helpers.BuildField(d, "git_details.0.connector_ref")
+	var comments = helpers.ConfigOnly(d, "comments")
+	var store_type = helpers.ConfigOnly(d, "git_details.0.store_type")
+	var base_branch = helpers.ConfigOnly(d, "git_details.0.base_branch")
+	var commit_message = helpers.ConfigOnly(d, "git_details.0.commit_message")
+	var connector_ref = helpers.ConfigOnly(d, "git_details.0.connector_ref")
 	var branch_name optional.String
 	branch_name = helpers.BuildField(d, "git_details.0.branch_name")
 	version := d.Get("version").(string)
@@ -798,7 +798,11 @@ func readGitDetails(template nextgen.TemplateWithInputsResponse, store_type opti
 		"last_commit_id": template.Template.GitDetails.CommitId,
 		"last_object_id": template.Template.GitDetails.ObjectId,
 	}
-	if store_type.IsSet() {
+	// Store type and connector reference come from the API; the configured values are kept
+	// only when the API omits them.
+	if storeType := template.Template.StoreType; storeType != "" {
+		git_details["store_type"] = storeType
+	} else if store_type.IsSet() {
 		git_details["store_type"] = store_type.Value()
 	}
 	if base_branch.IsSet() {
@@ -807,7 +811,9 @@ func readGitDetails(template nextgen.TemplateWithInputsResponse, store_type opti
 	if commit_message.IsSet() {
 		git_details["commit_message"] = commit_message.Value()
 	}
-	if connector_ref.IsSet() {
+	if connectorRef := template.Template.ConnectorRef; connectorRef != "" {
+		git_details["connector_ref"] = connectorRef
+	} else if connector_ref.IsSet() {
 		git_details["connector_ref"] = connector_ref.Value()
 	}
 	return git_details

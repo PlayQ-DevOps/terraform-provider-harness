@@ -352,9 +352,9 @@ func readServiceOverridesV2(d *schema.ResourceData, so *nextgen.ServiceOverrides
 	d.Set("yaml", so.YamlInternal)
 	d.Set("identifier", so.Identifier)
 
-	var store_type = helpers.BuildField(d, "git_details.0.store_type")
-	var base_branch = helpers.BuildField(d, "git_details.0.base_branch")
-	var commit_message = helpers.BuildField(d, "git_details.0.commit_message")
+	var store_type = helpers.ConfigOnly(d, "git_details.0.store_type")
+	var base_branch = helpers.ConfigOnly(d, "git_details.0.base_branch")
+	var commit_message = helpers.ConfigOnly(d, "git_details.0.commit_message")
 	var connector_ref = so.ConnectorRef
 
 	if so.EntityGitInfo != nil {

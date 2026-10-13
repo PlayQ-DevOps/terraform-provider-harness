@@ -13,6 +13,7 @@ func TestLifecycle_Project(t *testing.T) {
 	acctest.RunLifecycle(t, acctest.Lifecycle{
 		ResourceType: "harness_platform_project",
 		Kind:         fakeharness.KindProject,
+		Drift:        func(obj map[string]any) { obj["description"] = "changed outside Terraform" },
 		Scope:        acctest.ScopeOrg,
 		Config: func(p acctest.LifecycleParams) string {
 			return fmt.Sprintf(`

@@ -98,6 +98,11 @@ type Lifecycle struct {
 	// answers that many not-found reads after create, and the resource must still converge
 	// (which needs a read-after-write window on the resource).
 	EventuallyConsistentReads int
+	// Drift, when set, adds the drift_detected cell: after create it changes the stored
+	// object out of band; the refresh must then show a non-empty plan (the Read refreshes
+	// that attribute from the API rather than echoing the configuration) and the re-apply
+	// must plan an in-place update that converges.
+	Drift func(obj map[string]any)
 	// KnownFailing maps a cell name to the reason (an issue or plan step) it still fails.
 	// Those cells are skipped unless HARNESS_RUN_KNOWN_FAILING is set, so CI stays green
 	// while the fix is tracked. They must be removed when the fix lands: a passing cell that
@@ -115,6 +120,7 @@ const (
 	CellTransient503       = "transient_503_retried"
 	CellRetryExhausted     = "retry_exhausted_is_error_not_crash"
 	CellEventualConsistent = "eventually_consistent"
+	CellDrift              = "drift_detected"
 )
 
 func (lc Lifecycle) withDefaults() Lifecycle {
@@ -215,7 +221,9 @@ type cell struct {
 //     a replacement and is a DELETE then a POST on the wire, never a PUT;
 //   - transient_503_retried: a single 503 on read is retried, the plan stays empty;
 //   - retry_exhausted_is_error_not_crash: a persistent 503 is a clean error, not a crash;
-//   - eventually_consistent (opt-in): the object is not readable right after create.
+//   - eventually_consistent (opt-in): the object is not readable right after create;
+//   - drift_detected (opt-in): an out-of-band change to the object shows up in the plan and
+//     the re-apply converges.
 //
 // It needs the Terraform CLI and skips under -short.
 func RunLifecycle(t *testing.T, lc Lifecycle) {
@@ -243,6 +251,9 @@ func RunLifecycle(t *testing.T, lc Lifecycle) {
 	)
 	if lc.EventuallyConsistentReads > 0 {
 		cells = append(cells, cell{CellEventualConsistent, lc.cellEventuallyConsistent})
+	}
+	if lc.Drift != nil {
+		cells = append(cells, cell{CellDrift, lc.cellDrift})
 	}
 
 	runCells(t, cells, lc.Fake, lc.KnownFailing, base)
@@ -379,4 +390,27 @@ func (lc Lifecycle) cellRetryExhausted(t *testing.T, f *fakeharness.Server, p Li
 func (lc Lifecycle) cellEventuallyConsistent(t *testing.T, f *fakeharness.Server, p LifecycleParams) {
 	f.EventuallyConsistent(lc.Kind, lc.EventuallyConsistentReads)
 	resource.UnitTest(t, lc.testCase(f, lc.createStep(f, p)))
+}
+
+func (lc Lifecycle) cellDrift(t *testing.T, f *fakeharness.Server, p LifecycleParams) {
+	resource.UnitTest(t, lc.testCase(f,
+		lc.createStep(f, p),
+		resource.TestStep{
+			PreConfig: func() {
+				if !f.Store().Has(lc.Kind, lc.Key(p)) {
+					t.Fatalf("object %+v was not in the fake store before the out-of-band change", lc.Key(p))
+				}
+				f.Store().Mutate(lc.Kind, lc.Key(p), lc.Drift)
+			},
+			RefreshState:       true,
+			ExpectNonEmptyPlan: true,
+		},
+		resource.TestStep{
+			Config: lc.config(f, p),
+			ConfigPlanChecks: resource.ConfigPlanChecks{
+				PreApply: []plancheck.PlanCheck{plancheck.ExpectResourceAction(lc.addr(), plancheck.ResourceActionUpdate)},
+			},
+			Check: lc.checks(f, p),
+		},
+	))
 }

@@ -312,9 +312,9 @@ func readService(d *schema.ResourceData, project *nextgen.ServiceResponseDetails
 	d.Set("tags", helpers.FlattenTags(project.Tags))
 	d.Set("yaml", project.Yaml)
 
-	var store_type = helpers.BuildField(d, "git_details.0.store_type")
-	var base_branch = helpers.BuildField(d, "git_details.0.base_branch")
-	var commit_message = helpers.BuildField(d, "git_details.0.commit_message")
+	var store_type = helpers.ConfigOnly(d, "git_details.0.store_type")
+	var base_branch = helpers.ConfigOnly(d, "git_details.0.base_branch")
+	var commit_message = helpers.ConfigOnly(d, "git_details.0.commit_message")
 	var connector_ref = project.ConnectorRef
 
 	if project.EntityGitDetails != nil {

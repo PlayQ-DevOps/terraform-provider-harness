@@ -399,12 +399,8 @@ func buildPipelineCentralNotificationRule(d *schema.ResourceData) nextgen.Notifi
 
 func readPipelineCentralNotificationRule(accountIdentifier string, d *schema.ResourceData, notificationRuleDto nextgen.NotificationRuleDto) diag.Diagnostics {
 	d.SetId(notificationRuleDto.Identifier)
-	if notificationRuleDto.Org != "" {
-		d.Set("org", notificationRuleDto.Org)
-	}
-	if notificationRuleDto.Project != "" {
-		d.Set("project", notificationRuleDto.Project)
-	}
+	d.Set("org", notificationRuleDto.Org)
+	d.Set("project", notificationRuleDto.Project)
 	d.Set("account", accountIdentifier)
 	d.Set("identifier", notificationRuleDto.Identifier)
 	d.Set("name", notificationRuleDto.Name)

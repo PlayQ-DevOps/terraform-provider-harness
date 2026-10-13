@@ -343,12 +343,8 @@ func expandHeaders(raw []interface{}) []nextgen.WebHookHeaders {
 
 func readCentralNotificationChannel(accountIdentifier string, d *schema.ResourceData, notificationChannelDto nextgen.NotificationChannelDto) diag.Diagnostics {
 	d.SetId(notificationChannelDto.Identifier)
-	if notificationChannelDto.Org != "" {
-		d.Set("org", notificationChannelDto.Org)
-	}
-	if notificationChannelDto.Project != "" {
-		d.Set("project", notificationChannelDto.Project)
-	}
+	d.Set("org", notificationChannelDto.Org)
+	d.Set("project", notificationChannelDto.Project)
 	d.Set("identifier", notificationChannelDto.Identifier)
 	d.Set("name", notificationChannelDto.Name)
 	d.Set("notification_channel_type", notificationChannelDto.NotificationChannelType)

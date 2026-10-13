@@ -45,8 +45,11 @@ type Resource struct {
 	Dialect  Dialect
 	BasePath string // e.g. "/ng/api/connectors" or "/v1/orgs/{org}/projects/{project}/pipelines"
 	BodyKey  string // wrapper key on writes/reads ("connector"); "" for a plain object
-	IDField  string // object field holding the identifier, default "identifier"
-	Scope    ScopeSpec
+	// PlainRequest: writes send the bare object while responses still wrap it in BodyKey
+	// (environmentsV2 takes an EnvironmentRequest and answers {"environment": ...}).
+	PlainRequest bool
+	IDField      string // object field holding the identifier, default "identifier"
+	Scope        ScopeSpec
 	// UpdateHasID: PUT <base>/{id} (projects, orgs, pipelines) rather than PUT <base> with the
 	// identifier in the body (connectors).
 	UpdateHasID bool
@@ -130,6 +133,14 @@ func PipelinesV1() Resource {
 				writeJSON(w, http.StatusOK, map[string]any{"identifier": key.ID})
 			},
 		}}
+}
+
+// EnvironmentsV2 is /ng/api/environmentsV2: a plain EnvironmentRequest on writes (the
+// identifier in the body, also on update), {"environment": ...} in responses.
+func EnvironmentsV2() Resource {
+	return Resource{Kind: KindEnvironment, Dialect: DialectNextgenDTO, BasePath: "/ng/api/environmentsV2", BodyKey: "environment", PlainRequest: true, IDField: "identifier",
+		Scope:          ScopeSpec{QueryOrg: "orgIdentifier", QueryProject: "projectIdentifier", BodyOrg: "orgIdentifier", BodyProject: "projectIdentifier"},
+		RequireParents: true}
 }
 
 // Platform returns the resources New mounts by default.
@@ -257,7 +268,7 @@ func (s *Server) decodeObject(res Resource, w http.ResponseWriter, r *http.Reque
 		return nil, false
 	}
 	obj := body
-	if res.BodyKey != "" {
+	if res.BodyKey != "" && !res.PlainRequest {
 		nested, _ := body[res.BodyKey].(map[string]any)
 		if nested == nil {
 			s.writeError(res, w, APIError{Status: http.StatusBadRequest, Code: "INVALID_REQUEST", Message: "request body must contain " + res.BodyKey})

@@ -189,13 +189,12 @@ func resourcePipelineRead(ctx context.Context, d *schema.ResourceData, meta inte
 	id := d.Id()
 	org_id := d.Get("org_id").(string)
 	project_id := d.Get("project_id").(string)
-	template_applied := d.Get("template_applied").(bool)
 	var branch_name optional.String
 	branch_name = helpers.BuildField(d, "git_details.0.branch_name")
-	var store_type = helpers.BuildField(d, "git_details.0.store_type")
-	var base_branch = helpers.BuildField(d, "git_details.0.base_branch")
-	var commit_message = helpers.BuildField(d, "git_details.0.commit_message")
-	var connector_ref = helpers.BuildField(d, "git_details.0.connector_ref")
+	var store_type = helpers.ConfigOnly(d, "git_details.0.store_type")
+	var base_branch = helpers.ConfigOnly(d, "git_details.0.base_branch")
+	var commit_message = helpers.ConfigOnly(d, "git_details.0.commit_message")
+	var connector_ref = helpers.ConfigOnly(d, "git_details.0.connector_ref")
 	resp, httpResp, err := c.PipelinesApi.GetPipeline(ctx,
 		org_id,
 		project_id,
@@ -207,7 +206,7 @@ func resourcePipelineRead(ctx context.Context, d *schema.ResourceData, meta inte
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	readPipeline(d, resp, org_id, project_id, template_applied, store_type, base_branch, commit_message, connector_ref)
+	readPipeline(d, resp, org_id, project_id, store_type, base_branch, commit_message, connector_ref)
 
 	return nil
 }
@@ -226,7 +225,6 @@ func resourcePipelineCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 	id := d.Id()
 	org_id := d.Get("org_id").(string)
 	project_id := d.Get("project_id").(string)
-	template_applied := d.Get("template_applied").(bool)
 
 	if id == "" {
 		if d.Get("import_from_git").(bool) {
@@ -300,7 +298,7 @@ func resourcePipelineCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
-	readPipeline(d, resp, org_id, project_id, template_applied, store_type, base_branch, commit_message, connector_ref)
+	readPipeline(d, resp, org_id, project_id, store_type, base_branch, commit_message, connector_ref)
 
 	return nil
 }
@@ -478,7 +476,7 @@ func buildUpdatePipeline(d *schema.ResourceData) nextgen.PipelineUpdateRequestBo
 }
 
 // Read response from API out to the stored identifiers
-func readPipeline(d *schema.ResourceData, pipeline nextgen.PipelineGetResponseBody, org_id string, project_id string, template_applied bool, store_type optional.String, base_branch optional.String, commit_message optional.String, connector_ref optional.String) {
+func readPipeline(d *schema.ResourceData, pipeline nextgen.PipelineGetResponseBody, org_id string, project_id string, store_type optional.String, base_branch optional.String, commit_message optional.String, connector_ref optional.String) {
 	d.SetId(pipeline.Identifier)
 	d.Set("identifier", pipeline.Identifier)
 	d.Set("name", pipeline.Name)
@@ -488,7 +486,6 @@ func readPipeline(d *schema.ResourceData, pipeline nextgen.PipelineGetResponseBo
 	d.Set("yaml", pipeline.PipelineYaml)
 	d.Set("description", pipeline.Description)
 	d.Set("template_applied_pipeline_yaml", pipeline.TemplateAppliedPipelineYaml)
-	d.Set("template_applied", template_applied)
 	if pipeline.GitDetails != nil {
 		d.Set("git_details", []interface{}{readGitDetails(pipeline, store_type, base_branch, commit_message, connector_ref)})
 	}
@@ -511,12 +508,15 @@ func readGitDetails(pipeline nextgen.PipelineGetResponseBody, store_type optiona
 	if commit_message.IsSet() {
 		git_details["commit_message"] = commit_message.Value()
 	}
-	if connector_ref.IsSet() {
-		git_details["connector_ref"] = connector_ref.Value()
+	// The connector reference comes from the API; the configured one is kept only when the
+	// API omits it (Harness Code repositories have none).
+	connectorRef := pipeline.GitDetails.ConnectorRef
+	if connectorRef == "" && connector_ref.IsSet() {
+		connectorRef = connector_ref.Value()
 	}
-
-	if connector_ref.Value() == "" {
-		git_details["is_harness_code_repo"] = true
+	if connectorRef != "" {
+		git_details["connector_ref"] = connectorRef
 	}
+	git_details["is_harness_code_repo"] = pipeline.GitDetails.IsHarnessCodeRepo || connectorRef == ""
 	return git_details
 }

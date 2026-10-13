@@ -426,13 +426,9 @@ func buildCentralNotificationRule(d *schema.ResourceData, accountID string) next
 func readCentralNotificationRule(accountIdentifier string, d *schema.ResourceData, notificationRuleDto nextgen.NotificationRuleDto) diag.Diagnostics {
 	d.SetId(notificationRuleDto.Identifier)
 	d.Set("account", accountIdentifier)
-	if notificationRuleDto.Org != "" {
-		d.Set("org", notificationRuleDto.Org)
-	}
+	d.Set("org", notificationRuleDto.Org)
 
-	if notificationRuleDto.Project != "" {
-		d.Set("project", notificationRuleDto.Project)
-	}
+	d.Set("project", notificationRuleDto.Project)
 	d.Set("identifier", notificationRuleDto.Identifier)
 	d.Set("name", notificationRuleDto.Name)
 	d.Set("status", notificationRuleDto.Status)

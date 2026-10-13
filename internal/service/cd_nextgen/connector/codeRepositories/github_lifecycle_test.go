@@ -13,6 +13,7 @@ func TestLifecycle_ConnectorGithub(t *testing.T) {
 	acctest.RunLifecycle(t, acctest.Lifecycle{
 		ResourceType: "harness_platform_connector_github",
 		Kind:         fakeharness.KindConnector,
+		Drift:        func(obj map[string]any) { obj["description"] = "changed outside Terraform" },
 		Scope:        acctest.ScopeProject,
 		Config: func(p acctest.LifecycleParams) string {
 			return fmt.Sprintf(`

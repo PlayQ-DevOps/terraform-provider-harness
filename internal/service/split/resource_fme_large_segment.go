@@ -161,16 +161,12 @@ func resourceFMELargeSegmentRead(ctx context.Context, d *schema.ResourceData, me
 	if err := d.Set("large_segment_id", seg.ID); err != nil {
 		return helpers.HandleRead(ctx, d, err, nil)
 	}
-	switch {
-	case seg.TrafficType != nil && seg.TrafficType.ID != "":
+	if seg.TrafficType != nil && seg.TrafficType.ID != "" {
 		if err := d.Set("traffic_type_id", seg.TrafficType.ID); err != nil {
 			return helpers.HandleRead(ctx, d, err, nil)
 		}
-	default:
-		if err := d.Set("traffic_type_id", d.Get("traffic_type_id")); err != nil {
-			return helpers.HandleRead(ctx, d, err, nil)
-		}
 	}
+
 	return nil
 }
 

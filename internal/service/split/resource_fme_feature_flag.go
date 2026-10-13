@@ -175,16 +175,12 @@ func resourceFMEFeatureFlagRead(ctx context.Context, d *schema.ResourceData, met
 	if err := d.Set("flag_id", sp.ID); err != nil {
 		return helpers.HandleRead(ctx, d, err, nil)
 	}
-	switch {
-	case sp.TrafficType != nil && sp.TrafficType.ID != "":
+	if sp.TrafficType != nil && sp.TrafficType.ID != "" {
 		if err := d.Set("traffic_type_id", sp.TrafficType.ID); err != nil {
 			return helpers.HandleRead(ctx, d, err, nil)
 		}
-	default:
-		if err := d.Set("traffic_type_id", d.Get("traffic_type_id")); err != nil {
-			return helpers.HandleRead(ctx, d, err, nil)
-		}
 	}
+
 	tagNames := make([]interface{}, 0, len(sp.Tags))
 	for _, t := range sp.Tags {
 		tagNames = append(tagNames, t.Name)

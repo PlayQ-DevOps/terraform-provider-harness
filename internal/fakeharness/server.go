@@ -30,6 +30,7 @@ const (
 	KindConnector    = "connector"
 	KindSecret       = "secret"
 	KindPipeline     = "pipeline"
+	KindEnvironment  = "environment"
 )
 
 // Server is a fake Harness API.

@@ -205,10 +205,10 @@ func resourceInputSetRead(ctx context.Context, d *schema.ResourceData, meta inte
 	parent_entity_connector_ref := helpers.BuildField(d, "git_details.0.parent_entity_connector_ref")
 	parent_entity_repo_name := helpers.BuildField(d, "git_details.0.parent_entity_repo_name")
 
-	var store_type = helpers.BuildField(d, "git_details.0.store_type")
-	var base_branch = helpers.BuildField(d, "git_details.0.base_branch")
-	var commit_message = helpers.BuildField(d, "git_details.0.commit_message")
-	var connector_ref = helpers.BuildField(d, "git_details.0.connector_ref")
+	var store_type = helpers.ConfigOnly(d, "git_details.0.store_type")
+	var base_branch = helpers.ConfigOnly(d, "git_details.0.base_branch")
+	var commit_message = helpers.ConfigOnly(d, "git_details.0.commit_message")
+	var connector_ref = helpers.ConfigOnly(d, "git_details.0.connector_ref")
 
 	resp, httpResp, err := c.InputSetsApi.GetInputSet(ctx, orgId, projectId, id, pipelineId, &nextgen.InputSetsApiGetInputSetOpts{
 		HarnessAccount:           optional.NewString(c.AccountId),
@@ -540,11 +540,15 @@ func readGitDetails(inputSet *nextgen.InputSetResponseBody, store_type optional.
 	if commit_message.IsSet() {
 		git_details["commit_message"] = commit_message.Value()
 	}
-	if connector_ref.IsSet() {
-		git_details["connector_ref"] = connector_ref.Value()
+	// The connector reference comes from the API; the configured one is kept only when the
+	// API omits it (Harness Code repositories have none).
+	connectorRef := inputSet.GitDetails.ConnectorRef
+	if connectorRef == "" && connector_ref.IsSet() {
+		connectorRef = connector_ref.Value()
 	}
-	if connector_ref.Value() == "" {
-		git_details["is_harness_code_repo"] = true
+	if connectorRef != "" {
+		git_details["connector_ref"] = connectorRef
 	}
+	git_details["is_harness_code_repo"] = inputSet.GitDetails.IsHarnessCodeRepo || connectorRef == ""
 	return git_details
 }
