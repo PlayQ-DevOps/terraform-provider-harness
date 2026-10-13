@@ -62,8 +62,8 @@ func ResourceGitopsRepoCerts() *schema.Resource {
 						"certificates": {
 							Description: "certificates details.",
 							Type:        schema.TypeList,
-							Optional:    true,
 							Computed:    true,
+							Optional:    true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"metadata": {

@@ -134,7 +134,6 @@ func ResourceConnectorGcp() *schema.Resource {
 				Description: "Enable this flag for force deletion of connector",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 			"execute_on_delegate": {
 				Description: "Enable this flag to execute on Delegate",

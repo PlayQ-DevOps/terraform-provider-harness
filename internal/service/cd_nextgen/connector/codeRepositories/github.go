@@ -229,7 +229,6 @@ func ResourceConnectorGithub() *schema.Resource {
 				Description: "Enable this flag for force deletion of service",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 		},
 	}

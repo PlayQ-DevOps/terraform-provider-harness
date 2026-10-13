@@ -33,10 +33,11 @@ func ResourceInputSet() *schema.Resource {
 				ForceNew:    true,
 			},
 			"yaml": {
-				Description: "Input Set YAML." + helpers.Descriptions.YamlText.String(),
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
+				Description:      "Input Set YAML." + helpers.Descriptions.YamlText.String(),
+				Type:             schema.TypeString,
+				Optional:         true,
+				Computed:         true,
+				DiffSuppressFunc: helpers.YamlDiffSuppressFunction,
 			},
 			"git_details": {
 				Description: "Contains parameters related to creating an Entity for Git Experience.",

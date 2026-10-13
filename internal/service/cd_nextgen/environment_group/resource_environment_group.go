@@ -58,7 +58,6 @@ func ResourceEnvironmentGroup() *schema.Resource {
 				Description: "Enable this flag for force deletion of environment group",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 		},
 	}

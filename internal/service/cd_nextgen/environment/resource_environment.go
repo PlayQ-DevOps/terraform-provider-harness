@@ -50,7 +50,6 @@ func ResourceEnvironment() *schema.Resource {
 				Description: "Enable this flag for force deletion of environments",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 			"git_details": {
 				Description: "Contains parameters related to creating an Entity for Git Experience.",
@@ -155,13 +154,11 @@ func ResourceEnvironment() *schema.Resource {
 							Description: "force import environment from remote even if same file path already exist",
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Computed:    true,
 						},
 						"import_from_git": {
 							Description: "import environment from git",
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Computed:    true,
 						},
 					},
 				},

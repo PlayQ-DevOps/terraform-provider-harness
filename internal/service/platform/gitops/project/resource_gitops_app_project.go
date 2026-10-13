@@ -330,19 +330,8 @@ func ResourceProject() *schema.Resource {
 									"orphaned_resources": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Description: "OrphanedResources specifies if agent should monitor orphaned resources of apps in this project",
-										DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
-											// from API we always get warn = false, even if this is not set in the resource.tf file
-											// getchange will compare and deserialize this into a map where null will be converted to false
-											oldWarn, newWarn := d.GetChange("project.0.spec.0.orphaned_resources.0.warn")
-											oldWarnValue := oldWarn.(bool)
-											newWarnValue := newWarn.(bool)
-											// short circuit to not suppress diff if ignorevalues are diferent
-											if d.HasChange("project.0.spec.0.orphaned_resources.0.ignore") {
-												return false
-											}
-											return oldWarnValue == newWarnValue
-										},
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"warn": {

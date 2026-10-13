@@ -61,7 +61,7 @@ func ResourceGitopsGnupg() *schema.Resource {
 						"upsert": {
 							Description: "Indicates if the GnuPG Key should be inserted if not present or updated if present.",
 							Type:        schema.TypeBool,
-							Required:    true,
+							Optional:    true,
 						},
 						"publickey": {
 							Description: "Public key details.",

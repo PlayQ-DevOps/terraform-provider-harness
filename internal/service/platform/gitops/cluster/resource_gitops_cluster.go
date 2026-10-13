@@ -76,10 +76,6 @@ func ResourceGitopsCluster() *schema.Resource {
 							Description: "Indicates if the GitOps cluster should be updated if existing and inserted if not.",
 							Type:        schema.TypeBool,
 							Optional:    true,
-							DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-								// Suppress diffs if cluster resource already exists, only relevant during creation
-								return d.Id() != ""
-							},
 						},
 						"updated_fields": {
 							Description: "Fields which are updated.",
@@ -137,8 +133,8 @@ func ResourceGitopsCluster() *schema.Resource {
 												"password": {
 													Description:   "Password of the server of the cluster. Use password_wo for write-only support (Terraform >= 1.11).",
 													Type:          schema.TypeString,
-													Optional:      true,
 													Computed:      true,
+													Optional:      true,
 													Sensitive:     true,
 													ConflictsWith: []string{"request.0.cluster.0.config.0.password_wo"},
 												},

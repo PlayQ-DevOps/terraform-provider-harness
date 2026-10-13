@@ -25,6 +25,8 @@ func ResourceRepo() *schema.Resource {
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: helpers.WithIdentity(createSchema(), "identifier", "org_id", "project_id"),
+		// Seed inputs the API only accepts at create time; a later change is a plan-time error.
+		CustomizeDiff: helpers.CreateOnly("git_ignore", "license", "readme", "source"),
 	}
 
 	helpers.SetMultiLevelDatasourceSchemaWithoutCommonFields(resource.Schema)
@@ -248,10 +250,6 @@ func waitForImportCompletion(ctx context.Context, api *code.RepositoryApiService
 	}
 }
 
-func createOnlyFieldDiffFunc(k, oldValue, newValue string, d *schema.ResourceData) bool {
-	return d.Id() != ""
-}
-
 func createSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"identifier": {
@@ -275,10 +273,10 @@ func createSchema() map[string]*schema.Schema {
 			Computed:    true,
 		},
 		"default_branch": {
-			Description:      "Default branch of the repository (Applicate only for create).",
-			Type:             schema.TypeString,
-			Optional:         true,
-			DiffSuppressFunc: createOnlyFieldDiffFunc, // handle default branch update
+			Description: "Default branch of the repository (Applicate only for create).",
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
 		},
 		"description": {
 			Description: "Description of the repository.",
@@ -312,28 +310,24 @@ func createSchema() map[string]*schema.Schema {
 			Computed:    true,
 		},
 		"git_ignore": {
-			Description:      "Repository should be created with specified predefined gitignore file.",
-			Type:             schema.TypeString,
-			Optional:         true,
-			DiffSuppressFunc: createOnlyFieldDiffFunc,
+			Description: "Repository should be created with specified predefined gitignore file.",
+			Type:        schema.TypeString,
+			Optional:    true,
 		},
 		"license": {
-			Description:      "Repository should be created with specified predefined license file.",
-			Type:             schema.TypeString,
-			Optional:         true,
-			DiffSuppressFunc: createOnlyFieldDiffFunc,
+			Description: "Repository should be created with specified predefined license file.",
+			Type:        schema.TypeString,
+			Optional:    true,
 		},
 		"readme": {
-			Description:      "Repository should be created with readme file.",
-			Type:             schema.TypeBool,
-			Optional:         true,
-			DiffSuppressFunc: createOnlyFieldDiffFunc,
+			Description: "Repository should be created with readme file.",
+			Type:        schema.TypeBool,
+			Optional:    true,
 		},
 		"source": {
-			Description:      "Configuration for importing an existing repository from SCM provider.",
-			Type:             schema.TypeSet,
-			Optional:         true,
-			DiffSuppressFunc: createOnlyFieldDiffFunc,
+			Description: "Configuration for importing an existing repository from SCM provider.",
+			Type:        schema.TypeSet,
+			Optional:    true,
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"username": {

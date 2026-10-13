@@ -35,7 +35,6 @@ func ResourceService() *schema.Resource {
 				Description: "Enable this flag for force deletion of service",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 			"git_details": {
 				Description: "Contains parameters related to Git Experience for remote entities",
@@ -137,13 +136,11 @@ func ResourceService() *schema.Resource {
 				Description: "force import service from remote even if same file path already exist",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 			"import_from_git": {
 				Description: "import service from git",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 		},
 	}

@@ -60,7 +60,6 @@ func ResourceInfrastructure() *schema.Resource {
 				Description: "Enable this flag for force deletion of infrastructure",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 			"git_details": {
 				Description: "Contains parameters related to creating an Entity for Git Experience.",
@@ -165,13 +164,11 @@ func ResourceInfrastructure() *schema.Resource {
 							Description: "force import infrastructure from remote even if same file path already exist",
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Computed:    true,
 						},
 						"import_from_git": {
 							Description: "import infrastructure from git",
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Computed:    true,
 						},
 					},
 				},

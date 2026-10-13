@@ -25,12 +25,13 @@ import (
 
 // Kinds of the resources Platform mounts by default.
 const (
-	KindOrganization = "organization"
-	KindProject      = "project"
-	KindConnector    = "connector"
-	KindSecret       = "secret"
-	KindPipeline     = "pipeline"
-	KindEnvironment  = "environment"
+	KindOrganization  = "organization"
+	KindProject       = "project"
+	KindConnector     = "connector"
+	KindSecret        = "secret"
+	KindPipeline      = "pipeline"
+	KindEnvironment   = "environment"
+	KindResourceGroup = "resource_group"
 )
 
 // Server is a fake Harness API.

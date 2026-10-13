@@ -113,7 +113,7 @@ func ResourcePipeline() *schema.Resource {
 			"template_applied_pipeline_yaml": {
 				Description: "Pipeline YAML after resolving Templates (returned as a String).",
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 			},
 			"import_from_git": {
 				Description: "Flag to set if importing from Git",

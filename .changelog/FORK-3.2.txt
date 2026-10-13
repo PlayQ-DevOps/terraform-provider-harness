@@ -1,0 +1,9 @@
+```release-note:bug
+provider: several attributes no longer produce a diff on every plan. `force_delete` (13 resources), `import_from_git`, `is_force_import` and the GitOps `upsert` flags are plain inputs again instead of computed values; `harness_platform_resource_group.included_scopes` accepts the scope Harness assigns when it is left out (#989); the GitOps app project's `orphaned_resources` and the GitOps application's deprecated `identifier` are computed when omitted; `harness_platform_repo.default_branch` reads the branch Harness reports; and `template_yaml`, input set `yaml` and governance `rules_yaml` ignore formatting-only YAML differences like the other YAML attributes.
+```
+```release-note:bug
+resource/harness_platform_repo: changing `git_ignore`, `license`, `readme` or `source` after the repository exists is now a plan-time error, since Harness only applies them at create time; the diff was silently hidden before.
+```
+```release-note:breaking-change
+resource/harness_platform_pipeline: `template_applied_pipeline_yaml` is read-only (it was never an input Harness honoured); remove it from configurations that set it. resource/harness_platform_gitops_applications: `repo_ids` is now an unordered set. resource/harness_chaos_hub: a change in tag order no longer counts as a change.
+```

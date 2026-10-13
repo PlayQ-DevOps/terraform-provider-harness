@@ -62,7 +62,6 @@ func ResourceCatalogEntity() *schema.Resource {
 				Description: "Flag to set if importing from Git",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 			"git_details": {
 				Description: "Contains Git Information for importing entities from Git",

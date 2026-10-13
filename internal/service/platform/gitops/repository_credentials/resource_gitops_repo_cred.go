@@ -83,8 +83,8 @@ func ResourceGitopsRepoCred() *schema.Resource {
 						"password": {
 							Description:   "Password or PAT to be used for authenticating the remote repository. Use password_wo for write-only support (Terraform >= 1.11).",
 							Type:          schema.TypeString,
-							Optional:      true,
 							Computed:      true,
+							Optional:      true,
 							Sensitive:     true,
 							ConflictsWith: []string{"creds.0.ssh_private_key", "creds.0.tls_client_cert_data", "creds.0.tls_client_cert_key", "creds.0.github_app_private_key", "creds.0.github_app_id", "creds.0.github_app_installation_id", "creds.0.github_app_enterprise_base_url", "creds.0.password_wo"},
 						},

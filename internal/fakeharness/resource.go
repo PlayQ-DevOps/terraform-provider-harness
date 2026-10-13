@@ -135,6 +135,23 @@ func PipelinesV1() Resource {
 		}}
 }
 
+// ResourceGroups is /resourcegroup/api/v2/resourcegroup. A group created without included
+// scopes gets its own scope as the default, as the real API does (#989); a missing resource
+// filter stays absent.
+func ResourceGroups() Resource {
+	return Resource{Kind: KindResourceGroup, Dialect: DialectNextgenDTO, BasePath: "/resourcegroup/api/v2/resourcegroup", BodyKey: "resourceGroup", IDField: "identifier",
+		Scope:       ScopeSpec{QueryOrg: "orgIdentifier", QueryProject: "projectIdentifier", BodyOrg: "orgIdentifier", BodyProject: "projectIdentifier"},
+		UpdateHasID: true, RequireParents: true,
+		Decorate: func(obj map[string]any) {
+			if scopes, _ := obj["includedScopes"].([]any); len(scopes) == 0 {
+				obj["includedScopes"] = []any{map[string]any{
+					"filter": "EXCLUDING_CHILD_SCOPES", "accountIdentifier": str(obj["accountIdentifier"]),
+					"orgIdentifier": str(obj["orgIdentifier"]), "projectIdentifier": str(obj["projectIdentifier"]),
+				}}
+			}
+		}}
+}
+
 // EnvironmentsV2 is /ng/api/environmentsV2: a plain EnvironmentRequest on writes (the
 // identifier in the body, also on update), {"environment": ...} in responses.
 func EnvironmentsV2() Resource {

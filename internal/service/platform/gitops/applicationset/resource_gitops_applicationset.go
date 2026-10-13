@@ -120,8 +120,8 @@ func ResourceGitopsApplicationSet() *schema.Resource {
 									"namespace": {
 										Description: "Namespace of the GitOps application. An empty namespace is equivalent to the namespace of the GitOps agent.",
 										Type:        schema.TypeString,
-										Optional:    true,
 										Computed:    true,
+										Optional:    true,
 									},
 									"generation": {
 										Description: "A sequence number representing a specific generation of the desired state. This is a read-only value populated by the system.",

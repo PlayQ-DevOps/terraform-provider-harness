@@ -198,7 +198,6 @@ func ResourceConnectorAzureCloudProvider() *schema.Resource {
 				Description: "Enable this flag for force deletion of connector",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 		},
 	}

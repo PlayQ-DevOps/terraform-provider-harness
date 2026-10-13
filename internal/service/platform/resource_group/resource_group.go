@@ -47,6 +47,7 @@ func ResourceResourceGroup() *schema.Resource {
 				Description: "Included scopes; default selected based on resource group scope if not specified.",
 				Type:        schema.TypeSet,
 				Optional:    true,
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"account_id": {
@@ -277,12 +278,16 @@ func readResourceGroup(d *schema.ResourceData, resourceGroup *nextgen.ResourceGr
 	d.Set("description", resourceGroup.Description)
 	d.Set("allowed_scope_levels", resourceGroup.AllowedScopeLevels)
 	d.Set("included_scopes", expandIncludedScope(resourceGroup.IncludedScopes))
-	d.Set("resource_filter", []interface{}{
-		map[string]interface{}{
-			"include_all_resources": resourceGroup.ResourceFilter.IncludeAllResources,
-			"resources":             expandResourceFilter(resourceGroup.ResourceFilter.Resources),
-		},
-	})
+	if resourceGroup.ResourceFilter != nil {
+		d.Set("resource_filter", []interface{}{
+			map[string]interface{}{
+				"include_all_resources": resourceGroup.ResourceFilter.IncludeAllResources,
+				"resources":             expandResourceFilter(resourceGroup.ResourceFilter.Resources),
+			},
+		})
+	} else {
+		d.Set("resource_filter", []interface{}{})
+	}
 }
 
 func expandIncludedScope(includedScopes []nextgen.ScopeSelector) []interface{} {

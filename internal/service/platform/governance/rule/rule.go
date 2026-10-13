@@ -38,9 +38,10 @@ func ResourceRule() *schema.Resource {
 				ValidateFunc: validation.StringInSlice([]string{"AWS", "GCP", "AZURE"}, false),
 			},
 			"rules_yaml": {
-				Description: "The policy YAML of the rule",
-				Type:        schema.TypeString,
-				Required:    true,
+				Description:      "The policy YAML of the rule",
+				Type:             schema.TypeString,
+				Required:         true,
+				DiffSuppressFunc: helpers.YamlDiffSuppressFunction,
 			},
 			"rule_id": {
 				Description: "Id of the rule.",

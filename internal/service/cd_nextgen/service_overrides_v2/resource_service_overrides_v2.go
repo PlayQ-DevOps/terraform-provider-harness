@@ -70,13 +70,11 @@ func ResourceServiceOverrides() *schema.Resource {
 				Description: "force import override from remote even if same file path already exist",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 			"import_from_git": {
 				Description: "import override from git",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 			"git_details": {
 				Description: "Contains parameters related to creating an Entity for Git Experience.",

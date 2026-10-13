@@ -30,10 +30,11 @@ func ResourceTemplate() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"template_yaml": {
-				Description: "Yaml for creating new Template." + helpers.Descriptions.YamlText.String(),
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
+				Description:      "Yaml for creating new Template." + helpers.Descriptions.YamlText.String(),
+				Type:             schema.TypeString,
+				Optional:         true,
+				Computed:         true,
+				DiffSuppressFunc: helpers.YamlDiffSuppressFunction,
 			},
 			"version": {
 				Description: "Version Label for Template.",
@@ -122,7 +123,6 @@ func ResourceTemplate() *schema.Resource {
 				Description: "Enable this flag for force deletion of template. It will delete the Harness entity even if your pipelines or other entities reference it",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 			"identifier": {
 				Description: "Unique identifier of the resource",
