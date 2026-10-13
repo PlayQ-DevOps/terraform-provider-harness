@@ -13,7 +13,7 @@ Resource for managing Variable Sets
 ## Example Usage
 
 ```terraform
-resource "harness_platform_infra_variable_set" "example" {
+resource "harness_platform_infra_module" "example" {
   identifier  = "example"
   name        = "example"
   org_id      = harness_platform_organization.test.id

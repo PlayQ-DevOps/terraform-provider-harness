@@ -76,7 +76,6 @@ resource "harness_platform_connector_pdc" "test" {
 
 ### Required
 
-- `host` (Block Set, Min: 1) Host of the Physical data centers. (see [below for nested schema](#nestedblock--host))
 - `identifier` (String) Unique identifier of the resource.
 - `name` (String) Name of the resource.
 
@@ -84,6 +83,7 @@ resource "harness_platform_connector_pdc" "test" {
 
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
+- `host` (Block Set) Host of the Physical data centers. (see [below for nested schema](#nestedblock--host))
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.
 - `tags` (Set of String) Tags to associate with the resource.

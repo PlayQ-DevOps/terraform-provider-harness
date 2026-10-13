@@ -3,8 +3,8 @@ resource "harness_platform_pipeline_central_notification_rule" "example" {
   name                      = "name"
   status                    = "ENABLED"
   notification_channel_refs = ["account.notification_channel_ref"]
-  org = "org_id"
-  project = "project_id"
+  org                       = "org_id"
+  project                   = "project_id"
 
   notification_conditions {
     condition_name = "condition_name"
@@ -22,12 +22,12 @@ resource "harness_platform_pipeline_central_notification_rule" "example" {
     }
   }
   custom_notification_template_ref {
-    template_ref = "org.orgTemplate"
+    template_ref  = "org.orgTemplate"
     version_label = "1"
     variables {
-      name = "variableName"
+      name  = "variableName"
       value = "1"
-      type = "string"
+      type  = "string"
     }
   }
 

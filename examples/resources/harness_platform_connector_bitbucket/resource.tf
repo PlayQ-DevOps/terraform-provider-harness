@@ -45,7 +45,7 @@ resource "harness_platform_connector_bitbucket" "email_api_token" {
 
   api_authentication {
     auth_type = "EmailAndApiToken"
-    email     = "user@example.com"        # or use email_ref to reference a Harness secret
+    email     = "user@example.com" # or use email_ref to reference a Harness secret
     token_ref = "account.api_token_secret"
   }
 }

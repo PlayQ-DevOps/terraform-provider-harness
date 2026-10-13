@@ -83,7 +83,7 @@ resource "harness_chaos_fault_template" "kubernetes_fault" {
         name  = "CHAOS_DURATION"
         value = "30s"
       }
-      
+
       params {
         name  = "CHAOS_INTERVAL"
         value = "5s"
@@ -100,7 +100,7 @@ resource "harness_chaos_fault_template" "kubernetes_fault" {
             cpu    = "150m"
             memory = "150Mi"
           }
-          
+
           requests = {
             cpu    = "100m"
             memory = "100Mi"
@@ -145,12 +145,12 @@ resource "harness_chaos_fault_template" "fault_with_env" {
         name  = "CHAOS_DURATION"
         value = "15s"
       }
-      
+
       params {
         name  = "CHAOS_INTERVAL"
         value = "3s"
       }
-      
+
       params {
         name  = "TARGET_NAMESPACE"
         value = "<+input>.default('default')"
@@ -166,7 +166,7 @@ resource "harness_chaos_fault_template" "fault_with_env" {
           name  = "TARGET_NAMESPACE"
           value = "<+input>.default('default')"
         }
-        
+
         env {
           name  = "CHAOS_MODE"
           value = "pod"
@@ -217,7 +217,7 @@ resource "harness_chaos_fault_template" "advanced_fault" {
     name = "Documentation"
     url  = "https://docs.harness.io/chaos"
   }
-  
+
   links {
     name = "Support"
     url  = "https://support.harness.io"
@@ -231,7 +231,7 @@ resource "harness_chaos_fault_template" "advanced_fault" {
         name  = "CHAOS_DURATION"
         value = "<+input>.default('30s')"
       }
-      
+
       params {
         name  = "CHAOS_INTERVAL"
         value = "<+input>.default('5s')"
@@ -242,18 +242,18 @@ resource "harness_chaos_fault_template" "advanced_fault" {
         command           = ["/bin/bash", "-c"]
         args              = ["echo 'Advanced chaos fault'; sleep 30"]
         image_pull_policy = "IfNotPresent"
-        
+
         node_selector = {
           disktype = "ssd"
           zone     = "us-west-1a"
         }
-        
+
         labels = {
           app         = "chaos-fault"
           environment = "production"
           managed-by  = "terraform"
         }
-        
+
         annotations = {
           description = "Advanced chaos fault"
           owner       = "chaos-team"
@@ -264,7 +264,7 @@ resource "harness_chaos_fault_template" "advanced_fault" {
             cpu    = "250m"
             memory = "256Mi"
           }
-          
+
           requests = {
             cpu    = "125m"
             memory = "128Mi"
@@ -282,7 +282,7 @@ resource "harness_chaos_fault_template" "advanced_fault" {
     required    = true
     description = "Duration of chaos injection"
   }
-  
+
   variables {
     name        = "chaos_interval"
     value       = "<+input>"

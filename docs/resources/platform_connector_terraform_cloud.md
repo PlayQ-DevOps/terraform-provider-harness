@@ -52,13 +52,13 @@ resource "harness_platform_connector_terraform_cloud" "terraform_cloud" {
 
 ### Required
 
-- `credentials` (Block List, Min: 1, Max: 1) Credentials to connect to the Terraform Cloud platform. (see [below for nested schema](#nestedblock--credentials))
 - `identifier` (String) Unique identifier of the resource.
 - `name` (String) Name of the resource.
 - `url` (String) URL of the Terraform Cloud platform.
 
 ### Optional
 
+- `credentials` (Block List) Credentials to connect to the Terraform Cloud platform. (see [below for nested schema](#nestedblock--credentials))
 - `delegate_selectors` (Set of String) Connect only using delegates with these tags.
 - `description` (String) Description of the resource.
 - `execute_on_delegate` (Boolean) Enable this flag to execute on delegate (default: true).
@@ -73,9 +73,9 @@ resource "harness_platform_connector_terraform_cloud" "terraform_cloud" {
 <a id="nestedblock--credentials"></a>
 ### Nested Schema for `credentials`
 
-Required:
+Optional:
 
-- `api_token` (Block List, Min: 1, Max: 1) API token credentials to use for authentication. (see [below for nested schema](#nestedblock--credentials--api_token))
+- `api_token` (Block List) API token credentials to use for authentication. (see [below for nested schema](#nestedblock--credentials--api_token))
 
 <a id="nestedblock--credentials--api_token"></a>
 ### Nested Schema for `credentials.api_token`

@@ -31,7 +31,7 @@ data "harness_platform_dashboard_folder" "by_name" {
 
 - `id` (String) Identifier of the folder. Required if name is not provided.
 - `identifier` (String) Unique identifier of the resource.
-- `name` (String) Name of the resource.
+- `name` (String) Name of the folder. Required if id is not provided.
 
 ### Read-Only
 

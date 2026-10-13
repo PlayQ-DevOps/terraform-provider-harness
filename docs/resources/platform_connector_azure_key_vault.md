@@ -12,9 +12,8 @@ Resource for creating an Azure key vault in Harness.
 
 ## Example Usage
 
-### Manual Credentials
-
 ```terraform
+# Manual credentials example
 resource "harness_platform_connector_azure_key_vault" "manual" {
   identifier  = "identifier"
   name        = "name"
@@ -30,11 +29,8 @@ resource "harness_platform_connector_azure_key_vault" "manual" {
 
   azure_environment_type = "AZURE"
 }
-```
 
-### System-Assigned Managed Identity
-
-```terraform
+# System-assigned Managed Identity example
 resource "harness_platform_connector_azure_key_vault" "system_msi" {
   identifier  = "system_msi_example"
   name        = "system_msi_example"
@@ -51,11 +47,8 @@ resource "harness_platform_connector_azure_key_vault" "system_msi" {
   delegate_selectors     = ["harness-delegate"]
   azure_environment_type = "AZURE"
 }
-```
 
-### User-Assigned Managed Identity
-
-```terraform
+# User-assigned Managed Identity example
 resource "harness_platform_connector_azure_key_vault" "user_msi" {
   identifier  = "user_msi_example"
   name        = "user_msi_example"

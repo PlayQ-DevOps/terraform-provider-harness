@@ -113,10 +113,10 @@ resource "harness_platform_pipeline" "test" {
   name            = "gitx"
   import_from_git = true
   git_import_info {
-    branch_name   = "main"
-    file_path     = ".harness/gitx.yaml"
-    connector_ref = "account.DoNotDeleteGithub"
-    repo_name     = "open-repo"
+    branch_name     = "main"
+    file_path       = ".harness/gitx.yaml"
+    connector_ref   = "account.DoNotDeleteGithub"
+    repo_name       = "open-repo"
     is_force_import = true
   }
   pipeline_import_request {

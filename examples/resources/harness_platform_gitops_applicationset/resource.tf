@@ -4,7 +4,7 @@ resource "harness_platform_gitops_applicationset" "cluster_generator" {
   project_id = "projectId"
   agent_id   = "account.agentuseast1"
   upsert     = true
-  
+
   applicationset {
     metadata {
       name      = "cluster-appset"
@@ -19,7 +19,7 @@ resource "harness_platform_gitops_applicationset" "cluster_generator" {
           enabled = true
         }
       }
-      
+
       template {
         metadata {
           name = "{{.name}}-guestbook"
@@ -50,7 +50,7 @@ resource "harness_platform_gitops_applicationset" "list_generator" {
   project_id = "projectId"
   agent_id   = "account.agentuseast1"
   upsert     = true
-  
+
   applicationset {
     metadata {
       name = "list-appset"
@@ -58,7 +58,7 @@ resource "harness_platform_gitops_applicationset" "list_generator" {
     spec {
       go_template         = true
       go_template_options = ["missingkey=error"]
-      
+
       generator {
         list {
           elements = [
@@ -73,7 +73,7 @@ resource "harness_platform_gitops_applicationset" "list_generator" {
           ]
         }
       }
-      
+
       template {
         metadata {
           name = "{{.cluster}}-guestbook"
@@ -101,7 +101,7 @@ resource "harness_platform_gitops_applicationset" "git_files" {
   project_id = "projectId"
   agent_id   = "account.agentuseast1"
   upsert     = true
-  
+
   applicationset {
     metadata {
       name = "git-files-appset"
@@ -111,13 +111,13 @@ resource "harness_platform_gitops_applicationset" "git_files" {
         git {
           repo_url = "https://github.com/example/config-repo"
           revision = "main"
-          
+
           file {
             path = "apps/*/config.json"
           }
         }
       }
-      
+
       template {
         metadata {
           name = "{{.path.basename}}-app"
@@ -145,7 +145,7 @@ resource "harness_platform_gitops_applicationset" "git_directories" {
   project_id = "projectId"
   agent_id   = "account.agentuseast1"
   upsert     = true
-  
+
   applicationset {
     metadata {
       name = "git-directories-appset"
@@ -155,14 +155,14 @@ resource "harness_platform_gitops_applicationset" "git_directories" {
         git {
           repo_url = "https://github.com/argoproj/argo-cd.git"
           revision = "HEAD"
-          
+
           directory {
             path    = "applicationset/examples/git-generator-directory/cluster-addons/*"
             exclude = false
           }
         }
       }
-      
+
       template {
         metadata {
           name = "{{.path.basename}}-addon"

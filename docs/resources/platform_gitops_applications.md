@@ -74,12 +74,13 @@ resource "harness_platform_gitops_applications" "example" {
 ### Optional
 
 - `account_id` (String, Deprecated) Account identifier of the GitOps application.
+- `force_delete` (Boolean) Indicates if the GitOps application should be force deleted from harness.
 - `identifier` (String, Deprecated) Identifier of the GitOps application.
 - `kind` (String) Kind of the GitOps application.
 - `options_remove_existing_finalizers` (Boolean) Options to remove existing finalizers to delete the GitOps application.
 - `project` (String) The ArgoCD project name corresponding to this GitOps application. An empty string means that the GitOps application belongs to the default project created by Harness.
 - `repo_id` (String) Repository identifier of the GitOps application. When using skipRepoValidation, this field is not required.
-- `repo_ids` (List of String) List of repository identifiers of the GitOps for Multi-Source application. Not required if skipRepoValidation is set to true.
+- `repo_ids` (Set of String) List of repository identifiers of the GitOps for Multi-Source application. Not required if skipRepoValidation is set to true.
 - `request_cascade` (Boolean) Request cascade to delete the GitOps application.
 - `request_propagation_policy` (String) Request propagation policy to delete the GitOps application.
 - `skip_repo_validation` (Boolean) Indicates if the GitOps application should skip validate repository definition exists.

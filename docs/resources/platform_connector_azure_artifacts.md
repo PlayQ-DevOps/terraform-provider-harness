@@ -17,13 +17,13 @@ Resource for creating an Azure Artifacts connector.
 
 ### Required
 
-- `credentials` (Block List, Min: 1, Max: 1) Credentials to use for authentication. (see [below for nested schema](#nestedblock--credentials))
 - `identifier` (String) Unique identifier of the resource.
 - `name` (String) Name of the resource.
 - `url` (String) URL of the Azure Artifacts server.
 
 ### Optional
 
+- `credentials` (Block List) Credentials to use for authentication. (see [below for nested schema](#nestedblock--credentials))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
 - `org_id` (String) Unique identifier of the organization.

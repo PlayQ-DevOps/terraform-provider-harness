@@ -41,7 +41,30 @@ resource "harness_platform_connector_anthropic_model" "bedrock" {
   }
 }
 
-# CloudProvider auth — delegate to an existing AWS connector
+# Vertex auth — Google Vertex AI credentials
+resource "harness_platform_connector_anthropic_model" "vertex" {
+  identifier  = "example_anthropic_vertex"
+  name        = "example-anthropic-vertex"
+  description = "Anthropic connector with Vertex auth"
+  tags        = ["env:dev"]
+
+  url                    = "https://api.anthropic.com"
+  model                  = "claude-opus-4-6"
+  delegate_selectors     = ["harness-delegate"]
+  execute_on_delegate    = true
+  ignore_test_connection = true
+
+  auth {
+    auth_type = "Vertex"
+    vertex {
+      service_account_key_ref = "account.gcp_sa_key"
+      project_id              = "my-gcp-project"
+      region                  = "us-central1"
+    }
+  }
+}
+
+# CloudProvider auth — delegate to an existing cloud provider connector
 resource "harness_platform_connector_anthropic_model" "cloud_provider" {
   identifier  = "example_anthropic_cloud_provider"
   name        = "example-anthropic-cloud-provider"

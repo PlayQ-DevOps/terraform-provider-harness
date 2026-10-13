@@ -3,10 +3,12 @@
 page_title: "harness_cluster_orchestrator Resource - terraform-provider-harness"
 subcategory: "Next Gen"
 description: |-
-  Resource for creating and deleting ClusterOrchestrators.
+  Resource for creating ClusterOrchestrators.
 ---
 
 # harness_cluster_orchestrator (Resource)
+
+Resource for creating ClusterOrchestrators.
 
 Resource for creating and deleting ClusterOrchestrators.
 

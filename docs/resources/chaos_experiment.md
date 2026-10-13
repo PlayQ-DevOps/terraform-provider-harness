@@ -123,8 +123,8 @@ resource "harness_chaos_experiment" "cross_scope" {
   project_id = "my_project"
 
   # Hub scope (org level) - different from experiment scope!
-  hub_org_id     = "my_org"
-  hub_identity   = "my-chaos-hub"
+  hub_org_id   = "my_org"
+  hub_identity = "my-chaos-hub"
 
   # Template from org-level hub
   template_identity = "my-template"

@@ -80,12 +80,12 @@ resource "harness_chaos_probe_template" "http_probe" {
   http_probe {
     url    = "<+input>.default('http://localhost:8080/health')"
     method = "GET"
-    
+
     headers {
       key   = "Content-Type"
       value = "application/json"
     }
-    
+
     headers {
       key   = "Authorization"
       value = "<+input>"
@@ -94,11 +94,11 @@ resource "harness_chaos_probe_template" "http_probe" {
 
   # Run properties
   run_properties {
-    timeout         = "30s"
-    interval        = "10s"
+    timeout          = "30s"
+    interval         = "10s"
     polling_interval = "2s"
-    stop_on_failure = true
-    verbosity       = "INFO"
+    stop_on_failure  = true
+    verbosity        = "INFO"
   }
 
   # Variables

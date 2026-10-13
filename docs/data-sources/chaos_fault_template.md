@@ -50,7 +50,7 @@ resource "harness_chaos_experiment" "example" {
   fault {
     name        = data.harness_chaos_fault_template.by_identity.name
     description = data.harness_chaos_fault_template.by_identity.description
-    
+
     # Use fault template's chaos spec
     # ... fault configuration ...
   }
@@ -77,7 +77,7 @@ locals {
     data.harness_chaos_fault_template.by_identity.spec[0].chaos[0].kubernetes,
     []
   )) > 0
-  
+
   has_targets = length(try(
     data.harness_chaos_fault_template.by_identity.spec[0].target,
     []

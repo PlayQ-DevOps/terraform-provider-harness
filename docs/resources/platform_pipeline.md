@@ -128,10 +128,10 @@ resource "harness_platform_pipeline" "test" {
   name            = "gitx"
   import_from_git = true
   git_import_info {
-    branch_name   = "main"
-    file_path     = ".harness/gitx.yaml"
-    connector_ref = "account.DoNotDeleteGithub"
-    repo_name     = "open-repo"
+    branch_name     = "main"
+    file_path       = ".harness/gitx.yaml"
+    connector_ref   = "account.DoNotDeleteGithub"
+    repo_name       = "open-repo"
     is_force_import = true
   }
   pipeline_import_request {
@@ -160,12 +160,12 @@ resource "harness_platform_pipeline" "test" {
 - `pipeline_import_request` (Block List, Max: 1) Contains parameters for importing a pipeline (see [below for nested schema](#nestedblock--pipeline_import_request))
 - `tags` (Set of String) Tags to associate with the resource. These should match the tag value passed in the YAML; if this parameter is null or not passed, the tags specified in YAML should also be null.
 - `template_applied` (Boolean) If true, returns Pipeline YAML with Templates applied on it.
-- `template_applied_pipeline_yaml` (String) Pipeline YAML after resolving Templates (returned as a String).
 - `yaml` (String) YAML of the pipeline. In YAML, to reference an entity at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference an entity at the account scope, prefix 'account` to the expression: account.{identifier}. For eg, to reference a connector with identifier 'connectorId' at the organization scope in a stage mention it as connectorRef: org.connectorId.
 
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `template_applied_pipeline_yaml` (String) Pipeline YAML after resolving Templates (returned as a String).
 
 <a id="nestedblock--git_details"></a>
 ### Nested Schema for `git_details`

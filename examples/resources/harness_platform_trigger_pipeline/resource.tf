@@ -1,10 +1,10 @@
- terraform {
-   required_providers {
-     harness = {
-       source = "registry.terraform.io/harness/harness"
-     }
-   }
- }
+terraform {
+  required_providers {
+    harness = {
+      source = "registry.terraform.io/harness/harness"
+    }
+  }
+}
 
 resource "harness_platform_trigger_pipeline" "scs_ecs_timing_test" {
   org_id      = "default"

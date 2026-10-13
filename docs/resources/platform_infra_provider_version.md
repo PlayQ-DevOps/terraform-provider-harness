@@ -47,7 +47,7 @@ resource "harness_platform_infra_provider_version" "aws_v4" {
 
 ### Read-Only
 
-- `id` (String) The ID of this resource in the format `provider_id/version`.
+- `id` (String) The ID of this resource.
 
 ## Import
 

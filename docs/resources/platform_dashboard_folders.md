@@ -3,12 +3,12 @@
 page_title: "harness_platform_dashboard_folders Resource - terraform-provider-harness"
 subcategory: "Next Gen"
 description: |-
-  Resource for a Harness Custom Dashboard Folder.
+  Deprecated alias for harness_platform_dashboard_folder. Resource for a Harness Custom Dashboard Folder.
 ---
 
 # harness_platform_dashboard_folders (Resource)
 
-Resource for a Harness Custom Dashboard Folder.
+Deprecated alias for `harness_platform_dashboard_folder`. Resource for a Harness Custom Dashboard Folder.
 
 ## Example Usage
 

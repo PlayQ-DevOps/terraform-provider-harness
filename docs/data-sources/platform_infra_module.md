@@ -40,6 +40,8 @@ data "harness_platform_infra_module" "test" {
 - `onboarding_pipeline_org` (String) Onboarding Pipeline organization.
 - `onboarding_pipeline_project` (String) Onboarding Pipeline project.
 - `onboarding_pipeline_sync` (Boolean) Sync the project automatically.
+- `org` (String) Organization that owns the module
+- `project` (String) Project that owns the module
 - `repository` (String) For account connectors, the repository name where the module is stored.
 - `repository_branch` (String) Repository Branch in which the module should be accessed
 - `repository_commit` (String) Repository Commit in which the module should be accessed

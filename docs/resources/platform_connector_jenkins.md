@@ -74,7 +74,7 @@ resource "harness_platform_connector_jenkins" "test" {
 
 ### Optional
 
-- `auth` (Block List, Max: 1) This entity contains the details for Jenkins Authentication. (see [below for nested schema](#nestedblock--auth))
+- `auth` (Block List) This entity contains the details for Jenkins Authentication. (see [below for nested schema](#nestedblock--auth))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
 - `org_id` (String) Unique identifier of the organization.
@@ -94,8 +94,8 @@ Required:
 
 Optional:
 
-- `jenkins_bearer_token` (Block List, Max: 1) Authenticate to App Dynamics using bearer token. (see [below for nested schema](#nestedblock--auth--jenkins_bearer_token))
-- `jenkins_user_name_password` (Block List, Max: 1) Authenticate to App Dynamics using user name and password. (see [below for nested schema](#nestedblock--auth--jenkins_user_name_password))
+- `jenkins_bearer_token` (Block List) Authenticate to App Dynamics using bearer token. (see [below for nested schema](#nestedblock--auth--jenkins_bearer_token))
+- `jenkins_user_name_password` (Block List) Authenticate to App Dynamics using user name and password. (see [below for nested schema](#nestedblock--auth--jenkins_user_name_password))
 
 <a id="nestedblock--auth--jenkins_bearer_token"></a>
 ### Nested Schema for `auth.jenkins_bearer_token`

@@ -27,7 +27,7 @@ resource "harness_platform_role_assignments" "example1" {
   managed  = false
 }
 
-//To create a role binding in user group 
+//To create a role binding in user group
 resource "harness_platform_role_assignments" "example1" {
   org_id                    = "org_id"
   project_id                = "project_id"

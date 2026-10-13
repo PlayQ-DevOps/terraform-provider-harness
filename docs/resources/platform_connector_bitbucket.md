@@ -60,7 +60,7 @@ resource "harness_platform_connector_bitbucket" "email_api_token" {
 
   api_authentication {
     auth_type = "EmailAndApiToken"
-    email     = "user@example.com"        # or use email_ref to reference a Harness secret
+    email     = "user@example.com" # or use email_ref to reference a Harness secret
     token_ref = "account.api_token_secret"
   }
 }
@@ -114,14 +114,14 @@ resource "harness_platform_connector_bitbucket" "ssh" {
 ### Required
 
 - `connection_type` (String) Whether the connection we're making is to a BitBucket repository or a BitBucket account. Valid values are Account, Repo.
-- `credentials` (Block List, Min: 1, Max: 1) Credentials to use for the connection. (see [below for nested schema](#nestedblock--credentials))
 - `identifier` (String) Unique identifier of the resource.
 - `name` (String) Name of the resource.
 - `url` (String) URL of the BitBucket repository or account.
 
 ### Optional
 
-- `api_authentication` (Block List, Max: 1) Configuration for using the BitBucket api. API Access is required for using “Git Experience”, for creation of Git based triggers, Webhooks management and updating Git statuses. (see [below for nested schema](#nestedblock--api_authentication))
+- `api_authentication` (Block List) Configuration for using the BitBucket api. API Access is required for using “Git Experience”, for creation of Git based triggers, Webhooks management and updating Git statuses. (see [below for nested schema](#nestedblock--api_authentication))
+- `credentials` (Block List) Credentials to use for the connection. (see [below for nested schema](#nestedblock--credentials))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
 - `org_id` (String) Unique identifier of the organization.
@@ -133,13 +133,29 @@ resource "harness_platform_connector_bitbucket" "ssh" {
 
 - `id` (String) The ID of this resource.
 
+<a id="nestedblock--api_authentication"></a>
+### Nested Schema for `api_authentication`
+
+Required:
+
+- `token_ref` (String) Reference to a Harness secret containing the personal access token (or API token for `EmailAndApiToken`/`AccessToken`) for interacting with the BitBucket api. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
+
+Optional:
+
+- `auth_type` (String) Type of API authentication. Valid values are UsernameToken, AccessToken, EmailAndApiToken. Defaults to `UsernameToken` for backward compatibility.
+- `email` (String) The email used for connecting to the api. Applicable when `auth_type` is `EmailAndApiToken`.
+- `email_ref` (String) The name of the Harness secret containing the email. Applicable when `auth_type` is `EmailAndApiToken`. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
+- `username` (String) The username used for connecting to the api. Applicable when `auth_type` is `UsernameToken`.
+- `username_ref` (String) The name of the Harness secret containing the username. Applicable when `auth_type` is `UsernameToken`. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
+
+
 <a id="nestedblock--credentials"></a>
 ### Nested Schema for `credentials`
 
 Optional:
 
-- `http` (Block List, Max: 1) Authenticate using Username and password over http(s) for the connection. (see [below for nested schema](#nestedblock--credentials--http))
-- `ssh` (Block List, Max: 1) Authenticate using SSH for the connection. (see [below for nested schema](#nestedblock--credentials--ssh))
+- `http` (Block List) Authenticate using Username and password over http(s) for the connection. (see [below for nested schema](#nestedblock--credentials--http))
+- `ssh` (Block List) Authenticate using SSH for the connection. (see [below for nested schema](#nestedblock--credentials--ssh))
 
 <a id="nestedblock--credentials--http"></a>
 ### Nested Schema for `credentials.http`
@@ -157,23 +173,6 @@ Optional:
 Required:
 
 - `ssh_key_ref` (String) Reference to the Harness secret containing the ssh key. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
-
-
-
-<a id="nestedblock--api_authentication"></a>
-### Nested Schema for `api_authentication`
-
-Required:
-
-- `token_ref` (String) Reference to a Harness secret containing the personal access token (or API token for `EmailAndApiToken`/`AccessToken`) for interacting with the BitBucket api. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
-
-Optional:
-
-- `auth_type` (String) Type of API authentication. Valid values are UsernameToken, AccessToken, EmailAndApiToken. Defaults to `UsernameToken` for backward compatibility.
-- `email` (String) The email used for connecting to the api. Applicable when `auth_type` is `EmailAndApiToken`.
-- `email_ref` (String) The name of the Harness secret containing the email. Applicable when `auth_type` is `EmailAndApiToken`. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
-- `username` (String) The username used for connecting to the api. Applicable when `auth_type` is `UsernameToken`.
-- `username_ref` (String) The name of the Harness secret containing the username. Applicable when `auth_type` is `UsernameToken`. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
 
 ## Import
 

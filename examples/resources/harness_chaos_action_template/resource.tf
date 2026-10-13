@@ -159,9 +159,9 @@ resource "harness_chaos_action_template" "script_action" {
       sleep 10
       echo "Script completed"
     EOT
-    
+
     shell = "bash"
-    
+
     env {
       name  = "TARGET"
       value = "<+input>.default('default-target')"

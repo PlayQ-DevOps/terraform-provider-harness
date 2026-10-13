@@ -38,7 +38,7 @@ resource "harness_platform_connector_kubernetes" "bearer_token" {
 
 ### Optional
 
-- `bearer_token` (Block List, Max: 1) Bearer token information for the rancher cluster. (see [below for nested schema](#nestedblock--bearer_token))
+- `bearer_token` (Block List) Bearer token information for the rancher cluster. (see [below for nested schema](#nestedblock--bearer_token))
 - `delegate_selectors` (Set of String) Selectors to use for the delegate.
 - `description` (String) Description of the resource.
 - `force_delete` (Boolean) Enable this flag for force deletion of connector

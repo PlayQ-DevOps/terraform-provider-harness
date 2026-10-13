@@ -1,11 +1,11 @@
 resource "harness_platform_infra_module" "example" {
-  description          = "example"
-  name                 = "name"
-  system               = "provider"
-  repository           = "repo"
-  repository_branch    = "main"
-  repository_path      = "tf/aws/basic"
-  repository_connector = harness_platform_connector_github.test.id
+  description                 = "example"
+  name                        = "name"
+  system                      = "provider"
+  repository                  = "repo"
+  repository_branch           = "main"
+  repository_path             = "tf/aws/basic"
+  repository_connector        = harness_platform_connector_github.test.id
   onboarding_pipeline         = "my_onboarding_pipeline"
   onboarding_pipeline_org     = "default"
   onboarding_pipeline_project = "IaCM_Project"

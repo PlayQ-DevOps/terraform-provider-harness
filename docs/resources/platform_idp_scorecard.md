@@ -57,7 +57,7 @@ resource "harness_platform_idp_scorecard" "gold" {
 
 ### Required
 
-- `checks` (Block Set) Checks included in the scorecard. (see [below for nested schema](#nestedblock--checks))
+- `checks` (Block Set, Min: 1) Checks included in the scorecard. (see [below for nested schema](#nestedblock--checks))
 - `filter` (Block List, Min: 1, Max: 1) Filters that select catalog entities evaluated by the scorecard. (see [below for nested schema](#nestedblock--filter))
 - `identifier` (String) Unique identifier of the resource.
 - `name` (String) Name of the resource.
@@ -95,6 +95,7 @@ Read-Only:
 - `description` (String) Description of the check.
 - `name` (String) Name of the check.
 
+
 <a id="nestedblock--filter"></a>
 ### Nested Schema for `filter`
 
@@ -110,17 +111,18 @@ Optional:
 - `tags` (List of String) Entity tags to include.
 - `type` (String) Catalog entity type to evaluate.
 
+
 <a id="nestedatt--tier_analytics"></a>
 ### Nested Schema for `tier_analytics`
 
 Read-Only:
 
-- `component_count` (Number) Number of components in the tier.
-- `max_score` (Number) Maximum score for the tier.
-- `min_score` (Number) Minimum score for the tier.
-- `percentage` (Number) Percentage of components in the tier.
-- `tier_colour` (String) Colour of the tier.
-- `tier_name` (String) Name of the tier.
+- `component_count` (Number)
+- `max_score` (Number)
+- `min_score` (Number)
+- `percentage` (Number)
+- `tier_colour` (String)
+- `tier_name` (String)
 
 ## Import
 

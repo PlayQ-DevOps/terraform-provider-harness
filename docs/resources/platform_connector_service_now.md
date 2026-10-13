@@ -79,13 +79,13 @@ resource "harness_platform_connector_service_now" "test" {
 
 ### Required
 
-- `auth` (Block List, Min: 1, Max: 1) The credentials to use for the service now authentication. (see [below for nested schema](#nestedblock--auth))
 - `identifier` (String) Unique identifier of the resource.
 - `name` (String) Name of the resource.
 - `service_now_url` (String) URL of service now.
 
 ### Optional
 
+- `auth` (Block List) The credentials to use for the service now authentication. (see [below for nested schema](#nestedblock--auth))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
 - `org_id` (String) Unique identifier of the organization.
@@ -108,9 +108,9 @@ Required:
 
 Optional:
 
-- `adfs` (Block List, Max: 1) Authenticate using adfs client credentials with certificate. (see [below for nested schema](#nestedblock--auth--adfs))
-- `refresh_token` (Block List, Max: 1) Authenticate using refresh token grant type. (see [below for nested schema](#nestedblock--auth--refresh_token))
-- `username_password` (Block List, Max: 1) Authenticate using username password. (see [below for nested schema](#nestedblock--auth--username_password))
+- `adfs` (Block List) Authenticate using adfs client credentials with certificate. (see [below for nested schema](#nestedblock--auth--adfs))
+- `refresh_token` (Block List) Authenticate using refresh token grant type. (see [below for nested schema](#nestedblock--auth--refresh_token))
+- `username_password` (Block List) Authenticate using username password. (see [below for nested schema](#nestedblock--auth--username_password))
 
 <a id="nestedblock--auth--adfs"></a>
 ### Nested Schema for `auth.adfs`

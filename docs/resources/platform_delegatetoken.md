@@ -60,7 +60,7 @@ resource "harness_platform_delegatetoken" "expiry_token" {
 - `project_id` (String) Project Identifier for the Entity
 - `revoke_after` (Number) Epoch time in milliseconds after which the token will be marked as revoked. There can be a delay of up to one hour from the epoch value provided and actual revoking of the token.
 - `token_status` (String) Status of Delegate Token (ACTIVE or REVOKED). If left empty both active and revoked tokens will be assumed
-- `value` (String) Value of the delegate token. Encoded in base64.
+- `value` (String, Sensitive) Value of the delegate token. Encoded in base64.
 
 ### Read-Only
 

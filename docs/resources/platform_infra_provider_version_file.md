@@ -73,17 +73,17 @@ resource "harness_platform_infra_provider_version_file" "custom_name" {
 
 ### Required
 
+- `file_path` (String) Local path to the file to upload. Required for uploading file content.
 - `provider_id` (String) The ID of the provider.
 - `version` (String) Provider version number.
-- `file_path` (String) Local path to the file to upload. Required for uploading file content.
 
 ### Optional
 
-- `filename` (String) Name of the file to upload (e.g., terraform-provider-aws_5.0.0_linux_amd64.zip). If not provided, will be derived from file_path. Use this to override the uploaded filename if it should differ from the local filename.
+- `filename` (String) Name of the file to upload (e.g., terraform-provider-aws_5.0.0_linux_amd64.zip). If not provided, will be derived from file_path.
 
 ### Read-Only
 
-- `id` (String) The ID of this resource in the format `provider_id/version/filename`.
+- `id` (String) The ID of this resource.
 - `synced` (Boolean) Indicates if the provider version is synced after file upload.
 
 ## Import
@@ -95,14 +95,3 @@ The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/c
 ```shell
 terraform import harness_platform_infra_provider_version_file.example <provider_id>/<version>/<filename>
 ```
-
-## Notes
-
-- Files cannot be updated once uploaded. To change a file, you must delete and recreate the resource.
-- When `file_path` is provided, the resource reads the local file and uploads its content to the provider registry.
-- The `filename` is automatically derived from `file_path` if not explicitly provided.
-- Common files to upload include:
-  - Platform-specific provider binaries (e.g., `terraform-provider-aws_5.0.0_linux_amd64.zip`)
-  - SHA256SUMS file for verification
-  - SHA256SUMS.sig signature file for GPG verification
-- Files are uploaded as raw binary content with `Content-Type: application/octet-stream`.

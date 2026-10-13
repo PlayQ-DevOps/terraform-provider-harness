@@ -59,6 +59,35 @@ resource "harness_platform_gitops_cluster" "example" {
 }
 
 
+# Cluster with secret_expressions (agent resolves secrets at connect time)
+resource "harness_platform_gitops_cluster" "example" {
+  identifier = "identifier"
+  account_id = "account_id"
+  agent_id   = "account.agent_id"
+
+  request {
+    upsert = true
+    secret_expressions = {
+      bearerToken = "account.my_k8s_token_secret"
+    }
+    cluster {
+      server = "https://my-cluster.example.com"
+      name   = "name"
+      config {
+        cluster_connection_type = "SERVICE_ACCOUNT"
+        tls_client_config {
+          insecure = true
+        }
+      }
+    }
+  }
+  lifecycle {
+    ignore_changes = [
+      request.0.upsert, request.0.cluster.0.config.0.bearer_token,
+    ]
+  }
+}
+
 # Cluster with self signed certificate
 resource "harness_platform_gitops_cluster" "example" {
   identifier = "identifier"

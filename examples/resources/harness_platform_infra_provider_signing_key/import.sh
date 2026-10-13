@@ -1,0 +1,1 @@
+terraform import harness_platform_infra_provider_signing_key.example <signing_key_id>

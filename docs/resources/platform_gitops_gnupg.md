@@ -53,13 +53,10 @@ resource "harness_platform_gitops_gnupg" "example" {
 <a id="nestedblock--request"></a>
 ### Nested Schema for `request`
 
-Required:
-
-- `upsert` (Boolean) Indicates if the GnuPG Key should be inserted if not present or updated if present.
-
 Optional:
 
 - `publickey` (Block List) Public key details. (see [below for nested schema](#nestedblock--request--publickey))
+- `upsert` (Boolean) Indicates if the GnuPG Key should be inserted if not present or updated if present.
 
 <a id="nestedblock--request--publickey"></a>
 ### Nested Schema for `request.publickey`

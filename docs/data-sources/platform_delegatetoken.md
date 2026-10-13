@@ -55,4 +55,4 @@ data "harness_platform_delegatetoken" "project_level" {
 - `created_by` (Map of String) created by details
 - `id` (String) The ID of this resource.
 - `revoke_after` (Number) Epoch time in milliseconds after which the token will be marked as revoked. There can be a delay of up to one hour from the epoch value provided and actual revoking of the token.
-- `value` (String) Value of the delegate token. Encoded in base64.
+- `value` (String, Sensitive) Value of the delegate token. Encoded in base64.

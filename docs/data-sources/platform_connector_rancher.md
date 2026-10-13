@@ -27,7 +27,7 @@ data "harness_platform_connector_rancher" "example" {
 
 ### Optional
 
-- `bearer_token` (Block List, Max: 1) URL and bearer token for the rancher cluster. (see [below for nested schema](#nestedblock--bearer_token))
+- `bearer_token` (Block List) URL and bearer token for the rancher cluster. (see [below for nested schema](#nestedblock--bearer_token))
 - `name` (String) Name of the resource.
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.

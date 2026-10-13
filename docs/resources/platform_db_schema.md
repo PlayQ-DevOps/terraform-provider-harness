@@ -29,14 +29,14 @@ resource "harness_platform_db_schema" "default_type_test" {
 }
 
 resource "harness_platform_db_schema" "liquibase_repository_test" {
-  identifier      = "identifier"
-  org_id          = "org_id"
-  project_id      = "project_id"
-  name            = "name"
-  service         = "service1"
-  type            = "Repository"
-  migration_type  = "Liquibase"
-  tags            = ["foo:bar", "bar:foo"]
+  identifier     = "identifier"
+  org_id         = "org_id"
+  project_id     = "project_id"
+  name           = "name"
+  service        = "service1"
+  type           = "Repository"
+  migration_type = "Liquibase"
+  tags           = ["foo:bar", "bar:foo"]
   schema_source {
     connector    = "gitConnector"
     repo         = "TestRepo"
@@ -47,14 +47,14 @@ resource "harness_platform_db_schema" "liquibase_repository_test" {
 
 
 resource "harness_platform_db_schema" "liquibase_script_test" {
-  identifier      = "identifier"
-  org_id          = "org_id"
-  project_id      = "project_id"
-  name            = "name"
-  migration_type  = "Liquibase"
-  service         = "service1"
-  type            = "Script"
-  tags            = ["foo:bar", "bar:foo"]
+  identifier     = "identifier"
+  org_id         = "org_id"
+  project_id     = "project_id"
+  name           = "name"
+  migration_type = "Liquibase"
+  service        = "service1"
+  type           = "Script"
+  tags           = ["foo:bar", "bar:foo"]
   changelog_script {
     image    = "plugins/image"
     command  = "echo \\\"hello dbops\\\""
@@ -64,33 +64,33 @@ resource "harness_platform_db_schema" "liquibase_script_test" {
 }
 
 resource "harness_platform_db_schema" "flyway_repository_test" {
-  identifier      = "identifier"
-  org_id          = "org_id"
-  project_id      = "project_id"
-  name            = "name"
-  service         = "service1"
-  type            = "Repository"
-  migration_type  = "Flyway"
-  tags            = ["foo:bar", "bar:foo"]
+  identifier     = "identifier"
+  org_id         = "org_id"
+  project_id     = "project_id"
+  name           = "name"
+  service        = "service1"
+  type           = "Repository"
+  migration_type = "Flyway"
+  tags           = ["foo:bar", "bar:foo"]
   schema_source {
-    connector     = "gitConnector"
-    repo          = "TestRepo"
-    location      = "db/flyway/migrations"
-    toml          = "db/flyway.toml"
-    archive_path  = "path/to/archive.zip"
+    connector    = "gitConnector"
+    repo         = "TestRepo"
+    location     = "db/flyway/migrations"
+    toml         = "db/flyway.toml"
+    archive_path = "path/to/archive.zip"
   }
 }
 
 
 resource "harness_platform_db_schema" "flyway_script_test" {
-  identifier        = "identifier"
-  org_id            = "org_id"
-  project_id        = "project_id"
-  name              = "name"
-  migration_type    = "Flyway"
-  service           = "service1"
-  type              = "Script"
-  tags              = ["foo:bar", "bar:foo"]
+  identifier     = "identifier"
+  org_id         = "org_id"
+  project_id     = "project_id"
+  name           = "name"
+  migration_type = "Flyway"
+  service        = "service1"
+  type           = "Script"
+  tags           = ["foo:bar", "bar:foo"]
   changelog_script {
     image    = "plugins/image"
     command  = "echo \\\"hello dbops\\\""
@@ -152,7 +152,7 @@ resource "harness_platform_db_schema" "harness_code_repo" {
 - `service` (String) The service associated with schema
 - `tags` (Set of String) Tags to associate with the resource.
 - `type` (String) Type of the database schema. Valid values are: SCRIPT, REPOSITORY
-- `use_percona` (Boolean) If percona-toolkit is to be enabled for the database schema. Defaults to `false`.
+- `use_percona` (Boolean) If percona-toolkit is to be enabled for the database schema
 
 ### Read-Only
 
@@ -179,8 +179,8 @@ Required:
 
 Optional:
 
-- `connector` (String) Connector to repository at which to find details about the database schema. Leave empty when using Harness Code Repository.
 - `archive_path` (String) If connector type is artifactory, path to the archive file which contains the changeLog. Not supported with Harness Code Repository.
+- `connector` (String) Connector to repository at which to find details about the database schema. Leave empty when using Harness Code Repository.
 - `repo` (String) Repository name. Required for Harness Code Repository or when connector connection type is Account.
 - `toml` (String) Config file, to define various settings and properties for managing database schema change
 

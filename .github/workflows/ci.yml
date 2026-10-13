@@ -124,3 +124,30 @@ jobs:
         env:
           NO_CHANGELOG: ${{ contains(github.event.pull_request.labels.*.name, 'no-changelog') && '1' || '0' }}
         run: scripts/check-changelog.sh "origin/${{ github.event.pull_request.base.ref }}"
+
+  docs:
+    name: Documentation
+    needs: versions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+          cache: true
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: ${{ needs.versions.outputs.terraform }}
+          terraform_wrapper: false
+      # Non-blocking until docs/resources/platform_gitops_applicationset.md fits the Registry size
+      # limit (its nested schema renders to 1.6 MB; see the Phase 6 follow-ups).
+      - name: Validate the generated documentation
+        continue-on-error: true
+        run: make docs-validate
+      # The drift check reports pages that no longer match the schemas, examples and
+      # templates; it does not block until every page is generated from them.
+      - name: Check that the documentation is up to date
+        continue-on-error: true
+        run: |
+          make docs-all
+          git diff --exit-code --stat docs

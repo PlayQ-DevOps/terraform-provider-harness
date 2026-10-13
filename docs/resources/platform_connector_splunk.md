@@ -23,7 +23,7 @@ resource "harness_platform_connector_splunk" "username_password" {
   url                = "https://splunk.company.com:8089"
   delegate_selectors = ["harness-delegate"]
   account_id         = "splunk_account_id"
-  
+
   username_password {
     username     = "splunk_user"
     password_ref = "account.splunk_password"
@@ -40,7 +40,7 @@ resource "harness_platform_connector_splunk" "bearer_token" {
   url                = "https://splunk.company.com:8089"
   delegate_selectors = ["harness-delegate"]
   account_id         = "splunk_account_id"
-  
+
   bearer_token {
     bearer_token_ref = "account.splunk_bearer_token"
   }
@@ -56,7 +56,7 @@ resource "harness_platform_connector_splunk" "hec_token" {
   url                = "https://splunk.company.com:8088"
   delegate_selectors = ["harness-delegate"]
   account_id         = "splunk_account_id"
-  
+
   hec_token {
     hec_token_ref = "account.splunk_hec_token"
   }
@@ -72,7 +72,7 @@ resource "harness_platform_connector_splunk" "no_auth" {
   url                = "https://splunk-dev.company.com:8089"
   delegate_selectors = ["harness-delegate"]
   account_id         = "splunk_account_id"
-  
+
   no_authentication {}
 }
 
@@ -86,8 +86,8 @@ resource "harness_platform_connector_splunk" "legacy" {
   url                = "https://splunk.company.com:8089"
   delegate_selectors = ["harness-delegate"]
   account_id         = "splunk_account_id"
-  username           = "username"           # Deprecated
-  password_ref       = "account.secret_id"  # Deprecated
+  username           = "username"          # Deprecated
+  password_ref       = "account.secret_id" # Deprecated
 }
 ```
 
@@ -103,17 +103,17 @@ resource "harness_platform_connector_splunk" "legacy" {
 
 ### Optional
 
-- `bearer_token` (Block List, Max: 1) Authenticate to Splunk using bearer token. (see [below for nested schema](#nestedblock--bearer_token))
+- `bearer_token` (Block List) Authenticate to Splunk using bearer token. (see [below for nested schema](#nestedblock--bearer_token))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
-- `hec_token` (Block List, Max: 1) Authenticate to Splunk using HEC (HTTP Event Collector) token. (see [below for nested schema](#nestedblock--hec_token))
-- `no_authentication` (Block List, Max: 1) No authentication required for Splunk. (see [below for nested schema](#nestedblock--no_authentication))
+- `hec_token` (Block List) Authenticate to Splunk using HEC (HTTP Event Collector) token. (see [below for nested schema](#nestedblock--hec_token))
+- `no_authentication` (Block List) No authentication required for Splunk. (see [below for nested schema](#nestedblock--no_authentication))
 - `org_id` (String) Unique identifier of the organization.
 - `password_ref` (String, Deprecated) The reference to the Harness secret containing the Splunk password. Deprecated: Use 'username_password' block instead. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
 - `project_id` (String) Unique identifier of the project.
 - `tags` (Set of String) Tags to associate with the resource.
 - `username` (String, Deprecated) The username used for connecting to Splunk. Deprecated: Use 'username_password' block instead.
-- `username_password` (Block List, Max: 1) Authenticate to Splunk using username and password. (see [below for nested schema](#nestedblock--username_password))
+- `username_password` (Block List) Authenticate to Splunk using username and password. (see [below for nested schema](#nestedblock--username_password))
 
 ### Read-Only
 
