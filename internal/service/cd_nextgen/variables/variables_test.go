@@ -8,8 +8,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/stretchr/testify/require"
 )
 
@@ -24,10 +24,10 @@ func TestAccResourceVariables(t *testing.T) {
 
 	resourceName := "harness_platform_variables.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccVariablesDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccVariablesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceVariables(id, name, variableValue),
@@ -65,10 +65,10 @@ func TestAccResourceVariablesProjectLevel(t *testing.T) {
 
 	resourceName := "harness_platform_variables.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccVariablesOrgLevelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccVariablesOrgLevelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectResourceVariables(id, name, variableValue),
@@ -107,10 +107,10 @@ func TestAccResourceVariablesOrgLevel(t *testing.T) {
 
 	resourceName := "harness_platform_variables.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccVariablesOrgLevelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccVariablesOrgLevelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgResourceVariables(id, name, variableValue),
@@ -144,9 +144,9 @@ func TestAccResourceVariables_DeleteUnderlyingResource(t *testing.T) {
 	resourceName := "harness_platform_variables.test"
 	variableValue := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectResourceVariables(id, name, variableValue),

@@ -1,3 +1,0 @@
-```release-note:bug
-resource/harness_platform_user: Fixed Bug with user resource.
-```

@@ -142,7 +142,7 @@ func resourceDBSchemaRead(ctx context.Context, d *schema.ResourceData, meta inte
 	resp, httpResp, err := c.DatabaseSchemaApi.V1GetProjDbSchema(ctx, d.Get("org_id").(string), d.Get("project_id").(string), d.Id(), &localVarOptionals)
 
 	if err != nil {
-		return helpers.HandleDBOpsReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readDBSchema(d, &resp)
@@ -172,7 +172,7 @@ func resourceDBSchemaCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if err != nil {
-		return helpers.HandleDBOpsApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readDBSchema(d, &resp)
@@ -189,7 +189,7 @@ func resourceDBSchemaDelete(ctx context.Context, d *schema.ResourceData, meta in
 
 	httpResp, err := c.DatabaseSchemaApi.V1DeleteProjDbSchema(ctx, d.Get("org_id").(string), d.Get("project_id").(string), d.Id(), &localVarOptionals)
 	if err != nil {
-		return helpers.HandleDBOpsApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

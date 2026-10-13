@@ -23,7 +23,7 @@ func DatasourceConnectorAws() *schema.Resource {
 							Computed:    true,
 						},
 						"access_key_ref": {
-							Description: "Reference to the Harness secret containing the aws access key." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the aws access key." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},
@@ -33,12 +33,12 @@ func DatasourceConnectorAws() *schema.Resource {
 							Optional:    true,
 						},
 						"secret_key_ref": {
-							Description: "Reference to the Harness secret containing the aws secret key." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the aws secret key." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},
 						"session_token_ref": {
-							Description: "Reference to the Harness secret containing the aws session token." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the aws session token." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
@@ -49,7 +49,7 @@ func DatasourceConnectorAws() *schema.Resource {
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 						"region": {
-							Description: "Test Region to perform Connection test of AWS Connector" + secret_ref_text,
+							Description: "Test Region to perform Connection test of AWS Connector" + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
@@ -69,7 +69,7 @@ func DatasourceConnectorAws() *schema.Resource {
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 						"region": {
-							Description: "Test Region to perform Connection test of AWS Connector" + secret_ref_text,
+							Description: "Test Region to perform Connection test of AWS Connector" + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
@@ -89,7 +89,7 @@ func DatasourceConnectorAws() *schema.Resource {
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 						"region": {
-							Description: "Test Region to perform Connection test of AWS Connector" + secret_ref_text,
+							Description: "Test Region to perform Connection test of AWS Connector" + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
@@ -114,7 +114,7 @@ func DatasourceConnectorAws() *schema.Resource {
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 						"region": {
-							Description: "Test Region to perform Connection test of AWS Connector" + secret_ref_text,
+							Description: "Test Region to perform Connection test of AWS Connector" + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 						},

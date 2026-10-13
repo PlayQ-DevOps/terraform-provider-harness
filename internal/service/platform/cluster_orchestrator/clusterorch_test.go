@@ -9,7 +9,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
 	"github.com/harness/terraform-provider-harness/internal/service/platform/cluster_orchestrator"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func funcName(f interface{}) string {
@@ -60,9 +60,9 @@ func TestResourceClusterOrchestrator(t *testing.T) {
 	connectorID := fmt.Sprintf("tfco_%s", suffix)
 	resourceName := "harness_cluster_orchestrator.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		// CheckDestroy:      testRuleDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
@@ -93,9 +93,9 @@ func TestResourceClusterOrchestrator_CCM32336_OutOfBandDeleteRecreates(t *testin
 
 	var orchIDBefore string
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testClusterOrch(name, connectorID),

@@ -1,3 +1,0 @@
-```release-note:enhancement
-resource/harness_platform_gitops_cluster: Added support for IAM role in GitOps
-```

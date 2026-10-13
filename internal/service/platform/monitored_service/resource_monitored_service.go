@@ -2,14 +2,13 @@ package monitored_service
 
 import (
 	"context"
+
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"strings"
 )
 
 func ResourceMonitoredService() *schema.Resource {
@@ -27,16 +26,19 @@ func ResourceMonitoredService() *schema.Resource {
 				Description: "Identifier of the organization in which the monitored service is configured.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Identifier of the project in which the monitored service is configured.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"identifier": {
 				Description: "Identifier of the monitored service.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"request": {
 				Description: "Request for creating or updating a monitored service.",
@@ -228,16 +230,18 @@ func ResourceMonitoredService() *schema.Resource {
 
 func resourceMonitoredServiceCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier string
 	accountIdentifier = c.AccountId
-	createMonitoredServiceRequest := buildMonitoredServiceRequest(d)
+	createMonitoredServiceRequest, err := buildMonitoredServiceRequest(d)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	respCreate, httpRespCreate, errCreate := c.MonitoredServiceApi.SaveMonitoredService(ctx, accountIdentifier,
 		&nextgen.MonitoredServiceApiSaveMonitoredServiceOpts{
 			Body: optional.NewInterface(createMonitoredServiceRequest),
 		})
 	if errCreate != nil {
-		return helpers.HandleApiError(errCreate, d, httpRespCreate)
+		return helpers.HandleWrite(ctx, d, errCreate, httpRespCreate)
 	}
 
 	readMonitoredService(d, &respCreate.Resource)
@@ -246,7 +250,6 @@ func resourceMonitoredServiceCreate(ctx context.Context, d *schema.ResourceData,
 
 func resourceMonitoredServiceRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier, orgIdentifier, projectIdentifier string
 	identifier := d.Get("identifier").(string)
 	accountIdentifier = c.AccountId
@@ -259,16 +262,11 @@ func resourceMonitoredServiceRead(ctx context.Context, d *schema.ResourceData, m
 	resp, httpResp, err := c.MonitoredServiceApi.GetMonitoredService(ctx, identifier, accountIdentifier, orgIdentifier, projectIdentifier)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 
 	readMonitoredService(d, &resp.Data)
 	return nil
@@ -276,18 +274,20 @@ func resourceMonitoredServiceRead(ctx context.Context, d *schema.ResourceData, m
 
 func resourceMonitoredServiceUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier string
 	accountIdentifier = c.AccountId
 	identifier := d.Get("identifier").(string)
-	updateMonitoredServiceRequest := buildMonitoredServiceRequest(d)
+	updateMonitoredServiceRequest, err := buildMonitoredServiceRequest(d)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	respCreate, httpRespCreate, errCreate := c.MonitoredServiceApi.UpdateMonitoredService(ctx, accountIdentifier, identifier,
 		&nextgen.MonitoredServiceApiUpdateMonitoredServiceOpts{
 			Body: optional.NewInterface(updateMonitoredServiceRequest),
 		})
 
 	if errCreate != nil {
-		return helpers.HandleApiError(errCreate, d, httpRespCreate)
+		return helpers.HandleWrite(ctx, d, errCreate, httpRespCreate)
 	}
 
 	readMonitoredService(d, &respCreate.Resource)
@@ -296,7 +296,6 @@ func resourceMonitoredServiceUpdate(ctx context.Context, d *schema.ResourceData,
 
 func resourceMonitoredServiceDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier, orgIdentifier, projectIdentifier string
 	identifier := d.Get("identifier").(string)
 	accountIdentifier = c.AccountId
@@ -310,12 +309,12 @@ func resourceMonitoredServiceDelete(ctx context.Context, d *schema.ResourceData,
 	_, httpResp, err := c.MonitoredServiceApi.DeleteMonitoredService(ctx, accountIdentifier, orgIdentifier, projectIdentifier, identifier)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }
 
-func buildMonitoredServiceRequest(d *schema.ResourceData) *nextgen.MonitoredServiceDto {
+func buildMonitoredServiceRequest(d *schema.ResourceData) (*nextgen.MonitoredServiceDto, error) {
 	monitoredService := &nextgen.MonitoredServiceDto{}
 
 	if attr, ok := d.GetOk("org_id"); ok {
@@ -346,28 +345,26 @@ func buildMonitoredServiceRequest(d *schema.ResourceData) *nextgen.MonitoredServ
 		}
 		monitoredService.EnvironmentRefList = environmentRefList
 
-		tags := map[string]string{}
-		for _, t := range request["tags"].(*schema.Set).List() {
-			tagStr := t.(string)
-			parts := strings.Split(tagStr, ":")
-			tags[parts[0]] = parts[1]
-		}
-		monitoredService.Tags = tags
+		monitoredService.Tags = helpers.ExpandTags(request["tags"].(*schema.Set).List())
 
 		healthSources := request["health_sources"].(*schema.Set).List()
 		hss := make([]nextgen.HealthSource, len(healthSources))
 		for i, healthSource := range healthSources {
-			hs := healthSource.(map[string]interface{})
-			healthSourceDto := getHealthSourceByType(hs)
-			hss[i] = healthSourceDto
+			dto, err := getHealthSourceByType(healthSource.(map[string]interface{}))
+			if err != nil {
+				return nil, err
+			}
+			hss[i] = dto
 		}
 
 		changeSources := request["change_sources"].(*schema.Set).List()
 		csDto := make([]nextgen.ChangeSourceDto, len(changeSources))
 		for i, changeSource := range changeSources {
-			cs := changeSource.(map[string]interface{})
-			changeSourceDto := getChangeSourceByType(cs)
-			csDto[i] = changeSourceDto
+			dto, err := getChangeSourceByType(changeSource.(map[string]interface{}))
+			if err != nil {
+				return nil, err
+			}
+			csDto[i] = dto
 		}
 
 		monitoredService.Sources = &nextgen.Sources{
@@ -378,26 +375,27 @@ func buildMonitoredServiceRequest(d *schema.ResourceData) *nextgen.MonitoredServ
 		dependencies := request["dependencies"].(*schema.Set).List()
 		serviceDependencyDto := make([]nextgen.ServiceDependencyDto, len(dependencies))
 		for i, dependency := range dependencies {
-			sd := dependency.(map[string]interface{})
-			serviceDependency := getServiceDependencyByType(sd)
-			serviceDependencyDto[i] = serviceDependency
+			dto, err := getServiceDependencyByType(dependency.(map[string]interface{}))
+			if err != nil {
+				return nil, err
+			}
+			serviceDependencyDto[i] = dto
 		}
 		monitoredService.Dependencies = serviceDependencyDto
 
 		notificationRuleRefsReq := request["notification_rule_refs"].([]interface{})
 		notificationRuleRefs := make([]nextgen.NotificationRuleRefDto, len(notificationRuleRefsReq))
 		for i, notificationRuleRef := range notificationRuleRefsReq {
-			test := notificationRuleRef.(map[string]interface{})
-			notificationRuleRefDto := &nextgen.NotificationRuleRefDto{
-				NotificationRuleRef: test["notification_rule_ref"].(string),
-				Enabled:             test["enabled"].(bool),
+			ref := notificationRuleRef.(map[string]interface{})
+			notificationRuleRefs[i] = nextgen.NotificationRuleRefDto{
+				NotificationRuleRef: ref["notification_rule_ref"].(string),
+				Enabled:             ref["enabled"].(bool),
 			}
-			notificationRuleRefs[i] = *notificationRuleRefDto
 		}
 		monitoredService.NotificationRuleRefs = notificationRuleRefs
 	}
 
-	return monitoredService
+	return monitoredService, nil
 }
 
 func readMonitoredService(d *schema.ResourceData, monitoredServiceResponse **nextgen.MonitoredServiceResponse) {

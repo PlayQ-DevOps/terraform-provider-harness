@@ -55,10 +55,10 @@ func resourceCloudProviderSpotRead(ctx context.Context, d *schema.ResourceData, 
 	}
 	cp := &cac.SpotInstCloudProvider{}
 	if err := c.ConfigAsCodeClient.GetCloudProviderById(d.Id(), cp); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	} else if cp.IsEmpty() {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 

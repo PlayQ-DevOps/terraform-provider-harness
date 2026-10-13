@@ -5,6 +5,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -16,7 +17,7 @@ func ResourceConnectorSplunk() *schema.Resource {
 		ReadContext:   resourceConnectorSplunkRead,
 		CreateContext: resourceConnectorSplunkCreateOrUpdate,
 		UpdateContext: resourceConnectorSplunkCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -44,7 +45,7 @@ func ResourceConnectorSplunk() *schema.Resource {
 				Deprecated:  "Use 'username_password' authentication block instead",
 			},
 			"password_ref": {
-				Description: "The reference to the Harness secret containing the Splunk password. Deprecated: Use 'username_password' block instead." + secret_ref_text,
+				Description: "The reference to the Harness secret containing the Splunk password. Deprecated: Use 'username_password' block instead." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Optional:    true,
 				Deprecated:  "Use 'username_password' authentication block instead",
@@ -64,7 +65,7 @@ func ResourceConnectorSplunk() *schema.Resource {
 							Required:    true,
 						},
 						"password_ref": {
-							Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+							Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Required:    true,
 						},
@@ -80,7 +81,7 @@ func ResourceConnectorSplunk() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"bearer_token_ref": {
-							Description: "Reference to the Harness secret containing the Splunk bearer token." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the Splunk bearer token." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Required:    true,
 						},
@@ -96,7 +97,7 @@ func ResourceConnectorSplunk() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"hec_token_ref": {
-							Description: "Reference to the Harness secret containing the Splunk HEC token." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the Splunk HEC token." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Required:    true,
 						},
@@ -120,7 +121,7 @@ func ResourceConnectorSplunk() *schema.Resource {
 }
 
 func resourceConnectorSplunkRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.Splunk)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.Splunk)
 	if err != nil {
 		return err
 	}
@@ -139,7 +140,7 @@ func resourceConnectorSplunkRead(ctx context.Context, d *schema.ResourceData, me
 func resourceConnectorSplunkCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorSplunk(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

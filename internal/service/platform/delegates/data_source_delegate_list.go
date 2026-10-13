@@ -177,7 +177,7 @@ func dataSourceDelegateListRead(ctx context.Context, d *schema.ResourceData, met
 		tflog.Error(ctx, "Error listing delegates", map[string]interface{}{
 			"error": err,
 		})
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	// Check for nil Resource field or empty result

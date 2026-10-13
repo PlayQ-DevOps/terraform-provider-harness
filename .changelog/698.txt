@@ -1,3 +1,0 @@
-```release-note:new-resource
- - Support for AutoStopping LoadBalancers - AWS proxy, AWS ALB, Azure gateway, Azure proxy, GCP proxy
-```

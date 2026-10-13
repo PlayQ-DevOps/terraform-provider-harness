@@ -27,6 +27,7 @@ func ResourceTriggers() *schema.Resource {
 				Description: "Identifier of the target pipeline",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"ignore_error": {
 				Description: "ignore error default false",
@@ -66,14 +67,8 @@ func resourceTriggersRead(ctx context.Context, d *schema.ResourceData, meta inte
 		d.Get("org_id").(string),
 		d.Get("project_id").(string), d.Get("target_id").(string), id)
 
-	if httpResp.StatusCode == 404 {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
-
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readTriggers(d, resp.Data)
@@ -107,7 +102,7 @@ func resourceTriggersCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readTriggers(d, resp.Data)
@@ -123,7 +118,7 @@ func resourceTriggersDelete(ctx context.Context, d *schema.ResourceData, meta in
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

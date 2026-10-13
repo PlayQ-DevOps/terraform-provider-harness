@@ -2,13 +2,14 @@ package default_notification_template_set
 
 import (
 	"context"
+	"net/http"
+
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"net/http"
 )
 
 func ResourceDefaultNotificationTemplateSet() *schema.Resource {
@@ -28,6 +29,7 @@ func ResourceDefaultNotificationTemplateSet() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Identifier of Default Notification Template Set",
+				ForceNew:    true,
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -148,7 +150,7 @@ func resourceDefaultNotificationTemplateSetCreate(ctx context.Context, d *schema
 			})
 	}
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readDefaultNotificationTemplateSet(d, resp)
@@ -187,7 +189,7 @@ func resourceDefaultNotificationTemplateSetUpdate(ctx context.Context, d *schema
 			})
 	}
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readDefaultNotificationTemplateSet(d, resp)
@@ -221,7 +223,7 @@ func resourceDefaultNotificationTemplateSetDelete(ctx context.Context, d *schema
 			})
 	}
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -254,7 +256,7 @@ func resourceDefaultNotificationTemplateSetRead(ctx context.Context, d *schema.R
 			})
 	}
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readDefaultNotificationTemplateSet(d, resp)

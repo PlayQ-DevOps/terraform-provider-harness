@@ -237,6 +237,7 @@ Read-Only:
 - `images` (List of String)
 - `name_prefix` (String)
 - `name_suffix` (String)
+- `namespace` (String)
 - `version` (String)
 
 
@@ -384,6 +385,7 @@ Read-Only:
 - `images` (List of String)
 - `name_prefix` (String)
 - `name_suffix` (String)
+- `namespace` (String)
 - `version` (String)
 
 

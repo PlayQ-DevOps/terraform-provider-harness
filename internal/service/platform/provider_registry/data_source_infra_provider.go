@@ -2,6 +2,7 @@ package provider_registry
 
 import (
 	"context"
+
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -86,7 +87,7 @@ func dataSourceInfraProviderRead(ctx context.Context, d *schema.ResourceData, m 
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleError(ctx, d, err, httpRes)
 	}
 	readProvider(d, &resp)
 	return nil

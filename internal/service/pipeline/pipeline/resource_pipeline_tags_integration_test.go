@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/harness/harness-go-sdk/harness/utils"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
 )
@@ -19,10 +19,10 @@ func TestAccResourcePipeline_TagsWithColons(t *testing.T) {
 
 	resourceName := "harness_platform_pipeline.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPipelineDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPipelineDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineWithComplexTags(id, name),
@@ -50,10 +50,10 @@ func TestAccResourcePipeline_TagsWithHarnessExpressions(t *testing.T) {
 
 	resourceName := "harness_platform_pipeline.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPipelineDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPipelineDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineWithHarnessExpressions(id, name),

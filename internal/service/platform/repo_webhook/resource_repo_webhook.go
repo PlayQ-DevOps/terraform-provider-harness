@@ -21,10 +21,11 @@ func ResourceRepoWebhook() *schema.Resource {
 		DeleteContext: resourceRepoWebhookDelete,
 		Importer:      helpers.RepoRuleResourceImporter,
 
-		Schema: createSchema(),
+		Schema: helpers.WithIdentity(createSchema(), "identifier", "org_id", "project_id", "repo_identifier"),
 	}
 
 	helpers.SetMultiLevelDatasourceSchemaWithoutCommonFields(resource.Schema)
+	helpers.MarkIdentity(resource.Schema, "org_id", "project_id")
 
 	return resource
 }
@@ -47,7 +48,7 @@ func resourceRepoWebhookRead(ctx context.Context, d *schema.ResourceData, meta i
 		},
 	)
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, resp)
+		return helpers.HandleRead(ctx, d, err, resp)
 	}
 
 	readRepoWebhook(d, &webhook, orgID.Value(), projectID.Value(), repoIdentifier)
@@ -98,7 +99,7 @@ func resourceRepoWebhookCreateOrUpdate(
 		)
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, resp)
+		return helpers.HandleWrite(ctx, d, err, resp)
 	}
 
 	readRepoWebhook(d, &webhook, orgID.Value(), projectID.Value(), repoIdentifier)
@@ -126,7 +127,7 @@ func resourceRepoWebhookDelete(
 		},
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, resp)
+		return helpers.HandleDelete(ctx, d, err, resp)
 	}
 
 	return nil

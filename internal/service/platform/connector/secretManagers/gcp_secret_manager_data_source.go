@@ -28,7 +28,7 @@ func DatasourceConnectorGcpSM() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"credentials_ref": {
-				Description: "Reference to the secret containing credentials of IAM service account for Google Secret Manager." + secret_ref_text,
+				Description: "Reference to the secret containing credentials of IAM service account for Google Secret Manager." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Computed:    true,
 			},

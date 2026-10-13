@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	splitsdk "github.com/harness/harness-go-sdk/harness/split"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func init() {

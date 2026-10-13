@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/harness/harness-go-sdk/harness/cd/graphql"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/service/cd/usagescope"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -240,13 +241,12 @@ func resourceSSHCredentialRead(ctx context.Context, d *schema.ResourceData, meta
 	cred, err := c.CDClient.SecretClient.GetSSHCredentialById(credId)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 
 	if cred == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+		return helpers.ReadMissing(ctx, d, "SSH credential "+d.Id())
+
 	}
 
 	return readSSHCredential(d, cred)
@@ -277,7 +277,7 @@ func resourceSSHCredentialDelete(ctx context.Context, d *schema.ResourceData, me
 	err := c.CDClient.SecretClient.DeleteSecret(d.Get("id").(string), graphql.SecretTypes.SSHCredential)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	return nil

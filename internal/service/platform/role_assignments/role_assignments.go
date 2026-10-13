@@ -28,6 +28,7 @@ func ResourceRoleAssignments() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 			},
 			"resource_group_identifier": {
 				Description: "Resource group identifier.",
@@ -106,11 +107,13 @@ func ResourceRoleAssignments() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Project Identifier",
+				ForceNew:    true,
 			},
 			"org_id": {
 				Description: "Org identifier.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 		},
 	}
@@ -127,11 +130,11 @@ func resourceRoleAssignmentsRead(ctx context.Context, d *schema.ResourceData, me
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if resp.Data == nil {
-		return nil
+	if resp.Data == nil || resp.Data.RoleAssignment == nil {
+		return helpers.ReadMissing(ctx, d, "role assignment "+id)
 	}
 
 	ReadRoleAssignments(d, resp.Data.RoleAssignment)
@@ -161,7 +164,7 @@ func resourceRoleAssignmentsCreateorUpdate(ctx context.Context, d *schema.Resour
 		})
 
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 
 		resp, httpResp, err = c.RoleAssignmentsApi.PostRoleAssignment(ctx, *roleAssignment, c.AccountId, &nextgen.RoleAssignmentsApiPostRoleAssignmentOpts{
@@ -171,7 +174,7 @@ func resourceRoleAssignmentsCreateorUpdate(ctx context.Context, d *schema.Resour
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	ReadRoleAssignments(d, resp.Data.RoleAssignment)
@@ -188,7 +191,7 @@ func resourceRoleAssignmentsDelete(ctx context.Context, d *schema.ResourceData, 
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

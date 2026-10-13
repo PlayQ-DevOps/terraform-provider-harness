@@ -101,13 +101,12 @@ func dataSourceFiltersRead(ctx context.Context, d *schema.ResourceData, meta int
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if filter == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+		return diag.Errorf("filters not found: no object matched the given arguments")
+
 	}
 
 	readFilter(d, filter)

@@ -10,8 +10,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/idp"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccResourceEnvironmentBlueprint(t *testing.T) {
@@ -20,10 +20,10 @@ func TestAccResourceEnvironmentBlueprint(t *testing.T) {
 	updatedDescription := fmt.Sprintf("%s_updated", description)
 	resourceName := "harness_platform_idp_environment_blueprint.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccEnvironmentBlueprintDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccEnvironmentBlueprintDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceEnvironmentBlueprint(id, description),

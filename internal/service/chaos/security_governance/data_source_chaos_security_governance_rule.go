@@ -167,29 +167,13 @@ func dataSourceChaosSecurityGovernanceRuleRead(ctx context.Context, d *schema.Re
 
 		resp, err := securityGovernanceRuleClient.Get(ctx, identifiers, actualRuleID)
 		if err != nil {
-			if isNotFoundError(err) {
-				d.SetId("")
-				return diag.Diagnostics{
-					diag.Diagnostic{
-						Severity: diag.Warning,
-						Summary:  "Rule not found",
-						Detail:   fmt.Sprintf("Security governance rule with ID '%s' not found. Removing from state.", ruleID),
-					},
-				}
-			}
-			return helpers.HandleChaosGraphQLReadError(err, d, "read_chaos_security_governance_rule")
+			return helpers.HandleError(ctx, d, err, nil)
 		}
 		if resp == nil || resp.Rule == nil {
-			d.SetId("")
-			return diag.Diagnostics{
-				diag.Diagnostic{
-					Severity: diag.Warning,
-					Summary:  "Rule not found",
-					Detail:   fmt.Sprintf("Security governance rule with ID '%s' not found. Removing from state.", ruleID),
-				},
-			}
+			return diag.Errorf("security governance rule with ID %q not found", ruleID)
 		}
 		rule = resp.Rule
+
 	} else if ruleName, ok := d.GetOk("name"); ok {
 		nameStr := ruleName.(string)
 		// Look up by name
@@ -201,7 +185,7 @@ func dataSourceChaosSecurityGovernanceRuleRead(ctx context.Context, d *schema.Re
 
 		rules, err := securityGovernanceRuleClient.List(ctx, identifiers, model.ListRuleRequest{})
 		if err != nil {
-			return helpers.HandleChaosGraphQLReadError(err, d, "read_chaos_security_governance_rule")
+			return helpers.HandleError(ctx, d, err, nil)
 		}
 
 		var found bool
@@ -214,15 +198,9 @@ func dataSourceChaosSecurityGovernanceRuleRead(ctx context.Context, d *schema.Re
 		}
 
 		if !found {
-			d.SetId("")
-			return diag.Diagnostics{
-				diag.Diagnostic{
-					Severity: diag.Warning,
-					Summary:  "Rule not found",
-					Detail:   fmt.Sprintf("Security governance rule with name '%s' not found. Removing from state.", nameStr),
-				},
-			}
+			return diag.Errorf("security governance rule with name %q not found", nameStr)
 		}
+
 	} else {
 		return diag.Errorf("either 'id' or 'name' must be specified")
 	}
@@ -232,18 +210,8 @@ func dataSourceChaosSecurityGovernanceRuleRead(ctx context.Context, d *schema.Re
 
 	// Set the attributes
 	if err := setRuleAttributes(d, &model.RuleResponse{Rule: rule}, accountID); err != nil {
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("failed to set rule attributes: %w", err), d, "read_chaos_security_governance_rule")
+		return helpers.HandleError(ctx, d, fmt.Errorf("failed to set rule attributes: %w", err), nil)
 	}
 
 	return nil
-}
-
-// Helper function to check if error is a "not found" error
-func isNotFoundError(err error) bool {
-	if err == nil {
-		return false
-	}
-	return strings.Contains(err.Error(), "no documents in result") ||
-		strings.Contains(err.Error(), "not found") ||
-		strings.Contains(err.Error(), "does not exist")
 }

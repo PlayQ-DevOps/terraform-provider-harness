@@ -31,11 +31,13 @@ func ResourceInfrastructure() *schema.Resource {
 				Description: "Identifier of the Infrastructure.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"env_id": {
 				Description: "Environment Identifier.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"type": {
 				Description: fmt.Sprintf("Type of Infrastructure. Valid values are %s.", strings.Join(nextgen.InfrastructureTypeValues, ", ")),
@@ -58,7 +60,6 @@ func ResourceInfrastructure() *schema.Resource {
 				Description: "Enable this flag for force deletion of infrastructure",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 			"git_details": {
 				Description: "Contains parameters related to creating an Entity for Git Experience.",
@@ -163,13 +164,11 @@ func ResourceInfrastructure() *schema.Resource {
 							Description: "force import infrastructure from remote even if same file path already exist",
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Computed:    true,
 						},
 						"import_from_git": {
 							Description: "import infrastructure from git",
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Computed:    true,
 						},
 					},
 				},
@@ -206,7 +205,7 @@ func resourceInfrastructureRead(ctx context.Context, d *schema.ResourceData, met
 	resp, httpResp, err := c.InfrastructuresApi.GetInfrastructure(ctx, d.Id(), c.AccountId, env_id, infraParams)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readInfrastructure(d, resp.Data)
@@ -258,7 +257,7 @@ func resourceInfrastructureCreateOrUpdate(ctx context.Context, d *schema.Resourc
 	}
 
 	if err != nil {
-		return helpers.HandleGitApiErrorWithResourceData(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	if d.Get("git_details.0.import_from_git").(bool) {
@@ -277,7 +276,7 @@ func resourceInfrastructureCreateOrUpdate(ctx context.Context, d *schema.Resourc
 			resp, httpResp, err = c.InfrastructuresApi.GetInfrastructure(ctx, d.Id(), c.AccountId, env_id, infraParams)
 
 			if err != nil {
-				return helpers.HandleReadApiError(err, d, httpResp)
+				return helpers.HandleWrite(ctx, d, err, httpResp)
 			}
 		}
 		if resp.Data == nil || resp.Data.Infrastructure == nil {
@@ -307,7 +306,7 @@ func resourceInfrastructureEditGitDetails(ctx context.Context, c *nextgen.APICli
 	resp, httpResp, err := c.InfrastructuresApi.EditGitDetailsForInfrastructure(ctx, c.AccountId, org_id, project_id, env_id, id, gitDetails)
 
 	if err != nil {
-		return helpers.HandleGitApiErrorWithResourceData(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -332,7 +331,7 @@ func resourceInfrastructureDelete(ctx context.Context, d *schema.ResourceData, m
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -406,9 +405,9 @@ func readInfrastructure(d *schema.ResourceData, infra *nextgen.InfrastructureRes
 	d.Set("deployment_type", infra.Infrastructure.DeploymentType)
 	d.Set("yaml", infra.Infrastructure.Yaml)
 
-	var store_type = helpers.BuildField(d, "git_details.0.store_type")
-	var base_branch = helpers.BuildField(d, "git_details.0.base_branch")
-	var commit_message = helpers.BuildField(d, "git_details.0.commit_message")
+	var store_type = helpers.ConfigOnly(d, "git_details.0.store_type")
+	var base_branch = helpers.ConfigOnly(d, "git_details.0.base_branch")
+	var commit_message = helpers.ConfigOnly(d, "git_details.0.commit_message")
 	var connector_ref = infra.Infrastructure.ConnectorRef
 
 	if infra.Infrastructure.EntityGitDetails != nil {

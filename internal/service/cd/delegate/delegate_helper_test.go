@@ -3,10 +3,11 @@ package delegate_test
 import (
 	"context"
 	"fmt"
+	"os"
 	"testing"
 	"time"
 
-	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 	"github.com/harness/harness-go-sdk/harness/cd/graphql"
 	"github.com/harness/harness-go-sdk/harness/delegate"
@@ -55,6 +56,11 @@ func createDelegateContainer(t *testing.T, name string, pullImage bool) *graphql
 }
 
 func deleteDelegate(t *testing.T, name string) {
+	// The delegate exists only when the acceptance test ran; a skipped test has nothing
+	// to delete (and no Docker to talk to).
+	if os.Getenv("TF_ACC") == "" {
+		return
+	}
 	c := acctest.TestAccProvider.Meta().(*internal.Session).CDClient
 	delegate, err := c.DelegateClient.GetDelegateByName(name)
 	require.NoError(t, err, "Failed to get delegate: %s", err)
@@ -63,10 +69,10 @@ func deleteDelegate(t *testing.T, name string) {
 	cli, err := client.NewClientWithOpts(client.FromEnv)
 	require.NoError(t, err, "failed to create docker client: %s", err)
 
-	err = cli.ContainerStop(context.Background(), name, nil)
+	err = cli.ContainerStop(context.Background(), name, container.StopOptions{})
 	require.NoError(t, err, "failed to stop delegate container: %s", err)
 
-	err = cli.ContainerRemove(context.Background(), name, types.ContainerRemoveOptions{})
+	err = cli.ContainerRemove(context.Background(), name, container.RemoveOptions{})
 	require.NoError(t, err, "failed to remove delegate container: %s", err)
 
 	err = c.DelegateClient.DeleteDelegate(delegate.UUID)

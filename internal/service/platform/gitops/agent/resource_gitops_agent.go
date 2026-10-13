@@ -2,10 +2,8 @@ package agent
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -22,34 +20,6 @@ func ResourceGitopsAgent() *schema.Resource {
 		UpdateContext: resourceGitopsAgentUpdate,
 		DeleteContext: resourceGitopsAgentDelete,
 		Importer:      helpers.MultiLevelResourceImporter,
-		CustomizeDiff: func(ctx context.Context, diff *schema.ResourceDiff, i interface{}) error {
-			var e error
-			if diff.HasChange("project_id") && diff.Id() != "" {
-				e = fmt.Errorf("field 'project_id' cannot be changed after the resource is created")
-			}
-			if diff.HasChange("org_id") && diff.Id() != "" {
-				if e != nil {
-					e = fmt.Errorf("field 'org_id' cannot be changed after the resource is created:%w", e)
-				} else {
-					e = fmt.Errorf("field 'org_id' cannot be changed after the resource is created")
-				}
-			}
-			if diff.HasChange("identifier") && diff.Id() != "" {
-				if e != nil {
-					e = fmt.Errorf("field 'identifier' cannot be changed after the resource is created:%v", e)
-				} else {
-					e = fmt.Errorf("field 'identifier' cannot be changed after the resource is created")
-				}
-			}
-			if diff.HasChange("metadata.0.existing_installation") && diff.Id() != "" {
-				if e != nil {
-					e = fmt.Errorf("field 'metadata.existing_installation' cannot be changed after the agent is created:%w", e)
-				} else {
-					e = fmt.Errorf("field 'metadata.existing_installation' cannot be changed after the agent is created")
-				}
-			}
-			return e
-		},
 
 		Schema: map[string]*schema.Schema{
 			"account_id": {
@@ -63,16 +33,19 @@ func ResourceGitopsAgent() *schema.Resource {
 				Description: "Organization identifier of the GitOps agent.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project identifier of the GitOps agent.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"identifier": {
 				Description: "Identifier of the GitOps agent.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"name": {
 				Description: "Name of the GitOps agent.",
@@ -124,6 +97,7 @@ func ResourceGitopsAgent() *schema.Resource {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     false,
+							ForceNew:    true,
 						},
 					}},
 			},
@@ -150,28 +124,22 @@ func ResourceGitopsAgent() *schema.Resource {
 
 func resourceGitopsAgentCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	createAgentRequest := buildCreateAgentRequest(d)
 	createAgentRequest.AccountIdentifier = c.AccountId
 	resp, httpResp, err := c.AgentApi.AgentServiceForServerCreate(ctx, *createAgentRequest)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	readAgent(d, &resp)
 	return nil
 }
 
 func resourceGitopsAgentRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := d.Get("identifier").(string)
 
 	resp, httpResp, err := c.AgentApi.AgentServiceForServerGet(ctx, agentIdentifier, c.AccountId, &nextgen.AgentsApiAgentServiceForServerGetOpts{
@@ -179,19 +147,8 @@ func resourceGitopsAgentRead(ctx context.Context, d *schema.ResourceData, meta i
 		ProjectIdentifier: optional.NewString(d.Get("project_id").(string)),
 	})
 
-	if err != nil && httpResp != nil && httpResp.StatusCode != 404 {
-		return helpers.HandleApiError(err, d, httpResp)
-	}
-	if err != nil && httpResp == nil {
-		return helpers.HandleApiError(err, d, httpResp)
-	}
-
-	// Soft delete lookup error handling
-	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil || (httpResp != nil && httpResp.StatusCode == 404) {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+	if err != nil {
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 	readAgent(d, &resp)
 	return nil
@@ -199,7 +156,6 @@ func resourceGitopsAgentRead(ctx context.Context, d *schema.ResourceData, meta i
 
 func resourceGitopsAgentUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 
 	var e diag.Diagnostics
 	if d.HasChange("identifier") {
@@ -242,22 +198,17 @@ func resourceGitopsAgentUpdate(ctx context.Context, d *schema.ResourceData, meta
 	resp, httpResp, err := c.AgentApi.AgentServiceForServerUpdate(ctx, *updateAgentRequest, agentIdentifier)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	readAgent(d, &resp)
 	return nil
 }
 
 func resourceGitopsAgentDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := d.Get("identifier").(string)
 
 	_, httpResp, err := c.AgentApi.AgentServiceForServerDelete(ctx, agentIdentifier, &nextgen.AgentsApiAgentServiceForServerDeleteOpts{
@@ -267,7 +218,7 @@ func resourceGitopsAgentDelete(ctx context.Context, d *schema.ResourceData, meta
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

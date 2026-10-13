@@ -10,8 +10,8 @@ import (
 	splitapi "github.com/harness/harness-go-sdk/harness/split"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
 	splitpkg "github.com/harness/terraform-provider-harness/internal/service/split"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 // fmeSplitAPIErrIsNotFound returns true when err indicates the Split object no longer exists.

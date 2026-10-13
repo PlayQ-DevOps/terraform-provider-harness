@@ -52,6 +52,7 @@ Read-Only:
 - `name` (String)
 - `weightage` (Number)
 
+
 <a id="nestedatt--filter"></a>
 ### Nested Schema for `filter`
 
@@ -63,6 +64,7 @@ Read-Only:
 - `scopes` (List of String)
 - `tags` (List of String)
 - `type` (String)
+
 
 <a id="nestedatt--tier_analytics"></a>
 ### Nested Schema for `tier_analytics`

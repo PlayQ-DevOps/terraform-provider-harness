@@ -9,8 +9,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/policymgmt"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 var (
@@ -26,10 +26,10 @@ func TestAccResourcePolicy(t *testing.T) {
 
 	resourceName := "harness_platform_policy.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPolicyDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPolicyDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePolicy(id, name, description, rego),
@@ -82,10 +82,10 @@ func TestAccResourcePolicyOrgProject(t *testing.T) {
 	orgResourceName := "harness_platform_policy.org"
 	projectResourceName := "harness_platform_policy.project"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      resource.ComposeTestCheckFunc(testAccPolicyDestroy(orgResourceName), testAccPolicyDestroy(projectResourceName)),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             resource.ComposeTestCheckFunc(testAccPolicyDestroy(orgResourceName), testAccPolicyDestroy(projectResourceName)),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePolicyOrgProject(id, rego),
@@ -153,10 +153,10 @@ func TestAccResourcePolicyGit(t *testing.T) {
 	id := fmt.Sprintf("%s%s", t.Name(), utils.RandStringBytes(5))
 	resourceName := "harness_platform_policy.git"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPolicyDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPolicyDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePolicyGit(id),

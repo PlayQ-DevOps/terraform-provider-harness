@@ -7,10 +7,10 @@ import (
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 func ResourceVariables() *schema.Resource {
@@ -98,14 +98,11 @@ func resourceVariablesRead(ctx context.Context, d *schema.ResourceData, meta int
 			"id":    id,
 			"error": err.Error(),
 		})
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil || resp.Data.Variable == nil {
-		tflog.Error(ctx, "Received empty response from variable API during read", map[string]interface{}{
-			"id": id,
-		})
-		return diag.Errorf("received empty response from variable API for id '%s': resp.Data or resp.Data.Variable is nil", id)
+		return helpers.ReadMissing(ctx, d, "variable "+id)
 	}
 
 	readVariable(d, resp.Data.Variable)
@@ -134,7 +131,7 @@ func resourceVariablesCreateOrUpdate(ctx context.Context, d *schema.ResourceData
 			"id":    id,
 			"error": err.Error(),
 		})
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil || resp.Data.Variable == nil {
@@ -171,7 +168,7 @@ func resourceVariablesDelete(ctx context.Context, d *schema.ResourceData, meta i
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

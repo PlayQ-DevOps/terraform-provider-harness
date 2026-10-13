@@ -47,6 +47,6 @@ output "provider_versions" {
 
 Read-Only:
 
-- `files` (List of String) List of uploaded files for this version.
-- `synced` (Boolean) Whether the version is synced.
-- `version` (String) Version number.
+- `files` (List of String)
+- `synced` (Boolean)
+- `version` (String)

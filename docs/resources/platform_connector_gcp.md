@@ -70,7 +70,7 @@ resource "harness_platform_connector_gcp" "test" {
 - `execute_on_delegate` (Boolean) Enable this flag to execute on Delegate
 - `force_delete` (Boolean) Enable this flag for force deletion of connector
 - `inherit_from_delegate` (Block List) Inherit configuration from delegate. (see [below for nested schema](#nestedblock--inherit_from_delegate))
-- `manual` (Block List, Max: 1) Manual credential configuration. (see [below for nested schema](#nestedblock--manual))
+- `manual` (Block List) Manual credential configuration. (see [below for nested schema](#nestedblock--manual))
 - `oidc_authentication` (Block List) Authentication using harness oidc. (see [below for nested schema](#nestedblock--oidc_authentication))
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.

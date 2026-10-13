@@ -5,16 +5,16 @@ import (
 	"testing"
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestResourceK8sRule(t *testing.T) {
 	name := fmt.Sprintf("terr-k8s-%s", randAlnum(5)) // "terr-k8s-"+5 = 13 chars
 	resourceName := "harness_autostopping_rule_k8s.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testK8sRule(name, true),

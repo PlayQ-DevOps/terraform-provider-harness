@@ -97,12 +97,12 @@ Import is supported using the following syntax:
 The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
-# Import an Account level Gitops Repository Certificate
-terraform import harness_platform_gitops_repo_cert.example <repocert_id>
+# Import the repository certificates of an account level agent
+terraform import harness_platform_gitops_repo_cert.example <agent_id>
 
-# Import an Org level Gitops Repository Certificate
-terraform import harness_platform_gitops_repo_cert.example <organization_id>/<repocert_id>
+# Import the repository certificates of an org level agent
+terraform import harness_platform_gitops_repo_cert.example <org_id>/<agent_id>
 
-# Import a Project level Gitops Repository Certificate
-terraform import harness_platform_gitops_repo_cert.example <organization_id>/<project_id>/<repocert_id>
+# Import the repository certificates of a project level agent
+terraform import harness_platform_gitops_repo_cert.example <org_id>/<project_id>/<agent_id>
 ```

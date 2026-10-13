@@ -8,8 +8,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 const (
@@ -25,9 +25,9 @@ func TestAccResourceSetting_ProjectLevel(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	resourceName := "harness_platform_setting.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSettingProjectLevel(id, "repo-one", true),
@@ -61,9 +61,9 @@ func TestAccResourceSetting_OrgLevel(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	resourceName := "harness_platform_setting.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSettingOrgLevel(id, "org-repo", false),
@@ -125,7 +125,7 @@ func testAccResourceSettingOrgLevel(id string, value string, allowOverrides bool
 func TestAccResourceSetting_AccountLevel(t *testing.T) {
 	resourceName := "harness_platform_setting.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.TestAccPreCheck(t)
 			// Destroy resets the setting, so don't run if the account already has its own value.
@@ -133,7 +133,7 @@ func TestAccResourceSetting_AccountLevel(t *testing.T) {
 				t.Skipf("account already sets %s; skipping so the test doesn't reset it", testBoolSetting)
 			}
 		},
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSettingAccountLevel("true"),
@@ -170,9 +170,9 @@ func TestAccResourceSetting_DisallowOverridesRemovesChildOverride(t *testing.T) 
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	resourceName := "harness_platform_setting.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSettingOrgWithProject(id, "org-repo", true),
@@ -208,7 +208,7 @@ func TestAccResourceSetting_BooleanValue(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	resourceName := "harness_platform_setting.test"
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.TestAccPreCheck(t)
 			// The API rejects project values when the account (or the setting's default) disallows overrides.
@@ -216,7 +216,7 @@ func TestAccResourceSetting_BooleanValue(t *testing.T) {
 				t.Skipf("%s doesn't allow overrides on this account; enable \"Allow overrides\" for it in Account Settings > Default Settings to run this test", testBoolSetting)
 			}
 		},
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceSettingBooleanProjectLevel(id, "true"),

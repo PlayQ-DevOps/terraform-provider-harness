@@ -13,6 +13,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+// environmentClustersMappingImporter: [<org_id>/[<project_id>/]]<env_id>, which is also the
+// resource ID.
+var environmentClustersMappingImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org_id", "project_id", "env_id"}, OptionalPrefix: 2, RawID: true})
+
 func ResourceEnvironmentClustersMapping() *schema.Resource {
 	resource := &schema.Resource{
 		Description: "Resource for mapping environment with Harness Clusters.",
@@ -21,67 +25,104 @@ func ResourceEnvironmentClustersMapping() *schema.Resource {
 		DeleteContext: resourceEnvironmentClustersMappingDelete,
 		CreateContext: resourceEnvironmentClustersMappingClusterLink,
 		UpdateContext: resourceEnvironmentClustersMappingClusterLink,
-		// TODO: Implement Importer
-		Importer: helpers.ProjectResourceImporter,
+		Importer:      environmentClustersMappingImporter,
 
-		Schema: map[string]*schema.Schema{
-			"identifier": {
-				// this identifier is not used anywhere and has no meaning for the resource either but keeping it maintain backward compatibility
-				Description: "identifier for the cluster mapping(can be given any value).",
-				Type:        schema.TypeString,
-				Required:    true,
-			},
-			"env_id": {
-				Description: "environment identifier.",
-				Type:        schema.TypeString,
-				Required:    true,
-			},
-			"org_id": {
-				Description: "org_id of the environment.",
-				Type:        schema.TypeString,
-				Optional:    true,
-			},
-			"project_id": {
-				Description: "project_id of the environment.",
-				Type:        schema.TypeString,
-				Optional:    true,
-			},
-			"scope": {
-				Description: "scope at which the environment exists in harness.",
-				Type:        schema.TypeString,
-				Computed:    true,
-			},
-			"clusters": {
-				Description: "list of cluster identifiers and names",
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"identifier": {
-							Description: "identifier of the cluster",
-							Type:        schema.TypeString,
-							Optional:    true,
-						},
-						"name": {
-							Description: "name of the cluster",
-							Type:        schema.TypeString,
-							Optional:    true,
-						},
-						"agent_identifier": {
-							Description: "agent identifier of the cluster (include scope prefix)",
-							Type:        schema.TypeString,
-							Optional:    true,
-						},
-						"scope": {
-							Description: "scope at which the cluster exists in harness gitops, one of \"ACCOUNT\", \"ORGANIZATION\", \"PROJECT\". Scope of environment to which clusters are being mapped must be lower or equal to in hierarchy than the scope of the cluster",
-							Type:        schema.TypeString,
-							Optional:    true,
-						},
-					}},
-			},
-		},
+		// Version 1 changed the resource ID from the bare concatenation of the org, project
+		// and environment identifiers to "<org_id>/<project_id>/<env_id>", the import ID.
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{{
+			Version: 0,
+			Type:    (&schema.Resource{Schema: environmentClustersMappingSchema()}).CoreConfigSchema().ImpliedType(),
+			Upgrade: upgradeEnvironmentClustersMappingV0,
+		}},
+
+		Schema: helpers.WithIdentity(environmentClustersMappingSchema(), "env_id", "org_id", "project_id"),
 	}
 	return resource
+}
+
+func environmentClustersMappingSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"identifier": {
+			// this identifier is not used anywhere and has no meaning for the resource either but keeping it maintain backward compatibility
+			Description: "identifier for the cluster mapping(can be given any value).",
+			Type:        schema.TypeString,
+			Required:    true,
+		},
+		"env_id": {
+			Description: "environment identifier.",
+			Type:        schema.TypeString,
+			Required:    true,
+		},
+		"org_id": {
+			Description: "org_id of the environment.",
+			Type:        schema.TypeString,
+			Optional:    true,
+		},
+		"project_id": {
+			Description: "project_id of the environment.",
+			Type:        schema.TypeString,
+			Optional:    true,
+		},
+		"scope": {
+			Description: "scope at which the environment exists in harness.",
+			Type:        schema.TypeString,
+			Computed:    true,
+		},
+		"clusters": {
+			Description: "list of cluster identifiers and names",
+			Type:        schema.TypeSet,
+			Optional:    true,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"identifier": {
+						Description: "identifier of the cluster",
+						Type:        schema.TypeString,
+						Optional:    true,
+					},
+					"name": {
+						Description: "name of the cluster",
+						Type:        schema.TypeString,
+						Optional:    true,
+					},
+					"agent_identifier": {
+						Description: "agent identifier of the cluster (include scope prefix)",
+						Type:        schema.TypeString,
+						Optional:    true,
+					},
+					"scope": {
+						Description: "scope at which the cluster exists in harness gitops, one of \"ACCOUNT\", \"ORGANIZATION\", \"PROJECT\". Scope of environment to which clusters are being mapped must be lower or equal to in hierarchy than the scope of the cluster",
+						Type:        schema.TypeString,
+						Optional:    true,
+					},
+				}},
+		},
+	}
+}
+
+func upgradeEnvironmentClustersMappingV0(_ context.Context, rawState map[string]interface{}, _ interface{}) (map[string]interface{}, error) {
+	if rawState == nil {
+		return rawState, nil
+	}
+	rawState["id"] = clustersMappingID(stringOf(rawState["org_id"]), stringOf(rawState["project_id"]), stringOf(rawState["env_id"]))
+	return rawState, nil
+}
+
+func stringOf(v interface{}) string {
+	s, _ := v.(string)
+	return s
+}
+
+// clustersMappingID is the resource ID: the environment identifier prefixed with its scope,
+// "/"-separated, as the importer accepts it.
+func clustersMappingID(orgID, projectID, envID string) string {
+	var parts []string
+	for _, p := range []string{orgID, projectID, envID} {
+		if p != "" {
+			parts = append(parts, p)
+		}
+	}
+	return strings.Join(parts, "/")
 }
 
 func resourceEnvironmentClustersMappingRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -98,15 +139,12 @@ func resourceEnvironmentClustersMappingRead(ctx context.Context, d *schema.Resou
 	resp, httpResp, err := c.ClustersApi.GetClusterList(ctx, c.AccountId, envId, clustersApiGetClusterListOpts)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	// Soft delete lookup error handling
-	// https://harness.atlassian.net/browse/PL-23765
-	if resp.Data == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+	// No linked cluster left means the mapping is gone.
+	if resp.Data == nil || len(resp.Data.Content) == 0 {
+		return helpers.ReadMissing(ctx, d, "cluster mapping of environment "+envId)
 	}
 
 	readEnvironmentClustersMapping(d, &resp.Data.Content)
@@ -126,7 +164,7 @@ func resourceEnvironmentClustersMappingDelete(ctx context.Context, d *schema.Res
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -145,7 +183,7 @@ func resourceEnvironmentClustersMappingClusterLink(ctx context.Context, d *schem
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// only resource id needs to be set since api from sdk doesn't return any other information during batch link clusters
@@ -181,10 +219,8 @@ func ExpandEnvironmentClustersMappingCluster(clusterBasicDTO []interface{}) []ne
 }
 
 func readEnvironmentClustersMapping(d *schema.ResourceData, clusters *[]nextgen.ClusterResponse) {
-	d.SetId(d.Get("org_id").(string) + d.Get("project_id").(string) + d.Get("env_id").(string))
-	if clusterSet := flattenClusters(*clusters); len(clusterSet) > 0 {
-		d.Set("clusters", clusterSet)
-	}
+	d.SetId(clustersMappingID(d.Get("org_id").(string), d.Get("project_id").(string), d.Get("env_id").(string)))
+	d.Set("clusters", flattenClusters(*clusters))
 }
 
 func flattenClusters(clusters []nextgen.ClusterResponse) []map[string]interface{} {
@@ -206,7 +242,7 @@ func flattenClusters(clusters []nextgen.ClusterResponse) []map[string]interface{
 }
 
 func readEnvironmentClustersMappingLinkedCluster(d *schema.ResourceData, cl *nextgen.ClusterBatchResponse) {
-	d.SetId(d.Get("org_id").(string) + d.Get("project_id").(string) + d.Get("env_id").(string))
+	d.SetId(clustersMappingID(d.Get("org_id").(string), d.Get("project_id").(string), d.Get("env_id").(string)))
 }
 
 func removeScopePrefix(identifier string) string {

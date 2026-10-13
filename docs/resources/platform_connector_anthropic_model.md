@@ -12,9 +12,8 @@ Resource for creating an Anthropic Model connector.
 
 ## Example Usage
 
-### Token auth — direct Anthropic API key
-
 ```terraform
+# Token auth — direct Anthropic API key
 resource "harness_platform_connector_anthropic_model" "token" {
   identifier  = "example_anthropic_token"
   name        = "example-anthropic-token"
@@ -34,11 +33,8 @@ resource "harness_platform_connector_anthropic_model" "token" {
     }
   }
 }
-```
 
-### BedrockApiKey auth — AWS Bedrock with API key + region
-
-```terraform
+# BedrockApiKey auth — AWS Bedrock with API key + region
 resource "harness_platform_connector_anthropic_model" "bedrock" {
   identifier  = "example_anthropic_bedrock"
   name        = "example-anthropic-bedrock"
@@ -59,11 +55,8 @@ resource "harness_platform_connector_anthropic_model" "bedrock" {
     }
   }
 }
-```
 
-### Vertex auth — Google Vertex AI credentials
-
-```terraform
+# Vertex auth — Google Vertex AI credentials
 resource "harness_platform_connector_anthropic_model" "vertex" {
   identifier  = "example_anthropic_vertex"
   name        = "example-anthropic-vertex"
@@ -85,11 +78,8 @@ resource "harness_platform_connector_anthropic_model" "vertex" {
     }
   }
 }
-```
 
-### CloudProvider auth — delegate to an existing cloud provider connector
-
-```terraform
+# CloudProvider auth — delegate to an existing cloud provider connector
 resource "harness_platform_connector_anthropic_model" "cloud_provider" {
   identifier  = "example_anthropic_cloud_provider"
   name        = "example-anthropic-cloud-provider"
@@ -117,7 +107,6 @@ resource "harness_platform_connector_anthropic_model" "cloud_provider" {
 
 ### Required
 
-- `auth` (Block List, Max: 1) The authentication configuration for the Anthropic connector. (see [below for nested schema](#nestedblock--auth))
 - `identifier` (String) Unique identifier of the resource.
 - `model` (String) The Anthropic model to use (e.g. claude-opus-4-6).
 - `name` (String) Name of the resource.
@@ -125,10 +114,11 @@ resource "harness_platform_connector_anthropic_model" "cloud_provider" {
 
 ### Optional
 
+- `auth` (Block List) The authentication configuration for the Anthropic connector. (see [below for nested schema](#nestedblock--auth))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
-- `execute_on_delegate` (Boolean) Execute on delegate or not. Defaults to `true`.
-- `ignore_test_connection` (Boolean) Ignore test connection when creating or updating the connector. Defaults to `false`.
+- `execute_on_delegate` (Boolean) Execute on delegate or not.
+- `ignore_test_connection` (Boolean) Ignore test connection when creating or updating the connector.
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.
 - `tags` (Set of String) Tags to associate with the resource.
@@ -142,29 +132,40 @@ resource "harness_platform_connector_anthropic_model" "cloud_provider" {
 
 Required:
 
-- `auth_type` (String) Authentication type for the Anthropic connector. Valid values: `Token`, `BedrockApiKey`, `Vertex`, `CloudProvider`.
+- `auth_type` (String) Authentication type for the Anthropic connector.
 
 Optional:
 
-- `bedrock_api_key` (Block List, Max: 1) Authenticate using an AWS Bedrock API key. (see [below for nested schema](#nestedblock--auth--bedrock_api_key))
-- `cloud_provider` (Block List, Max: 1) Authenticate using an existing cloud provider connector. (see [below for nested schema](#nestedblock--auth--cloud_provider))
-- `token` (Block List, Max: 1) Authenticate using an Anthropic API token. (see [below for nested schema](#nestedblock--auth--token))
-- `vertex` (Block List, Max: 1) Authenticate using Google Vertex AI credentials. (see [below for nested schema](#nestedblock--auth--vertex))
-
-<a id="nestedblock--auth--token"></a>
-### Nested Schema for `auth.token`
-
-Required:
-
-- `token_ref` (String) Reference to a secret containing the Anthropic API token. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account' to the expression: account.{identifier}.
+- `bedrock_api_key` (Block List) Authenticate using an AWS Bedrock API key. (see [below for nested schema](#nestedblock--auth--bedrock_api_key))
+- `cloud_provider` (Block List) Authenticate using an existing cloud provider connector. (see [below for nested schema](#nestedblock--auth--cloud_provider))
+- `token` (Block List) Authenticate using an Anthropic API token. (see [below for nested schema](#nestedblock--auth--token))
+- `vertex` (Block List) Authenticate using Google Vertex AI credentials. (see [below for nested schema](#nestedblock--auth--vertex))
 
 <a id="nestedblock--auth--bedrock_api_key"></a>
 ### Nested Schema for `auth.bedrock_api_key`
 
 Required:
 
-- `api_key_ref` (String) Reference to a secret containing the Bedrock API key. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account' to the expression: account.{identifier}.
+- `api_key_ref` (String) Reference to a secret containing the Bedrock API key. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
 - `region` (String) AWS region for the Bedrock endpoint.
+
+
+<a id="nestedblock--auth--cloud_provider"></a>
+### Nested Schema for `auth.cloud_provider`
+
+Required:
+
+- `connector_ref` (String) Reference to an existing cloud provider connector.
+- `type` (String) Cloud provider type.
+
+
+<a id="nestedblock--auth--token"></a>
+### Nested Schema for `auth.token`
+
+Required:
+
+- `token_ref` (String) Reference to a secret containing the Anthropic API token. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
+
 
 <a id="nestedblock--auth--vertex"></a>
 ### Nested Schema for `auth.vertex`
@@ -173,15 +174,7 @@ Required:
 
 - `project_id` (String) GCP project ID.
 - `region` (String) GCP region for the Vertex AI endpoint.
-- `service_account_key_ref` (String) Reference to a secret containing the GCP service account key. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account' to the expression: account.{identifier}.
-
-<a id="nestedblock--auth--cloud_provider"></a>
-### Nested Schema for `auth.cloud_provider`
-
-Required:
-
-- `connector_ref` (String) Reference to an existing cloud provider connector.
-- `type` (String) Cloud provider type. Valid values: `AWS`, `GCP`, `Azure`.
+- `service_account_key_ref` (String) Reference to a secret containing the GCP service account key. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
 
 ## Import
 

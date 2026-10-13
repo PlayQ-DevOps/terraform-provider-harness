@@ -1,3 +1,0 @@
-```release-note:bug
-resource/harness_platform_organization: Fixed the plugin crash issue during terraform refresh when the api key was invalid.
-```

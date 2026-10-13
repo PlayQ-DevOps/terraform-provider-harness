@@ -1,3 +1,0 @@
-```release-note:new-resource
-harness_governance_rule_enforcement - Added Governance Enforcement resource in Harness terraform provider
-```

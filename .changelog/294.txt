@@ -1,3 +1,0 @@
-```release-note:enhancement
-platform_pipeline - Added support for pipelines with new Git Experience.
-```

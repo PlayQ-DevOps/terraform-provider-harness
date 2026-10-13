@@ -22,8 +22,8 @@ import (
 	"testing"
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 // TestAccResourceIdpPlugin_basic tests the basic CRUD lifecycle:
@@ -32,9 +32,9 @@ func TestAccResourceIdpPlugin_basic(t *testing.T) {
 	pluginId := getTestPluginId(t)
 	resourceName := "harness_platform_idp_plugin.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePluginBasic(pluginId),
@@ -56,9 +56,9 @@ func TestAccResourceIdpPlugin_withEnvVariables(t *testing.T) {
 	secretId := getTestSecretId(t)
 	resourceName := "harness_platform_idp_plugin.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePluginWithEnvVars(pluginId, secretId),
@@ -82,9 +82,9 @@ func TestAccResourceIdpPlugin_withProxy(t *testing.T) {
 	pluginId := getTestPluginId(t)
 	resourceName := "harness_platform_idp_plugin.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePluginWithProxy(pluginId),
@@ -107,9 +107,9 @@ func TestAccResourceIdpPlugin_disable(t *testing.T) {
 	pluginId := getTestPluginId(t)
 	resourceName := "harness_platform_idp_plugin.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePluginDisabled(pluginId),
@@ -136,9 +136,9 @@ func TestAccResourceIdpPlugin_import(t *testing.T) {
 	pluginId := getTestPluginId(t)
 	resourceName := "harness_platform_idp_plugin.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePluginBasic(pluginId),
@@ -161,9 +161,9 @@ func TestAccDataSourceIdpPlugin(t *testing.T) {
 	pluginId := getTestPluginId(t)
 	resourceName := "data.harness_platform_idp_plugin.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourcePlugin(pluginId),

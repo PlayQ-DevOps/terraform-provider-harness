@@ -135,6 +135,7 @@ func DataSourceCentralNotificationChannelService() *schema.Resource {
 						"api_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Sensitive:   true,
 							Description: "API key for the webhook or integration.",
 						},
 						"delegate_selectors": {

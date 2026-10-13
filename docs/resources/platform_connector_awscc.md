@@ -40,13 +40,13 @@ resource "harness_platform_connector_awscc" "test" {
 ### Required
 
 - `account_id` (String) The AWS account id.
-- `cross_account_access` (Block List, Min: 1, Max: 1) Harness uses the secure cross-account role to access your AWS account. The role includes a restricted policy to access the cost and usage reports and resources for the sole purpose of cost analysis and cost optimization. (see [below for nested schema](#nestedblock--cross_account_access))
 - `features_enabled` (Set of String) The features enabled for the connector. Valid values are BILLING, OPTIMIZATION, VISIBILITY, GOVERNANCE.
 - `identifier` (String) Unique identifier of the resource.
 - `name` (String) Name of the resource.
 
 ### Optional
 
+- `cross_account_access` (Block List) Harness uses the secure cross-account role to access your AWS account. The role includes a restricted policy to access the cost and usage reports and resources for the sole purpose of cost analysis and cost optimization. (see [below for nested schema](#nestedblock--cross_account_access))
 - `description` (String) Description of the resource.
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.

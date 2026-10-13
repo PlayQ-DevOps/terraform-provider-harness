@@ -9,8 +9,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/code"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/stretchr/testify/require"
 )
 
@@ -24,10 +24,10 @@ const (
 func TestProjResourceRepo(t *testing.T) {
 	identifier := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testRepoDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testRepoDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjResourceRepo(identifier, description),
@@ -58,10 +58,10 @@ func TestProjResourceRepo(t *testing.T) {
 func TestAccResourceRepo(t *testing.T) {
 	identifier := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testRepoDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testRepoDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRepo(identifier, description),
@@ -92,10 +92,10 @@ func TestAccResourceRepo(t *testing.T) {
 func TestAccResourceRepo_Import(t *testing.T) {
 	identifier := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testRepoDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testRepoDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRepoImport(identifier, description, providerRepo),
@@ -126,10 +126,10 @@ func TestAccResourceRepo_Import(t *testing.T) {
 func TestProjResourceRepo_Import(t *testing.T) {
 	identifier := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testRepoDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testRepoDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjResourceRepoImport(identifier, description, providerRepo),
@@ -162,10 +162,10 @@ func TestAccResourceRepo_DeleteUnderlyingResource(t *testing.T) {
 
 	identifier := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testRepoDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testRepoDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjResourceRepo(identifier, description),
@@ -201,9 +201,9 @@ func TestAccResourceRepo_DeleteUnderlyingResource(t *testing.T) {
 func TestAccResourceRepo_ImportNonExistentGithubRepo(t *testing.T) {
 	id := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccResourceRepoImport(id, description, "nonexistent-org-abc123/nonexistent-repo-xyz789"),

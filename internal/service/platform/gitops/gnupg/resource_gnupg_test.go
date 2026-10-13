@@ -1,7 +1,6 @@
 package gnupg_test
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"strings"
@@ -9,12 +8,11 @@ import (
 
 	"github.com/antihax/optional"
 
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccResourceGitopsGnupg(t *testing.T) {
@@ -24,10 +22,10 @@ func TestAccResourceGitopsGnupg(t *testing.T) {
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resourceName := "harness_platform_gitops_gnupg.test"
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsGnupgDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsGnupgDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsGnupg(id, accountId, name, agentId),
@@ -50,7 +48,6 @@ func TestAccResourceGitopsGnupg(t *testing.T) {
 func testAccGetGnupg(resourceName string, state *terraform.State) (*nextgen.GpgkeysGnuPgPublicKey, error) {
 	r := acctest.TestAccGetResource(resourceName, state)
 	c, ctx := acctest.TestAccGetPlatformClientWithContext()
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := r.Primary.Attributes["agent_id"]
 
 	resp, _, err := c.GnuPGPKeysApi.AgentGPGKeyServiceGet(ctx, agentIdentifier, r.Primary.ID, c.AccountId, &nextgen.GnuPGPKeysApiAgentGPGKeyServiceGetOpts{

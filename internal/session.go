@@ -37,6 +37,9 @@ type Session struct {
 	HARClient      *har.APIClient
 	IDPClient      *idp.APIClient
 	POClient       *po.APIClient
+	// PolicyClient is built once by the provider; GetPolicyManagementClient falls back to a
+	// default client only for sessions constructed by hand in tests.
+	PolicyClient *policymgmt.APIClient
 }
 
 func (s *Session) GetPlatformClient() (*nextgen.APIClient, context.Context) {
@@ -60,9 +63,10 @@ func (s *Session) GetClientWithContext(ctx context.Context) (*openapi_client_nex
 }
 
 func (s *Session) GetPolicyManagementClient() *policymgmt.APIClient {
-	c := policymgmt.NewAPIClient(
-		policymgmt.NewConfiguration(),
-	)
+	if s.PolicyClient != nil {
+		return s.PolicyClient
+	}
+	c := policymgmt.NewAPIClient(policymgmt.NewConfiguration())
 	c.ChangeBasePath(s.Endpoint + "/pm")
 	return c
 }

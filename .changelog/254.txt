@@ -1,3 +1,0 @@
-```release-note:new-resource
-platform_connector_gcp_secret_manager - Added gcp secret manager resource in Harness terraform provider
-```

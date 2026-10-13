@@ -1,3 +1,0 @@
-```release-note:new-resource
-harness_platform_gitops_project: Added the terraform support for creating the gitops project
-```

@@ -27,6 +27,7 @@ func ResourceDBInstance() *schema.Resource {
 				Description: "The identifier of the parent database schema",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"branch": {
 				Description:   "The branch of changeSet repository",
@@ -79,7 +80,7 @@ func resourceDBInstanceRead(ctx context.Context, d *schema.ResourceData, meta in
 	resp, httpResp, err := c.DatabaseInstanceApi.V1GetProjDbSchemaInstance(ctx, d.Get("org_id").(string), d.Get("project_id").(string), d.Get("schema").(string), d.Id(), &localVarOptionals)
 
 	if err != nil {
-		return helpers.HandleDBOpsReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readDBInstance(d, &resp)
@@ -109,7 +110,7 @@ func resourceDBInstanceCreateOrUpdate(ctx context.Context, d *schema.ResourceDat
 	}
 
 	if err != nil {
-		return helpers.HandleDBOpsApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readDBInstance(d, &resp)
@@ -126,7 +127,7 @@ func resourceDBInstanceDelete(ctx context.Context, d *schema.ResourceData, meta 
 
 	httpResp, err := c.DatabaseInstanceApi.V1DeleteProjDbSchemaInstance(ctx, d.Get("org_id").(string), d.Get("project_id").(string), d.Get("schema").(string), d.Id(), &localVarOptionals)
 	if err != nil {
-		return helpers.HandleDBOpsApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

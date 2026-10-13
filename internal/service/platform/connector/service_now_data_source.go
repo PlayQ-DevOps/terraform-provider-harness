@@ -22,12 +22,12 @@ func DataSourceConnectorSerivceNow() *schema.Resource {
 				Computed:    true,
 			},
 			"username_ref": {
-				Description: "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+				Description: "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
 			"password_ref": {
-				Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+				Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
@@ -60,12 +60,12 @@ func DataSourceConnectorSerivceNow() *schema.Resource {
 										Computed:    true,
 									},
 									"username_ref": {
-										Description: "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
 									"password_ref": {
-										Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
@@ -79,22 +79,22 @@ func DataSourceConnectorSerivceNow() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"certificate_ref": {
-										Description: "Reference to a secret containing the certificate to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the certificate to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
 									"private_key_ref": {
-										Description: "Reference to a secret containing the privateKeyRef to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the privateKeyRef to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
 									"client_id_ref": {
-										Description: "Reference to a secret containing the clientIdRef to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the clientIdRef to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
 									"resource_id_ref": {
-										Description: "Reference to a secret containing the resourceIdRef to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the resourceIdRef to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
@@ -118,28 +118,28 @@ func DataSourceConnectorSerivceNow() *schema.Resource {
 										Computed:    true,
 									},
 									"refresh_token_ref": {
-										Description: "Reference to a secret containing the refresh token to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the refresh token to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
 									"client_id_ref": {
-										Description: "Reference to a secret containing the client id to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the client id to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
 									"client_secret_ref": {
-										Description: "Reference to a secret containing the client secret to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the client secret to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
 									"scope": {
-										Description: "Scope string to use for authentication." + secret_ref_text,
+										Description: "Scope string to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
 								},
 							},
-						},						
+						},
 					},
 				},
 			},

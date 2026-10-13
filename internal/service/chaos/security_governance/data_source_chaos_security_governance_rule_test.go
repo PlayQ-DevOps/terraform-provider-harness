@@ -6,7 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 // TestAccDataSourceChaosSecurityGovernanceRule verifies the basic data source functionality for Chaos Security Governance Rule.
@@ -16,9 +16,9 @@ func TestAccDataSourceChaosSecurityGovernanceRule(t *testing.T) {
 	dataSourceName := "data.harness_chaos_security_governance_rule.test"
 	resourceName := "harness_chaos_security_governance_rule.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceChaosSecurityGovernanceRuleConfig(rName, id, "Kubernetes"),
@@ -40,9 +40,9 @@ func TestAccDataSourceChaosSecurityGovernanceRule_ByName(t *testing.T) {
 	rName := id
 	dataSourceName := "data.harness_chaos_security_governance_rule.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceChaosSecurityGovernanceRuleConfigByName(rName, id, "Kubernetes"),

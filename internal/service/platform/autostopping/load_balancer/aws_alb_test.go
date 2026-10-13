@@ -6,8 +6,8 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 // AWS cloud connector ID in the test account (same as awsProxyCloudConnectorID in aws_proxy_test.go).
@@ -17,9 +17,9 @@ func TestResourceAwsALB(t *testing.T) {
 	name := fmt.Sprintf("terr-awsalb-%s", randAlnum(5))
 	resourceName := "harness_autostopping_aws_alb.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		//		CheckDestroy:      testAWSProxyDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
@@ -37,7 +37,7 @@ func TestResourceAwsALB(t *testing.T) {
 // the next refresh treats the GET as "not found" (HTTP 404 + ENTITY_NOT_FOUND)
 // and re-plans a create instead of erroring out.
 //
-// Regression test for CCM-32336. The provider's helpers.HandleReadApiError clears
+// Regression test for CCM-32336. The provider's helpers.HandleRead clears
 // state on 404 + ENTITY_NOT_FOUND so terraform plan reports a recreate.
 func TestAccResourceAwsALB_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 	name := fmt.Sprintf("terr-c336alb-%s", randAlnum(5))
@@ -45,9 +45,9 @@ func TestAccResourceAwsALB_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 
 	var lbIDBefore string
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAwsALB(name),

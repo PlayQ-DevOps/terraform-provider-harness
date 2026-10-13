@@ -6,7 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccDataSourceConnectorAws(t *testing.T) {
@@ -16,9 +16,9 @@ func TestAccDataSourceConnectorAws(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceConnectorAws(name),
@@ -43,9 +43,9 @@ func TestOidcDataSourceConnectorAws(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testOidcDataSourceConnectorAws(name),
@@ -71,12 +71,12 @@ func TestAccDataSourceConnectorAwsFullJitterBackOff(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceConnectorAwsFullJitterBackOff(name),
+				Config:             testAccDataSourceConnectorAwsFullJitterBackOff(name),
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "id", name),
@@ -103,12 +103,12 @@ func TestAccDataSourceConnectorAwsEqualJitterBackOff(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceConnectorAwsEqualJitterBackOff(name),
+				Config:             testAccDataSourceConnectorAwsEqualJitterBackOff(name),
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "id", name),
@@ -134,12 +134,12 @@ func TestAccDataSourceConnectorAwsFixedDelayBackOff(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceConnectorAwsFixedDelayBackOff(name),
+				Config:             testAccDataSourceConnectorAwsFixedDelayBackOff(name),
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "id", name),

@@ -9,8 +9,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/policymgmt"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 var (
@@ -27,10 +27,10 @@ func TestAccResourcePolicyset(t *testing.T) {
 	policyFirstIdentifier := fmt.Sprintf("policyFirst%s", utils.RandStringBytes(5))
 	policySecondIdentifier := fmt.Sprintf("policySecond%s", utils.RandStringBytes(5))
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPolicysetDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPolicysetDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePolicyset(id, name, action, policyType, policyFirstIdentifier, policySecondIdentifier, false),
@@ -99,10 +99,10 @@ func TestAccResourcePolicysetCrossScope(t *testing.T) {
 	resourceName := "harness_platform_policyset.test"
 	policyIdentifier := fmt.Sprintf("policy%s", utils.RandStringBytes(5))
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPolicysetDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPolicysetDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePolicysetCrossScope(id, policyIdentifier),

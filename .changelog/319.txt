@@ -1,3 +1,0 @@
-```release-note:enhancement
-resource/harness_platform_policy: Adding the policy management provider
-```

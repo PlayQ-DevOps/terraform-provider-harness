@@ -3,7 +3,6 @@ package usergroup
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"reflect"
 	"sort"
@@ -11,6 +10,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -168,7 +168,7 @@ func resourceUserGroupRead(ctx context.Context, d *schema.ResourceData, meta int
 	})
 
 	if err != nil {
-		log.Printf("Error getting user group v2. Falling back to v1: %v", err)
+		tflog.Debug(ctx, fmt.Sprintf("Error getting user group v2. Falling back to v1: %v", err))
 		// Fallback to V1 API
 		return handleReadUserGroupV1(ctx, d, meta)
 	}
@@ -202,7 +202,7 @@ func handleReadUserGroupV1(ctx context.Context, d *schema.ResourceData, meta int
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	emails, emails_present := d.GetOk("user_emails")
@@ -248,7 +248,7 @@ func resourceUserGroupCreateOrUpdate(ctx context.Context, d *schema.ResourceData
 		}
 
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 
 		if resp.Data == nil {
@@ -289,7 +289,7 @@ func resourceUserGroupCreateOrUpdate(ctx context.Context, d *schema.ResourceData
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -314,7 +314,7 @@ func resourceUserGroupDelete(ctx context.Context, d *schema.ResourceData, meta i
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

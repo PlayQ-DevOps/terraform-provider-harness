@@ -2,9 +2,7 @@ package iacm
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"net/http"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
@@ -21,7 +19,7 @@ func ResourceIacmDefaultPipeline() *schema.Resource {
 		DeleteContext: resourceIacmDefaultPipelineDelete,
 		CreateContext: resourceIacmDefaultPipelineCreate,
 		UpdateContext: resourceIacmDefaultPipelineUpdate,
-		Importer:      helpers.ProjectResourceImporter,
+		Importer:      iacmDefaultPipelineImporter,
 
 		Schema: map[string]*schema.Schema{
 			"org_id": {
@@ -40,13 +38,13 @@ func ResourceIacmDefaultPipeline() *schema.Resource {
 				Description: "The provisioner associated with this default.",
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    false,
+				ForceNew:    true,
 			},
 			"operation": {
 				Description: "The operation associated with this default.",
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    false,
+				ForceNew:    true,
 			},
 			"pipeline": {
 				Description: "The pipeline associated with this default.",
@@ -62,10 +60,6 @@ func ResourceIacmDefaultPipeline() *schema.Resource {
 
 func resourceIacmDefaultPipelineRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	id := d.Id()
-	if id == "" {
-		d.MarkNewResource()
-	}
 	defaultPipelines, httpResp, err := c.SettingsApi.SettingsListDefaultPipelines(
 		ctx,
 		d.Get("org_id").(string),
@@ -74,7 +68,7 @@ func resourceIacmDefaultPipelineRead(ctx context.Context, d *schema.ResourceData
 		nil,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 	for _, defaultPipeline := range defaultPipelines {
 		if defaultPipeline.Provisioner == d.Get("provisioner_type").(string) &&
@@ -84,10 +78,7 @@ func resourceIacmDefaultPipelineRead(ctx context.Context, d *schema.ResourceData
 			return nil
 		}
 	}
-	if d.Id() == "" {
-		return diag.Errorf("resource with provisioner type '%s' and operation '%s' not found", d.Get("provisioner_type"), d.Get("operation"))
-	}
-	return diag.Errorf("resource with ID %s not found", d.Id())
+	return helpers.ReadMissing(ctx, d, fmt.Sprintf("default pipeline for provisioner %s and operation %s", d.Get("provisioner_type"), d.Get("operation")))
 }
 
 func resourceIacmDefaultPipelineDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -108,7 +99,7 @@ func resourceIacmDefaultPipelineDelete(ctx context.Context, d *schema.ResourceDa
 		d.Get("project_id").(string),
 	)
 	if err != nil {
-		return parseError(err, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -137,36 +128,13 @@ func resourceIacmDefaultPipelineUpdate(ctx context.Context, d *schema.ResourceDa
 		d.Get("project_id").(string),
 	)
 	if err != nil {
-		return parseError(err, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
-	resourceIacmDefaultPipelineRead(ctx, d, meta)
-	return nil
+	d.SetId(fmt.Sprintf("%s-%s", d.Get("provisioner_type").(string), d.Get("operation").(string)))
+	return helpers.ReadAfterWrite(ctx, d, meta, 0, resourceIacmDefaultPipelineRead)
 }
 
-// iacm errors are in a different format from other harness services
-// this function parses iacm errors and attempts to return them in way
-// that is consistent with the provider.
-func parseError(err error, httpResp *http.Response) diag.Diagnostics {
-	// copied from helpers/errors.go
-	if httpResp != nil && httpResp.StatusCode == 401 {
-		return diag.Errorf("%s\nHint:\n1) Please check if token has expired or is wrong.\n2) Harness Provider is misconfigured. For firstgen resources please give the correct api_key and for nextgen resources please give the correct platform_api_key.", httpResp.Status)
-	}
-	if httpResp != nil && httpResp.StatusCode == 403 {
-		return diag.Errorf("%s\nHint:\n1) Please check if the token has required permission for this operation.\n2) Please check if the token has expired or is wrong.", httpResp.Status)
-	}
-
-	se, ok := err.(nextgen.GenericSwaggerError)
-	if !ok {
-		return diag.FromErr(err)
-	}
-
-	iacmErrBody := se.Body()
-	iacmErr := nextgen.IacmError{}
-	jsonErr := json.Unmarshal(iacmErrBody, &iacmErr)
-	if jsonErr != nil {
-		return diag.Errorf("%s", err.Error())
-	}
-
-	return diag.Errorf("%s\nHint:\n1) %s", httpResp.Status, iacmErr.Message)
-}
+// iacmDefaultPipelineImporter: <org_id>/<project_id>/<provisioner_type>/<operation>; Read
+// derives the "<provisioner>-<operation>" resource ID.
+var iacmDefaultPipelineImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org_id", "project_id", "provisioner_type", "operation"}})

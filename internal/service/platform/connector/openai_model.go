@@ -6,6 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,7 +19,7 @@ func ResourceConnectorOpenAIModel() *schema.Resource {
 		ReadContext:   resourceConnectorOpenAIModelRead,
 		CreateContext: resourceConnectorOpenAIModelCreateOrUpdate,
 		UpdateContext: resourceConnectorOpenAIModelCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 		CustomizeDiff: validateOpenAIModelAuthConfig,
 
@@ -77,7 +78,7 @@ func ResourceConnectorOpenAIModel() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"token_ref": {
-										Description: "Reference to a secret containing the OpenAI API token." + secret_ref_text,
+										Description: "Reference to a secret containing the OpenAI API token." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
@@ -97,7 +98,7 @@ func ResourceConnectorOpenAIModel() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"service_account_key_ref": {
-										Description: "Reference to a secret containing the GCP service account key." + secret_ref_text,
+										Description: "Reference to a secret containing the GCP service account key." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
@@ -126,7 +127,7 @@ func ResourceConnectorOpenAIModel() *schema.Resource {
 }
 
 func resourceConnectorOpenAIModelRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.OpenAIModel)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.OpenAIModel)
 	if err != nil {
 		return err
 	}
@@ -145,7 +146,7 @@ func resourceConnectorOpenAIModelRead(ctx context.Context, d *schema.ResourceDat
 func resourceConnectorOpenAIModelCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorOpenAIModel(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}
@@ -278,6 +279,14 @@ func readConnectorOpenAIModel(d *schema.ResourceData, connector *nextgen.Connect
 }
 
 func validateOpenAIModelAuthConfig(_ context.Context, d *schema.ResourceDiff, _ interface{}) error {
+	return checkOpenAIModelAuthConfig(d)
+}
+
+// checkOpenAIModelAuthConfig validates the auth block against its auth_type; it reads the configuration
+// through GetOk so both the SDK v2 CustomizeDiff and the framework definition can run it.
+func checkOpenAIModelAuthConfig(d interface {
+	GetOk(string) (interface{}, bool)
+}) error {
 	auth, ok := d.GetOk("auth")
 	if !ok {
 		return nil

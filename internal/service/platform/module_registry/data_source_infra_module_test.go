@@ -2,19 +2,20 @@ package module_registry_test
 
 import (
 	"fmt"
-	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"strings"
 	"testing"
+
+	"github.com/harness/terraform-provider-harness/internal/acctest"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccDataSourceInfraModule(t *testing.T) {
 	name := strings.ToLower(t.Name())
 	system := strings.ToLower(t.Name())
 	resourceName := "harness_platform_infra_module.test"
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceInfraModule(name, system),

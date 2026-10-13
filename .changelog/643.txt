@@ -1,3 +1,0 @@
-```release-note:enhancement
-harness_platform_pipeline - Added support to import pipeline entity from git.
-```

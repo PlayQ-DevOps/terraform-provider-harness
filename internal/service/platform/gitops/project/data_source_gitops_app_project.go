@@ -73,14 +73,13 @@ func dataSourceProjectRead(ctx context.Context, d *schema.ResourceData, meta int
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
 	if resp.Metadata == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+		return diag.Errorf("gitops app project not found: no object matched the given arguments")
+
 	}
 	setProjectDetails(d, accountIdentifier, &resp)
 

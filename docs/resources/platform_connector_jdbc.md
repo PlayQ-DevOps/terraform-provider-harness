@@ -72,8 +72,8 @@ resource "harness_platform_connector_jdbc" "test" {
   credentials {
     auth_type = "KeyPair"
     key_pair {
-      username_ref               = "account.user_ref"
-      private_key_file_ref       = "account.private_key_secret"
+      username_ref         = "account.user_ref"
+      private_key_file_ref = "account.private_key_secret"
     }
   }
 }
@@ -88,8 +88,8 @@ resource "harness_platform_connector_jdbc" "test" {
   credentials {
     auth_type = "KeyPair"
     key_pair {
-      username                   = "admin"
-      private_key_file_ref       = "account.private_key_secret"
+      username             = "admin"
+      private_key_file_ref = "account.private_key_secret"
     }
   }
 }
@@ -196,13 +196,13 @@ resource "harness_platform_connector_jdbc" "inherit_from_delegate_example" {
 
 ### Required
 
-- `credentials` (Block List, Min: 1, Max: 1) The credentials to use for the database server. (see [below for nested schema](#nestedblock--credentials))
 - `identifier` (String) Unique identifier of the resource.
 - `name` (String) Name of the resource.
 - `url` (String) The URL of the database server.
 
 ### Optional
 
+- `credentials` (Block List) The credentials to use for the database server. (see [below for nested schema](#nestedblock--credentials))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
 - `org_id` (String) Unique identifier of the organization.
@@ -219,13 +219,13 @@ resource "harness_platform_connector_jdbc" "inherit_from_delegate_example" {
 Optional:
 
 - `auth_type` (String) Authentication types for JDBC connector
-- `inherit_from_delegate` (Block List, Max: 1) Authenticate using credentials inherited from the Harness delegate runtime identity (e.g. GCP ADC, AWS IAM). (see [below for nested schema](#nestedblock--credentials--inherit_from_delegate))
-- `key_pair` (Block List, Max: 1) Authenticate using key pair. (see [below for nested schema](#nestedblock--credentials--key_pair))
-- `oidc` (Block List, Max: 1) Authenticate using OIDC. (see [below for nested schema](#nestedblock--credentials--oidc))
+- `inherit_from_delegate` (Block List) Authenticate using credentials inherited from the Harness delegate runtime identity (e.g. GCP ADC, AWS IAM). (see [below for nested schema](#nestedblock--credentials--inherit_from_delegate))
+- `key_pair` (Block List) Authenticate using key pair. (see [below for nested schema](#nestedblock--credentials--key_pair))
+- `oidc` (Block List) Authenticate using OIDC. (see [below for nested schema](#nestedblock--credentials--oidc))
 - `password_ref` (String) The reference to the Harness secret containing the password to use for the database server. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
-- `service_account` (Block List, Max: 1) Authenticate using service account. (see [below for nested schema](#nestedblock--credentials--service_account))
+- `service_account` (Block List) Authenticate using service account. (see [below for nested schema](#nestedblock--credentials--service_account))
 - `username` (String) The username to use for the database server.
-- `username_password` (Block List, Max: 1) Authenticate using username password. (see [below for nested schema](#nestedblock--credentials--username_password))
+- `username_password` (Block List) Authenticate using username password. (see [below for nested schema](#nestedblock--credentials--username_password))
 - `username_ref` (String) The reference to the Harness secret containing the username to use for the database server. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
 
 <a id="nestedblock--credentials--inherit_from_delegate"></a>
@@ -260,7 +260,7 @@ Required:
 
 Optional:
 
-- `gcp_oidc` (Block List, Max: 1) GCP OIDC configuration. Required when provider_type is Gcp. (see [below for nested schema](#nestedblock--credentials--oidc--gcp_oidc))
+- `gcp_oidc` (Block List) GCP OIDC configuration. Required when provider_type is Gcp. (see [below for nested schema](#nestedblock--credentials--oidc--gcp_oidc))
 
 <a id="nestedblock--credentials--oidc--gcp_oidc"></a>
 ### Nested Schema for `credentials.oidc.gcp_oidc`

@@ -48,40 +48,43 @@ data "harness_platform_connector_anthropic_model" "example" {
 
 Read-Only:
 
-- `auth_type` (String) Authentication type for the Anthropic connector.
-- `bedrock_api_key` (List of Object) (see [below for nested schema](#nestedatt--auth--bedrock_api_key))
-- `cloud_provider` (List of Object) (see [below for nested schema](#nestedatt--auth--cloud_provider))
-- `token` (List of Object) (see [below for nested schema](#nestedatt--auth--token))
-- `vertex` (List of Object) (see [below for nested schema](#nestedatt--auth--vertex))
+- `auth_type` (String)
+- `bedrock_api_key` (List of Object) (see [below for nested schema](#nestedobjatt--auth--bedrock_api_key))
+- `cloud_provider` (List of Object) (see [below for nested schema](#nestedobjatt--auth--cloud_provider))
+- `token` (List of Object) (see [below for nested schema](#nestedobjatt--auth--token))
+- `vertex` (List of Object) (see [below for nested schema](#nestedobjatt--auth--vertex))
 
-<a id="nestedatt--auth--token"></a>
-### Nested Schema for `auth.token`
-
-Read-Only:
-
-- `token_ref` (String) Reference to a secret containing the Anthropic API token.
-
-<a id="nestedatt--auth--bedrock_api_key"></a>
+<a id="nestedobjatt--auth--bedrock_api_key"></a>
 ### Nested Schema for `auth.bedrock_api_key`
 
 Read-Only:
 
-- `api_key_ref` (String) Reference to a secret containing the Bedrock API key.
-- `region` (String) AWS region for the Bedrock endpoint.
+- `api_key_ref` (String)
+- `region` (String)
 
-<a id="nestedatt--auth--vertex"></a>
-### Nested Schema for `auth.vertex`
 
-Read-Only:
-
-- `project_id` (String) GCP project ID.
-- `region` (String) GCP region for the Vertex AI endpoint.
-- `service_account_key_ref` (String) Reference to a secret containing the GCP service account key.
-
-<a id="nestedatt--auth--cloud_provider"></a>
+<a id="nestedobjatt--auth--cloud_provider"></a>
 ### Nested Schema for `auth.cloud_provider`
 
 Read-Only:
 
-- `connector_ref` (String) Reference to an existing cloud provider connector.
-- `type` (String) Cloud provider type.
+- `connector_ref` (String)
+- `type` (String)
+
+
+<a id="nestedobjatt--auth--token"></a>
+### Nested Schema for `auth.token`
+
+Read-Only:
+
+- `token_ref` (String)
+
+
+<a id="nestedobjatt--auth--vertex"></a>
+### Nested Schema for `auth.vertex`
+
+Read-Only:
+
+- `project_id` (String)
+- `region` (String)
+- `service_account_key_ref` (String)

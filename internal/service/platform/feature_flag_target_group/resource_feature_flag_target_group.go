@@ -4,18 +4,18 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"time"
+
 	"github.com/antihax/optional"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
-	"github.com/harness/terraform-provider-harness/internal/service/platform/feature_flag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"io"
-	"log"
-	"net/http"
-	"time"
 )
 
 // ResourceFeatureFlagTargetGroup ...
@@ -27,7 +27,7 @@ func ResourceFeatureFlagTargetGroup() *schema.Resource {
 		CreateContext: resourceFeatureFlagTargetCreate,
 		UpdateContext: resourceFeatureFlagTargetGroupUpdate,
 		DeleteContext: resourceFeatureFlagTargetGroupDelete,
-		Importer:      helpers.ProjectResourceImporter,
+		Importer:      featureFlagTargetGroupImporter,
 
 		Schema: map[string]*schema.Schema{
 			"identifier": {
@@ -176,15 +176,19 @@ func resourceFeatureFlagTargetGroupRead(ctx context.Context, d *schema.ResourceD
 
 	id := d.Id()
 	if id == "" {
-		d.MarkNewResource()
+
 		return nil
 	}
 
 	qp := buildFFTargetGroupQueryParameters(d)
+	if qp.AcountID == "" {
+		// Imported: the account is the provider's.
+		qp.AcountID = c.AccountId
+	}
 
 	segment, httpResp, err := c.TargetGroupsApi.GetSegment(ctx, c.AccountId, qp.OrgID, id, qp.Project, qp.Environment)
 	if err != nil {
-		return feature_flag.HandleCFApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 	readFeatureFlagTargetGroup(d, &segment, qp)
 
@@ -211,7 +215,7 @@ func resourceFeatureFlagTargetCreate(ctx context.Context, d *schema.ResourceData
 		if httpResp != nil && httpResp.StatusCode == 409 {
 			return diag.Errorf("A target group with identifier [%s] orgIdentifier [%s] project [%s] environment [%s] already exists", segmentRequest.Identifier, qp.OrgID, qp.Project, segmentRequest.Environment)
 		}
-		return feature_flag.HandleCFApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if httpResp.StatusCode != http.StatusCreated {
@@ -220,7 +224,7 @@ func resourceFeatureFlagTargetCreate(ctx context.Context, d *schema.ResourceData
 
 	segment, httpResp, err = c.TargetGroupsApi.GetSegment(ctx, c.AccountId, qp.OrgID, id, qp.Project, qp.Environment)
 	if err != nil {
-		return feature_flag.HandleCFApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readFeatureFlagTargetGroup(d, &segment, qp)
@@ -243,7 +247,7 @@ func resourceFeatureFlagTargetGroupUpdate(ctx context.Context, d *schema.Resourc
 
 		_, httpResp, err := c.TargetGroupsApi.PatchSegment(ctx, c.AccountId, qp.OrgID, qp.Project, qp.Environment, id, opts)
 		if err != nil {
-			return feature_flag.HandleCFApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 		time.Sleep(1 * time.Second)
 	}
@@ -280,7 +284,7 @@ func resourceFeatureFlagTargetGroupDelete(ctx context.Context, d *schema.Resourc
 
 	httpResp, err := c.TargetGroupsApi.DeleteSegment(ctx, c.AccountId, qp.OrgID, id, qp.Project, qp.Environment)
 	if err != nil {
-		return feature_flag.HandleCFApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -583,3 +587,6 @@ func arrayToMap(identifiers []string) map[string]struct{} {
 	}
 	return m
 }
+
+// featureFlagTargetGroupImporter: <org_id>/<project_id>/<environment>/<identifier>.
+var featureFlagTargetGroupImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org_id", "project_id", "environment", "identifier"}})

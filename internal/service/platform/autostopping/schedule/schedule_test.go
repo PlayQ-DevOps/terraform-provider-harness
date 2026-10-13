@@ -8,16 +8,16 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestResourceVMRule(t *testing.T) {
 	name := "terraform-schedule-test"
 	resourceName := "harness_autostopping_schedule.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testSchedule(name),
@@ -34,7 +34,7 @@ func TestResourceVMRule(t *testing.T) {
 // next refresh treats the GET as "not found" and re-plans a create instead of
 // erroring out with "giving up after 11 attempt(s)".
 //
-// Regression test for CCM-32336. helpers.HandleReadApiError clears state on
+// Regression test for CCM-32336. helpers.HandleRead clears state on
 // 404 + ENTITY_NOT_FOUND so terraform plan reports a recreate.
 func TestAccResourceSchedule_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 	suffix := strings.ToLower(utils.RandStringBytes(5))
@@ -43,9 +43,9 @@ func TestAccResourceSchedule_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 
 	var schedIDBefore string
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testSchedule(name),

@@ -57,13 +57,13 @@ resource "harness_platform_connector_git" "test" {
 ### Required
 
 - `connection_type` (String) Whether the connection we're making is to a git repository or a git account. Valid values are Account, Repo.
-- `credentials` (Block List, Min: 1, Max: 1) Credentials to use for the connection. (see [below for nested schema](#nestedblock--credentials))
 - `identifier` (String) Unique identifier of the resource.
 - `name` (String) Name of the resource.
 - `url` (String) URL of the git repository or account.
 
 ### Optional
 
+- `credentials` (Block List) Credentials to use for the connection. (see [below for nested schema](#nestedblock--credentials))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
 - `execute_on_delegate` (Boolean) Execute on delegate or not.
@@ -81,8 +81,8 @@ resource "harness_platform_connector_git" "test" {
 
 Optional:
 
-- `http` (Block List, Max: 1) Authenticate using Username and password over http(s) for the connection. (see [below for nested schema](#nestedblock--credentials--http))
-- `ssh` (Block List, Max: 1) Authenticate using SSH for the connection. (see [below for nested schema](#nestedblock--credentials--ssh))
+- `http` (Block List) Authenticate using Username and password over http(s) for the connection. (see [below for nested schema](#nestedblock--credentials--http))
+- `ssh` (Block List) Authenticate using SSH for the connection. (see [below for nested schema](#nestedblock--credentials--ssh))
 
 <a id="nestedblock--credentials--http"></a>
 ### Nested Schema for `credentials.http`

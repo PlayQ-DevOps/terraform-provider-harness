@@ -65,14 +65,13 @@ func dataSourceApiKeyRead(ctx context.Context, d *schema.ResourceData, meta inte
 			ProjectIdentifier: helpers.BuildField(d, "project_id"),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 		apiKey = resp.Data.ApiKey
 
 		if apiKey == nil {
-			d.SetId("")
-			d.MarkNewResource()
-			return nil
+			return diag.Errorf("api key not found: no object matched the given arguments")
+
 		}
 	} else {
 		return diag.FromErr(errors.New("Identifier must be specified"))

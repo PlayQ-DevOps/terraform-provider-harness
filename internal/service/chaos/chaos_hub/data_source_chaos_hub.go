@@ -2,7 +2,6 @@ package chaos_hub
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/harness-go-sdk/harness/chaos/graphql/model"
@@ -121,7 +120,7 @@ func dataSourceChaosHubRead(ctx context.Context, d *schema.ResourceData, meta in
 	hubClient := chaos.NewChaosHubClient(c)
 	hubs, err := hubClient.List(ctx, identifiers)
 	if err != nil {
-		return helpers.HandleChaosGraphQLReadError(err, d, "list_chaos_hubs")
+		return helpers.HandleError(ctx, d, err, nil)
 	}
 
 	targetName := d.Get("name").(string)
@@ -135,10 +134,10 @@ func dataSourceChaosHubRead(ctx context.Context, d *schema.ResourceData, meta in
 	}
 
 	if foundHub == nil {
-		return helpers.HandleChaosGraphQLReadError(fmt.Errorf("chaos hub with name '%s' not found", targetName), d, "get_chaos_hub")
+		return diag.Errorf("chaos hub with name %q not found", targetName)
+
 	}
 
-	// Convert model.IdentifiersRequest to ScopedIdentifiersRequest for generateID
 	scopedIdentifiers := ScopedIdentifiersRequest{
 		AccountIdentifier: identifiers.AccountIdentifier,
 	}

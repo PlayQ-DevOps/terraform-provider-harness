@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/cd/cac"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -74,11 +75,10 @@ func resourceYamlConfigRead(ctx context.Context, d *schema.ResourceData, meta in
 
 	entity, err := c.CDClient.ConfigAsCodeClient.FindYamlByPath(app_id, path)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	} else if entity == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+		return helpers.ReadMissing(ctx, d, "yaml config "+d.Id())
+
 	}
 
 	return readYamlConfig(d, entity)
@@ -137,7 +137,7 @@ func resourceYamlConfigDelete(ctx context.Context, d *schema.ResourceData, meta 
 
 	err := c.CDClient.ConfigAsCodeClient.DeleteEntityV2(path, content)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	return nil

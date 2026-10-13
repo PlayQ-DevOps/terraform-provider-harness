@@ -1,3 +1,0 @@
-```release-note:bug
- - Deprecated enabled from the monitored service dto to not allow customer to set monitored service as enabled to start with via terraform
-```

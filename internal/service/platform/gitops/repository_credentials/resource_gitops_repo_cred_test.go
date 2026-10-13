@@ -1,18 +1,16 @@
 package repository_credentials_test
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"strings"
 	"testing"
 
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccResourceGitopsRepoCred(t *testing.T) {
@@ -22,10 +20,10 @@ func TestAccResourceGitopsRepoCred(t *testing.T) {
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resourceName := "harness_platform_gitops_repo_cred.test"
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsRepoCredDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsRepoCredDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsRepoCredAccountLevel(id, accountId, agentId),
@@ -47,9 +45,9 @@ func TestAccResourceGitopsRepoCred(t *testing.T) {
 	//id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	//name := id
 	//resourceName = "harness_platform_gitops_repo_cred.test"
-	//resource.UnitTest(t, resource.TestCase{
+	//resource.Test(t, resource.TestCase{
 	//	PreCheck:          func() { acctest.TestAccPreCheck(t) },
-	//	ProviderFactories: acctest.ProviderFactories,
+	//	ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 	//	CheckDestroy:      testAccResourceGitopsRepoCredDestroy(resourceName),
 	//	Steps: []resource.TestStep{
 	//		{
@@ -78,10 +76,10 @@ func TestAccResourceGitopsRepoCred_IdentifierForceNew(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	resourceName := "harness_platform_gitops_repo_cred.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGitopsRepoCredDestroyByIdentifier(newId, agentId),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGitopsRepoCredDestroyByIdentifier(newId, agentId),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceGitopsRepoCredAccountLevel(id, accountId, agentId),
@@ -107,7 +105,6 @@ func TestAccResourceGitopsRepoCred_IdentifierForceNew(t *testing.T) {
 func testAccGetRepoCred(resourceName string, state *terraform.State) (*nextgen.Servicev1RepositoryCredentials, error) {
 	r := acctest.TestAccGetResource(resourceName, state)
 	c, ctx := acctest.TestAccGetPlatformClientWithContext()
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := r.Primary.Attributes["agent_id"]
 	identifier := r.Primary.Attributes["identifier"]
 
@@ -133,7 +130,6 @@ func testAccResourceGitopsRepoCredDestroy(resourceName string) resource.TestChec
 func testAccResourceGitopsRepoCredDestroyByIdentifier(identifier string, agentId string) resource.TestCheckFunc {
 	return func(state *terraform.State) error {
 		c, ctx := acctest.TestAccGetPlatformClientWithContext()
-		ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 
 		_, _, err := c.RepositoryCredentialsApi.AgentRepositoryCredentialsServiceGetRepositoryCredentials(ctx, agentId, identifier, c.AccountId, &nextgen.RepositoryCredentialsApiAgentRepositoryCredentialsServiceGetRepositoryCredentialsOpts{})
 		if err == nil {
@@ -146,7 +142,6 @@ func testAccResourceGitopsRepoCredDestroyByIdentifier(identifier string, agentId
 func testAccResourceGitopsRepoCredExists(identifier string, agentId string) resource.TestCheckFunc {
 	return func(state *terraform.State) error {
 		c, ctx := acctest.TestAccGetPlatformClientWithContext()
-		ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 
 		_, _, err := c.RepositoryCredentialsApi.AgentRepositoryCredentialsServiceGetRepositoryCredentials(ctx, agentId, identifier, c.AccountId, &nextgen.RepositoryCredentialsApiAgentRepositoryCredentialsServiceGetRepositoryCredentialsOpts{})
 		if err != nil {
@@ -159,7 +154,6 @@ func testAccResourceGitopsRepoCredExists(identifier string, agentId string) reso
 func testAccResourceGitopsRepoCredDoesNotExist(identifier string, agentId string) resource.TestCheckFunc {
 	return func(state *terraform.State) error {
 		c, ctx := acctest.TestAccGetPlatformClientWithContext()
-		ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 
 		_, _, err := c.RepositoryCredentialsApi.AgentRepositoryCredentialsServiceGetRepositoryCredentials(ctx, agentId, identifier, c.AccountId, &nextgen.RepositoryCredentialsApiAgentRepositoryCredentialsServiceGetRepositoryCredentialsOpts{})
 		if err == nil {

@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
-	"strings"
 
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/utils"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -37,15 +37,8 @@ func ResourceAddUserToGroup() *schema.Resource {
 			},
 		},
 
-		Importer: &schema.ResourceImporter{
-			StateContext: func(ctx context.Context, d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
-				// <user_id>/<group_id>
-				parts := strings.Split(d.Id(), "/")
-				d.Set("user_id", parts[0])
-				d.Set("group_id", parts[1])
-				return []*schema.ResourceData{d}, nil
-			},
-		},
+		// <user_id>/<group_id>; the import ID stays the resource ID.
+		Importer: helpers.NewImporter(helpers.ImportSpec{Parts: []string{"user_id", "group_id"}, RawID: true}),
 	}
 }
 
@@ -56,14 +49,13 @@ func resourceAddUserToGroupCreate(ctx context.Context, d *schema.ResourceData, m
 	}
 	userId := d.Get("user_id").(string)
 	groupId := d.Get("group_id").(string)
-
-	log.Printf("[DEBUG] Check if user is already in group")
+	tflog.Debug(ctx, "Check if user is already in group")
 	ok, err := c.UserClient.IsUserInGroup(userId, groupId)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 	if !ok {
-		log.Printf("[DEBUG] User is not in group, adding user to group")
+		tflog.Debug(ctx, "User is not in group, adding user to group")
 		ok, err := c.UserClient.AddUserToGroup(userId, groupId)
 		if err != nil {
 			return diag.FromErr(err)
@@ -88,10 +80,10 @@ func resourceAddUserToGroupRead(ctx context.Context, d *schema.ResourceData, met
 
 	ok, err := c.UserClient.IsUserInGroup(userId, groupId)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if !ok {
-		log.Printf("[WARN] Removing from state because user %s is no longer in group %s", userId, groupId)
+		tflog.Warn(ctx, fmt.Sprintf("Removing from state because user %s is no longer in group %s", userId, groupId))
 		d.SetId("")
 		return nil
 	}
@@ -111,7 +103,7 @@ func resourceAddUserToGroupDelete(ctx context.Context, d *schema.ResourceData, m
 
 	ok, err := c.UserClient.RemoveUserFromGroup(userId, groupId)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 	if !ok {
 		return diag.FromErr(errors.New("failed to remove user from group"))

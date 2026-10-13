@@ -6,7 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccDataSourceDBSchema(t *testing.T) {
@@ -15,9 +15,9 @@ func TestAccDataSourceDBSchema(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_schema.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBSchema(id, name),
@@ -38,9 +38,9 @@ func TestAccDataSourceDBSchemaForFlywayMigrationType(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_schema.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBSchemaForFlywayMigrationType(id, name),
@@ -61,9 +61,9 @@ func TestAccDataSourceDBSchemaArtifactory(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_schema.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBSchemaArtifactory(id, name),
@@ -83,9 +83,9 @@ func TestAccDataSourceDBSchemaWithChangelogScript(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_schema.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBSchemaWithChangelogScript(id, name),
@@ -106,9 +106,9 @@ func TestAccDataSourceDBSchemaWithChangelogScriptForFlywayMigrationType(t *testi
 	name := id
 	resourceName := "data.harness_platform_db_schema.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBSchemaWithChangelogScriptForFlywayMigrationType(id, name),
@@ -129,9 +129,9 @@ func TestAccDataSourceDBSchemaHarnessCodeRepo(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_schema.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBSchemaHarnessCodeRepo(id, name),
@@ -153,9 +153,9 @@ func TestAccDataSourceDBSchemaWithUsePercona(t *testing.T) {
 	name := id
 	resourceName := "data.harness_platform_db_schema.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDBSchemaWithUsePercona(id, name),

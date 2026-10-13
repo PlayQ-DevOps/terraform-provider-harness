@@ -2,6 +2,7 @@ package environment_service_overrides
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/antihax/optional"
@@ -28,16 +29,19 @@ func ResourceEnvironmentServiceOverrides() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 			},
 			"service_id": {
 				Description: "The service ID to which the overrides applies.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"env_id": {
 				Description: "The env ID to which the overrides associated.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"yaml": {
 				Description:      "Environment Service Overrides YAML." + helpers.Descriptions.YamlText.String(),
@@ -57,6 +61,7 @@ func resourceEnvironmentServiceOverridesRead(ctx context.Context, d *schema.Reso
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 
 	envId := d.Get("env_id").(string)
+	serviceId := d.Get("service_id").(string)
 
 	resp, httpResp, err := c.EnvironmentsApi.GetServiceOverridesList(ctx, c.AccountId, envId,
 		&nextgen.EnvironmentsApiGetServiceOverridesListOpts{
@@ -64,20 +69,22 @@ func resourceEnvironmentServiceOverridesRead(ctx context.Context, d *schema.Reso
 			OrgIdentifier:     helpers.BuildField(d, "org_id"),
 			ProjectIdentifier: helpers.BuildField(d, "project_id"),
 		})
-
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if resp.Data == nil || len(resp.Data.Content) == 0 {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+	// The list is filtered by service, but match explicitly so an unfiltered answer can never
+	// make another service's override look like this one.
+	if resp.Data != nil {
+		for i := range resp.Data.Content {
+			so := &resp.Data.Content[i]
+			if so.EnvironmentRef == envId && so.ServiceRef == serviceId {
+				readEnvironmentServiceOverrides(d, so)
+				return nil
+			}
+		}
 	}
-
-	readEnvironmentServiceOverridesList(d, resp.Data)
-
-	return nil
+	return helpers.ReadMissing(ctx, d, fmt.Sprintf("service override of service %s in environment %s", serviceId, envId))
 }
 
 func resourceEnvironmentServiceOverridesCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -93,15 +100,11 @@ func resourceEnvironmentServiceOverridesCreateOrUpdate(ctx context.Context, d *s
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
-	// Soft delete lookup error handling
-	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil || resp.Data == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+	if resp.Data == nil {
+		return helpers.HandleEmptyCreateUpdateResponse(nil, "service override")
 	}
 
 	readEnvironmentServiceOverrides(d, resp.Data)
@@ -123,7 +126,7 @@ func resourceEnvironmentServiceOverridesDelete(ctx context.Context, d *schema.Re
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -136,13 +139,6 @@ func buildEnvironmentServiceOverride(d *schema.ResourceData) *nextgen.ServiceOve
 		EnvironmentIdentifier: d.Get("env_id").(string),
 		ServiceIdentifier:     d.Get("service_id").(string),
 		Yaml:                  d.Get("yaml").(string),
-	}
-}
-
-func readEnvironmentServiceOverridesList(d *schema.ResourceData, env *nextgen.PageResponseServiceOverrideResponse) {
-	ServiceOverrideList := env.Content
-	for _, value := range ServiceOverrideList {
-		readEnvironmentServiceOverrides(d, &value)
 	}
 }
 
@@ -160,4 +156,5 @@ func readEnvironmentServiceOverrides(d *schema.ResourceData, so *nextgen.Service
 func SetScopedResourceSchemaForServiceOverride(s map[string]*schema.Schema) {
 	s["project_id"] = helpers.GetProjectIdSchema(helpers.SchemaFlagTypes.Optional)
 	s["org_id"] = helpers.GetOrgIdSchema(helpers.SchemaFlagTypes.Optional)
+	helpers.MarkIdentity(s, "org_id", "project_id")
 }

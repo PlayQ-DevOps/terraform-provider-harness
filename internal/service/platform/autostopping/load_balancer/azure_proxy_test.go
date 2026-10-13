@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestResourceAzureProxy(t *testing.T) {
@@ -16,9 +16,9 @@ func TestResourceAzureProxy(t *testing.T) {
 	name := fmt.Sprintf("terr-az-proxy%s", randAlnum(5))
 	resourceName := "harness_autostopping_azure_proxy.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		//		CheckDestroy:      testAzureProxyDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{

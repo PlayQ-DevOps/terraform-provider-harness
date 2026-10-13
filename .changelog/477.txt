@@ -1,3 +1,0 @@
-```release-note:bug
-resource/harness_platform_role_assignments: Allow creation of role_assignments without Identifier and set that identifier coming from upStream when doing a get call.
-```

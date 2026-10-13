@@ -27,7 +27,7 @@ Full, comprehensive documentation is available on the Terraform Registry website
 ## Requirements
 
 - [Terraform](https://www.terraform.io/downloads.html) >= 0.13.x
-- [Go](https://golang.org/doc/install) >= 1.21 (for development)
+- [Go](https://golang.org/doc/install) matching the `toolchain` directive in `go.mod` (Go downloads it automatically when `GOTOOLCHAIN=auto`)
 
 ## Usage
 

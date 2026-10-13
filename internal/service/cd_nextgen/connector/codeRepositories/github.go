@@ -7,6 +7,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -19,7 +20,7 @@ func ResourceConnectorGithub() *schema.Resource {
 		ReadContext:   resourceConnectorGithubRead,
 		CreateContext: resourceConnectorGithubCreateOrUpdate,
 		UpdateContext: resourceConnectorGithubCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -228,7 +229,6 @@ func ResourceConnectorGithub() *schema.Resource {
 				Description: "Enable this flag for force deletion of service",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 		},
 	}
@@ -239,7 +239,7 @@ func ResourceConnectorGithub() *schema.Resource {
 }
 
 func resourceConnectorGithubRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.Github)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.Github)
 	if err != nil {
 		return err
 	}
@@ -258,7 +258,7 @@ func resourceConnectorGithubRead(ctx context.Context, d *schema.ResourceData, me
 func resourceConnectorGithubCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorGithub(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

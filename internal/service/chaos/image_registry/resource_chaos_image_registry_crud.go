@@ -3,12 +3,12 @@ package image_registry
 import (
 	"context"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/chaos/graphql/model"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -87,13 +87,13 @@ func resourceChaosImageRegistryCreate(ctx context.Context, d *schema.ResourceDat
 	// actually applied.
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key error") {
-			log.Printf("[WARN] Chaos image registry already exists, reconciling existing registry to configuration: %s", err)
+			tflog.Warn(ctx, fmt.Sprintf("Chaos image registry already exists, reconciling existing registry to configuration: %s", err))
 			d.SetId(generateID(identifiers, req.RegistryAccount))
 			return resourceChaosImageRegistryUpdate(ctx, d, meta)
 		}
-		log.Printf("[ERROR] Chaos image registry creation failed: %s", err)
+		tflog.Error(ctx, fmt.Sprintf("Chaos image registry creation failed: %s", err))
 		d.SetId("")
-		return helpers.HandleChaosGraphQLError(err, d, "create_image_registry")
+		return helpers.HandleWrite(ctx, d, err, nil)
 	}
 
 	d.SetId(generateID(identifiers, req.RegistryAccount))
@@ -113,10 +113,10 @@ func resourceChaosImageRegistryRead(ctx context.Context, d *schema.ResourceData,
 	registry, err := c.ImageRegistryApi.Get(ctx, identifiers, infraID)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
-			log.Printf("[WARN] Chaos image registry not found: %s", err)
-			return helpers.HandleChaosGraphQLReadError(err, d, "get_image_registry")
+			tflog.Warn(ctx, fmt.Sprintf("Chaos image registry not found: %s", err))
+			return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound())
 		}
-		return helpers.HandleChaosGraphQLReadError(err, d, "get_image_registry")
+		return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound())
 	}
 
 	d.SetId(generateID(identifiers, registry.RegistryAccount))
@@ -221,7 +221,7 @@ func resourceChaosImageRegistryUpdate(ctx context.Context, d *schema.ResourceDat
 		},
 	)
 	if err != nil {
-		return helpers.HandleChaosGraphQLError(err, d, "update_image_registry")
+		return helpers.HandleWrite(ctx, d, err, nil)
 	}
 
 	return resourceChaosImageRegistryRead(ctx, d, meta)
@@ -266,7 +266,10 @@ func resourceChaosImageRegistryImport(ctx context.Context, d *schema.ResourceDat
 //
 // A single segment (account scope) is intentionally rejected.
 func parseImageRegistryImportID(id string) (orgID, projectID, infraID string, err error) {
-	parts := strings.Split(id, "/")
+	parts, err := helpers.SplitImportID(id, 2, 3)
+	if err != nil {
+		return "", "", "", err
+	}
 	switch len(parts) {
 	case 2:
 		return parts[0], parts[1], "", nil

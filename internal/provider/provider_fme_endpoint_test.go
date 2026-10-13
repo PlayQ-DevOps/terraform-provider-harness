@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/harness/terraform-provider-harness/internal/httpclient"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/stretchr/testify/require"
@@ -50,7 +51,7 @@ func TestGetSplitClient_BasePathUsesHarnessEndpoint(t *testing.T) {
 			require.NoError(t, err)
 			require.Equal(t, tt.want, basePath)
 
-			client := getSplitClient(d, "test", basePath)
+			client := SessionConfig{AccountID: d.Get("account_id").(string), PlatformAPIKey: d.Get("platform_api_key").(string), Version: "test"}.splitClient(basePath, httpclient.Config{})
 			require.NotNil(t, client)
 			require.Equal(t, tt.want, client.BasePath)
 		})

@@ -28,16 +28,19 @@ func ResourceEnvironmentGroup() *schema.Resource {
 				Description: "identifier of the environment group.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"org_id": {
 				Description: "org_id of the environment group.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "project_id of the environment group.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"color": {
 				Description: "Color of the environment group.",
@@ -55,7 +58,6 @@ func ResourceEnvironmentGroup() *schema.Resource {
 				Description: "Enable this flag for force deletion of environment group",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 		},
 	}
@@ -84,14 +86,13 @@ func resourceEnvironmentGroupRead(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
+	}
+	// A soft-deleted environment group answers 200 with no object (PL-23765).
+	if resp.Data == nil || resp.Data.EnvGroup == nil {
+		return helpers.ReadMissing(ctx, d, "environment group "+id)
 	}
 	envGroup = resp.Data.EnvGroup
-	// Soft delete lookup error handling
-	// https://harness.atlassian.net/browse/PL-23765
-	if envGroup == nil {
-		return nil
-	}
 
 	readEnvironmentGroup(d, envGroup)
 
@@ -119,7 +120,7 @@ func resourceEnvironmentGroupCreateOrUpdate(ctx context.Context, d *schema.Resou
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil || resp.Data.EnvGroup == nil {
@@ -143,7 +144,7 @@ func resourceEnvironmentGroupDelete(ctx context.Context, d *schema.ResourceData,
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -165,8 +166,5 @@ func readEnvironmentGroup(d *schema.ResourceData, env *nextgen.EnvironmentGroupR
 	d.Set("project_id", env.ProjectIdentifier)
 	d.Set("identifier", env.Identifier)
 	d.Set("color", env.Color)
-	yaml := env.Yaml
-	if yaml != "" {
-		d.Set("yaml", yaml)
-	}
+	d.Set("yaml", env.Yaml)
 }

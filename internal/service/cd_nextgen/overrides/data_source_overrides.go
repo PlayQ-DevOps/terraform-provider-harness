@@ -50,7 +50,6 @@ func DataSourceOverrides() *schema.Resource {
 			"identifier": {
 				Description: "The identifier of the override entity.",
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Required:    true,
 			},
 			"git_details": {
@@ -110,15 +109,14 @@ func dataSourceOverridesRead(ctx context.Context, d *schema.ResourceData, meta i
 			LoadFromCache:          helpers.BuildField(d, "load_from_cache"),
 		})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil || resp.Data == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+	if resp.Data == nil {
+		return diag.Errorf("overrides not found: no object matched the given arguments")
+
 	}
 
 	readOverrides(d, resp.Data)

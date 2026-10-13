@@ -57,7 +57,7 @@ func dataSourceRolesRead(ctx context.Context, d *schema.ResourceData, meta inter
 	resp, httpResp, err := c.RolesApi.GetRole(ctx, id, rolesApiGetRoleOpts)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	readRoles(d, resp.Data.Role)

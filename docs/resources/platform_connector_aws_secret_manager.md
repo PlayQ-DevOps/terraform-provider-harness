@@ -175,13 +175,13 @@ resource "harness_platform_connector_aws_secret_manager" "test" {
 
 ### Required
 
-- `credentials` (Block List, Min: 1, Max: 1) Credentials to connect to AWS. (see [below for nested schema](#nestedblock--credentials))
 - `identifier` (String) Unique identifier of the resource.
 - `name` (String) Name of the resource.
 - `region` (String) The AWS region where the AWS Secret Manager is.
 
 ### Optional
 
+- `credentials` (Block List) Credentials to connect to AWS. (see [below for nested schema](#nestedblock--credentials))
 - `default` (Boolean) Use as Default Secrets Manager.
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
@@ -203,10 +203,10 @@ resource "harness_platform_connector_aws_secret_manager" "test" {
 
 Optional:
 
-- `assume_role` (Block List, Max: 1) Connect using STS assume role. (see [below for nested schema](#nestedblock--credentials--assume_role))
+- `assume_role` (Block List) Connect using STS assume role. (see [below for nested schema](#nestedblock--credentials--assume_role))
 - `inherit_from_delegate` (Boolean) Inherit the credentials from from the delegate.
-- `manual` (Block List, Max: 1) Specify the AWS key and secret used for authenticating. (see [below for nested schema](#nestedblock--credentials--manual))
-- `oidc_authentication` (Block List, Max: 1) Authentication using harness oidc. (see [below for nested schema](#nestedblock--credentials--oidc_authentication))
+- `manual` (Block List) Specify the AWS key and secret used for authenticating. (see [below for nested schema](#nestedblock--credentials--manual))
+- `oidc_authentication` (Block List) Authentication using harness oidc. (see [below for nested schema](#nestedblock--credentials--oidc_authentication))
 
 <a id="nestedblock--credentials--assume_role"></a>
 ### Nested Schema for `credentials.assume_role`

@@ -1,8 +1,8 @@
 package helpers
 
 import (
+	"context"
 	"fmt"
-	"strings"
 
 	"github.com/antihax/optional"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -43,10 +43,6 @@ func GetIdentifierSchema(flag SchemaFlagType) *schema.Schema {
 		Type:        schema.TypeString,
 	}
 
-	if flag == SchemaFlagTypes.Required {
-		s.ForceNew = true
-	}
-
 	SetSchemaFlagType(s, flag)
 
 	return s
@@ -58,10 +54,6 @@ func GetProjectIdSchema(flag SchemaFlagType) *schema.Schema {
 		Type:        schema.TypeString,
 	}
 
-	if flag == SchemaFlagTypes.Required {
-		s.ForceNew = true
-	}
-
 	SetSchemaFlagType(s, flag)
 	return s
 }
@@ -70,10 +62,6 @@ func GetOrgIdSchema(flag SchemaFlagType) *schema.Schema {
 	s := &schema.Schema{
 		Description: "Unique identifier of the organization.",
 		Type:        schema.TypeString,
-	}
-
-	if flag == SchemaFlagTypes.Required {
-		s.ForceNew = true
 	}
 
 	SetSchemaFlagType(s, flag)
@@ -105,6 +93,7 @@ func SetCommonResourceSchema(s map[string]*schema.Schema) {
 	s["description"] = GetDescriptionSchema(SchemaFlagTypes.Optional)
 	s["name"] = GetNameSchema(SchemaFlagTypes.Required)
 	s["tags"] = GetTagsSchema(SchemaFlagTypes.Optional)
+	MarkIdentity(s, "identifier")
 }
 
 // SetCommonDataSourceSchema sets the default schema objects used for most data sources.
@@ -158,12 +147,14 @@ func SetOptionalOrgAndProjectLevelDataSourceSchema(s map[string]*schema.Schema) 
 func SetOrgLevelResourceSchema(s map[string]*schema.Schema) {
 	SetCommonResourceSchema(s)
 	s["org_id"] = GetOrgIdSchema(SchemaFlagTypes.Required)
+	MarkIdentity(s, "org_id")
 }
 
 // SetProjectLevelResourceSchema sets the default schema objects used for project level resources.
 func SetProjectLevelResourceSchema(s map[string]*schema.Schema) {
 	SetOrgLevelResourceSchema(s)
 	s["project_id"] = GetProjectIdSchema(SchemaFlagTypes.Required)
+	MarkIdentity(s, "project_id")
 }
 
 func SetMultiLevelResourceSchema(s map[string]*schema.Schema) {
@@ -171,6 +162,7 @@ func SetMultiLevelResourceSchema(s map[string]*schema.Schema) {
 	s["org_id"] = GetOrgIdSchema(SchemaFlagTypes.Optional)
 	s["project_id"] = GetProjectIdSchema(SchemaFlagTypes.Optional)
 	s["project_id"].RequiredWith = []string{"org_id"}
+	MarkIdentity(s, "org_id", "project_id")
 }
 
 func SetMultiLevelDatasourceSchema(s map[string]*schema.Schema) {
@@ -200,541 +192,123 @@ func BuildField(d *schema.ResourceData, field string) optional.String {
 	return optional.EmptyString()
 }
 
-func BuildFieldInt32(d *schema.ResourceData, field string) optional.Int32 {
-	if arr, ok := d.GetOk(field); ok {
-		return optional.NewInt32(int32(arr.(int)))
-	}
-	return optional.EmptyInt32()
-}
+// Shared importers. Each is an ImportSpec (see importer.go): the accepted formats are
+// documented by ImportSpec.Format, malformed IDs are errors rather than panics, and the
+// resource ID is the bare identifier with the scope stored in attributes.
 
-func BuildFieldForBoolean(d *schema.ResourceData, field string) optional.Bool {
-	if arr, ok := d.GetOk(field); ok {
+// PipelineResourceImporter: <org_id>/<project_id>/<pipeline_id>/<identifier>.
+var PipelineResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "pipeline_id", "identifier"}})
 
-		return optional.NewBool(arr.(string) == "true")
-	}
-	return optional.EmptyBool()
-}
+// DBInstanceResourceImporter: <org_id>/<project_id>/<schema>/<identifier>.
+var DBInstanceResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "schema", "identifier"}})
 
-func BuildFieldBool(d *schema.ResourceData, field string) optional.Bool {
-	if b, ok := d.GetOk(field); ok {
-		return optional.NewBool(b.(bool))
-	}
+// TriggerResourceImporter: <org_id>/<project_id>/<target_id>/<identifier>.
+var TriggerResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "target_id", "identifier"}})
 
-	return optional.EmptyBool()
-}
+// EnvRelatedResourceImporter: [<org_id>/[<project_id>/]]<env_id>/<identifier>.
+var EnvRelatedResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "env_id", "identifier"}, OptionalPrefix: 2})
 
-// PipelineResourceImporter defines the importer configuration for all pipeline level resources.
-var PipelineResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		d.Set("org_id", parts[0])
-		d.Set("project_id", parts[1])
-		d.Set("pipeline_id", parts[2])
-		d.Set("identifier", parts[3])
-		d.SetId(parts[3])
+// ServiceOverrideResourceImporter: [<org_id>/[<project_id>/]]<env_id>/<service_id>. The
+// resource's Read derives its composite ID from the service and the environment.
+var ServiceOverrideResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "env_id", "service_id"}, OptionalPrefix: 2})
 
-		return []*schema.ResourceData{d}, nil
-	},
-}
+// ServiceOverrideV2ResourceImporter: [<org_id>/[<project_id>/]]<identifier>.
+var ServiceOverrideV2ResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", ""}, OptionalPrefix: 2})
 
-var DBInstanceResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		d.Set("org_id", parts[0])
-		d.Set("project_id", parts[1])
-		d.Set("schema", parts[2])
-		d.Set("identifier", parts[3])
-		d.SetId(parts[3])
+// UserResourceImporter: <email>[/<org_id>[/<project_id>]]; the full import ID stays the
+// resource ID until Read resets it.
+var UserResourceImporter = NewImporter(ImportSpec{Parts: []string{"email", "org_id", "project_id"}, OptionalSuffix: 2, RawID: true})
 
-		return []*schema.ResourceData{d}, nil
-	},
-}
+// ProjectResourceImporter: <org_id>/<project_id>/<identifier>.
+var ProjectResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "identifier"}})
 
-var TriggerResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		d.Set("org_id", parts[0])
-		d.Set("project_id", parts[1])
-		d.Set("target_id", parts[2])
-		d.Set("identifier", parts[3])
-		d.SetId(parts[3])
+// ProjectResourceWithBranchImporter: <org_id>/<project_id>/<identifier>[/<branch>] for
+// git-backed project-level resources. The branch may itself contain "/".
+var ProjectResourceWithBranchImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "identifier"}, Tail: BranchTail})
 
-		return []*schema.ResourceData{d}, nil
-	},
-}
+// GitopsAgentResourceImporter: [<org_id>/[<project_id>/]]<agent_id>/<identifier>.
+var GitopsAgentResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "agent_id", "identifier"}, OptionalPrefix: 2})
 
-var EnvRelatedResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		partCount := len(parts)
-		isAccountEntity := partCount == 2
-		isOrgEntity := partCount == 3
-		isProjectEntity := partCount == 4
-		if isAccountEntity {
-			d.Set("env_id", parts[0])
-			d.Set("identifier", parts[1])
-			d.SetId(parts[1])
-			return []*schema.ResourceData{d}, nil
-		}
-		if isOrgEntity {
-			d.Set("org_id", parts[0])
-			d.Set("env_id", parts[1])
-			d.Set("identifier", parts[2])
-			d.SetId(parts[2])
-			return []*schema.ResourceData{d}, nil
-		}
-		if isProjectEntity {
-			d.Set("org_id", parts[0])
-			d.Set("project_id", parts[1])
-			d.Set("env_id", parts[2])
-			d.Set("identifier", parts[3])
-			d.SetId(parts[3])
-			return []*schema.ResourceData{d}, nil
-		}
+// GitopsAgentApplicationImporter: <org_id>/<project_id>/<agent_id>/<name>.
+var GitopsAgentApplicationImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "agent_id", "name"}})
 
-		return nil, fmt.Errorf("invalid identifier: %s", d.Id())
-	},
-}
+// GitopsAgentApplicationsetImporter: <org_id>/<project_id>/<agent_id>/<identifier>.
+var GitopsAgentApplicationsetImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "agent_id", "identifier"}})
 
-var ServiceOverrideResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		partCount := len(parts)
-		isAccountEntity := partCount == 1
-		isOrgEntity := partCount == 2
-		isProjectEntity := partCount == 3
-		if isAccountEntity {
-			d.Set("env_id", parts[0])
-			return []*schema.ResourceData{d}, nil
-		}
-		if isOrgEntity {
-			d.Set("org_id", parts[0])
-			d.Set("env_id", parts[1])
-			return []*schema.ResourceData{d}, nil
-		}
-		if isProjectEntity {
-			d.Set("org_id", parts[0])
-			d.Set("project_id", parts[1])
-			d.Set("env_id", parts[2])
-			return []*schema.ResourceData{d}, nil
-		}
+// GitopsAppProjectMappingImporter: <org_id>/<project_id>/<agent_id>/<argo_project_name>.
+// The Argo project name becomes the ID; Read resolves the mapping from it.
+var GitopsAppProjectMappingImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "agent_id", "argo_project_name"}})
 
-		return nil, fmt.Errorf("invalid identifier: %s", d.Id())
-	},
-}
+// GitopsAgentProjectImporter: [<org_id>/[<project_id>/]]<agent_id>/<query_name>.
+var GitopsAgentProjectImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "agent_id", "query_name"}, OptionalPrefix: 2})
 
-var ServiceOverrideV2ResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		partCount := len(parts)
-		isAccountEntity := partCount == 1
-		isOrgEntity := partCount == 2
-		isProjectEntity := partCount == 3
-		if isAccountEntity {
-			d.SetId(parts[0])
-			return []*schema.ResourceData{d}, nil
-		}
-		if isOrgEntity {
-			d.Set("org_id", parts[0])
-			d.SetId(parts[1])
-			return []*schema.ResourceData{d}, nil
-		}
-		if isProjectEntity {
-			d.Set("org_id", parts[0])
-			d.Set("project_id", parts[1])
-			d.SetId(parts[2])
-			return []*schema.ResourceData{d}, nil
-		}
+// RepoRuleResourceImporter: [<org_id>/[<project_id>/]]<repo_identifier>/<identifier>.
+var RepoRuleResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "repo_identifier", "identifier"}, OptionalPrefix: 2})
 
-		return nil, fmt.Errorf("invalid identifier: %s", d.Id())
-	},
-}
+// GitopsRepoCertResourceImporter: [<org_id>/[<project_id>/]]<agent_id>. An agent holds one
+// certificate list, so the agent identifier is the resource ID.
+var GitopsRepoCertResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "agent_id"}, OptionalPrefix: 2})
 
-var UserResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		d.Set("email", parts[0])
-		if len(parts) > 1 {
-			d.Set("org_id", parts[1])
-		}
-		if len(parts) > 2 {
-			d.Set("project_id", parts[2])
-		}
-		return []*schema.ResourceData{d}, nil
-	},
-}
+// OrgResourceImporter: <org_id>/<identifier>.
+var OrgResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "identifier"}})
 
-// ProjectResourceImporter defines the importer configuration for all project level resources.
-// The id used for the import should be in the format <org_id>/<project_id>/<identifier>
-// The id used for the import should be in the format <org_id>/<project_id>/<identifier>/<branch>
-var ProjectResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		d.Set("org_id", parts[0])
-		d.Set("project_id", parts[1])
-		d.Set("identifier", parts[2])
-		d.SetId(parts[2])
+// GitOpsFilterImporter: <org_id>/<project_id>/<identifier>/<type>.
+var GitOpsFilterImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "identifier", "type"}, IDFrom: "identifier"})
 
-		if len(parts) == 4 {
-			d.Set("git_details", []interface{}{map[string]interface{}{"branch_name": parts[3]}})
-		}
+// MultiLevelResourceImporter: [<org_id>/[<project_id>/]]<identifier>.
+var MultiLevelResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "identifier"}, OptionalPrefix: 2})
 
-		return []*schema.ResourceData{d}, nil
-	},
-}
+// MultiLevelFilterImporter: [<org_id>/[<project_id>/]]<identifier>/<type>.
+var MultiLevelFilterImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "identifier", "type"}, OptionalPrefix: 2, IDFrom: "identifier"})
 
-// GitopsAgentResourceImporter defines the importer configuration for all project level gitops agent resources.
-// The id used for the import should be in the format <org_id>/<project_id>/<identifier>/<agentId>
-var GitopsAgentResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		if len(parts) == 2 { //Account level
-			d.Set("agent_id", parts[0])
-			d.Set("identifier", parts[1])
-			d.SetId(parts[1])
-			return []*schema.ResourceData{d}, nil
-		}
+// GitWebhookResourceImporter: <identifier>[/<org_id>[/<project_id>]] (scope after the identifier).
+var GitWebhookResourceImporter = NewImporter(ImportSpec{Parts: []string{"identifier", "org_id", "project_id"}, OptionalSuffix: 2, IDFrom: "identifier"})
 
-		if len(parts) == 3 { //Org level
-			d.Set("org_id", parts[0])
-			d.Set("agent_id", parts[1])
-			d.Set("identifier", parts[2])
-			d.SetId(parts[2])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		if len(parts) == 4 { //Project level
-			d.Set("org_id", parts[0])
-			d.Set("project_id", parts[1])
-			d.Set("agent_id", parts[2])
-			d.Set("identifier", parts[3])
-			d.SetId(parts[3])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		return nil, fmt.Errorf("invalid identifier: %s", d.Id())
-	},
-}
-
-var GitopsAgentApplicationImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		if len(parts) == 4 { //Project level
-			d.Set("org_id", parts[0])
-			d.Set("project_id", parts[1])
-			d.Set("agent_id", parts[2])
-			d.Set("name", parts[3])
-			d.SetId(parts[3])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		return nil, fmt.Errorf("invalid identifier: %s", d.Id())
-	},
-}
-
-var GitopsAgentApplicationsetImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		if len(parts) == 4 { //Project level
-			d.Set("org_id", parts[0])
-			d.Set("project_id", parts[1])
-			d.Set("agent_id", parts[2])
-			d.Set("identifier", parts[3])
-			d.SetId(parts[3])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		return nil, fmt.Errorf("invalid identifier: %s", d.Id())
-	},
-}
-
-// GitopsAppProjectMappingImporter defines the importer configuration for app project mapping.
-// The id used for the import should be in the format <org_id>/<project_id>/<identifier>/<argo_project_name>\
-// It is used always at project level.
-var GitopsAppProjectMappingImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-
-		// Approject mapping always has 4 parts
-		if len(parts) == 4 { //Project level
-			d.Set("org_id", parts[0])
-			d.Set("project_id", parts[1])
-			d.Set("agent_id", parts[2])
-			d.Set("argo_project_name", parts[3])
-			// During import we are using argo_project_name as identifier not the actual identifier which is mongo id
-			// that way we are not fetching mapping by mongo id but by argo_project_name, agent_id, account_id, org_id and project_id.
-			d.SetId(parts[3])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		return nil, fmt.Errorf("invalid identifier: %s", d.Id())
-	},
-}
-
-// GitopsAgentResourceImporter defines the importer configuration for all project level gitops agent resources.
-// The id used for the import should be in the format <agent_id>/<query_name>
-var GitopsAgentProjectImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		if len(parts) == 2 { //Account level
-			d.Set("agent_id", parts[0])
-			d.Set("query_name", parts[1])
-			d.SetId(parts[1])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		if len(parts) == 3 { //Org level
-			d.Set("org_id", parts[0])
-			d.Set("agent_id", parts[1])
-			d.Set("query_name", parts[2])
-			d.SetId(parts[2])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		if len(parts) == 4 { //Project level
-			d.Set("org_id", parts[0])
-			d.Set("project_id", parts[1])
-			d.Set("agent_id", parts[2])
-			d.Set("query_name", parts[3])
-			d.SetId(parts[3])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		return nil, fmt.Errorf("invalid identifier: %s", d.Id())
-	},
-}
-
-// The id used for the import should be in the format <org_id>/<project_id>/<repoIdentifier>/<identifier>
-var RepoRuleResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		if len(parts) == 2 { //Account level
-			d.Set("repo_identifier", parts[0])
-			d.Set("identifier", parts[1])
-			d.SetId(parts[1])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		if len(parts) == 3 { //Org level
-			d.Set("org_id", parts[0])
-			d.Set("repo_identifier", parts[1])
-			d.Set("identifier", parts[2])
-			d.SetId(parts[2])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		if len(parts) == 4 { //Project level
-			d.Set("org_id", parts[0])
-			d.Set("project_id", parts[1])
-			d.Set("repo_identifier", parts[2])
-			d.Set("identifier", parts[3])
-			d.SetId(parts[3])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		return nil, fmt.Errorf("invalid identifier: %s", d.Id())
-	},
-}
-
-var GitopsRepoCertResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		d.Set("agent_id", parts[0])
-		d.SetId(parts[1])
-		return []*schema.ResourceData{d}, nil
-	},
-}
-
-// OrgResourceImporter defines the importer configuration for all organization level resources.
-// The id used for the import should be in the format <org_id>/<identifier>
-var OrgResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		d.Set("org_id", parts[0])
-		d.Set("identifier", parts[1])
-		d.SetId(parts[1])
-
-		return []*schema.ResourceData{d}, nil
-	},
-}
-
-var GitOpsFilterImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-
-		if len(parts) != 4 {
-			return nil, fmt.Errorf("invalid format. Expected: <org_id>/<project_id>/<filter_id>/<filter_type>")
-		}
-
-		orgId := parts[0]
-		projectId := parts[1]
-		filterId := parts[2]
-		filterType := parts[3]
-
-		d.SetId(filterId)
-		d.Set("identifier", filterId)
-		d.Set("org_id", orgId)
-		d.Set("project_id", projectId)
-		d.Set("type", filterType)
-
-		return []*schema.ResourceData{d}, nil
-	},
-}
+// AccountLevelResourceImporter keeps the import ID as the resource ID.
+var AccountLevelResourceImporter = PassthroughImporter()
 
 // MultiLevelTemplateImporter defines the importer configuration for template resources.
 // When no version is specified, the stable version is fetched.
-// Account level stable:          <template_id>
-// Account level specific version: <template_id>/versions/<version>
-// Org level stable:              <org_id>/<template_id>
-// Org level specific version:    <org_id>/<template_id>/versions/<version>
-// Project level stable:          <org_id>/<project_id>/<template_id>
-// Project level specific version: <org_id>/<project_id>/<template_id>/versions/<version>
+//
+//	Account level stable:           <template_id>
+//	Account level specific version: <template_id>/versions/<version>
+//	Org level stable:               <org_id>/<template_id>
+//	Org level specific version:     <org_id>/<template_id>/versions/<version>
+//	Project level stable:           <org_id>/<project_id>/<template_id>
+//	Project level specific version: <org_id>/<project_id>/<template_id>/versions/<version>
 var MultiLevelTemplateImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		partCount := len(parts)
-
-		// "versions" is only a marker when it is the second-to-last segment
-		var version string
-		idParts := parts
-		hasVersion := partCount >= 3 && parts[partCount-2] == "versions" && parts[partCount-1] != ""
-		if hasVersion {
-			version = parts[partCount-1]
-			idParts = parts[:partCount-2]
+	StateContext: func(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+		const format = "[<org_id>/][<project_id>/]<template_id>[/versions/<version>]"
+		parts, err := SplitImportID(d.Id(), 1, 5)
+		if err != nil {
+			return nil, fmt.Errorf("%w; expected %s", err, format)
 		}
-
+		idParts := parts
+		version := ""
+		if n := len(parts); n >= 3 && parts[n-2] == "versions" {
+			version = parts[n-1]
+			idParts = parts[:n-2]
+		}
+		attrs := map[string]string{}
 		switch len(idParts) {
 		case 1:
-			// Account level: <template_id>
-			d.SetId(idParts[0])
-			d.Set("identifier", idParts[0])
-			if hasVersion {
-				d.Set("version", version)
-			}
-			return []*schema.ResourceData{d}, nil
+			attrs["identifier"] = idParts[0]
 		case 2:
-			// Org level: <org_id>/<template_id>
-			d.SetId(idParts[1])
-			d.Set("identifier", idParts[1])
-			d.Set("org_id", idParts[0])
-			if hasVersion {
-				d.Set("version", version)
-			}
-			return []*schema.ResourceData{d}, nil
+			attrs["org_id"], attrs["identifier"] = idParts[0], idParts[1]
 		case 3:
-			// Project level: <org_id>/<project_id>/<template_id>
-			d.SetId(idParts[2])
-			d.Set("identifier", idParts[2])
-			d.Set("org_id", idParts[0])
-			d.Set("project_id", idParts[1])
-			if hasVersion {
-				d.Set("version", version)
+			attrs["org_id"], attrs["project_id"], attrs["identifier"] = idParts[0], idParts[1], idParts[2]
+		default:
+			return nil, fmt.Errorf("unexpected import ID %q: expected %s", d.Id(), format)
+		}
+		if version != "" {
+			attrs["version"] = version
+		}
+		for k, v := range attrs {
+			if err := d.Set(k, v); err != nil {
+				return nil, fmt.Errorf("import: cannot set %s from the import ID: %w", k, err)
 			}
-			return []*schema.ResourceData{d}, nil
 		}
-
-		return nil, fmt.Errorf("invalid identifier: %s, expected format: [org_id/][project_id/]template_id[/versions/version]", d.Id())
-	},
-}
-
-// MultiLevelResourceImporter defines the importer configuration for all multi level resources.
-// The format used for the id is as follows:
-//   - Account Level: <identifier>
-//   - Org Level: <org_id>/<identifier>
-//   - Project Level: <org_id>/<project_id>/<identifier>
-var MultiLevelResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-
-		partCount := len(parts)
-		isAccountConnector := partCount == 1
-		isOrgConnector := partCount == 2
-		isProjectConnector := partCount == 3
-
-		if isAccountConnector {
-			d.SetId(parts[0])
-			d.Set("identifier", parts[0])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		if isOrgConnector {
-			d.SetId(parts[1])
-			d.Set("identifier", parts[1])
-			d.Set("org_id", parts[0])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		if isProjectConnector {
-			d.SetId(parts[2])
-			d.Set("identifier", parts[2])
-			d.Set("project_id", parts[1])
-			d.Set("org_id", parts[0])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		return nil, fmt.Errorf("invalid identifier: %s", d.Id())
-	},
-}
-
-var MultiLevelFilterImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-
-		partCount := len(parts)
-		isAccountConnector := partCount == 2
-		isOrgConnector := partCount == 3
-		isProjectConnector := partCount == 4
-
-		if isAccountConnector {
-			d.SetId(parts[0])
-			d.Set("identifier", parts[0])
-			d.Set("type", parts[1])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		if isOrgConnector {
-			d.SetId(parts[1])
-			d.Set("identifier", parts[1])
-			d.Set("org_id", parts[0])
-			d.Set("type", parts[2])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		if isProjectConnector {
-			d.SetId(parts[2])
-			d.Set("identifier", parts[2])
-			d.Set("project_id", parts[1])
-			d.Set("org_id", parts[0])
-			d.Set("type", parts[3])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		return nil, fmt.Errorf("invalid identifier: %s", d.Id())
-	},
-}
-
-var GitWebhookResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		d.Set("identifier", parts[0])
-		if len(parts) > 1 {
-			d.Set("org_id", parts[1])
-		}
-		if len(parts) > 2 {
-			d.Set("project_id", parts[2])
-		}
-		d.SetId(parts[0])
-
+		d.SetId(attrs["identifier"])
 		return []*schema.ResourceData{d}, nil
-	},
-}
-
-var AccountLevelResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		if d.Id() != "" {
-			return []*schema.ResourceData{d}, nil
-		}
-
-		return nil, fmt.Errorf("invalid identifier: %s", d.Id())
 	},
 }

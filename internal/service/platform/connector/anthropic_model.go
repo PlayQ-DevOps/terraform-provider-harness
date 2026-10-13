@@ -6,6 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -13,6 +14,14 @@ import (
 )
 
 func validateAnthropicModelAuthConfig(_ context.Context, d *schema.ResourceDiff, _ interface{}) error {
+	return checkAnthropicModelAuthConfig(d)
+}
+
+// checkAnthropicModelAuthConfig validates the auth block against its auth_type; it reads the configuration
+// through GetOk so both the SDK v2 CustomizeDiff and the framework definition can run it.
+func checkAnthropicModelAuthConfig(d interface {
+	GetOk(string) (interface{}, bool)
+}) error {
 	auth, ok := d.GetOk("auth")
 	if !ok {
 		return nil
@@ -48,7 +57,7 @@ func ResourceConnectorAnthropicModel() *schema.Resource {
 		ReadContext:   resourceConnectorAnthropicModelRead,
 		CreateContext: resourceConnectorAnthropicModelCreateOrUpdate,
 		UpdateContext: resourceConnectorAnthropicModelCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 		CustomizeDiff: validateAnthropicModelAuthConfig,
 
@@ -109,7 +118,7 @@ func ResourceConnectorAnthropicModel() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"token_ref": {
-										Description: "Reference to a secret containing the Anthropic API token." + secret_ref_text,
+										Description: "Reference to a secret containing the Anthropic API token." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
@@ -131,7 +140,7 @@ func ResourceConnectorAnthropicModel() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"api_key_ref": {
-										Description: "Reference to a secret containing the Bedrock API key." + secret_ref_text,
+										Description: "Reference to a secret containing the Bedrock API key." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
@@ -158,7 +167,7 @@ func ResourceConnectorAnthropicModel() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"service_account_key_ref": {
-										Description: "Reference to a secret containing the GCP service account key." + secret_ref_text,
+										Description: "Reference to a secret containing the GCP service account key." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
@@ -215,7 +224,7 @@ func ResourceConnectorAnthropicModel() *schema.Resource {
 }
 
 func resourceConnectorAnthropicModelRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.AnthropicModel)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.AnthropicModel)
 	if err != nil {
 		return err
 	}
@@ -234,7 +243,7 @@ func resourceConnectorAnthropicModelRead(ctx context.Context, d *schema.Resource
 func resourceConnectorAnthropicModelCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorAnthropicModel(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

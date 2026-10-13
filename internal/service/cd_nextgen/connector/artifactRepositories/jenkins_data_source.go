@@ -5,6 +5,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -44,7 +45,7 @@ func DataSourceConnectorJenkins() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"token_ref": {
-										Description: "Reference of the token." + secret_ref_text,
+										Description: "Reference of the token." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
@@ -68,7 +69,7 @@ func DataSourceConnectorJenkins() *schema.Resource {
 										Computed:    true,
 									},
 									"password_ref": {
-										Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
@@ -87,7 +88,7 @@ func DataSourceConnectorJenkins() *schema.Resource {
 }
 
 func dataConnectorJenkinsRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := dataConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.Jenkins)
+	conn, err := connectorbase.DataRead(ctx, d, meta, nextgen.ConnectorTypes.Jenkins)
 	if err != nil {
 		return err
 	}

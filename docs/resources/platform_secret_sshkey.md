@@ -110,7 +110,6 @@ resource "harness_platform_secret_sshkey" "ssh_password" {
 - `project_id` (String) Unique identifier of the project.
 - `ssh` (Block List, Max: 1) Kerberos authentication scheme (see [below for nested schema](#nestedblock--ssh))
 - `tags` (Set of String) Tags to associate with the resource.
-- `force_delete` (Boolean) Enable this flag for force deletion of connector
 
 ### Read-Only
 
@@ -143,7 +142,7 @@ Optional:
 
 Optional:
 
-- `password` (String) password. To reference a password at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a password at the account scope, prefix 'account` to the expression: account.{identifier}
+- `password` (String, Sensitive) password. To reference a password at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a password at the account scope, prefix 'account` to the expression: account.{identifier}
 
 
 
@@ -165,7 +164,7 @@ Optional:
 
 Required:
 
-- `password` (String) SSH Password. To reference a password at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a password at the account scope, prefix 'account` to the expression: account.{identifier}
+- `password` (String, Sensitive) SSH Password. To reference a password at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a password at the account scope, prefix 'account` to the expression: account.{identifier}
 - `user_name` (String) SSH Username.
 
 
@@ -179,7 +178,7 @@ Required:
 
 Optional:
 
-- `encrypted_passphrase` (String) Encrypted Passphrase . To reference a encryptedPassphrase at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a encryptedPassPhrase at the account scope, prefix 'account` to the expression: account.{identifier}
+- `encrypted_passphrase` (String, Sensitive) Encrypted Passphrase . To reference a encryptedPassphrase at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a encryptedPassPhrase at the account scope, prefix 'account` to the expression: account.{identifier}
 
 
 <a id="nestedblock--ssh--sshkey_reference_credential"></a>
@@ -192,7 +191,7 @@ Required:
 
 Optional:
 
-- `encrypted_passphrase` (String) Encrypted Passphrase. To reference a encryptedPassphrase at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a encryptedPassPhrase at the account scope, prefix 'account` to the expression: account.{identifier}
+- `encrypted_passphrase` (String, Sensitive) Encrypted Passphrase. To reference a encryptedPassphrase at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a encryptedPassPhrase at the account scope, prefix 'account` to the expression: account.{identifier}
 
 ## Import
 

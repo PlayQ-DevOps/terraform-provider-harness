@@ -89,7 +89,7 @@ func dataSourceCurrentUserRead(ctx context.Context, d *schema.ResourceData, meta
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 	resp, httpResp, err := c.UserApi.GetCurrentUserInfo(ctx, c.AccountId)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	user := resp.Data

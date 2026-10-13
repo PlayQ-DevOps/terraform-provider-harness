@@ -3,7 +3,6 @@ package template
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/harness/harness-openapi-go-client/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -30,15 +30,17 @@ func ResourceTemplate() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"template_yaml": {
-				Description: "Yaml for creating new Template." + helpers.Descriptions.YamlText.String(),
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
+				Description:      "Yaml for creating new Template." + helpers.Descriptions.YamlText.String(),
+				Type:             schema.TypeString,
+				Optional:         true,
+				Computed:         true,
+				DiffSuppressFunc: helpers.YamlDiffSuppressFunction,
 			},
 			"version": {
 				Description: "Version Label for Template.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"is_stable": {
 				Description: "True if given version for template to be set as stable.",
@@ -121,12 +123,12 @@ func ResourceTemplate() *schema.Resource {
 				Description: "Enable this flag for force deletion of template. It will delete the Harness entity even if your pipelines or other entities reference it",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 			"identifier": {
 				Description: "Unique identifier of the resource",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"name": {
 				Description: "Name of the Variable",
@@ -143,11 +145,13 @@ func ResourceTemplate() *schema.Resource {
 				Description: "Organization Identifier for the Entity",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project Identifier for the Entity",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"tags": {
 				Description: "Tags to associate with the resource.",
@@ -234,11 +238,11 @@ func resourceTemplateRead(ctx context.Context, d *schema.ResourceData, meta inte
 	template_id := d.Id()
 	org_id := d.Get("org_id").(string)
 	project_id := d.Get("project_id").(string)
-	var comments = helpers.BuildField(d, "comments")
-	var store_type = helpers.BuildField(d, "git_details.0.store_type")
-	var base_branch = helpers.BuildField(d, "git_details.0.base_branch")
-	var commit_message = helpers.BuildField(d, "git_details.0.commit_message")
-	var connector_ref = helpers.BuildField(d, "git_details.0.connector_ref")
+	var comments = helpers.ConfigOnly(d, "comments")
+	var store_type = helpers.ConfigOnly(d, "git_details.0.store_type")
+	var base_branch = helpers.ConfigOnly(d, "git_details.0.base_branch")
+	var commit_message = helpers.ConfigOnly(d, "git_details.0.commit_message")
+	var connector_ref = helpers.ConfigOnly(d, "git_details.0.connector_ref")
 	var branch_name optional.String
 	branch_name = helpers.BuildField(d, "git_details.0.branch_name")
 	version := d.Get("version").(string)
@@ -283,14 +287,8 @@ func resourceTemplateRead(ctx context.Context, d *schema.ResourceData, meta inte
 		}
 	}
 
-	if httpResp.StatusCode == 404 {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
-
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readTemplate(d, resp, comments.Value(), store_type, base_branch, commit_message, connector_ref)
@@ -433,7 +431,7 @@ func resourceTemplateCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 				}
 			}
 			if err != nil {
-				return helpers.HandleApiError(err, d, httpResp)
+				return helpers.HandleWriteGit(ctx, d, err, httpResp)
 			}
 		}
 
@@ -459,7 +457,7 @@ func resourceTemplateCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	if isOPADeniedResponse(template_id, resp) {
@@ -511,7 +509,7 @@ func resourceTemplateCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	readTemplate(d, respGet, comments, store_type, base_branch, commit_message, connector_ref)
@@ -572,7 +570,7 @@ func resourceTemplateDelete(ctx context.Context, d *schema.ResourceData, meta in
 	version := d.Get("version").(string)
 	var httpResp *http.Response
 	var err error
-	log.Printf("[DEBUG] Deleting template with identifier %s and version %s", id, version)
+	tflog.Debug(ctx, fmt.Sprintf("Deleting template with identifier %s and version %s", id, version))
 
 	if project_id != "" {
 		httpResp, err = c.ProjectTemplateApi.DeleteTemplateProject(ctx, project_id, id, org_id, version, &nextgen.ProjectTemplateApiDeleteTemplateProjectOpts{
@@ -595,7 +593,7 @@ func resourceTemplateDelete(ctx context.Context, d *schema.ResourceData, meta in
 
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -749,11 +747,6 @@ func readTemplate(d *schema.ResourceData, template nextgen.TemplateWithInputsRes
 // validateIdentifierMatchesYaml is a CustomizeDiff function that validates the identifier in the schema matches the identifier in the YAML template
 // and prevents changes to the identifier once the resource is created
 func validateIdentifierMatchesYaml(ctx context.Context, d *schema.ResourceDiff, meta interface{}) error {
-	// Prevent changes to identifier after creation
-	if d.Id() != "" && d.HasChange("identifier") {
-		return fmt.Errorf("the identifier cannot be changed once the template is created; you must create a new resource")
-	}
-
 	template_yaml := d.Get("template_yaml").(string)
 	if template_yaml == "" {
 		return nil
@@ -804,7 +797,11 @@ func readGitDetails(template nextgen.TemplateWithInputsResponse, store_type opti
 		"last_commit_id": template.Template.GitDetails.CommitId,
 		"last_object_id": template.Template.GitDetails.ObjectId,
 	}
-	if store_type.IsSet() {
+	// Store type and connector reference come from the API; the configured values are kept
+	// only when the API omits them.
+	if storeType := template.Template.StoreType; storeType != "" {
+		git_details["store_type"] = storeType
+	} else if store_type.IsSet() {
 		git_details["store_type"] = store_type.Value()
 	}
 	if base_branch.IsSet() {
@@ -813,7 +810,9 @@ func readGitDetails(template nextgen.TemplateWithInputsResponse, store_type opti
 	if commit_message.IsSet() {
 		git_details["commit_message"] = commit_message.Value()
 	}
-	if connector_ref.IsSet() {
+	if connectorRef := template.Template.ConnectorRef; connectorRef != "" {
+		git_details["connector_ref"] = connectorRef
+	} else if connector_ref.IsSet() {
 		git_details["connector_ref"] = connector_ref.Value()
 	}
 	return git_details

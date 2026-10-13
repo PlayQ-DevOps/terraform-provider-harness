@@ -1,3 +1,0 @@
-```release-note:bug
- Fix for supporting yaml for environment and environment group data source
-```

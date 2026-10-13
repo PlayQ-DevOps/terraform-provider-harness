@@ -1,3 +1,0 @@
-```release-note:bug
-resource/harness_platform_gitops_applicationset: Handle nil TypeList elements in spec expand so empty sync_policy.automated no longer panics
-```

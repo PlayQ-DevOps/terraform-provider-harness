@@ -3,7 +3,6 @@ package experiment
 import (
 	"context"
 	"fmt"
-	"log"
 	"regexp"
 	"strings"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -47,8 +47,7 @@ func resourceExperimentCreate(ctx context.Context, d *schema.ResourceData, meta 
 	hubIdentity := d.Get("hub_identity").(string)
 	name := d.Get("name").(string)
 	infraRef := d.Get("infra_ref").(string)
-
-	log.Printf("[DEBUG] Creating experiment from template: %s in hub: %s", templateIdentity, hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Creating experiment from template: %s in hub: %s", templateIdentity, hubIdentity))
 
 	// Build request
 	req := chaos.TypesCreateExperimentFromTemplateRequest{
@@ -62,7 +61,7 @@ func resourceExperimentCreate(ctx context.Context, d *schema.ResourceData, meta 
 	// Add optional fields
 	if v, ok := d.GetOk("identity"); ok {
 		req.Identity = v.(string)
-		log.Printf("[DEBUG] Using provided identity: %s", req.Identity)
+		tflog.Debug(ctx, fmt.Sprintf("Using provided identity: %s", req.Identity))
 	} else {
 		// Generate identity from name
 		// API requires: lowercase letters, numbers, and dashes only
@@ -74,7 +73,7 @@ func resourceExperimentCreate(ctx context.Context, d *schema.ResourceData, meta 
 		// Remove leading/trailing dashes
 		identity = strings.Trim(identity, "-")
 		req.Identity = identity
-		log.Printf("[DEBUG] Generated identity from name: %s -> %s", name, req.Identity)
+		tflog.Debug(ctx, fmt.Sprintf("Generated identity from name: %s -> %s", name, req.Identity))
 	}
 
 	if v, ok := d.GetOk("description"); ok {
@@ -91,11 +90,11 @@ func resourceExperimentCreate(ctx context.Context, d *schema.ResourceData, meta 
 	if importType == "LOCAL" {
 		local := chaos.LOCAL_MongodbImportType
 		importTypePtr = &local
-		log.Printf("[DEBUG] Using LOCAL import type (full copy)")
+		tflog.Debug(ctx, "Using LOCAL import type (full copy)")
 	} else {
 		ref := chaos.REFERENCE_MongodbImportType
 		importTypePtr = &ref
-		log.Printf("[DEBUG] Using REFERENCE import type (template reference)")
+		tflog.Debug(ctx, "Using REFERENCE import type (template reference)")
 	}
 	req.ImportType = importTypePtr
 
@@ -118,17 +117,17 @@ func resourceExperimentCreate(ctx context.Context, d *schema.ResourceData, meta 
 		OrganizationIdentifier: optional.NewString(hubOrgID),          // Hub's org (may be empty for account-level)
 		ProjectIdentifier:      optional.NewString(hubProjectID),      // Hub's project (may be empty for org/account-level)
 	}
-
-	log.Printf("[DEBUG] Hub location - org: %q, project: %q, identity: %q", hubOrgID, hubProjectID, hubIdentity)
-	log.Printf("[DEBUG] Experiment location - org: %q, project: %q", orgID, projectID)
+	tflog.Debug(ctx, fmt.Sprintf("Hub location - org: %q, project: %q, identity: %q", hubOrgID, hubProjectID, hubIdentity))
+	tflog.Debug(ctx, fmt.Sprintf("Experiment location - org: %q, project: %q", orgID, projectID))
 
 	if v, ok := d.GetOk("revision"); ok {
 		opts.Revision = optional.NewString(v.(string))
-		log.Printf("[DEBUG] Using template revision: %s", v.(string))
+		tflog.Debug(ctx, fmt.Sprintf("Using template revision: %s", v.(string)))
 	}
+	tflog.
 
-	// Call CreateExperimentFromTemplate API
-	log.Printf("[DEBUG] Calling CreateExperimentFromTemplate API")
+		// Call CreateExperimentFromTemplate API
+		Debug(ctx, "Calling CreateExperimentFromTemplate API")
 	resp, httpResp, err := c.ExperimenttemplateApi.CreateExperimentFromTemplate(
 		ctx,
 		req,
@@ -138,14 +137,14 @@ func resourceExperimentCreate(ctx context.Context, d *schema.ResourceData, meta 
 	)
 
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Extract experiment ID from response (CRITICAL: Use Id, not Identity)
 	var experimentID string
 	if resp.Data != nil && resp.Data.Id != "" {
 		experimentID = resp.Data.Id
-		log.Printf("[DEBUG] Experiment created with ID: %s", experimentID)
+		tflog.Debug(ctx, fmt.Sprintf("Experiment created with ID: %s", experimentID))
 	} else {
 		return diag.Errorf("failed to get experiment ID from response")
 	}
@@ -153,17 +152,17 @@ func resourceExperimentCreate(ctx context.Context, d *schema.ResourceData, meta 
 	// Store identity separately (different from ID)
 	if resp.Data != nil && resp.Data.Identity != "" {
 		d.Set("identity", resp.Data.Identity)
-		log.Printf("[DEBUG] Experiment identity: %s", resp.Data.Identity)
+		tflog.Debug(ctx, fmt.Sprintf("Experiment identity: %s", resp.Data.Identity))
 	}
 
 	// Set ID: org_id/project_id/experiment_id (CRITICAL: Use experiment_id, not identity)
 	d.SetId(fmt.Sprintf("%s/%s/%s", orgID, projectID, experimentID))
-	log.Printf("[DEBUG] Set resource ID: %s", d.Id())
+	tflog.Debug(ctx, fmt.Sprintf("Set resource ID: %s", d.Id()))
 
 	// Store manifest if LOCAL import (only available in create response)
 	if importType == "LOCAL" && resp.Data != nil && resp.Data.Manifest != "" {
 		d.Set("manifest", resp.Data.Manifest)
-		log.Printf("[DEBUG] Stored manifest for LOCAL import, length: %d", len(resp.Data.Manifest))
+		tflog.Debug(ctx, fmt.Sprintf("Stored manifest for LOCAL import, length: %d", len(resp.Data.Manifest)))
 	}
 
 	// Read back to populate all computed fields
@@ -182,9 +181,9 @@ func resourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta in
 
 	orgID := parts[0]
 	projectID := parts[1]
-	experimentID := parts[2] // This is the actual experiment ID from the API
-
-	log.Printf("[DEBUG] Reading experiment: %s (org: %s, project: %s)", experimentID, orgID, projectID)
+	experimentID := parts[2]
+	tflog. // This is the actual experiment ID from the API
+		Debug(ctx, fmt.Sprintf("Reading experiment: %s (org: %s, project: %s)", experimentID, orgID, projectID))
 
 	// Call GetChaosV2Experiment API (CRITICAL: Use experiment_id, not identity)
 	experiment, httpResp, err := c.DefaultApi.GetChaosV2Experiment(
@@ -196,14 +195,12 @@ func resourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta in
 	)
 
 	if err != nil {
-		return helpers.HandleChaosReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Check if experiment is soft-deleted
 	if experiment.IsRemoved {
-		log.Printf("[DEBUG] Experiment %s is soft-deleted, removing from state", experimentID)
-		d.SetId("")
-		return nil
+		return helpers.ReadMissing(ctx, d, "chaos experiment "+experimentID+" (soft-deleted)")
 	}
 
 	// ========== SET ALL FIELDS ==========
@@ -216,20 +213,9 @@ func resourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta in
 	d.Set("name", experiment.Name)
 	d.Set("identity", experiment.Identity)
 	d.Set("description", experiment.Description)
-	if len(experiment.Tags) > 0 {
-		// Only preserve user-configured tags to prevent drift from API-added tags
-		configTags := d.Get("tags").(*schema.Set)
-
-		// During import, configTags will be empty, so preserve all tags
-		// During normal reads, filter to only user-configured tags
-		if configTags.Len() == 0 {
-			// Import scenario or no tags configured - preserve all API tags
-			d.Set("tags", flattenTags(experiment.Tags))
-		} else {
-			// Normal read - preserve only user-configured tags
-			d.Set("tags", flattenTagsPreserveConfig(experiment.Tags, configTags))
-		}
-	}
+	// Tags are refreshed from the API in full, so a tag added or removed outside Terraform
+	// shows up in the plan.
+	d.Set("tags", flattenTags(experiment.Tags))
 
 	// Infrastructure
 	d.Set("infra_id", experiment.InfraID)
@@ -276,7 +262,7 @@ func resourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta in
 	if experiment.TemplateDetails != nil {
 		// REFERENCE import - has template details
 		d.Set("import_type", "REFERENCE")
-		log.Printf("[DEBUG] Experiment uses REFERENCE import (template reference)")
+		tflog.Debug(ctx, "Experiment uses REFERENCE import (template reference)")
 
 		templateDetails := []map[string]interface{}{
 			{
@@ -329,22 +315,21 @@ func resourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta in
 		// Keep existing manifest value from state
 		if manifestVal, ok := d.GetOk("manifest"); ok && manifestVal.(string) != "" {
 			d.Set("import_type", "LOCAL")
-			log.Printf("[DEBUG] Experiment uses LOCAL import (manifest preserved from state)")
+			tflog.Debug(ctx, "Experiment uses LOCAL import (manifest preserved from state)")
 		}
 		// Set template_details to empty for LOCAL imports to prevent drift
 		d.Set("template_details", []map[string]interface{}{})
 	}
-
-	log.Printf("[DEBUG] Successfully read experiment: %s", experimentID)
+	tflog.Debug(ctx, fmt.Sprintf("Successfully read experiment: %s", experimentID))
 	return nil
 }
 
 // resourceExperimentUpdate updates the experiment
 func resourceExperimentUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	// Experiments created from templates have limited update support
-	// Most fields are ForceNew, so changes will trigger recreation
-
-	log.Printf("[DEBUG] Update called for experiment: %s", d.Id())
+	tflog.
+		// Experiments created from templates have limited update support
+		// Most fields are ForceNew, so changes will trigger recreation
+		Debug(ctx, fmt.Sprintf("Update called for experiment: %s", d.Id()))
 
 	// Check if only updatable fields changed
 	if d.HasChanges("name", "description", "tags") {
@@ -370,8 +355,7 @@ func resourceExperimentDelete(ctx context.Context, d *schema.ResourceData, meta 
 	orgID := parts[0]
 	projectID := parts[1]
 	experimentIdentity := parts[2]
-
-	log.Printf("[DEBUG] Deleting experiment: %s (org: %s, project: %s)", experimentIdentity, orgID, projectID)
+	tflog.Debug(ctx, fmt.Sprintf("Deleting experiment: %s (org: %s, project: %s)", experimentIdentity, orgID, projectID))
 
 	// Call DeleteChaosV2Experiment API
 	_, httpResp, err := c.DefaultApi.DeleteChaosV2Experiment(
@@ -383,11 +367,11 @@ func resourceExperimentDelete(ctx context.Context, d *schema.ResourceData, meta 
 	)
 
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	d.SetId("")
-	log.Printf("[DEBUG] Successfully deleted experiment: %s", experimentIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Successfully deleted experiment: %s", experimentIdentity))
 	return nil
 }
 
@@ -408,8 +392,7 @@ func resourceExperimentImport(ctx context.Context, d *schema.ResourceData, meta 
 	if err != nil {
 		return nil, err
 	}
-
-	log.Printf("[DEBUG] Importing experiment with ID: %s", d.Id())
+	tflog.Debug(ctx, fmt.Sprintf("Importing experiment with ID: %s", d.Id()))
 
 	// Set scope fields
 	d.Set("org_id", orgID)
@@ -420,8 +403,7 @@ func resourceExperimentImport(ctx context.Context, d *schema.ResourceData, meta 
 	if diags.HasError() {
 		return nil, fmt.Errorf("failed to read experiment during import: %v", diags)
 	}
-
-	log.Printf("[DEBUG] Successfully imported experiment: %s", d.Id())
+	tflog.Debug(ctx, fmt.Sprintf("Successfully imported experiment: %s", d.Id()))
 	return []*schema.ResourceData{d}, nil
 }
 
@@ -444,21 +426,5 @@ func flattenTags(tags []string) *schema.Set {
 	for _, tag := range tags {
 		result = append(result, tag)
 	}
-	return schema.NewSet(schema.HashString, result)
-}
-
-// flattenTagsPreserveConfig preserves only user-configured tags from the API response
-// The API may add system-generated tags (e.g., "fault=<fault-identity>") which should not cause drift
-// This approach is robust against any future API changes that add new system tags
-func flattenTagsPreserveConfig(apiTags []string, configTags *schema.Set) *schema.Set {
-	result := make([]interface{}, 0, len(apiTags))
-
-	for _, tag := range apiTags {
-		// Only keep tags that were in the user's configuration
-		if configTags.Contains(tag) {
-			result = append(result, tag)
-		}
-	}
-
 	return schema.NewSet(schema.HashString, result)
 }

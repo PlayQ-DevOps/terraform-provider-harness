@@ -10,8 +10,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccResourceGitopsRepositoryOrgLevel(t *testing.T) {
@@ -25,9 +25,9 @@ func TestAccResourceGitopsRepositoryOrgLevel(t *testing.T) {
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 	resourceName := "harness_platform_gitops_repository.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		//CheckDestroy:      testAccResourceGitopsRepositoryDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
@@ -65,9 +65,9 @@ func TestAccResourceGitopsRepository(t *testing.T) {
 	agentId := os.Getenv("HARNESS_TEST_GITOPS_AGENT_ID")
 	resourceName := "harness_platform_gitops_repository.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		//CheckDestroy:      testAccResourceGitopsRepositoryDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
@@ -101,9 +101,9 @@ func TestAccResourceGitopsRepository(t *testing.T) {
 	repo = "https://github.com/willycoll/argocd-example-apps.git"
 	repoName = id
 	resourceName = "harness_platform_gitops_repository.test"
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		//CheckDestroy:      testAccResourceGitopsRepositoryDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
@@ -252,9 +252,9 @@ func TestHelmRepoOCIECR(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	awsAccessId := os.Getenv("HARNESS_TEST_AWS_ACCESS_KEY_ID")
 	awsAccessKey := os.Getenv("HARNESS_TEST_AWS_SECRET_ACCESS_KEY")
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testHelmRepoOCIECR(id, name, repo, repoName, agentId, accountId, awsAccessId, awsAccessKey),
@@ -280,9 +280,9 @@ func TestHelmRepoOCIECRJwt(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	awsAccessId := os.Getenv("HARNESS_TEST_AWS_ACCESS_KEY_ID")
 	awsAccessKey := os.Getenv("HARNESS_TEST_AWS_SECRET_ACCESS_KEY")
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testHelmRepoOCIECRJwt(id, name, repo, repoName, agentId, accountId, awsAccessId, awsAccessKey),
@@ -308,9 +308,9 @@ func TestHelmRepoOCIGCRWorkload(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	awsAccessId := os.Getenv("HARNESS_TEST_AWS_ACCESS_KEY_ID")
 	awsAccessKey := os.Getenv("HARNESS_TEST_AWS_SECRET_ACCESS_KEY")
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testHelmRepoOCIGCRWorkload(id, name, repo, repoName, agentId, accountId, awsAccessId, awsAccessKey),
@@ -337,9 +337,9 @@ func TestHelmRepoOCIGCRServiceAccount(t *testing.T) {
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 	awsAccessId := os.Getenv("HARNESS_TEST_AWS_ACCESS_KEY_ID")
 	awsAccessKey := os.Getenv("HARNESS_TEST_AWS_SECRET_ACCESS_KEY")
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testHelmRepoOCIGCRServiceAccount(id, name, repo, repoName, agentId, accountId, gcrAccountKey, awsAccessId, awsAccessKey),

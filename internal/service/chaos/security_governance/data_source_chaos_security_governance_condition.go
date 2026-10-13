@@ -4,18 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/harness-go-sdk/harness/chaos/graphql/model"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-)
-
-const (
-	dataSourceName = "harness_chaos_security_governance_condition"
 )
 
 func DataSourceChaosSecurityGovernanceCondition() *schema.Resource {
@@ -393,15 +389,7 @@ func dataSourceChaosSecurityGovernanceConditionRead(ctx context.Context, d *sche
 
 	// Handle errors
 	if err != nil {
-		if strings.Contains(err.Error(), "not found") || strings.Contains(err.Error(), "no documents in result") {
-			logDebug(ctx, "Condition not found", "condition_id", conditionID)
-			d.SetId("")
-			return nil
-		}
-		logError(ctx, "Failed to get condition",
-			"condition_id", conditionID,
-			"error", err.Error())
-		return apiError(fmt.Sprintf("get security governance condition %s", conditionID), err)
+		return helpers.HandleError(ctx, d, err, nil)
 	}
 
 	// Validate the response
@@ -412,9 +400,7 @@ func dataSourceChaosSecurityGovernanceConditionRead(ctx context.Context, d *sche
 	}
 
 	if resp.Condition == nil {
-		logDebug(ctx, "Condition not found in response", "condition_id", conditionID)
-		d.SetId("")
-		return nil
+		return diag.Errorf("security governance condition %q not found", conditionID)
 	}
 
 	// Set the ID and other fields

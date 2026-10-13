@@ -17,12 +17,12 @@ func DatasourceConnectorDatadog() *schema.Resource {
 				Computed:    true,
 			},
 			"application_key_ref": {
-				Description: "Reference to the Harness secret containing the application key." + secret_ref_text,
+				Description: "Reference to the Harness secret containing the application key." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
 			"api_key_ref": {
-				Description: "Reference to the Harness secret containing the api key." + secret_ref_text,
+				Description: "Reference to the Harness secret containing the api key." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Computed:    true,
 			},

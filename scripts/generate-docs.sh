@@ -29,17 +29,8 @@ __parent="$(dirname "$__dir")"
 
 cd "$__parent"
 
-# Check if tfplugindocs is installed
-TFPLUGINDOCS_PATH="$(go env GOPATH)/bin/tfplugindocs"
-if [ ! -f "$TFPLUGINDOCS_PATH" ]; then
-    error "tfplugindocs not found at $TFPLUGINDOCS_PATH"
-    echo ""
-    info "Install it with:"
-    echo "  go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs@latest"
-    echo "  or run: make tools"
-    echo ""
-    exit 1
-fi
+# tfplugindocs is a `tool` dependency in go.mod, so `go tool` runs the pinned version.
+TFPLUGINDOCS="go tool tfplugindocs"
 
 BACKUP_DIR=".docs-backup"
 SUBCATEGORIES_FILE="$BACKUP_DIR/subcategories.txt"
@@ -266,7 +257,7 @@ info "Saved $subcategory_count subcategories"
 
 # Generate docs into a temp directory first, then sync only changed files back.
 info "Generating Terraform provider docs into temporary output..."
-"$TFPLUGINDOCS_PATH" generate --rendered-website-dir "$GENERATED_DOCS_DIR"
+$TFPLUGINDOCS generate --rendered-website-dir "$GENERATED_DOCS_DIR"
 
 # Restore subcategories in generated docs
 if [ -f "$SUBCATEGORIES_FILE" ]; then

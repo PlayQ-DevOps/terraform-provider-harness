@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/harness/terraform-provider-harness/internal/acctest"
 	"github.com/harness/harness-go-sdk/harness/har"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/harness/terraform-provider-harness/internal/acctest"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 const resourceType = "harness_platform_har_lifecycle_rule"
@@ -61,10 +61,10 @@ func runAtAllScopes(t *testing.T, fn func(t *testing.T, sc ruleScope)) {
 func TestAccLifecycleRuleDeleteAction(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
-		resource.UnitTest(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+		resource.Test(t, resource.TestCase{
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleBasic(name, sc),
@@ -91,10 +91,10 @@ func TestAccLifecycleRuleDeleteAction(t *testing.T) {
 func TestAccLifecycleRuleProtectAction(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
-		resource.UnitTest(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+		resource.Test(t, resource.TestCase{
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleProtect(name, sc),
@@ -114,10 +114,10 @@ func TestAccLifecycleRuleProtectAction(t *testing.T) {
 func TestAccLifecycleRuleKeepLastN(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
-		resource.UnitTest(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+		resource.Test(t, resource.TestCase{
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleWithKeepLastN(name, sc, 10),
@@ -146,10 +146,10 @@ func TestAccLifecycleRuleKeepLastN(t *testing.T) {
 func TestAccLifecycleRuleAgeBased(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
-		resource.UnitTest(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+		resource.Test(t, resource.TestCase{
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleWithAgeBased(name, sc),
@@ -170,10 +170,10 @@ func TestAccLifecycleRuleAgeBased(t *testing.T) {
 func TestAccLifecycleRuleMultipleCriteria(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
-		resource.UnitTest(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+		resource.Test(t, resource.TestCase{
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleWithMultipleCriteria(name, sc),
@@ -194,10 +194,10 @@ func TestAccLifecycleRuleMultipleCriteria(t *testing.T) {
 func TestAccLifecycleRuleWithSchedule(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
-		resource.UnitTest(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+		resource.Test(t, resource.TestCase{
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleWithSchedule(name, sc),
@@ -222,10 +222,10 @@ func TestAccLifecycleRuleWithSchedule(t *testing.T) {
 func TestAccLifecycleRuleDockerFilter(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
-		resource.UnitTest(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+		resource.Test(t, resource.TestCase{
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleWithDockerFilter(name, sc),
@@ -246,10 +246,10 @@ func TestAccLifecycleRuleDockerFilter(t *testing.T) {
 func TestAccLifecycleRuleUpdate(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
-		resource.UnitTest(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+		resource.Test(t, resource.TestCase{
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleWithKeepLastN(name, sc, 10),
@@ -276,10 +276,10 @@ func TestAccLifecycleRuleUpdate(t *testing.T) {
 func TestAccLifecycleRuleDryRun(t *testing.T) {
 	runAtAllScopes(t, func(t *testing.T, sc ruleScope) {
 		name := fmt.Sprintf("tf_lc_%s", randAlphanumeric(6))
-		resource.UnitTest(t, resource.TestCase{
-			PreCheck:          func() { acctest.TestAccPreCheck(t) },
-			ProviderFactories: acctest.ProviderFactories,
-			CheckDestroy:      testAccLifecycleRuleCheckDestroy,
+		resource.Test(t, resource.TestCase{
+			PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+			ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+			CheckDestroy:             testAccLifecycleRuleCheckDestroy,
 			Steps: []resource.TestStep{
 				{
 					Config: testAccLifecycleRuleWithKeepLastN(name, sc, 5),

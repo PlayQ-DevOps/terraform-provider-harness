@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -62,7 +61,7 @@ func ResourceGitopsGnupg() *schema.Resource {
 						"upsert": {
 							Description: "Indicates if the GnuPG Key should be inserted if not present or updated if present.",
 							Type:        schema.TypeBool,
-							Required:    true,
+							Optional:    true,
 						},
 						"publickey": {
 							Description: "Public key details.",
@@ -113,7 +112,6 @@ func ResourceGitopsGnupg() *schema.Resource {
 
 func resourceGitopsGnupgCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var agentIdentifier, accountIdentifier, orgIdentifier, projectIdentifier string
 	accountIdentifier = c.AccountId
 	if attr, ok := d.GetOk("agent_id"); ok {
@@ -134,16 +132,11 @@ func resourceGitopsGnupgCreate(ctx context.Context, d *schema.ResourceData, meta
 		})
 
 	if errCreate != nil {
-		return helpers.HandleApiError(errCreate, d, httpRespCreate)
+		return helpers.HandleWrite(ctx, d, errCreate, httpRespCreate)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &respCreate == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 
 	readGnupgKeyCreate(d, &respCreate, accountIdentifier, agentIdentifier, orgIdentifier, projectIdentifier)
 	return nil
@@ -151,7 +144,6 @@ func resourceGitopsGnupgCreate(ctx context.Context, d *schema.ResourceData, meta
 
 func resourceGitopsGnupgRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var agentIdentifier, orgIdentifier, projectIdentifier string
 	keyId := d.Get("identifier").(string)
 	if attr, ok := d.GetOk("agent_id"); ok {
@@ -169,23 +161,18 @@ func resourceGitopsGnupgRead(ctx context.Context, d *schema.ResourceData, meta i
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	readGnupgKey(d, &resp, c.AccountId, agentIdentifier, orgIdentifier, projectIdentifier)
 	return nil
 }
 
 func resourceGitopsGnupgDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var agentIdentifier, orgIdentifier, projectIdentifier string
 	keyId := d.Get("identifier").(string)
 	if attr, ok := d.GetOk("agent_id"); ok {
@@ -205,7 +192,7 @@ func resourceGitopsGnupgDelete(ctx context.Context, d *schema.ResourceData, meta
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

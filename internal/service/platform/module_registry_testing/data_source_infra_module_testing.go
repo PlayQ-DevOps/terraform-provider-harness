@@ -11,7 +11,6 @@ func DataSourceInfraModuleTesting() *schema.Resource {
 				Description: "Identifier of the module to enable testing for",
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 			},
 			// Input fields for enabling/updating testing
 			"org": {

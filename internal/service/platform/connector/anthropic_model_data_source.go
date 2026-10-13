@@ -55,7 +55,7 @@ func DatasourceConnectorAnthropicModel() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"token_ref": {
-										Description: "Reference to a secret containing the Anthropic API token." + secret_ref_text,
+										Description: "Reference to a secret containing the Anthropic API token." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
@@ -69,7 +69,7 @@ func DatasourceConnectorAnthropicModel() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"api_key_ref": {
-										Description: "Reference to a secret containing the Bedrock API key." + secret_ref_text,
+										Description: "Reference to a secret containing the Bedrock API key." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
@@ -88,7 +88,7 @@ func DatasourceConnectorAnthropicModel() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"service_account_key_ref": {
-										Description: "Reference to a secret containing the GCP service account key." + secret_ref_text,
+										Description: "Reference to a secret containing the GCP service account key." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},

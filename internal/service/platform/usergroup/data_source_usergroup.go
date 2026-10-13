@@ -136,13 +136,12 @@ func dataSourceUserGroupRead(ctx context.Context, d *schema.ResourceData, meta i
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if ug == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+		return diag.Errorf("user group not found: no object matched the given arguments")
+
 	}
 
 	readUserGroup(d, ug)

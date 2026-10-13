@@ -50,11 +50,11 @@ func resourceServiceAccountRead(ctx context.Context, d *schema.ResourceData, met
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if resp.Data.ServiceAccount == nil {
-		return nil
+	if resp.Data == nil || resp.Data.ServiceAccount == nil {
+		return helpers.ReadMissing(ctx, d, "service account "+id)
 	}
 
 	readServiceAccount(d, resp.Data.ServiceAccount)
@@ -85,7 +85,7 @@ func resourceServiceAccountCreateOrUpdate(ctx context.Context, d *schema.Resourc
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -107,7 +107,7 @@ func resourceServiceAccountDelete(ctx context.Context, d *schema.ResourceData, m
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

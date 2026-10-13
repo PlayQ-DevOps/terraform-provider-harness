@@ -6,7 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccDataSourceConnectorJira_UsernamePassword(t *testing.T) {
@@ -16,9 +16,9 @@ func TestAccDataSourceConnectorJira_UsernamePassword(t *testing.T) {
 		resourceName = "data.harness_platform_connector_jira.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -33,7 +33,7 @@ func TestAccDataSourceConnectorJira_UsernamePassword(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "tags.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "url", "https://jira.com"),
 					resource.TestCheckResourceAttr(resourceName, "username", "admin"),
-					resource.TestCheckResourceAttr(resourceName, "auth.0.username_password.0.username", "admin"),					
+					resource.TestCheckResourceAttr(resourceName, "auth.0.username_password.0.username", "admin"),
 					resource.TestCheckResourceAttr(resourceName, "delegate_selectors.#", "1"),
 				),
 			},
@@ -48,9 +48,9 @@ func TestAccDataSourceConnectorJira_PersonalAccessToken(t *testing.T) {
 		resourceName = "data.harness_platform_connector_jira.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -63,7 +63,7 @@ func TestAccDataSourceConnectorJira_PersonalAccessToken(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "name", name),
 					resource.TestCheckResourceAttr(resourceName, "description", "test"),
 					resource.TestCheckResourceAttr(resourceName, "tags.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "url", "https://jira.com"),				
+					resource.TestCheckResourceAttr(resourceName, "url", "https://jira.com"),
 					resource.TestCheckResourceAttr(resourceName, "delegate_selectors.#", "1"),
 				),
 			},

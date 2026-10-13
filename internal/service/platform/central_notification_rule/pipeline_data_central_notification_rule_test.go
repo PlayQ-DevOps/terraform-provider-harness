@@ -7,7 +7,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccDataSourcePipelineCentralNotificationRule_basic(t *testing.T) {
@@ -16,8 +16,8 @@ func TestAccDataSourcePipelineCentralNotificationRule_basic(t *testing.T) {
 	resourceName := "data.harness_platform_pipeline_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourcePipelineCentralNotificationRuleConfig(rName, id),

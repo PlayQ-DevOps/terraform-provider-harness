@@ -1,3 +1,0 @@
-```release-note:bug
-Monitored service didn't use to honour metric threshold correctly earlier with this fix customer can add metric threshold to all the health sources
-```

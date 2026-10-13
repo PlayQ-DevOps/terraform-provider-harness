@@ -121,7 +121,7 @@ Required:
 Required:
 
 - `notification_entity` (String)
-- `notification_event` (String) The pipeline event that triggers the notification. Supported values: `PIPELINE_START`, `PIPELINE_SUCCESS`, `PIPELINE_FAILED`, `STAGE_START`, `STAGE_SUCCESS`, `STAGE_FAILED`.
+- `notification_event` (String)
 
 Optional:
 

@@ -6,6 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -17,7 +18,7 @@ func ResourceConnectorAws() *schema.Resource {
 		ReadContext:   resourceConnectorAwsRead,
 		CreateContext: resourceConnectorAwsCreateOrUpdate,
 		UpdateContext: resourceConnectorAwsCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -47,19 +48,19 @@ func ResourceConnectorAws() *schema.Resource {
 							AtLeastOneOf:  []string{"manual.0.access_key", "manual.0.access_key_ref"},
 						},
 						"access_key_ref": {
-							Description:   "Reference to the Harness secret containing the aws access key." + secret_ref_text,
+							Description:   "Reference to the Harness secret containing the aws access key." + helpers.Descriptions.SecretRefText.String(),
 							Type:          schema.TypeString,
 							Optional:      true,
 							ConflictsWith: []string{"manual.0.access_key"},
 							AtLeastOneOf:  []string{"manual.0.access_key", "manual.0.access_key_ref"},
 						},
 						"secret_key_ref": {
-							Description: "Reference to the Harness secret containing the aws secret key." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the aws secret key." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Required:    true,
 						},
 						"session_token_ref": {
-							Description: "Reference to the Harness secret containing the aws session token." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the aws session token." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
@@ -70,7 +71,7 @@ func ResourceConnectorAws() *schema.Resource {
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 						"region": {
-							Description: "Test Region to perform Connection test of AWS Connector" + secret_ref_text,
+							Description: "Test Region to perform Connection test of AWS Connector" + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
@@ -102,7 +103,7 @@ func ResourceConnectorAws() *schema.Resource {
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 						"region": {
-							Description: "Test Region to perform Connection test of AWS Connector" + secret_ref_text,
+							Description: "Test Region to perform Connection test of AWS Connector" + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
@@ -134,7 +135,7 @@ func ResourceConnectorAws() *schema.Resource {
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 						"region": {
-							Description: "Test Region to perform Connection test of AWS Connector" + secret_ref_text,
+							Description: "Test Region to perform Connection test of AWS Connector" + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
@@ -171,7 +172,7 @@ func ResourceConnectorAws() *schema.Resource {
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 						"region": {
-							Description: "Test Region to perform Connection test of AWS Connector." + secret_ref_text,
+							Description: "Test Region to perform Connection test of AWS Connector." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
@@ -293,7 +294,6 @@ func ResourceConnectorAws() *schema.Resource {
 				Description: "Enable this flag for force deletion of connector",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 			"execute_on_delegate": {
 				Description: "Enable this flag to execute on Delegate",
@@ -309,7 +309,7 @@ func ResourceConnectorAws() *schema.Resource {
 }
 
 func resourceConnectorAwsRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.Aws)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.Aws)
 	if err != nil {
 		return err
 	}
@@ -328,7 +328,7 @@ func resourceConnectorAwsRead(ctx context.Context, d *schema.ResourceData, meta 
 func resourceConnectorAwsCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorAws(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

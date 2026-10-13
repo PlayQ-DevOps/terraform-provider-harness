@@ -1,3 +1,0 @@
-```release-note:feat
-resource/data_source_gitops_agent_deploy_yaml add private key to data source to control regenerate of credentials
-```

@@ -10,6 +10,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"gopkg.in/yaml.v3"
@@ -94,15 +95,14 @@ func resourceFaultTemplateCreate(ctx context.Context, d *schema.ResourceData, me
 	if req.Spec == nil {
 		req.Spec = &chaos.FaulttemplateSpec{}
 	}
-
-	log.Printf("[DEBUG] Creating fault template: %s in hub: %s", req.Identity, hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Creating fault template: %s in hub: %s", req.Identity, hubIdentity))
 
 	// Create fault template
 	resp, httpResp, err := c.FaulttemplateApi.CreateFaultTemplate(ctx, req, accountID, orgID, projectID, hubIdentity, nil)
 	if err != nil {
-		log.Printf("[ERROR] Failed to create fault template: %v", err)
+		tflog.Error(ctx, fmt.Sprintf("Failed to create fault template: %v", err))
 		if httpResp != nil {
-			log.Printf("[ERROR] HTTP Status: %d", httpResp.StatusCode)
+			tflog.Error(ctx, fmt.Sprintf("HTTP Status: %d", httpResp.StatusCode))
 		}
 
 		// WORKAROUND: API returns 500 for duplicate key errors and other issues
@@ -116,13 +116,13 @@ func resourceFaultTemplateCreate(ctx context.Context, d *schema.ResourceData, me
 
 			checkResp, _, checkErr := c.FaulttemplateApi.GetFaultTemplate(ctx, accountID, orgID, projectID, hubIdentity, revision, identity, nil)
 			if checkErr == nil && checkResp.Data != nil {
-				log.Printf("[WARN] Resource already exists despite 500 error (likely duplicate key). Importing existing resource.")
+				tflog.Warn(ctx, "Resource already exists despite 500 error (likely duplicate key). Importing existing resource.")
 				d.SetId(fmt.Sprintf("%s/%s/%s/%s", orgID, projectID, hubIdentity, checkResp.Data.Identity))
 				return resourceFaultTemplateRead(ctx, d, meta)
 			}
 		}
 
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Set ID: org_id/project_id/hub_identity/identity
@@ -154,7 +154,7 @@ func resourceFaultTemplateRead(ctx context.Context, d *schema.ResourceData, meta
 	// Get fault template with the revision from state
 	resp, httpResp, err := c.FaulttemplateApi.GetFaultTemplate(ctx, c.AccountId, orgID, projectID, hubIdentity, revision, identity, nil)
 	if err != nil {
-		return helpers.HandleChaosReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Set Phase 1 fields from response
@@ -216,7 +216,7 @@ func resourceFaultTemplateUpdate(ctx context.Context, d *schema.ResourceData, me
 	// duplicate-key 500, so updates must use UpdateFaultTemplate.
 	_, httpResp, err := c.FaulttemplateApi.UpdateFaultTemplate(ctx, req, c.AccountId, orgID, projectID, hubIdentity, identity, nil)
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	return resourceFaultTemplateRead(ctx, d, meta)
@@ -239,7 +239,7 @@ func resourceFaultTemplateDelete(ctx context.Context, d *schema.ResourceData, me
 	// Delete fault template
 	_, httpResp, err := c.FaulttemplateApi.DeleteFaultTemplate(ctx, c.AccountId, orgID, projectID, hubIdentity, identity, nil)
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	d.SetId("")

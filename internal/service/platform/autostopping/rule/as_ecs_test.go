@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 const platformAPIKeyEnv = "HARNESS_PLATFORM_API_KEY"
@@ -26,9 +26,9 @@ func TestResourceECSRule(t *testing.T) {
 	// Step 1 creates all resources in a single apply (before async proxy
 	// provisioning can fail). Steps 2+ wait for the proxy to be healthy
 	// before running updates.
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testECSRuleWithDependency(nameFirst, name, proxyName, apiKey, true),

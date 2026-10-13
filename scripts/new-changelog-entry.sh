@@ -7,7 +7,7 @@
 #         If omitted, the script tries, in order:
 #           1. A JIRA-style ticket in the current branch name (e.g. feature/CDS-130810-foo -> CDS-130810)
 #           2. The open GitHub PR number for the current branch (requires `gh`)
-#   type: Optional release-note type (enhancement|bug|feature|new-resource|new-data-source|breaking-change|note)
+#   type: Optional release-note type (enhancement|bug|feature|new-resource|new-data-source|new-guide|new-ephemeral-resource|breaking-change|note)
 #         Defaults to "enhancement".
 #
 # Examples:
@@ -37,7 +37,7 @@ CHANGELOG_DIR="$__parent/.changelog"
 NAME="${1:-}"
 TYPE="${2:-enhancement}"
 
-VALID_TYPES="enhancement bug feature new-resource new-data-source breaking-change note"
+VALID_TYPES="enhancement bug feature new-resource new-data-source new-guide new-ephemeral-resource breaking-change note"
 if ! echo " $VALID_TYPES " | grep -q " $TYPE "; then
     error "Invalid type '$TYPE'. Must be one of: $VALID_TYPES"
     exit 1

@@ -8,8 +8,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
 	splitpkg "github.com/harness/terraform-provider-harness/internal/service/split"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccResourceFMERuleBasedSegment_basic(t *testing.T) {
@@ -24,9 +24,9 @@ func TestAccResourceFMERuleBasedSegment_basic(t *testing.T) {
 	resEnv := "harness_fme_environment.test"
 	var envID string
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFMERuleBasedSegment(id, envName, rbsName, "acc rbs v1", "acc comment v1"),

@@ -2,8 +2,7 @@ package slo
 
 import (
 	"context"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
-	"github.com/harness/harness-go-sdk/harness/nextgen"
+
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -40,7 +39,6 @@ func DataSourceSloService() *schema.Resource {
 
 func dataSourceSloRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier, orgIdentifier, projectIdentifier string
 	identifier := d.Get("identifier").(string)
 	accountIdentifier = c.AccountId
@@ -53,7 +51,7 @@ func dataSourceSloRead(ctx context.Context, d *schema.ResourceData, meta interfa
 	resp, httpResp, err := c.SloApi.GetServiceLevelObjectiveNg(ctx, accountIdentifier, orgIdentifier, projectIdentifier, identifier)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	readSlo(d, &resp.Resource)

@@ -6,15 +6,15 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestDataSourceGitxWebhookProjectLevel(t *testing.T) {
 	resourceName := "data.harness_platform_gitx_webhook.test"
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		//CheckDestroy:      testAccResourceGitopsRepositoryDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
@@ -31,9 +31,9 @@ func TestDataSourceGitxWebhookProjectLevel(t *testing.T) {
 func TestDataSourceGitxWebhookAccLevel(t *testing.T) {
 	resourceName := "data.harness_platform_gitx_webhook.test"
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testDataSourceGitXAccLevel(id, id),
@@ -49,9 +49,9 @@ func TestDataSourceGitxWebhookAccLevel(t *testing.T) {
 func TestDataSourceGitxWebhookOrgLevel(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
 	resourceName := "harness_platform_gitx_webhook.test"
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testDataSourceGitXOrgLevel(id, id),

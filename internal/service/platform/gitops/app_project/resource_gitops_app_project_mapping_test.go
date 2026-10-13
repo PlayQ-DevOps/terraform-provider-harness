@@ -1,19 +1,17 @@
 package app_project_test
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"strings"
 	"testing"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccResourceGitopsAppProjectMapping(t *testing.T) {
@@ -23,9 +21,9 @@ func TestAccResourceGitopsAppProjectMapping(t *testing.T) {
 	resourceName := "harness_platform_gitops_app_project_mapping.test"
 	argoProject := "test123"
 	argoProjectUpdated := "test123Updated"
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		// CheckDestroy:      testAccResourceGitopsAppProjectMappingDestroy(resourceName, agentId), //commenting this since app project mapping cannot exist without an agent.
 		Steps: []resource.TestStep{
 			{
@@ -80,7 +78,6 @@ func TestAccResourceGitopsAppProjectMapping(t *testing.T) {
 func testAccGetAppProjectMapping(resourceName string, state *terraform.State, agentId string) (*nextgen.V1AppProjectMappingV2, error) {
 	r := acctest.TestAccGetResource(resourceName, state)
 	c, ctx := acctest.TestAccGetPlatformClientWithContext()
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	projectMappingId := r.Primary.Attributes["identifier"]
 
 	resp, _, err := c.ProjectMappingsApi.AppProjectMappingServiceGetAppProjectMappingV2(ctx, agentId, projectMappingId, &nextgen.ProjectMappingsApiAppProjectMappingServiceGetAppProjectMappingV2Opts{

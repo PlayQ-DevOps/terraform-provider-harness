@@ -7,6 +7,7 @@ import (
 	"reflect"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -35,7 +36,7 @@ func reconcileManualInventory(ctx context.Context, c *nextgen.APIClient, d *sche
 				if httpResp, err := c.AnsibleApi.AnsibleDeleteInventoryHost(
 					ctx, s.org, s.project, s.invID, host, s.account,
 				); err != nil {
-					return parseError(fmt.Errorf("delete host %s/%s: %w", gid, host, err), httpResp)
+					return helpers.HandleWrite(ctx, d, fmt.Errorf("delete host %s/%s: %w", gid, host, err), httpResp)
 				}
 			}
 		}
@@ -47,7 +48,7 @@ func reconcileManualInventory(ctx context.Context, c *nextgen.APIClient, d *sche
 			if httpResp, err := c.AnsibleApi.AnsibleDeleteInventoryGroup(
 				ctx, s.org, s.project, s.invID, gid, s.account,
 			); err != nil {
-				return parseError(fmt.Errorf("delete group %s: %w", gid, err), httpResp)
+				return helpers.HandleWrite(ctx, d, fmt.Errorf("delete group %s: %w", gid, err), httpResp)
 			}
 		}
 	}
@@ -65,7 +66,7 @@ func reconcileManualInventory(ctx context.Context, c *nextgen.APIClient, d *sche
 		if httpResp, err := c.AnsibleApi.AnsibleCreateInventoryGroup(
 			ctx, body, s.account, s.org, s.project, s.invID,
 		); err != nil {
-			return parseError(fmt.Errorf("create group %s: %w", gid, err), httpResp)
+			return helpers.HandleWrite(ctx, d, fmt.Errorf("create group %s: %w", gid, err), httpResp)
 		}
 	}
 
@@ -83,7 +84,7 @@ func reconcileManualInventory(ctx context.Context, c *nextgen.APIClient, d *sche
 			if httpResp, err := c.AnsibleApi.AnsibleCreateInventoryHost(
 				ctx, body, s.account, s.org, s.project, s.invID,
 			); err != nil {
-				return parseError(fmt.Errorf("create host %s/%s: %w", gid, host, err), httpResp)
+				return helpers.HandleWrite(ctx, d, fmt.Errorf("create host %s/%s: %w", gid, host, err), httpResp)
 			}
 		}
 	}
@@ -105,7 +106,7 @@ func reconcileManualInventory(ctx context.Context, c *nextgen.APIClient, d *sche
 		if httpResp, err := c.AnsibleApi.AnsibleUpdateInventoryGroup(
 			ctx, body, s.account, s.org, s.project, s.invID, gid,
 		); err != nil {
-			return parseError(fmt.Errorf("update group %s: %w", gid, err), httpResp)
+			return helpers.HandleWrite(ctx, d, fmt.Errorf("update group %s: %w", gid, err), httpResp)
 		}
 	}
 
@@ -130,7 +131,7 @@ func reconcileDynamicInventory(ctx context.Context, c *nextgen.APIClient, d *sch
 			if httpResp, err := c.AnsibleApi.AnsibleDeleteInventoryGroup(
 				ctx, s.org, s.project, s.invID, gid, s.account,
 			); err != nil {
-				return parseError(fmt.Errorf("delete group %s: %w", gid, err), httpResp)
+				return helpers.HandleWrite(ctx, d, fmt.Errorf("delete group %s: %w", gid, err), httpResp)
 			}
 		}
 	}
@@ -152,7 +153,7 @@ func reconcileDynamicInventory(ctx context.Context, c *nextgen.APIClient, d *sch
 		if httpResp, err := c.AnsibleApi.AnsibleCreateInventoryGroup(
 			ctx, body, s.account, s.org, s.project, s.invID,
 		); err != nil {
-			return parseError(fmt.Errorf("create group %s: %w", gid, err), httpResp)
+			return helpers.HandleWrite(ctx, d, fmt.Errorf("create group %s: %w", gid, err), httpResp)
 		}
 	}
 
@@ -176,7 +177,7 @@ func reconcileDynamicInventory(ctx context.Context, c *nextgen.APIClient, d *sch
 		if httpResp, err := c.AnsibleApi.AnsibleUpdateInventoryGroup(
 			ctx, body, s.account, s.org, s.project, s.invID, gid,
 		); err != nil {
-			return parseError(fmt.Errorf("update group %s: %w", gid, err), httpResp)
+			return helpers.HandleWrite(ctx, d, fmt.Errorf("update group %s: %w", gid, err), httpResp)
 		}
 	}
 
@@ -198,7 +199,7 @@ func reconcilePluginInventory(ctx context.Context, c *nextgen.APIClient, d *sche
 		if httpResp, err := c.AnsibleApi.AnsibleUpdateInventoryPlugin(
 			ctx, body, s.account, s.org, s.project, s.invID,
 		); err != nil {
-			return parseError(fmt.Errorf("update plugin options: %w", err), httpResp)
+			return helpers.HandleWrite(ctx, d, fmt.Errorf("update plugin options: %w", err), httpResp)
 		}
 	}
 
@@ -221,7 +222,7 @@ func updateInventoryVars(ctx context.Context, c *nextgen.APIClient, d *schema.Re
 	if httpResp, err := c.AnsibleApi.AnsibleUpdateInventoryVars(
 		ctx, body, s.account, s.org, s.project, s.invID,
 	); err != nil {
-		return parseError(fmt.Errorf("update vars: %w", err), httpResp)
+		return helpers.HandleWrite(ctx, d, fmt.Errorf("update vars: %w", err), httpResp)
 	}
 	return nil
 }
@@ -236,13 +237,13 @@ func updateInventoryVars(ctx context.Context, c *nextgen.APIClient, d *schema.Re
 func updateInventoryTopLevel(ctx context.Context, c *nextgen.APIClient, d *schema.ResourceData, s inventoryScope) diag.Diagnostics {
 	current, httpResp, err := c.AnsibleApi.AnsibleShowInventory(ctx, s.org, s.project, s.invID, s.account, nil)
 	if err != nil {
-		return parseError(fmt.Errorf("read inventory before update: %w", err), httpResp)
+		return helpers.HandleWrite(ctx, d, fmt.Errorf("read inventory before update: %w", err), httpResp)
 	}
 
 	if httpResp, err := c.AnsibleApi.AnsibleUpdateInventory(
 		ctx, buildUpdateInventory(d, current.Data), s.account, s.org, s.project, s.invID,
 	); err != nil {
-		return parseError(err, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	return nil
 }

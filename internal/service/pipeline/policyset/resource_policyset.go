@@ -127,7 +127,7 @@ func resourcePolicysetRead(ctx context.Context, d *schema.ResourceData, meta int
 	policy, httpResp, err := c.PolicysetsApi.PolicysetsFind(ctx, id, &localVarOptionals)
 
 	if err != nil {
-		return helpers.HandlePolicyApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readPolicyset(d, policy)
@@ -164,7 +164,7 @@ func resourcePolicysetCreateOrUpdate(ctx context.Context, d *schema.ResourceData
 		}
 		createPolicySet, createHttpResp, createErr := c.PolicysetsApi.PolicysetsCreate(ctx, body, &localVarOptionals)
 		if createErr != nil {
-			return helpers.HandlePolicyApiError(createErr, d, createHttpResp)
+			return helpers.HandleWrite(ctx, d, createErr, createHttpResp)
 		}
 		id = createPolicySet.Identifier
 	}
@@ -206,7 +206,7 @@ func resourcePolicysetCreateOrUpdate(ctx context.Context, d *schema.ResourceData
 	}
 
 	if err != nil {
-		return helpers.HandlePolicyApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readPolicyset(d, responsePolicyset)
@@ -298,7 +298,7 @@ func resourcePolicysetDelete(ctx context.Context, d *schema.ResourceData, meta i
 	httpResp, err := c.PolicysetsApi.PolicysetsDelete(ctx, d.Id(), &localVarOptionals)
 
 	if err != nil {
-		return helpers.HandlePolicyApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

@@ -2,6 +2,7 @@ package provider_registry
 
 import (
 	"context"
+
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -83,7 +84,7 @@ func dataSourceInfraProviderVersionsRead(ctx context.Context, d *schema.Resource
 		providerType,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleError(ctx, d, err, httpRes)
 	}
 	readProviderVersionsList(d, resp, account, providerType)
 	return nil
@@ -91,7 +92,7 @@ func dataSourceInfraProviderVersionsRead(ctx context.Context, d *schema.Resource
 
 func readProviderVersionsList(d *schema.ResourceData, response nextgen.ListProviderVersionsResponse, account string, providerType string) {
 	d.SetId(account + "/" + providerType)
-	
+
 	if len(response.Versions) > 0 {
 		versionsList := make([]interface{}, len(response.Versions))
 		for i, v := range response.Versions {
@@ -99,7 +100,7 @@ func readProviderVersionsList(d *schema.ResourceData, response nextgen.ListProvi
 				"version":   v.Version,
 				"protocols": v.Protocols,
 			}
-			
+
 			if len(v.Platforms) > 0 {
 				platformsList := make([]interface{}, len(v.Platforms))
 				for j, p := range v.Platforms {
@@ -111,7 +112,7 @@ func readProviderVersionsList(d *schema.ResourceData, response nextgen.ListProvi
 				}
 				versionMap["platforms"] = platformsList
 			}
-			
+
 			versionsList[i] = versionMap
 		}
 		d.Set("versions", versionsList)

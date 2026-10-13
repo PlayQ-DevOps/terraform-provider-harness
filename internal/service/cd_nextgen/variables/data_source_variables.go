@@ -8,9 +8,9 @@ import (
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 func DataSourceVariables() *schema.Resource {
@@ -102,7 +102,7 @@ func dataSourceVariablesRead(ctx context.Context, d *schema.ResourceData, meta i
 			"id":    id,
 			"error": err.Error(),
 		})
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if variable == nil {

@@ -42,7 +42,7 @@ import (
 	"testing"
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func testAccDataSourceEnv(t *testing.T, idKey, nameKey string) (ruleID, ruleName string) {
@@ -64,9 +64,9 @@ func TestAccDataSourceK8sRuleById(t *testing.T) {
 	ruleID, _ := testAccDataSourceEnv(t, "AS_DS_TEST_K8S_RULE_ID", "AS_DS_TEST_K8S_RULE_NAME")
 	dataSourceName := "data.harness_autostopping_rule_k8s.by_id"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(`
@@ -90,9 +90,9 @@ func TestAccDataSourceK8sRuleByName(t *testing.T) {
 	namePattern := fmt.Sprintf("^%s$", ruleName)
 	dataSourceName := "data.harness_autostopping_rule_k8s.by_name"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(`
@@ -117,9 +117,9 @@ func TestAccDataSourceVMRuleById(t *testing.T) {
 	ruleID, _ := testAccDataSourceEnv(t, "AS_DS_TEST_VM_RULE_ID", "AS_DS_TEST_VM_RULE_NAME")
 	dataSourceName := "data.harness_autostopping_rule_vm.by_id"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(`
@@ -143,9 +143,9 @@ func TestAccDataSourceVMRuleByName(t *testing.T) {
 	namePattern := fmt.Sprintf("^%s$", ruleName)
 	dataSourceName := "data.harness_autostopping_rule_vm.by_name"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(`

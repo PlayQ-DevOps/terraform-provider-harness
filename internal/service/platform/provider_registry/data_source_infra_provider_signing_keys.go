@@ -2,6 +2,7 @@ package provider_registry
 
 import (
 	"context"
+
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -74,7 +75,7 @@ func dataSourceInfraProviderSigningKeysRead(ctx context.Context, d *schema.Resou
 		nil,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleError(ctx, d, err, httpRes)
 	}
 	readSigningKeysList(d, resp)
 	return nil

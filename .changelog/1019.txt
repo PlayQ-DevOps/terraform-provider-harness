@@ -1,3 +1,0 @@
-```release-note:enhancement
-resource/harness_platform_connector_gcp: added support for OIDC Auth in GCP connector.
-```

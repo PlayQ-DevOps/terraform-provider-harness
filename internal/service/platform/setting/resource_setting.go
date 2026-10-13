@@ -120,7 +120,7 @@ func resourceSettingRead(ctx context.Context, d *schema.ResourceData, meta inter
 	// it now inherits its value, so remove it from state and let Terraform set it again.
 	if resp == nil || resp.Setting.SettingSource != settingSource(d) {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -168,7 +168,7 @@ func updateSetting(ctx context.Context, c *nextgen.APIClient, d *schema.Resource
 		ProjectIdentifier: helpers.BuildField(d, "project_id"),
 	})
 	if err != nil {
-		return nil, helpers.HandleApiError(err, d, httpResp)
+		return nil, helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	for i := range resp.Data {
@@ -218,7 +218,7 @@ func findSetting(ctx context.Context, c *nextgen.APIClient, d *schema.ResourceDa
 				skippedErr = fmt.Errorf("category %s: %w", category, err)
 				continue
 			}
-			return nil, helpers.HandleReadApiError(err, d, httpResp)
+			return nil, helpers.HandleRead(ctx, d, err, httpResp)
 		}
 		for i := range resp.Data {
 			if resp.Data[i].Setting != nil && resp.Data[i].Setting.Identifier == identifier {

@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -34,11 +33,13 @@ func ResourceGitopsAppProjectMapping() *schema.Resource {
 				Description: "Organization identifier of the GitOps agent's Application Project.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project identifier of the GitOps agent's Application Project.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"agent_id": {
 				Description: "Agent identifier for which the ArgoCD and Harness project mapping is to be created.",
@@ -51,52 +52,45 @@ func ResourceGitopsAppProjectMapping() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
-		"argo_project_name": {
-			Description: "ArgoCD Project name which is to be mapped to the Harness project.",
-			Type:        schema.TypeString,
-			Required:    true,
-			ForceNew:    true,
+			"argo_project_name": {
+				Description: "ArgoCD Project name which is to be mapped to the Harness project.",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+			},
+			"auto_create_service_env": {
+				Description: "Enable automated creation of service, environment and cluster-env link. Defaults to false.",
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+			},
+			"block_if_referenced": {
+				Description: "If true, fails the delete with an error instead of removing Applications, Clusters, Repositories, or ApplicationSets that still reference this mapping. Defaults to true. Set to false only if you intend for the delete to remove those resources as well. Also applies when this resource is replaced due to a change in agent_id or argo_project_name.",
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+			},
 		},
-		"auto_create_service_env": {
-			Description: "Enable automated creation of service, environment and cluster-env link. Defaults to false.",
-			Type:        schema.TypeBool,
-			Optional:    true,
-			Default:     false,
-		},
-		"block_if_referenced": {
-			Description: "If true, fails the delete with an error instead of removing Applications, Clusters, Repositories, or ApplicationSets that still reference this mapping. Defaults to true. Set to false only if you intend for the delete to remove those resources as well. Also applies when this resource is replaced due to a change in agent_id or argo_project_name.",
-			Type:        schema.TypeBool,
-			Optional:    true,
-			Default:     true,
-		},
-	},
-}
+	}
 	return resource
 }
 
 func resourceGitopsAppProjectMappingCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	createAppProjectMappingRequest := buildCreateAppProjectMappingRequest(c.AccountId, d)
 	agentIdentifier := d.Get("agent_id").(string)
 	resp, httpResp, err := c.ProjectMappingsApi.AppProjectMappingServiceCreateV2(ctx, *createAppProjectMappingRequest, agentIdentifier)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 	readAppProjectMapping(d, &resp)
 	return nil
 }
 
 func resourceGitopsAppProjectMappingRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := d.Get("agent_id").(string)
 	identifier := d.Get("identifier").(string)
 	argo_proj_name := d.Get("argo_project_name").(string)
@@ -114,42 +108,30 @@ func resourceGitopsAppProjectMappingRead(ctx context.Context, d *schema.Resource
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 	readAppProjectMapping(d, &resp)
 	return nil
 }
 
 func resourceGitopsAppProjectMappingUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	updateAppProjectMappingRequest := buildUpdateAppProjectMappingRequest(c.AccountId, d)
 	agentIdentifier := d.Get("agent_id").(string)
 	identifier := d.Get("identifier").(string)
 	resp, httpResp, err := c.ProjectMappingsApi.AppProjectMappingServiceUpdateV2(ctx, *updateAppProjectMappingRequest, agentIdentifier, identifier)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 	readAppProjectMapping(d, &resp)
 	return nil
 }
 
 func resourceGitopsAppProjectMappingDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := d.Get("agent_id").(string)
 	identifier := d.Get("identifier").(string)
 	_, httpResp, err := c.ProjectMappingsApi.AppProjectMappingServiceDeleteV2(ctx, agentIdentifier, identifier, &nextgen.ProjectMappingsApiAppProjectMappingServiceDeleteV2Opts{
@@ -160,7 +142,7 @@ func resourceGitopsAppProjectMappingDelete(ctx context.Context, d *schema.Resour
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

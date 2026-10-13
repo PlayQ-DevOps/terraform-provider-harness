@@ -7,7 +7,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -84,8 +83,8 @@ func ResourceGitopsRepoCred() *schema.Resource {
 						"password": {
 							Description:   "Password or PAT to be used for authenticating the remote repository. Use password_wo for write-only support (Terraform >= 1.11).",
 							Type:          schema.TypeString,
-							Optional:      true,
 							Computed:      true,
+							Optional:      true,
 							Sensitive:     true,
 							ConflictsWith: []string{"creds.0.ssh_private_key", "creds.0.tls_client_cert_data", "creds.0.tls_client_cert_key", "creds.0.github_app_private_key", "creds.0.github_app_id", "creds.0.github_app_installation_id", "creds.0.github_app_enterprise_base_url", "creds.0.password_wo"},
 						},
@@ -240,7 +239,6 @@ func ResourceGitopsRepoCred() *schema.Resource {
 
 func resourceGitopsRepoCredCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 
 	var agentIdentifier, accountIdentifier, orgIdentifier, projectIdentifier, identifier string
 	accountIdentifier = c.AccountId
@@ -271,15 +269,11 @@ func resourceGitopsRepoCredCreate(ctx context.Context, d *schema.ResourceData, m
 		})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	if helpers.WoActive(d, "creds.0.password_wo", "creds.0.password_wo_version") {
 		resp.RepoCreds.Password = ""
 	} else if attr, ok := d.GetOk("creds.0.password"); ok {
@@ -316,7 +310,6 @@ func resourceGitopsRepoCredCreate(ctx context.Context, d *schema.ResourceData, m
 
 func resourceGitopsRepoCredUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 
 	var agentIdentifier, accountIdentifier, orgIdentifier, projectIdentifier, identifier string
 	accountIdentifier = c.AccountId
@@ -347,15 +340,10 @@ func resourceGitopsRepoCredUpdate(ctx context.Context, d *schema.ResourceData, m
 		})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 
 	if helpers.WoActive(d, "creds.0.password_wo", "creds.0.password_wo_version") {
 		resp.RepoCreds.Password = ""
@@ -393,7 +381,6 @@ func resourceGitopsRepoCredUpdate(ctx context.Context, d *schema.ResourceData, m
 
 func resourceGitopsRepoCredRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 
 	agentIdentifier := d.Get("agent_id").(string)
 	identifier := d.Get("identifier").(string)
@@ -404,16 +391,11 @@ func resourceGitopsRepoCredRead(ctx context.Context, d *schema.ResourceData, met
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 
 	if helpers.WoActive(d, "creds.0.password_wo", "creds.0.password_wo_version") {
 		resp.RepoCreds.Password = ""
@@ -463,7 +445,6 @@ func resourceGitopsRepoCredRead(ctx context.Context, d *schema.ResourceData, met
 
 func resourceGitopsRepoCredDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := d.Get("agent_id").(string)
 	identifier := d.Get("identifier").(string)
 
@@ -476,7 +457,7 @@ func resourceGitopsRepoCredDelete(ctx context.Context, d *schema.ResourceData, m
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

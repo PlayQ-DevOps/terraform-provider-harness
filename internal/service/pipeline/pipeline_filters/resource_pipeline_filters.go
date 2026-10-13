@@ -28,6 +28,7 @@ func ResourcePipelineFilters() *schema.Resource {
 				Description: "Unique identifier of the resource.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"name": {
 				Description: "Name of the pipeline filters.",
@@ -39,16 +40,19 @@ func ResourcePipelineFilters() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"PipelineSetup", "PipelineExecution", "Deployment", "Template", "EnvironmentGroup", "Environment"}, false),
+				ForceNew:     true,
 			},
 			"org_id": {
 				Description: "Organization Identifier for the Entity.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project Identifier for the Entity.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"filter_properties": {
 				Description: "Properties of the filters entity defined in Harness.",
@@ -279,12 +283,12 @@ func resourcePipelineFiltersRead(ctx context.Context, d *schema.ResourceData, me
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -310,7 +314,7 @@ func resourcePipelineFiltersCreateOrUpdate(ctx context.Context, d *schema.Resour
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readPipelineFilter(d, resp.Data)
@@ -329,7 +333,7 @@ func resourcePipelineFiltersDelete(ctx context.Context, d *schema.ResourceData, 
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

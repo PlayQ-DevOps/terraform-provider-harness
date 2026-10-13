@@ -8,8 +8,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccEnvServiceOverrides_ProjectScope(t *testing.T) {
@@ -18,10 +18,10 @@ func TestAccEnvServiceOverrides_ProjectScope(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_environment_service_overrides.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccEnvServiceOverridesDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccEnvServiceOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccEnvServiceOverridesProjectScope(id, name),
@@ -46,10 +46,10 @@ func TestAccEnvServiceOverrides_OrgScope(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_environment_service_overrides.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccEnvServiceOverridesDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccEnvServiceOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccEnvServiceOverridesOrgScope(id, name),
@@ -73,10 +73,10 @@ func TestAccEnvServiceOverrides_AccountScope(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_environment_service_overrides.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccEnvServiceOverridesDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccEnvServiceOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccEnvServiceOverridesAccountScope(id, name),

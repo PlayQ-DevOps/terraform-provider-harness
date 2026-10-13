@@ -5,6 +5,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -16,7 +17,7 @@ func ResourceConnectorKubernetesCloudCost() *schema.Resource {
 		ReadContext:   resourceConnectorKubernetesCloudCostRead,
 		CreateContext: resourceConnectorKubernetesCloudCostCreateOrUpdate,
 		UpdateContext: resourceConnectorKubernetesCloudCostCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -43,7 +44,7 @@ func ResourceConnectorKubernetesCloudCost() *schema.Resource {
 }
 
 func resourceConnectorKubernetesCloudCostRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.CEK8sCluster)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.CEK8sCluster)
 	if err != nil {
 		return err
 	}
@@ -62,7 +63,7 @@ func resourceConnectorKubernetesCloudCostRead(ctx context.Context, d *schema.Res
 func resourceConnectorKubernetesCloudCostCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorKubernetesCloudCost(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

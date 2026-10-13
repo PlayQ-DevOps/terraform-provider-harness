@@ -103,17 +103,17 @@ resource "harness_platform_connector_kubernetes" "inheritFromDelegate" {
 
 ### Optional
 
-- `client_key_cert` (Block List, Max: 1) Client key and certificate config for the connector. (see [below for nested schema](#nestedblock--client_key_cert))
+- `client_key_cert` (Block List) Client key and certificate config for the connector. (see [below for nested schema](#nestedblock--client_key_cert))
 - `delegate_selectors` (Set of String) Selectors to use for the delegate.
 - `description` (String) Description of the resource.
 - `force_delete` (Boolean) Enable this flag for force deletion of connector
-- `inherit_from_delegate` (Block List, Max: 1) Credentials are inherited from the delegate. (see [below for nested schema](#nestedblock--inherit_from_delegate))
-- `openid_connect` (Block List, Max: 1) OpenID configuration for the connector. (see [below for nested schema](#nestedblock--openid_connect))
+- `inherit_from_delegate` (Block List) Credentials are inherited from the delegate. (see [below for nested schema](#nestedblock--inherit_from_delegate))
+- `openid_connect` (Block List) OpenID configuration for the connector. (see [below for nested schema](#nestedblock--openid_connect))
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.
-- `service_account` (Block List, Max: 1) Service account for the connector. (see [below for nested schema](#nestedblock--service_account))
+- `service_account` (Block List) Service account for the connector. (see [below for nested schema](#nestedblock--service_account))
 - `tags` (Set of String) Tags to associate with the resource.
-- `username_password` (Block List, Max: 1) Username and password for the connector. (see [below for nested schema](#nestedblock--username_password))
+- `username_password` (Block List) Username and password for the connector. (see [below for nested schema](#nestedblock--username_password))
 
 ### Read-Only
 

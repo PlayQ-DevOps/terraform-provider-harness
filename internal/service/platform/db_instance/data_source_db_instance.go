@@ -77,7 +77,7 @@ func dataSourceDBInstanceRead(ctx context.Context, d *schema.ResourceData, meta 
 	dbInstance, httpResp, err = c.DatabaseInstanceApi.V1GetProjDbSchemaInstance(ctx, d.Get("org_id").(string), d.Get("project_id").(string), d.Get("schema").(string), id, &localVarOptionals)
 
 	if err != nil {
-		return helpers.HandleDBOpsApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	readDataSourceDBInstance(d, &dbInstance)

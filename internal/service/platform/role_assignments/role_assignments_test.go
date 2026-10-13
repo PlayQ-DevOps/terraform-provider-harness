@@ -9,8 +9,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/stretchr/testify/require"
 )
 
@@ -20,10 +20,10 @@ func TestAccRoleAssignments(t *testing.T) {
 	resourceName := "harness_platform_role_assignments.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRoleAssignmentsDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRoleAssignmentsDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRoleAssignments(id, name, "false", accountId),
@@ -63,10 +63,10 @@ func TestAccRoleAssignments_withoutSendingIdentifier(t *testing.T) {
 	resourceName := "harness_platform_role_assignments.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRoleAssignmentsDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRoleAssignmentsDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRoleAssignments_withoutIdentifier(id, name, "false", accountId),
@@ -95,10 +95,10 @@ func TestAccRoleAssignments_withRoleReference(t *testing.T) {
 	resourceName := "harness_platform_role_assignments.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRoleAssignmentsDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRoleAssignmentsDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRoleAssignments_withRoleReference(id, name, "false", accountId),
@@ -129,9 +129,9 @@ func TestAccResourceRoleAssignments_DeleteUnderlyingResource(t *testing.T) {
 	resourceName := "harness_platform_role_assignments.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRoleAssignments(id, name, "false", accountId),

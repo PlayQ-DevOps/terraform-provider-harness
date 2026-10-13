@@ -30,12 +30,14 @@ func ResourceInputSet() *schema.Resource {
 				Description: "Identifier of the pipeline",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"yaml": {
-				Description: "Input Set YAML." + helpers.Descriptions.YamlText.String(),
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
+				Description:      "Input Set YAML." + helpers.Descriptions.YamlText.String(),
+				Type:             schema.TypeString,
+				Optional:         true,
+				Computed:         true,
+				DiffSuppressFunc: helpers.YamlDiffSuppressFunction,
 			},
 			"git_details": {
 				Description: "Contains parameters related to creating an Entity for Git Experience.",
@@ -205,10 +207,10 @@ func resourceInputSetRead(ctx context.Context, d *schema.ResourceData, meta inte
 	parent_entity_connector_ref := helpers.BuildField(d, "git_details.0.parent_entity_connector_ref")
 	parent_entity_repo_name := helpers.BuildField(d, "git_details.0.parent_entity_repo_name")
 
-	var store_type = helpers.BuildField(d, "git_details.0.store_type")
-	var base_branch = helpers.BuildField(d, "git_details.0.base_branch")
-	var commit_message = helpers.BuildField(d, "git_details.0.commit_message")
-	var connector_ref = helpers.BuildField(d, "git_details.0.connector_ref")
+	var store_type = helpers.ConfigOnly(d, "git_details.0.store_type")
+	var base_branch = helpers.ConfigOnly(d, "git_details.0.base_branch")
+	var commit_message = helpers.ConfigOnly(d, "git_details.0.commit_message")
+	var connector_ref = helpers.ConfigOnly(d, "git_details.0.connector_ref")
 
 	resp, httpResp, err := c.InputSetsApi.GetInputSet(ctx, orgId, projectId, id, pipelineId, &nextgen.InputSetsApiGetInputSetOpts{
 		HarnessAccount:           optional.NewString(c.AccountId),
@@ -217,14 +219,8 @@ func resourceInputSetRead(ctx context.Context, d *schema.ResourceData, meta inte
 		ParentEntityRepoName:     parent_entity_repo_name,
 	})
 
-	if httpResp.StatusCode == 404 {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
-
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readInputSet(d, &resp, pipelineId, store_type, base_branch, commit_message, connector_ref)
@@ -299,7 +295,7 @@ func resourceInputSetCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 			})
 
 			if err != nil {
-				return helpers.HandleApiError(err, d, httpResp)
+				return helpers.HandleWriteGit(ctx, d, err, httpResp)
 			}
 		}
 
@@ -316,7 +312,7 @@ func resourceInputSetCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	if importing {
@@ -335,7 +331,7 @@ func resourceInputSetCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 		})
 
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWriteGit(ctx, d, err, httpResp)
 		}
 
 		readInputSet(d, &resp, pipelineIdentifier, optional.NewString("REMOTE"), optional.EmptyString(), optional.EmptyString(), parent_entity_connector_ref)
@@ -363,7 +359,7 @@ func resourceInputSetEditGitDetials(ctx context.Context, d *schema.ResourceData,
 	resp, httpResp, err := c.InputSetsApi.EditGitDetailsForInputSet(ctx, c.AccountId, org_id, project_id, pipelineIdentifier, id, gitDetails)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	d.SetId(resp.Data.Identifier)
@@ -423,7 +419,7 @@ func resourceInputSetDelete(ctx context.Context, d *schema.ResourceData, meta in
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -546,11 +542,15 @@ func readGitDetails(inputSet *nextgen.InputSetResponseBody, store_type optional.
 	if commit_message.IsSet() {
 		git_details["commit_message"] = commit_message.Value()
 	}
-	if connector_ref.IsSet() {
-		git_details["connector_ref"] = connector_ref.Value()
+	// The connector reference comes from the API; the configured one is kept only when the
+	// API omits it (Harness Code repositories have none).
+	connectorRef := inputSet.GitDetails.ConnectorRef
+	if connectorRef == "" && connector_ref.IsSet() {
+		connectorRef = connector_ref.Value()
 	}
-	if connector_ref.Value() == "" {
-		git_details["is_harness_code_repo"] = true
+	if connectorRef != "" {
+		git_details["connector_ref"] = connectorRef
 	}
+	git_details["is_harness_code_repo"] = inputSet.GitDetails.IsHarnessCodeRepo || connectorRef == ""
 	return git_details
 }

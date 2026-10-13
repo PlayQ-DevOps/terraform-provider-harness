@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"log"
 )
 
 func ResourceResourceGroup() *schema.Resource {
@@ -48,6 +47,7 @@ func ResourceResourceGroup() *schema.Resource {
 				Description: "Included scopes; default selected based on resource group scope if not specified.",
 				Type:        schema.TypeSet,
 				Optional:    true,
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"account_id": {
@@ -148,19 +148,12 @@ func resourceResourceGroupRead(ctx context.Context, d *schema.ResourceData, meta
 		ProjectIdentifier: helpers.BuildField(d, "project_id"),
 	})
 
-	// This tells TF the resource-group no longer exists
-	if httpResp != nil && httpResp.StatusCode == 404 {
-		log.Printf("Resource group with ID '%s' not found (HTTP 404). Clearing resource ID.", id)
-		d.SetId("")
-		return nil
-	}
-
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if resp.Data == nil {
-		return nil
+	if resp.Data == nil || resp.Data.ResourceGroup == nil {
+		return helpers.ReadMissing(ctx, d, "resource group "+id)
 	}
 
 	readResourceGroup(d, resp.Data.ResourceGroup)
@@ -191,7 +184,7 @@ func resourceResourceGroupCreateOrUpdate(ctx context.Context, d *schema.Resource
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readResourceGroup(d, resp.Data.ResourceGroup)
@@ -208,7 +201,7 @@ func resourceResourceGroupDelete(ctx context.Context, d *schema.ResourceData, me
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -285,12 +278,16 @@ func readResourceGroup(d *schema.ResourceData, resourceGroup *nextgen.ResourceGr
 	d.Set("description", resourceGroup.Description)
 	d.Set("allowed_scope_levels", resourceGroup.AllowedScopeLevels)
 	d.Set("included_scopes", expandIncludedScope(resourceGroup.IncludedScopes))
-	d.Set("resource_filter", []interface{}{
-		map[string]interface{}{
-			"include_all_resources": resourceGroup.ResourceFilter.IncludeAllResources,
-			"resources":             expandResourceFilter(resourceGroup.ResourceFilter.Resources),
-		},
-	})
+	if resourceGroup.ResourceFilter != nil {
+		d.Set("resource_filter", []interface{}{
+			map[string]interface{}{
+				"include_all_resources": resourceGroup.ResourceFilter.IncludeAllResources,
+				"resources":             expandResourceFilter(resourceGroup.ResourceFilter.Resources),
+			},
+		})
+	} else {
+		d.Set("resource_filter", []interface{}{})
+	}
 }
 
 func expandIncludedScope(includedScopes []nextgen.ScopeSelector) []interface{} {

@@ -6,8 +6,8 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 // testAccActionTemplateDestroy verifies resources are destroyed, ignoring hub deletion errors
@@ -22,9 +22,9 @@ func TestAccDataSourceActionTemplate_byIdentity(t *testing.T) {
 	resourceName := "data.harness_chaos_action_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccActionTemplateDestroy,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccActionTemplateDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceActionTemplate_byIdentity(name),
@@ -44,9 +44,9 @@ func TestAccDataSourceActionTemplate_byName(t *testing.T) {
 	resourceName := "data.harness_chaos_action_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccActionTemplateDestroy,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccActionTemplateDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceActionTemplate_byName(name),

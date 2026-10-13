@@ -52,19 +52,19 @@ func resourceRuleReadDataSource(ctx context.Context, d *schema.ResourceData, met
 	resp, httpResp, err := c.RuleApi.GetPolicies(ctx, readRuleRequest(id), c.AccountId, nil)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if resp.Data != nil {
 		// Check if the rule was deleted externally
 		if len(resp.Data.Rules) == 0 {
-			d.SetId("")
-			return nil
+			return diag.Errorf("governance rule not found: no object matched the given arguments")
+
 		}
 
 		err := readRuleResponse(d, resp.Data)
 		if err != nil {
-			return helpers.HandleReadApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 	}
 

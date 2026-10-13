@@ -58,20 +58,20 @@ func dataSourceEnvironmentServiceOverridesRead(ctx context.Context, d *schema.Re
 			ProjectIdentifier: helpers.BuildField(d, "project_id"),
 		})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
-	// Soft delete lookup error handling
-	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil || resp.Data == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+	serviceId := d.Get("service_id").(string)
+	if resp.Data != nil {
+		for i := range resp.Data.Content {
+			so := &resp.Data.Content[i]
+			if so.EnvironmentRef == envId && (serviceId == "" || so.ServiceRef == serviceId) {
+				readEnvironmentServiceOverrides(d, so)
+				return nil
+			}
+		}
 	}
-
-	readEnvironmentServiceOverridesList(d, resp.Data)
-
-	return nil
+	return diag.Errorf("no service override of service %q was found in environment %s", serviceId, envId)
 }
 
 func SetScopeDataResourceSchemaForServiceOverride(s map[string]*schema.Schema) {

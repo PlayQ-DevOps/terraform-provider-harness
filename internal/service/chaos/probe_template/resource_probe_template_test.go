@@ -6,7 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccResourceProbeTemplate_httpProbe_basic(t *testing.T) {
@@ -14,8 +14,8 @@ func TestAccResourceProbeTemplate_httpProbe_basic(t *testing.T) {
 	resourceName := "harness_chaos_probe_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceProbeTemplate_httpProbe_basic(name),
@@ -48,8 +48,8 @@ func TestAccResourceProbeTemplate_httpProbe_update(t *testing.T) {
 	resourceName := "harness_chaos_probe_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceProbeTemplate_httpProbe_basic(name),
@@ -78,8 +78,8 @@ func TestAccResourceProbeTemplate_cmdProbe_basic(t *testing.T) {
 	resourceName := "harness_chaos_probe_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceProbeTemplate_cmdProbe_basic(name),
@@ -106,8 +106,8 @@ func TestAccResourceProbeTemplate_k8sProbe_basic(t *testing.T) {
 	resourceName := "harness_chaos_probe_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceProbeTemplate_k8sProbe_basic(name),
@@ -134,8 +134,8 @@ func TestAccResourceProbeTemplate_apmProbe_prometheus(t *testing.T) {
 	resourceName := "harness_chaos_probe_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceProbeTemplate_apmProbe_prometheus(name),
@@ -163,8 +163,8 @@ func TestAccResourceProbeTemplate_apmProbe_datadog(t *testing.T) {
 	resourceName := "harness_chaos_probe_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceProbeTemplate_apmProbe_datadog(name),

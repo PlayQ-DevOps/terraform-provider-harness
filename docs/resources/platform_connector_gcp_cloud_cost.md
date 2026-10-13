@@ -42,7 +42,7 @@ resource "harness_platform_connector_gcp_cloud_cost" "test" {
 
 ### Optional
 
-- `billing_export_spec` (Block List, Max: 1) Returns billing details. (see [below for nested schema](#nestedblock--billing_export_spec))
+- `billing_export_spec` (Block List) Returns billing details. (see [below for nested schema](#nestedblock--billing_export_spec))
 - `description` (String) Description of the resource.
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.

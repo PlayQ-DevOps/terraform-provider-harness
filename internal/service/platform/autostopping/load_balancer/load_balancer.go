@@ -26,7 +26,11 @@ func resourceLoadBalancerRead(ctx context.Context, d *schema.ResourceData, meta 
 	resp, httpResp, err := c.CloudCostAutoStoppingLoadBalancersApi.DescribeLoadBalancer(ctx, c.AccountId, id, c.AccountId)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
+	}
+
+	if resp.Response == nil {
+		return helpers.ReadMissing(ctx, d, "load balancer "+id)
 	}
 
 	readLoadBalancer(d, resp.Response)
@@ -50,7 +54,11 @@ func resourceLoadBalancerCreateOrUpdate(ctx context.Context, d *schema.ResourceD
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
+	}
+
+	if resp.Response == nil {
+		return helpers.HandleEmptyCreateUpdateResponse(nil, "load balancer")
 	}
 
 	readLoadBalancer(d, resp.Response)
@@ -81,7 +89,7 @@ func resourceLoadBalancerDelete(ctx context.Context, d *schema.ResourceData, met
 	}, c.AccountId, c.AccountId)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

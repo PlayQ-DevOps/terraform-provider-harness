@@ -55,19 +55,19 @@ func resourceRuleSetReadDataSource(ctx context.Context, d *schema.ResourceData, 
 	resp, httpResp, err := c.RuleSetsApi.ListRuleSets(ctx, readRuleSetRequest(id), c.AccountId)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if resp.Data != nil {
 		// Check if the rule set was deleted externally
 		if len(resp.Data.RuleSet) == 0 {
-			d.SetId("")
-			return nil
+			return diag.Errorf("governance rule set not found: no object matched the given arguments")
+
 		}
 
 		err := readRuleSetResponse(d, resp.Data)
 		if err != nil {
-			return helpers.HandleReadApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 	}
 

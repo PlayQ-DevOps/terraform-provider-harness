@@ -1,3 +1,0 @@
-```release-note:bug
-harness_platform_ff_api_key -  Fix error type
-```

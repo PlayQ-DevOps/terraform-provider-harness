@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -77,10 +76,6 @@ func ResourceGitopsCluster() *schema.Resource {
 							Description: "Indicates if the GitOps cluster should be updated if existing and inserted if not.",
 							Type:        schema.TypeBool,
 							Optional:    true,
-							DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-								// Suppress diffs if cluster resource already exists, only relevant during creation
-								return d.Id() != ""
-							},
 						},
 						"updated_fields": {
 							Description: "Fields which are updated.",
@@ -138,8 +133,8 @@ func ResourceGitopsCluster() *schema.Resource {
 												"password": {
 													Description:   "Password of the server of the cluster. Use password_wo for write-only support (Terraform >= 1.11).",
 													Type:          schema.TypeString,
-													Optional:      true,
 													Computed:      true,
+													Optional:      true,
 													Sensitive:     true,
 													ConflictsWith: []string{"request.0.cluster.0.config.0.password_wo"},
 												},
@@ -501,7 +496,6 @@ func ResourceGitopsCluster() *schema.Resource {
 
 func resourceGitopsClusterCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var agentIdentifier, accountIdentifier, orgIdentifier, projectIdentifier, identifier string
 	accountIdentifier = c.AccountId
 	if attr, ok := d.GetOk("agent_id"); ok {
@@ -530,7 +524,7 @@ func resourceGitopsClusterCreate(ctx context.Context, d *schema.ResourceData, me
 		})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
@@ -562,7 +556,6 @@ func resourceGitopsClusterCreate(ctx context.Context, d *schema.ResourceData, me
 
 func resourceGitopsClusterRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := d.Get("agent_id").(string)
 	identifier := d.Get("identifier").(string)
 	resp, httpResp, err := c.ClustersApi.AgentClusterServiceGet(ctx, agentIdentifier, identifier, c.AccountId, &nextgen.ClustersApiAgentClusterServiceGetOpts{
@@ -571,14 +564,14 @@ func resourceGitopsClusterRead(ctx context.Context, d *schema.ResourceData, meta
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
 	if resp.Cluster == nil {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -603,7 +596,6 @@ func resourceGitopsClusterRead(ctx context.Context, d *schema.ResourceData, meta
 
 func resourceGitopsClusterUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 
 	agentIdentifier := d.Get("agent_id").(string)
 	projectIdentifier := d.Get("project_id").(string)
@@ -621,7 +613,7 @@ func resourceGitopsClusterUpdate(ctx context.Context, d *schema.ResourceData, me
 		})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
@@ -658,7 +650,6 @@ func resourceGitopsClusterUpdate(ctx context.Context, d *schema.ResourceData, me
 
 func resourceGitopsClusterDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := d.Get("agent_id").(string)
 	identifier := d.Get("identifier").(string)
 	_, httpResp, err := c.ClustersApi.AgentClusterServiceDelete(ctx, agentIdentifier, identifier, &nextgen.ClustersApiAgentClusterServiceDeleteOpts{
@@ -670,7 +661,7 @@ func resourceGitopsClusterDelete(ctx context.Context, d *schema.ResourceData, me
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

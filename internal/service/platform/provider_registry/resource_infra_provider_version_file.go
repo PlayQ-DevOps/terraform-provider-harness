@@ -3,12 +3,12 @@ package provider_registry
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -73,7 +73,7 @@ func resourceInfraProviderVersionFileRead(ctx context.Context, d *schema.Resourc
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleRead(ctx, d, err, httpRes)
 	}
 
 	// Check if file exists in the provider's metadata
@@ -84,7 +84,7 @@ func resourceInfraProviderVersionFileRead(ctx context.Context, d *schema.Resourc
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleRead(ctx, d, err, httpRes)
 	}
 
 	// Find the version and check if file exists
@@ -138,23 +138,22 @@ func resourceInfraProviderVersionFileCreate(ctx context.Context, d *schema.Resou
 		if filename == "" {
 			return diag.Errorf("Could not derive filename from file_path: %s", filePath)
 		}
-		log.Printf("[DEBUG] Derived filename '%s' from file_path '%s'", filename, filePath)
+		tflog.Debug(ctx, fmt.Sprintf("Derived filename '%s' from file_path '%s'", filename, filePath))
 		d.Set("filename", filename)
 	}
-
-	log.Printf("[DEBUG] Uploading file %s for provider %s version %s", filename, providerId, version)
+	tflog.Debug(ctx, fmt.Sprintf("Uploading file %s for provider %s version %s", filename, providerId, version))
 
 	// Read file content if file_path is provided
 	var fileData []byte
 	if filePath != "" {
-		log.Printf("[DEBUG] Reading file from path: %s", filePath)
+		tflog.Debug(ctx, fmt.Sprintf("Reading file from path: %s", filePath))
 
 		var err error
 		fileData, err = os.ReadFile(filePath)
 		if err != nil {
 			return diag.Errorf("Failed to read file %s: %v", filePath, err)
 		}
-		log.Printf("[DEBUG] Read %d bytes from file %s", len(fileData), filePath)
+		tflog.Debug(ctx, fmt.Sprintf("Read %d bytes from file %s", len(fileData), filePath))
 	}
 
 	// Upload file using SDK method
@@ -170,11 +169,10 @@ func resourceInfraProviderVersionFileCreate(ctx context.Context, d *schema.Resou
 	)
 
 	if err != nil {
-		log.Printf("[ERROR] Failed to upload file: %v", err)
-		return parseError(err, httpRes)
+		tflog.Error(ctx, fmt.Sprintf("Failed to upload file: %v", err))
+		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
-
-	log.Printf("[DEBUG] Successfully uploaded file %s", filename)
+	tflog.Debug(ctx, fmt.Sprintf("Successfully uploaded file %s", filename))
 	d.Set("synced", resp.Synced)
 
 	d.SetId(fmt.Sprintf("%s/%s/%s", providerId, version, filename))
@@ -192,7 +190,7 @@ func resourceInfraProviderVersionFileDelete(ctx context.Context, d *schema.Resou
 	// If the file is synced, it cannot be deleted independently
 	// It will only be deleted when the provider itself is deleted
 	if synced {
-		log.Printf("[WARN] File %s is synced and cannot be deleted independently. It will be deleted when provider %s is deleted. Removing from state.", filename, providerId)
+		tflog.Warn(ctx, fmt.Sprintf("File %s is synced and cannot be deleted independently. It will be deleted when provider %s is deleted. Removing from state.", filename, providerId))
 		d.SetId("")
 		return nil
 	}
@@ -205,38 +203,27 @@ func resourceInfraProviderVersionFileDelete(ctx context.Context, d *schema.Resou
 		c.AccountId,
 	)
 	if err != nil {
-		// If resource is already gone (404), treat as success
-		if httpRes != nil && httpRes.StatusCode == 404 {
-			log.Printf("[INFO] File %s not found, already deleted. Removing from state.", filename)
-			d.SetId("")
-			return nil
-		}
 		// If we get a 400/409 error indicating the file is synced, handle gracefully
 		if httpRes != nil && (httpRes.StatusCode == 400 || httpRes.StatusCode == 409) {
-			log.Printf("[WARN] File %s cannot be deleted (likely synced). Removing from state.", filename)
+			tflog.Warn(ctx, fmt.Sprintf("File %s cannot be deleted (likely synced). Removing from state.", filename))
 			d.SetId("")
 			return nil
 		}
-		return parseError(err, httpRes)
+		return helpers.HandleDelete(ctx, d, err, httpRes)
 	}
 	return nil
 }
 
 func resourceInfraProviderVersionFileImport(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
-	parts := strings.Split(d.Id(), "/")
-	if len(parts) != 3 {
-		return nil, fmt.Errorf("invalid import ID format, expected: provider_id/version/filename")
+	parts, err := helpers.SplitImportID(d.Id(), 3, 3)
+	if err != nil {
+		return nil, fmt.Errorf("%w; expected provider_id/version/filename", err)
 	}
 
 	d.Set("provider_id", parts[0])
 	d.Set("version", parts[1])
 	d.Set("filename", parts[2])
 	d.SetId(d.Id())
-
-	diags := resourceInfraProviderVersionFileRead(ctx, d, m)
-	if diags.HasError() {
-		return nil, fmt.Errorf("failed to read provider version file: %v", diags)
-	}
 
 	return []*schema.ResourceData{d}, nil
 }

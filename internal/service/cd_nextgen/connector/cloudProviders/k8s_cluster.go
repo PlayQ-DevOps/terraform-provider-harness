@@ -7,6 +7,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,7 +19,7 @@ func ResourceConnectorK8s() *schema.Resource {
 		ReadContext:   resourceConnectorK8sRead,
 		CreateContext: resourceConnectorK8sCreateOrUpdate,
 		UpdateContext: resourceConnectorK8sCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -96,7 +97,7 @@ func ResourceConnectorK8s() *schema.Resource {
 							ConflictsWith: []string{"username_password.0.username_ref"},
 						},
 						"username_ref": {
-							Description: "Reference to the secret containing the username for the connector." + secret_ref_text,
+							Description: "Reference to the secret containing the username for the connector." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 							ExactlyOneOf: []string{
@@ -106,7 +107,7 @@ func ResourceConnectorK8s() *schema.Resource {
 							ConflictsWith: []string{"username_password.0.username"},
 						},
 						"password_ref": {
-							Description: "Reference to the secret containing the password for the connector." + secret_ref_text,
+							Description: "Reference to the secret containing the password for the connector." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Required:    true,
 						},
@@ -139,12 +140,12 @@ func ResourceConnectorK8s() *schema.Resource {
 							Required:    true,
 						},
 						"service_account_token_ref": {
-							Description: "Reference to the secret containing the service account token for the connector." + secret_ref_text,
+							Description: "Reference to the secret containing the service account token for the connector." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Required:    true,
 						},
 						"ca_cert_ref": {
-							Description: "Reference to the secret containing the CA certificate for the connector." + secret_ref_text,
+							Description: "Reference to the secret containing the CA certificate for the connector." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
@@ -192,7 +193,7 @@ func ResourceConnectorK8s() *schema.Resource {
 							ConflictsWith: []string{"openid_connect.0.username_ref"},
 						},
 						"username_ref": {
-							Description: "Reference to the secret containing the username for the connector." + secret_ref_text,
+							Description: "Reference to the secret containing the username for the connector." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 							ExactlyOneOf: []string{
@@ -202,17 +203,17 @@ func ResourceConnectorK8s() *schema.Resource {
 							ConflictsWith: []string{"openid_connect.0.username"},
 						},
 						"client_id_ref": {
-							Description: "Reference to the secret containing the client ID for the connector." + secret_ref_text,
+							Description: "Reference to the secret containing the client ID for the connector." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Required:    true,
 						},
 						"password_ref": {
-							Description: "Reference to the secret containing the password for the connector." + secret_ref_text,
+							Description: "Reference to the secret containing the password for the connector." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Required:    true,
 						},
 						"secret_ref": {
-							Description: "Reference to the secret containing the client secret for the connector." + secret_ref_text,
+							Description: "Reference to the secret containing the client secret for the connector." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
@@ -251,22 +252,22 @@ func ResourceConnectorK8s() *schema.Resource {
 							Required:    true,
 						},
 						"ca_cert_ref": {
-							Description: "Reference to the secret containing the CA certificate for the connector." + secret_ref_text,
+							Description: "Reference to the secret containing the CA certificate for the connector." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
 						"client_cert_ref": {
-							Description: "Reference to the secret containing the client certificate for the connector." + secret_ref_text,
+							Description: "Reference to the secret containing the client certificate for the connector." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Required:    true,
 						},
 						"client_key_ref": {
-							Description: "Reference to the secret containing the client key for the connector." + secret_ref_text,
+							Description: "Reference to the secret containing the client key for the connector." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Required:    true,
 						},
 						"client_key_passphrase_ref": {
-							Description: "Reference to the secret containing the client key passphrase for the connector." + secret_ref_text,
+							Description: "Reference to the secret containing the client key passphrase for the connector." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
@@ -282,7 +283,6 @@ func ResourceConnectorK8s() *schema.Resource {
 				Description: "Enable this flag for force deletion of connector",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 		},
 	}
@@ -293,7 +293,7 @@ func ResourceConnectorK8s() *schema.Resource {
 }
 
 func resourceConnectorK8sRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.K8sCluster)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.K8sCluster)
 	if err != nil {
 		return err
 	}
@@ -312,7 +312,7 @@ func resourceConnectorK8sRead(ctx context.Context, d *schema.ResourceData, meta 
 func resourceConnectorK8sCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorK8s(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

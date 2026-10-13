@@ -3,442 +3,355 @@ package monitored_service
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
+
 	"github.com/harness/harness-go-sdk/harness/nextgen"
-	"strconv" //this package is used to convert the data type
 )
 
-func getAppDynamicsHealthSource(hs map[string]interface{}) nextgen.AppDynamicsHealthSource {
-	healthSource := &nextgen.AppDynamicsHealthSource{}
-	healthSource.ConnectorRef = hs["connectorRef"].(string)
-	healthSource.ApplicationName = hs["applicationName"].(string)
-	healthSource.Feature = hs["feature"].(string)
-	healthSource.TierName = hs["tierName"].(string)
+// The health source builders turn the decoded `spec` JSON of a health source block into the
+// SDK model. Misshapen input (a missing key, a wrong type, a definition the model cannot
+// decode) is an error for the plan or apply, never a panic that kills the plugin.
+
+// asString returns v as a string, or "" when it is absent or not a string.
+func asString(v interface{}) string {
+	s, _ := v.(string)
+	return s
+}
+
+// asList returns v as a list, or nil when it is absent or not a list.
+func asList(v interface{}) []interface{} {
+	l, _ := v.([]interface{})
+	return l
+}
+
+// decodeInto re-encodes a decoded JSON value into the SDK model out.
+func decodeInto(v interface{}, out interface{}, what string) error {
+	raw, err := json.Marshal(v)
+	if err != nil {
+		return fmt.Errorf("invalid %s %v: %w", what, v, err)
+	}
+	if err := safeUnmarshal(raw, out); err != nil {
+		return fmt.Errorf("invalid %s %v: %w", what, v, err)
+	}
+	return nil
+}
+
+// decodeList decodes every element of a list into T.
+func decodeList[T any](v interface{}, what string) ([]T, error) {
+	items := asList(v)
+	out := make([]T, len(items))
+	for i, item := range items {
+		if err := decodeInto(item, &out[i], what); err != nil {
+			return nil, err
+		}
+	}
+	return out, nil
+}
+
+// metricPacksOf decodes the metric packs of a health source spec, if it has any.
+func metricPacksOf(hs map[string]interface{}) ([]nextgen.TimeSeriesMetricPackDto, error) {
+	if hs["metricPacks"] == nil {
+		return nil, nil
+	}
+	return getMetricPacks(hs, "metricPacks")
+}
+
+func getAppDynamicsHealthSource(hs map[string]interface{}) (nextgen.AppDynamicsHealthSource, error) {
+	healthSource := nextgen.AppDynamicsHealthSource{
+		ConnectorRef:    asString(hs["connectorRef"]),
+		ApplicationName: asString(hs["applicationName"]),
+		Feature:         asString(hs["feature"]),
+		TierName:        asString(hs["tierName"]),
+	}
 	if hs["metricDefinitions"] != nil {
-		metricDefinitions := hs["metricDefinitions"].([]interface{})
-		healthSourceMetricDefinitions := make([]nextgen.AppDMetricDefinitions, len(metricDefinitions))
-		for i, metricDefinition := range metricDefinitions {
-			data := nextgen.AppDMetricDefinitions{}
-			metricDef, errMarshal := json.Marshal(metricDefinition)
-			if errMarshal != nil {
-				panic(fmt.Sprintf("Invalid Health source %s", hs))
-			}
-			errUnMarshal := json.Unmarshal(metricDef, &data)
-			if errUnMarshal != nil {
-				panic(fmt.Sprintf("Invalid Health source %s", hs))
-			}
-			healthSourceMetricDefinitions[i] = data
+		defs, err := decodeList[nextgen.AppDMetricDefinitions](hs["metricDefinitions"], "AppDynamics metric definition")
+		if err != nil {
+			return healthSource, err
 		}
-		healthSource.MetricDefinitions = healthSourceMetricDefinitions
+		healthSource.MetricDefinitions = defs
 	}
-
-	if hs["metricPacks"] != nil {
-		healthSource.MetricPacks = getMetricPacks(hs, "metricPacks")
+	packs, err := metricPacksOf(hs)
+	if err != nil {
+		return healthSource, err
 	}
-	return *healthSource
+	healthSource.MetricPacks = packs
+	return healthSource, nil
 }
 
-func getPrometheusHealthSource(hs map[string]interface{}) nextgen.PrometheusHealthSource {
-	healthSource := &nextgen.PrometheusHealthSource{}
-
-	healthSource.ConnectorRef = hs["connectorRef"].(string)
-
-	metricDefinitions := hs["metricDefinitions"].([]interface{})
-	healthSourceMetricDefinitions := make([]nextgen.PrometheusMetricDefinition, len(metricDefinitions))
-	for i, metricDefinition := range metricDefinitions {
-		data := nextgen.PrometheusMetricDefinition{}
-		metricDef, errMarshal := json.Marshal(metricDefinition)
-		if errMarshal != nil {
-			panic(fmt.Sprintf("Invalid Health source %s", hs))
-		}
-		errUnMarshal := json.Unmarshal(metricDef, &data)
-		if errUnMarshal != nil {
-			panic(fmt.Sprintf("Invalid Health source %s", hs))
-		}
-		healthSourceMetricDefinitions[i] = data
+func getPrometheusHealthSource(hs map[string]interface{}) (nextgen.PrometheusHealthSource, error) {
+	healthSource := nextgen.PrometheusHealthSource{ConnectorRef: asString(hs["connectorRef"])}
+	defs, err := decodeList[nextgen.PrometheusMetricDefinition](hs["metricDefinitions"], "Prometheus metric definition")
+	if err != nil {
+		return healthSource, err
 	}
-	healthSource.MetricDefinitions = healthSourceMetricDefinitions
-
-	if hs["metricPacks"] != nil {
-		healthSource.MetricPacks = getMetricPacks(hs, "metricPacks")
+	healthSource.MetricDefinitions = defs
+	packs, err := metricPacksOf(hs)
+	if err != nil {
+		return healthSource, err
 	}
-	return *healthSource
+	healthSource.MetricPacks = packs
+	return healthSource, nil
 }
 
-func getNewRelicHealthSource(hs map[string]interface{}) nextgen.NewRelicHealthSource {
-	healthSource := &nextgen.NewRelicHealthSource{}
-
-	healthSource.ConnectorRef = hs["connectorRef"].(string)
+func getNewRelicHealthSource(hs map[string]interface{}) (nextgen.NewRelicHealthSource, error) {
+	healthSource := nextgen.NewRelicHealthSource{
+		ConnectorRef:    asString(hs["connectorRef"]),
+		ApplicationName: asString(hs["applicationName"]),
+		ApplicationId:   asString(hs["applicationId"]),
+		Feature:         asString(hs["feature"]),
+	}
 	if hs["newRelicMetricDefinitions"] != nil {
-		metricDefinitions := hs["newRelicMetricDefinitions"].([]interface{})
-		healthSourceMetricDefinitions := make([]nextgen.NewRelicMetricDefinition, len(metricDefinitions))
-		for i, metricDefinition := range metricDefinitions {
-			data := nextgen.NewRelicMetricDefinition{}
-			metricDef, errMarshal := json.Marshal(metricDefinition)
-			if errMarshal != nil {
-				panic(fmt.Sprintf("Invalid Health source %s", hs))
-			}
-			errUnMarshal := json.Unmarshal(metricDef, &data)
-			if errUnMarshal != nil {
-				panic(fmt.Sprintf("Invalid Health source %s", hs))
-			}
-			healthSourceMetricDefinitions[i] = data
+		defs, err := decodeList[nextgen.NewRelicMetricDefinition](hs["newRelicMetricDefinitions"], "New Relic metric definition")
+		if err != nil {
+			return healthSource, err
 		}
-		healthSource.NewRelicMetricDefinitions = healthSourceMetricDefinitions
+		healthSource.NewRelicMetricDefinitions = defs
 	}
-
-	if hs["metricPacks"] != nil {
-		healthSource.MetricPacks = getMetricPacks(hs, "metricPacks")
+	packs, err := metricPacksOf(hs)
+	if err != nil {
+		return healthSource, err
 	}
-	return *healthSource
+	healthSource.MetricPacks = packs
+	return healthSource, nil
 }
 
-func getStackDriverHealthSource(hs map[string]interface{}) nextgen.StackdriverMetricHealthSource {
-	healthSource := &nextgen.StackdriverMetricHealthSource{}
-
-	healthSource.ConnectorRef = hs["connectorRef"].(string)
-
-	if hs["gcpProjectId"] != nil {
-		healthSource.GcpProjectId = hs["gcpProjectId"].(string)
+func getStackDriverHealthSource(hs map[string]interface{}) (nextgen.StackdriverMetricHealthSource, error) {
+	healthSource := nextgen.StackdriverMetricHealthSource{
+		ConnectorRef: asString(hs["connectorRef"]),
+		GcpProjectId: asString(hs["gcpProjectId"]),
 	}
-
-	metricDefinitions := hs["metricDefinitions"].([]interface{})
-	healthSourceMetricDefinitions := make([]nextgen.StackdriverDefinition, len(metricDefinitions))
-	for i, metricDefinition := range metricDefinitions {
-		data := nextgen.StackdriverDefinition{}
-		metricDef, errMarshal := json.Marshal(metricDefinition)
-		if errMarshal != nil {
-			panic(fmt.Sprintf("Invalid Health source %s", hs))
-		}
-		errUnMarshal := json.Unmarshal(metricDef, &data)
-		if errUnMarshal != nil {
-			panic(fmt.Sprintf("Invalid Health source %s", hs))
-		}
-		healthSourceMetricDefinitions[i] = data
+	defs, err := decodeList[nextgen.StackdriverDefinition](hs["metricDefinitions"], "Stackdriver metric definition")
+	if err != nil {
+		return healthSource, err
 	}
-	healthSource.MetricDefinitions = healthSourceMetricDefinitions
-
-	if hs["metricPacks"] != nil {
-		healthSource.MetricPacks = getMetricPacks(hs, "metricPacks")
+	healthSource.MetricDefinitions = defs
+	packs, err := metricPacksOf(hs)
+	if err != nil {
+		return healthSource, err
 	}
-	return *healthSource
+	healthSource.MetricPacks = packs
+	return healthSource, nil
 }
 
-func getDataDogHealthSource(hs map[string]interface{}) nextgen.DatadogMetricHealthSource {
-	healthSource := &nextgen.DatadogMetricHealthSource{}
-
-	healthSource.ConnectorRef = hs["connectorRef"].(string)
-
-	metricDefinitions := hs["metricDefinitions"].([]interface{})
-	healthSourceMetricDefinitions := make([]nextgen.DatadogMetricHealthDefinition, len(metricDefinitions))
-	for i, metricDefinition := range metricDefinitions {
-		data := nextgen.DatadogMetricHealthDefinition{}
-		metricDef, errMarshal := json.Marshal(metricDefinition)
-		if errMarshal != nil {
-			panic(fmt.Sprintf("Invalid Health source %s", hs))
-		}
-		errUnMarshal := json.Unmarshal(metricDef, &data)
-		if errUnMarshal != nil {
-			panic(fmt.Sprintf("Invalid Health source %s", hs))
-		}
-		healthSourceMetricDefinitions[i] = data
+func getDataDogHealthSource(hs map[string]interface{}) (nextgen.DatadogMetricHealthSource, error) {
+	healthSource := nextgen.DatadogMetricHealthSource{ConnectorRef: asString(hs["connectorRef"])}
+	defs, err := decodeList[nextgen.DatadogMetricHealthDefinition](hs["metricDefinitions"], "Datadog metric definition")
+	if err != nil {
+		return healthSource, err
 	}
-	healthSource.MetricDefinitions = healthSourceMetricDefinitions
-
-	if hs["metricPacks"] != nil {
-		healthSource.MetricPacks = getMetricPacks(hs, "metricPacks")
+	healthSource.MetricDefinitions = defs
+	packs, err := metricPacksOf(hs)
+	if err != nil {
+		return healthSource, err
 	}
-	return *healthSource
+	healthSource.MetricPacks = packs
+	return healthSource, nil
 }
 
-func getDynatraceHealthSource(hs map[string]interface{}) nextgen.DynatraceHealthSource {
-	healthSource := &nextgen.DynatraceHealthSource{}
-	healthSource.ConnectorRef = hs["connectorRef"].(string)
-	healthSource.ServiceId = hs["serviceId"].(string)
-	if hs["serviceMethodIds"] != nil {
-		serviceMethodIds := hs["serviceMethodIds"].([]interface{})
-		s := make([]string, len(serviceMethodIds))
-		for i, v := range serviceMethodIds {
+func getDynatraceHealthSource(hs map[string]interface{}) (nextgen.DynatraceHealthSource, error) {
+	healthSource := nextgen.DynatraceHealthSource{
+		ConnectorRef: asString(hs["connectorRef"]),
+		ServiceId:    asString(hs["serviceId"]),
+		ServiceName:  asString(hs["serviceName"]),
+		Feature:      asString(hs["feature"]),
+	}
+	if ids := asList(hs["serviceMethodIds"]); ids != nil {
+		s := make([]string, len(ids))
+		for i, v := range ids {
 			s[i] = fmt.Sprint(v)
 		}
 		healthSource.ServiceMethodIds = s
 	}
-	healthSource.ServiceName = hs["serviceName"].(string)
-	healthSource.Feature = hs["feature"].(string)
 	if hs["metricDefinitions"] != nil {
-		metricDefinitions := hs["metricDefinitions"].([]interface{})
-		healthSourceMetricDefinitions := make([]nextgen.DynatraceMetricDefinition, len(metricDefinitions))
-		for i, metricDefinition := range metricDefinitions {
-			data := nextgen.DynatraceMetricDefinition{}
-			metricDef, errMarshal := json.Marshal(metricDefinition)
-			if errMarshal != nil {
-				panic(fmt.Sprintf("Invalid Health source %s", hs))
-			}
-			errUnMarshal := json.Unmarshal(metricDef, &data)
-			if errUnMarshal != nil {
-				panic(fmt.Sprintf("Invalid Health source %s", hs))
-			}
-			healthSourceMetricDefinitions[i] = data
+		defs, err := decodeList[nextgen.DynatraceMetricDefinition](hs["metricDefinitions"], "Dynatrace metric definition")
+		if err != nil {
+			return healthSource, err
 		}
-		healthSource.MetricDefinitions = healthSourceMetricDefinitions
+		healthSource.MetricDefinitions = defs
 	}
-
-	if hs["metricPacks"] != nil {
-		healthSource.MetricPacks = getMetricPacks(hs, "metricPacks")
+	packs, err := metricPacksOf(hs)
+	if err != nil {
+		return healthSource, err
 	}
-	return *healthSource
+	healthSource.MetricPacks = packs
+	return healthSource, nil
 }
 
-func getCustomHealthSource(hs map[string]interface{}) nextgen.CustomHealthSourceMetric {
-	healthSource := &nextgen.CustomHealthSourceMetric{}
-
-	healthSource.ConnectorRef = hs["connectorRef"].(string)
-
-	metricDefinitions := hs["metricDefinitions"].([]interface{})
-	healthSourceMetricDefinitions := make([]nextgen.CustomHealthMetricDefinition, len(metricDefinitions))
-	for i, metricDefinition := range metricDefinitions {
-		data := nextgen.CustomHealthMetricDefinition{}
-		metricDef, errMarshal := json.Marshal(metricDefinition)
-		if errMarshal != nil {
-			panic(fmt.Sprintf("Invalid Health source %s", hs))
-		}
-		errUnMarshal := json.Unmarshal(metricDef, &data)
-		if errUnMarshal != nil {
-			panic(fmt.Sprintf("Invalid Health source %s", hs))
-		}
-		healthSourceMetricDefinitions[i] = data
+func getCustomHealthSource(hs map[string]interface{}) (nextgen.CustomHealthSourceMetric, error) {
+	healthSource := nextgen.CustomHealthSourceMetric{ConnectorRef: asString(hs["connectorRef"])}
+	defs, err := decodeList[nextgen.CustomHealthMetricDefinition](hs["metricDefinitions"], "custom health metric definition")
+	if err != nil {
+		return healthSource, err
 	}
-	healthSource.MetricDefinitions = healthSourceMetricDefinitions
-
-	if hs["metricPacks"] != nil {
-		healthSource.MetricPacks = getMetricPacks(hs, "metricPacks")
+	healthSource.MetricDefinitions = defs
+	packs, err := metricPacksOf(hs)
+	if err != nil {
+		return healthSource, err
 	}
-	return *healthSource
+	healthSource.MetricPacks = packs
+	return healthSource, nil
 }
 
-func getSplunkHealthSource(hs map[string]interface{}) nextgen.SplunkMetricHealthSource {
-	healthSource := &nextgen.SplunkMetricHealthSource{}
-
-	healthSource.ConnectorRef = hs["connectorRef"].(string)
-
-	metricDefinitions := hs["metricDefinitions"].([]interface{})
-	healthSourceMetricDefinitions := make([]nextgen.SplunkMetricDefinition, len(metricDefinitions))
-	for i, metricDefinition := range metricDefinitions {
-		data := nextgen.SplunkMetricDefinition{}
-		metricDef, errMarshal := json.Marshal(metricDefinition)
-		if errMarshal != nil {
-			panic(fmt.Sprintf("Invalid Health source %s", hs))
-		}
-		errUnMarshal := json.Unmarshal(metricDef, &data)
-		if errUnMarshal != nil {
-			panic(fmt.Sprintf("Invalid Health source %s", hs))
-		}
-		healthSourceMetricDefinitions[i] = data
+func getSplunkHealthSource(hs map[string]interface{}) (nextgen.SplunkMetricHealthSource, error) {
+	healthSource := nextgen.SplunkMetricHealthSource{ConnectorRef: asString(hs["connectorRef"])}
+	defs, err := decodeList[nextgen.SplunkMetricDefinition](hs["metricDefinitions"], "Splunk metric definition")
+	if err != nil {
+		return healthSource, err
 	}
-	healthSource.MetricDefinitions = healthSourceMetricDefinitions
-
-	if hs["metricPacks"] != nil {
-		healthSource.MetricPacks = getMetricPacks(hs, "metricPacks")
+	healthSource.MetricDefinitions = defs
+	packs, err := metricPacksOf(hs)
+	if err != nil {
+		return healthSource, err
 	}
-	return *healthSource
+	healthSource.MetricPacks = packs
+	return healthSource, nil
 }
 
-func getCloudWatchHealthSource(hs map[string]interface{}) nextgen.CloudWatchMetricsHealthSource {
-	healthSource := &nextgen.CloudWatchMetricsHealthSource{}
-
-	healthSource.ConnectorRef = hs["connectorRef"].(string)
-
-	metricDefinitions := hs["metricDefinitions"].([]interface{})
-	healthSourceMetricDefinitions := make([]nextgen.CloudWatchMetricDefinition, len(metricDefinitions))
-	for i, metricDefinition := range metricDefinitions {
-		data := nextgen.CloudWatchMetricDefinition{}
-		metricDef, errMarshal := json.Marshal(metricDefinition)
-		if errMarshal != nil {
-			panic(fmt.Sprintf("Invalid Health source %s", hs))
-		}
-		errUnMarshal := json.Unmarshal(metricDef, &data)
-		if errUnMarshal != nil {
-			panic(fmt.Sprintf("Invalid Health source %s", hs))
-		}
-		healthSourceMetricDefinitions[i] = data
+func getCloudWatchHealthSource(hs map[string]interface{}) (nextgen.CloudWatchMetricsHealthSource, error) {
+	healthSource := nextgen.CloudWatchMetricsHealthSource{ConnectorRef: asString(hs["connectorRef"])}
+	defs, err := decodeList[nextgen.CloudWatchMetricDefinition](hs["metricDefinitions"], "CloudWatch metric definition")
+	if err != nil {
+		return healthSource, err
 	}
-	healthSource.MetricDefinitions = healthSourceMetricDefinitions
-
-	if hs["metricPacks"] != nil {
-		healthSource.MetricPacks = getMetricPacks(hs, "metricPacks")
+	healthSource.MetricDefinitions = defs
+	packs, err := metricPacksOf(hs)
+	if err != nil {
+		return healthSource, err
 	}
-	return *healthSource
+	healthSource.MetricPacks = packs
+	return healthSource, nil
 }
 
-func getAwsPrometheusHealthSource(hs map[string]interface{}) nextgen.AwsPrometheusHealthSource {
-	healthSource := &nextgen.AwsPrometheusHealthSource{}
-
-	healthSource.ConnectorRef = hs["connectorRef"].(string)
-
-	metricDefinitions := hs["metricDefinitions"].([]interface{})
-	healthSourceMetricDefinitions := make([]nextgen.PrometheusMetricDefinition, len(metricDefinitions))
-	for i, metricDefinition := range metricDefinitions {
-		data := nextgen.PrometheusMetricDefinition{}
-		metricDef, errMarshal := json.Marshal(metricDefinition)
-		if errMarshal != nil {
-			panic(fmt.Sprintf("Invalid Health source %s", hs))
-		}
-		errUnMarshal := json.Unmarshal(metricDef, &data)
-		if errUnMarshal != nil {
-			panic(fmt.Sprintf("Invalid Health source %s", hs))
-		}
-		healthSourceMetricDefinitions[i] = data
+func getAwsPrometheusHealthSource(hs map[string]interface{}) (nextgen.AwsPrometheusHealthSource, error) {
+	healthSource := nextgen.AwsPrometheusHealthSource{ConnectorRef: asString(hs["connectorRef"])}
+	defs, err := decodeList[nextgen.PrometheusMetricDefinition](hs["metricDefinitions"], "AWS Prometheus metric definition")
+	if err != nil {
+		return healthSource, err
 	}
-	healthSource.MetricDefinitions = healthSourceMetricDefinitions
-
-	if hs["metricPacks"] != nil {
-		healthSource.MetricPacks = getMetricPacks(hs, "metricPacks")
+	healthSource.MetricDefinitions = defs
+	packs, err := metricPacksOf(hs)
+	if err != nil {
+		return healthSource, err
 	}
-	return *healthSource
+	healthSource.MetricPacks = packs
+	return healthSource, nil
 }
 
-func getNextGenHealthSource(hs map[string]interface{}) nextgen.NextGenHealthSource {
-	healthSource := &nextgen.NextGenHealthSource{}
-	healthSource.ConnectorRef = hs["connectorRef"].(string)
+func getNextGenHealthSource(hs map[string]interface{}) (nextgen.NextGenHealthSource, error) {
+	healthSource := nextgen.NextGenHealthSource{ConnectorRef: asString(hs["connectorRef"])}
 	healthSourceParamDto := nextgen.HealthSourceParamsDto{}
-	healthSourceParamData, errMarshal := json.Marshal(hs["healthSourceParams"])
-	if errMarshal != nil {
-		panic(fmt.Sprintf("Invalid health source param dto %s", hs))
+	if err := decodeInto(hs["healthSourceParams"], &healthSourceParamDto, "health source params"); err != nil {
+		return healthSource, err
 	}
-	errUnMarshal := json.Unmarshal(healthSourceParamData, &healthSourceParamDto)
-	if errUnMarshal != nil {
-		panic(fmt.Sprintf("Invalid health source param dto %s", hs))
-	}
-	queryDefinitions := hs["queryDefinitions"].([]interface{})
+	queryDefinitions := asList(hs["queryDefinitions"])
 	queryDefinitionDtos := make([]nextgen.QueryDefinition, len(queryDefinitions))
 	for i, queryDefinition := range queryDefinitions {
-		data := queryDefinition.(map[string]interface{})
+		data, _ := queryDefinition.(map[string]interface{})
+		if data == nil {
+			return healthSource, fmt.Errorf("invalid query definition %v: expected an object", queryDefinition)
+		}
 
 		queryParams := nextgen.QueryParamsDto{}
-		queryParamsData, _ := json.Marshal(data["queryParams"])
-		json.Unmarshal(queryParamsData, &queryParams)
-
+		if err := decodeInto(data["queryParams"], &queryParams, "query params"); err != nil {
+			return healthSource, err
+		}
 		riskProfile := nextgen.RiskProfile{}
-		riskProfileData, _ := json.Marshal(data["riskProfile"])
-		json.Unmarshal(riskProfileData, &riskProfile)
+		if err := decodeInto(data["riskProfile"], &riskProfile, "risk profile"); err != nil {
+			return healthSource, err
+		}
 
-		query := ""
-		if data["query"] != nil {
-			query = data["query"].(string)
+		liveMonitoringEnabled, _ := strconv.ParseBool(asString(data["liveMonitoringEnabled"]))
+		continuousVerificationEnabled, _ := strconv.ParseBool(asString(data["continuousVerificationEnabled"]))
+		sliEnabled, _ := strconv.ParseBool(asString(data["sliEnabled"]))
+		thresholds, err := getMetricThreshold(data)
+		if err != nil {
+			return healthSource, err
 		}
-		liveMonitoringEnabled := false
-		if data["liveMonitoringEnabled"] != nil {
-			liveMonitoringEnabled, _ = strconv.ParseBool(data["liveMonitoringEnabled"].(string))
-		}
-		continuousVerificationEnabled := false
-		if data["continuousVerificationEnabled"] != nil {
-			continuousVerificationEnabled, _ = strconv.ParseBool(data["continuousVerificationEnabled"].(string))
-		}
-		sliEnabled := false
-		if data["sliEnabled"] != nil {
-			sliEnabled, _ = strconv.ParseBool(data["sliEnabled"].(string))
-		}
-		queryDefinitionDto := &nextgen.QueryDefinition{
-			Identifier:                    data["identifier"].(string),
-			Name:                          data["name"].(string),
-			GroupName:                     data["groupName"].(string),
+		queryDefinitionDtos[i] = nextgen.QueryDefinition{
+			Identifier:                    asString(data["identifier"]),
+			Name:                          asString(data["name"]),
+			GroupName:                     asString(data["groupName"]),
 			LiveMonitoringEnabled:         liveMonitoringEnabled,
 			ContinuousVerificationEnabled: continuousVerificationEnabled,
 			SliEnabled:                    sliEnabled,
-			Query:                         query,
-			MetricThresholds:              getMetricThreshold(data),
+			Query:                         asString(data["query"]),
+			MetricThresholds:              thresholds,
 			QueryParams:                   &queryParams,
 			RiskProfile:                   &riskProfile,
 		}
-		queryDefinitionDtos[i] = *queryDefinitionDto
 	}
 	healthSource.QueryDefinitions = queryDefinitionDtos
 	healthSource.HealthSourceParams = &healthSourceParamDto
 
-	return *healthSource
+	return healthSource, nil
 }
 
-func getMetricPacks(hs map[string]interface{}, path string) []nextgen.TimeSeriesMetricPackDto {
-	metricPacks := hs[path].([]interface{})
+func getMetricPacks(hs map[string]interface{}, path string) ([]nextgen.TimeSeriesMetricPackDto, error) {
+	metricPacks := asList(hs[path])
 	metricPackDto := make([]nextgen.TimeSeriesMetricPackDto, len(metricPacks))
 	for i, metricPack := range metricPacks {
-		test := metricPack.(map[string]interface{})
-		timeSeriesMetricPackDto := &nextgen.TimeSeriesMetricPackDto{
-			Identifier:       test["identifier"].(string),
-			MetricThresholds: getMetricThreshold(test),
+		pack, _ := metricPack.(map[string]interface{})
+		if pack == nil {
+			return nil, fmt.Errorf("invalid metric pack %v: expected an object", metricPack)
 		}
-		metricPackDto[i] = *timeSeriesMetricPackDto
+		thresholds, err := getMetricThreshold(pack)
+		if err != nil {
+			return nil, err
+		}
+		metricPackDto[i] = nextgen.TimeSeriesMetricPackDto{
+			Identifier:       asString(pack["identifier"]),
+			MetricThresholds: thresholds,
+		}
 	}
-	return metricPackDto
+	return metricPackDto, nil
 }
 
-func getMetricThreshold(hs map[string]interface{}) []nextgen.MetricThreshold {
-	if hs["metricThresholds"] != nil {
-		metricThresholds := hs["metricThresholds"].([]interface{})
-		metricThresholdDto := make([]nextgen.MetricThreshold, len(metricThresholds))
-		for j, metricThreshold := range metricThresholds {
-			metricThresholdDto[j] = getMetricThresholdByType(metricThreshold.(map[string]interface{}))
+func getMetricThreshold(hs map[string]interface{}) ([]nextgen.MetricThreshold, error) {
+	metricThresholds := asList(hs["metricThresholds"])
+	metricThresholdDto := make([]nextgen.MetricThreshold, len(metricThresholds))
+	for j, metricThreshold := range metricThresholds {
+		threshold, _ := metricThreshold.(map[string]interface{})
+		if threshold == nil {
+			return nil, fmt.Errorf("invalid metric threshold %v: expected an object", metricThreshold)
 		}
-		return metricThresholdDto
-	} else {
-		return make([]nextgen.MetricThreshold, 0)
+		dto, err := getMetricThresholdByType(threshold)
+		if err != nil {
+			return nil, err
+		}
+		metricThresholdDto[j] = dto
 	}
+	return metricThresholdDto, nil
 }
 
-func getMetricThresholdByType(hs map[string]interface{}) nextgen.MetricThreshold {
-	metricThresholdType := hs["type"].(string)
-	spec, errMarshal := json.Marshal(hs["spec"])
-	if errMarshal != nil {
-		panic(fmt.Sprintf("Invalid metric threshold %s", hs))
-	}
+func getMetricThresholdByType(hs map[string]interface{}) (nextgen.MetricThreshold, error) {
+	metricThresholdType := asString(hs["type"])
 	criteria := nextgen.MetricThresholdCriteria{}
-	criteriaData, errMarshal := json.Marshal(hs["criteria"])
-	if errMarshal != nil {
-		panic(fmt.Sprintf("Invalid metric threshold %s", hs))
+	if err := decodeInto(hs["criteria"], &criteria, "metric threshold criteria"); err != nil {
+		return nextgen.MetricThreshold{}, err
 	}
-	errUnMarshal := json.Unmarshal(criteriaData, &criteria)
-	if errUnMarshal != nil {
-		panic(fmt.Sprintf("Invalid metric threshold %s", hs))
+	threshold := nextgen.MetricThreshold{
+		MetricName:       asString(hs["metricName"]),
+		MetricType:       asString(hs["metricType"]),
+		MetricIdentifier: asString(hs["identifier"]),
+		GroupName:        asString(hs["groupName"]),
+		Type_:            nextgen.MetricThresholdType(metricThresholdType),
+		Criteria:         &criteria,
 	}
-	groupName := ""
-	if hs["groupName"] != nil {
-		groupName = hs["groupName"].(string)
-	}
-	identifier := ""
-	if hs["identifier"] != nil {
-		identifier = hs["identifier"].(string)
-	}
-	if metricThresholdType == "FailImmediately" {
+	switch metricThresholdType {
+	case "FailImmediately":
 		data := nextgen.FailMetricThresholdSpec{}
-		err := json.Unmarshal(spec, &data)
-		if err != nil {
-			panic(fmt.Sprintf("Invalid metric threshold %s", hs))
+		if err := decodeInto(hs["spec"], &data, "metric threshold spec"); err != nil {
+			return nextgen.MetricThreshold{}, err
 		}
-
-		return nextgen.MetricThreshold{
-			MetricName:       hs["metricName"].(string),
-			MetricType:       hs["metricType"].(string),
-			MetricIdentifier: identifier,
-			GroupName:        groupName,
-			Type_:            nextgen.MetricThresholdType(metricThresholdType),
-			FailImmediately:  &data,
-			Criteria:         &criteria,
-		}
-	}
-	if metricThresholdType == "IgnoreThreshold" {
+		threshold.FailImmediately = &data
+	case "IgnoreThreshold":
 		data := nextgen.IgnoreMetricThresholdSpec{}
-		err := json.Unmarshal(spec, &data)
-		if err != nil {
-			panic(fmt.Sprintf("Invalid metric threshold %s", hs))
+		if err := decodeInto(hs["spec"], &data, "metric threshold spec"); err != nil {
+			return nextgen.MetricThreshold{}, err
 		}
-		return nextgen.MetricThreshold{
-			MetricName:       hs["metricName"].(string),
-			MetricType:       hs["metricType"].(string),
-			MetricIdentifier: identifier,
-			GroupName:        groupName,
-			Type_:            nextgen.MetricThresholdType(metricThresholdType),
-			IgnoreThreshold:  &data,
-			Criteria:         &criteria,
-		}
+		threshold.IgnoreThreshold = &data
+	default:
+		return nextgen.MetricThreshold{}, fmt.Errorf("invalid metric threshold type %q (expected FailImmediately or IgnoreThreshold)", metricThresholdType)
 	}
-	panic(fmt.Sprintf("Invalid metric threshold %s", hs))
+	return threshold, nil
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -16,7 +17,7 @@ func ResourceConnectorPrometheus() *schema.Resource {
 		ReadContext:   resourceConnectorPrometheusRead,
 		CreateContext: resourceConnectorPrometheusCreateOrUpdate,
 		UpdateContext: resourceConnectorPrometheusCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -37,7 +38,7 @@ func ResourceConnectorPrometheus() *schema.Resource {
 				Optional:    true,
 			},
 			"password_ref": {
-				Description: "Reference to the Harness secret containing the password." + secret_ref_text,
+				Description: "Reference to the Harness secret containing the password." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Optional:    true,
 			},
@@ -53,7 +54,7 @@ func ResourceConnectorPrometheus() *schema.Resource {
 							Required:    true,
 						},
 						"encrypted_value_ref": {
-							Description: "Reference to the Harness secret containing the encrypted value." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the encrypted value." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
@@ -78,7 +79,7 @@ func ResourceConnectorPrometheus() *schema.Resource {
 }
 
 func resourceConnectorPrometheusRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.Prometheus)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.Prometheus)
 	if err != nil {
 		return err
 	}
@@ -97,7 +98,7 @@ func resourceConnectorPrometheusRead(ctx context.Context, d *schema.ResourceData
 func resourceConnectorPrometheusCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorPrometheus(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

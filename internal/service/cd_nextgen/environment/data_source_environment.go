@@ -101,7 +101,7 @@ func dataSourceEnvironmentRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling

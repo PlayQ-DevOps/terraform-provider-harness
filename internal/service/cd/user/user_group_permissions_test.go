@@ -9,12 +9,13 @@ import (
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/stretchr/testify/require"
 )
 
 func TestAccResourceUserGroupPermissions_AccountPermissions(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_user_group_permissions.test"
@@ -27,7 +28,7 @@ func TestAccResourceUserGroupPermissions_AccountPermissions(t *testing.T) {
 		c.UserClient.DeleteUserGroup(ug.Id)
 	}()
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.TestAccPreCheck(t)
 			c := acctest.TestAccGetApiClientFromProvider().CDClient
@@ -35,8 +36,8 @@ func TestAccResourceUserGroupPermissions_AccountPermissions(t *testing.T) {
 				Name: expectedName,
 			})
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserGroupPermissionsDestroy(resourceName),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserGroupPermissionsDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserGroupPermissions_AccountPermissions(expectedName),
@@ -58,10 +59,11 @@ func TestAccResourceUserGroupPermissions_AccountPermissions(t *testing.T) {
 }
 
 func TestAccResourceUserGroupPermissions_DeleteUnderlyingResource(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.TestAccPreCheck(t)
 			c := acctest.TestAccGetApiClientFromProvider().CDClient
@@ -69,7 +71,7 @@ func TestAccResourceUserGroupPermissions_DeleteUnderlyingResource(t *testing.T) 
 				Name: expectedName,
 			})
 		},
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserGroupPermissions_AccountPermissions(expectedName),
@@ -96,6 +98,7 @@ func TestAccResourceUserGroupPermissions_DeleteUnderlyingResource(t *testing.T) 
 }
 
 func TestAccResourceUserGroupPermissions_AppPermissions(t *testing.T) {
+	acctest.TestAccSkipIfNotAcc(t)
 
 	expectedName := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(12))
 	resourceName := "harness_user_group_permissions.test"
@@ -108,7 +111,7 @@ func TestAccResourceUserGroupPermissions_AppPermissions(t *testing.T) {
 		c.UserClient.DeleteUserGroup(ug.Id)
 	}()
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.TestAccPreCheck(t)
 			c := acctest.TestAccGetApiClientFromProvider().CDClient
@@ -116,8 +119,8 @@ func TestAccResourceUserGroupPermissions_AppPermissions(t *testing.T) {
 				Name: expectedName,
 			})
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserGroupPermissionsDestroy(resourceName),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserGroupPermissionsDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUserGroupPermissionsAppPermissions(expectedName),

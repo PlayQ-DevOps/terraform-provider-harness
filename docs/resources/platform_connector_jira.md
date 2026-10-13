@@ -54,13 +54,13 @@ resource "harness_platform_connector_jira" "test" {
 
 ### Required
 
-- `auth` (Block List, Min: 1, Max: 1) The credentials to use for the jira authentication. (see [below for nested schema](#nestedblock--auth))
 - `identifier` (String) Unique identifier of the resource.
 - `name` (String) Name of the resource.
 - `url` (String) URL of the Jira server.
 
 ### Optional
 
+- `auth` (Block List) The credentials to use for the jira authentication. (see [below for nested schema](#nestedblock--auth))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
 - `org_id` (String) Unique identifier of the organization.
@@ -83,8 +83,8 @@ Required:
 
 Optional:
 
-- `personal_access_token` (Block List, Max: 1) Authenticate using personal access token. (see [below for nested schema](#nestedblock--auth--personal_access_token))
-- `username_password` (Block List, Max: 1) Authenticate using username password. (see [below for nested schema](#nestedblock--auth--username_password))
+- `personal_access_token` (Block List) Authenticate using personal access token. (see [below for nested schema](#nestedblock--auth--personal_access_token))
+- `username_password` (Block List) Authenticate using username password. (see [below for nested schema](#nestedblock--auth--username_password))
 
 <a id="nestedblock--auth--personal_access_token"></a>
 ### Nested Schema for `auth.personal_access_token`

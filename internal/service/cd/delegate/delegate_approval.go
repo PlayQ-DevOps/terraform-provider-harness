@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/cd/graphql"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -55,11 +56,11 @@ func resourceDelegateApprovalRead(ctx context.Context, d *schema.ResourceData, m
 	delegate, err := c.DelegateClient.GetDelegateById(id)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 
 	if delegate == nil {
-		return diag.FromErr(fmt.Errorf("delegate %s not found", id))
+		return helpers.ReadMissing(ctx, d, "delegate "+id)
 	}
 
 	d.SetId(delegate.UUID)

@@ -1,3 +1,0 @@
-```release-note:bug
- - Formatting the sample example for harness_platform_environment resource
-```

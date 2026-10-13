@@ -6,7 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccDataSourceMonitoredService(t *testing.T) {
@@ -14,9 +14,9 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6)) //Add with muliptle logs and metrics
 	name := id
 	resourceName := "data.harness_platform_monitored_service.test"
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccELKDataSourceMonitoredService(id, name),
@@ -29,9 +29,9 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSumologicMetricDataSourceMonitoredService(id, name),
@@ -44,9 +44,9 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSumologicLogDataSourceMonitoredService(id, name),
@@ -59,9 +59,9 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSplunkSignalFXDataSourceMonitoredService(id, name),
@@ -74,9 +74,9 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGrafanaLokiLogsDataSourceMonitoredService(id, name),
@@ -89,9 +89,9 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccAzureMetricsDataSourceMonitoredService(id, name),
@@ -104,9 +104,9 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccAzureLogsDataSourceMonitoredService(id, name),
@@ -119,9 +119,9 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPrometheusMetricsDataSourceMonitoredService(id, name),
@@ -134,9 +134,9 @@ func TestAccDataSourceMonitoredService(t *testing.T) {
 		},
 	})
 	id = fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(6))
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDatadogMetricsDataSourceMonitoredService(id, name),

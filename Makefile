@@ -36,12 +36,32 @@ TESTARGS     ?=
 SWEEP_DIR    ?= ./internal/sweep
 SWEEP_RUN    ?= all
 ACC_TEST_TIMEOUT ?= 120m
-UNIT_TEST_TIMEOUT ?= 10m
+UNIT_TEST_TIMEOUT ?= 20m
 
-# Tools
-TFPLUGINDOCS := $(GOPATH)/bin/tfplugindocs
-CHANGELOG_BUILD := $(GOPATH)/bin/changelog-build
-GOLANGCI_LINT := $(GOPATH)/bin/golangci-lint
+# Pinned tool versions live in .tool-versions (single source of truth for CI and `make tools`).
+TERRAFORM_VERSION     := $(shell awk '/^terraform /{print $$2}' .tool-versions)
+GOLANGCI_LINT_VERSION := $(shell awk '/^golangci-lint /{print $$2}' .tool-versions)
+HC_INSTALL_VERSION    := v0.10.0
+
+# Terraform CLI for the offline lifecycle tests. helper/resource looks it up via
+# TF_ACC_TERRAFORM_PATH; without it the harness downloads a copy per test package.
+# Prefer one on PATH, else the one `make tools` installs into $(GOPATH)/bin.
+TERRAFORM_BIN := $(shell command -v terraform 2>/dev/null)
+ifeq ($(TERRAFORM_BIN),)
+  TERRAFORM_BIN := $(firstword $(wildcard $(GOPATH)/bin/terraform $(GOPATH)/bin/terraform.exe))
+endif
+ifneq ($(TERRAFORM_BIN),)
+  TF_ACC_TERRAFORM_PATH ?= $(TERRAFORM_BIN)
+  export TF_ACC_TERRAFORM_PATH
+endif
+# Never phone home to checkpoint.hashicorp.com from tests or tooling.
+export CHECKPOINT_DISABLE := 1
+
+# Tools. tfplugindocs and changelog-build are `tool` dependencies in go.mod and run
+# through `go tool`; terraform and golangci-lint are installed by `make tools`.
+TFPLUGINDOCS    := $(GO) tool tfplugindocs
+CHANGELOG_BUILD := $(GO) tool changelog-build
+GOLANGCI_LINT   := $(or $(shell command -v golangci-lint 2>/dev/null),$(GOPATH)/bin/golangci-lint)
 
 # ============================================================================
 # Colors and Output Formatting
@@ -178,11 +198,30 @@ clean-plugins: ## Remove all local Terraform plugin installations for this provi
 ##@ Testing
 
 .PHONY: test
-test: ## Run unit tests
-	$(call log_header,Running Unit Tests)
+test: ## Run all offline tests: unit, contract and fake-backed lifecycle tests (needs a Terraform CLI, no credentials)
+	$(call log_header,Running Offline Tests)
+	$(call log_info,Terraform CLI: $(TF_ACC_TERRAFORM_PATH))
 	$(call log_info,Running tests with timeout $(UNIT_TEST_TIMEOUT)...)
-	@$(GO) test $(TEST) -v $(TESTARGS) -timeout=$(UNIT_TEST_TIMEOUT)
+	@$(GO) test $(TEST) $(TESTARGS) -timeout=$(UNIT_TEST_TIMEOUT)
+	$(call log_success,Offline tests passed)
+
+.PHONY: test-unit
+test-unit: ## Run offline unit, contract and lint-ratchet tests only (-short; no Terraform CLI needed)
+	$(call log_header,Running Unit Tests)
+	@$(GO) test -short $(TEST) $(TESTARGS) -timeout=$(UNIT_TEST_TIMEOUT)
 	$(call log_success,Unit tests passed)
+
+.PHONY: test-contract
+test-contract: ## Run the provider-wide contract tests (schema, importer and ForceNew guardrails)
+	$(call log_header,Running Contract Tests)
+	@$(GO) test ./internal/provider/ -run 'TestContract' $(TESTARGS)
+	$(call log_success,Contract tests passed)
+
+.PHONY: test-lifecycle
+test-lifecycle: ## Run the fake-backed lifecycle tests only (needs a Terraform CLI)
+	$(call log_header,Running Lifecycle Tests)
+	@$(GO) test $(TEST) -run 'TestLifecycle' $(TESTARGS) -timeout=$(UNIT_TEST_TIMEOUT)
+	$(call log_success,Lifecycle tests passed)
 
 .PHONY: testacc
 testacc: ## Run acceptance tests (requires HARNESS_* env vars)
@@ -253,14 +292,14 @@ lint: ## Run golangci-lint
 	$(call log_header,Running Linter)
 	@if [ ! -f $(GOLANGCI_LINT) ]; then \
 		printf "$(COLOR_YELLOW)⚠$(COLOR_RESET) golangci-lint not found, installing...\n"; \
-		$(GO) install github.com/golangci/golangci-lint/cmd/golangci-lint@latest; \
+		$(GO) install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v$(GOLANGCI_LINT_VERSION); \
 	fi
 	$(call log_info,Running golangci-lint...)
 	@$(GOLANGCI_LINT) run ./...
 	$(call log_success,Linting passed)
 
 .PHONY: check
-check: fmt-check vet ## Run all code quality checks
+check: fmt-check vet test-contract ## Run all code quality checks (format, vet, provider contract)
 	$(call log_success,All checks passed)
 
 # ============================================================================
@@ -282,10 +321,6 @@ docs-all: ## Force full provider documentation regeneration
 .PHONY: docs-validate
 docs-validate: ## Validate provider documentation
 	$(call log_header,Validating Documentation)
-	@if [ ! -f $(TFPLUGINDOCS) ]; then \
-		printf "$(COLOR_YELLOW)⚠$(COLOR_RESET) tfplugindocs not found, installing...\n"; \
-		$(GO) install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs@latest; \
-	fi
 	$(call log_info,Validating documentation...)
 	@$(TFPLUGINDOCS) validate
 	$(call log_success,Documentation is valid)
@@ -294,6 +329,11 @@ docs-validate: ## Validate provider documentation
 changelog: ## Generate changelog from .changelog entries
 	$(call log_header,Generating Changelog)
 	@./scripts/generate-changelog.sh
+
+.PHONY: changelog-check
+changelog-check: ## Validate .changelog entries changed since BASE (default origin/main); use BASE=--all for every entry
+	$(call log_header,Checking Changelog Entries)
+	@./scripts/check-changelog.sh "$(or $(BASE),origin/main)"
 
 .PHONY: changelog-entry
 changelog-entry: ## Scaffold a .changelog entry for the current branch/ticket/PR (override with ENTRY=, TYPE=)
@@ -324,14 +364,13 @@ deps-upgrade: ## Upgrade all dependencies
 	$(call log_success,Dependencies upgraded)
 
 .PHONY: tools
-tools: ## Install development tools
+tools: ## Install the tools pinned in .tool-versions (terraform via hc-install, golangci-lint); tfplugindocs and changelog-build run via go tool
 	$(call log_header,Installing Development Tools)
-	$(call log_info,Installing tfplugindocs...)
-	@$(GO) install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs@latest
-	$(call log_info,Installing changelog-build...)
-	@$(GO) install github.com/hashicorp/go-changelog/cmd/changelog-build@latest
-	$(call log_info,Installing golangci-lint...)
-	@$(GO) install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	$(call log_info,Installing terraform $(TERRAFORM_VERSION) into $(GOPATH)/bin via hc-install...)
+	@$(GO) run github.com/hashicorp/hc-install/cmd/hc-install@$(HC_INSTALL_VERSION) install -version $(TERRAFORM_VERSION) -path $(GOPATH)/bin terraform
+	$(call log_info,Installing golangci-lint v$(GOLANGCI_LINT_VERSION)...)
+	@$(GO) install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v$(GOLANGCI_LINT_VERSION)
+	$(call log_info,tfplugindocs and changelog-build are go.mod tool dependencies: run them with '$(GO) tool tfplugindocs' and '$(GO) tool changelog-build')
 	$(call log_success,All tools installed)
 
 .PHONY: dev-setup

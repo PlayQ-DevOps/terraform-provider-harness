@@ -127,7 +127,7 @@ func resourceTriggerPipelineCreate(ctx context.Context, d *schema.ResourceData, 
 
 	resp, httpResp, err := c.ExecuteApi.PostPipelineExecuteWithInputSetYaml(ctx, c.AccountId, orgId, projectId, moduleType, pipelineId, opts)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	if resp.Data == nil || resp.Data.PlanExecution == nil {
 		return diag.Errorf("triggering pipeline %s did not return a plan execution", pipelineId)
@@ -153,15 +153,11 @@ func resourceTriggerPipelineRead(ctx context.Context, d *schema.ResourceData, me
 	projectId := d.Get("project_id").(string)
 
 	resp, httpResp, err := c.ExecutionDetailsApi.GetExecutionDetail(ctx, c.AccountId, orgId, projectId, d.Id(), nil)
-	if httpResp != nil && httpResp.StatusCode == 404 {
-		d.SetId("")
-		return nil
-	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 	if resp.Data == nil || resp.Data.PipelineExecutionSummary == nil {
-		return diag.Errorf("no execution summary returned for pipeline execution %s", d.Id())
+		return helpers.ReadMissing(ctx, d, "pipeline execution "+d.Id())
 	}
 
 	d.Set("status", resp.Data.PipelineExecutionSummary.Status)
@@ -205,7 +201,7 @@ func waitAndPopulate(ctx context.Context, c *pipeline_go_sdk.APIClient, d *schem
 	for {
 		resp, httpResp, err := c.ExecutionDetailsApi.GetExecutionDetail(ctx, c.AccountId, orgId, projectId, planExecutionId, nil)
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 		if resp.Data == nil || resp.Data.PipelineExecutionSummary == nil {
 			return diag.Errorf("no execution summary returned for pipeline execution %s", planExecutionId)

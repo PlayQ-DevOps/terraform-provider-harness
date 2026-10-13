@@ -33,12 +33,14 @@ func ResourceUser() *schema.Resource {
 				Description: "Organization identifier of the user.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description:  "Project identifier of the user.",
 				Type:         schema.TypeString,
 				Optional:     true,
 				RequiredWith: []string{"org_id"},
+				ForceNew:     true,
 			},
 			"name": {
 				Description: "Name of the user.",
@@ -49,6 +51,7 @@ func ResourceUser() *schema.Resource {
 				Description: "The email of the user.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"disabled": {
 				Description: "Whether or not the user account is disabled.",
@@ -127,12 +130,12 @@ func resourceUserRead(ctx context.Context, d *schema.ResourceData, meta interfac
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if &resp == nil || resp.Data == nil || resp.Data.Empty || len(resp.Data.Content) == 0 {
+	if resp.Data == nil || resp.Data.Empty || len(resp.Data.Content) == 0 {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -178,7 +181,7 @@ func resourceUserCreateOrUpdate(ctx context.Context, d *schema.ResourceData, met
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if addUsersResp.Data != nil {
@@ -202,10 +205,10 @@ func resourceUserCreateOrUpdate(ctx context.Context, d *schema.ResourceData, met
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
-	if &resp == nil || resp.Data == nil || resp.Data.Empty || len(resp.Data.Content) == 0 {
+	if resp.Data == nil || resp.Data.Empty || len(resp.Data.Content) == 0 {
 		return diag.Errorf("no user found with email %s", email)
 	}
 
@@ -242,7 +245,7 @@ func resourceUserDelete(ctx context.Context, d *schema.ResourceData, meta interf
 	_, httpResp, err := c.UserApi.RemoveUser(ctx, uuid, c.AccountId, removeUserOpts)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

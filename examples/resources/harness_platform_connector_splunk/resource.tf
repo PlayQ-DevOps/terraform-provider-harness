@@ -8,7 +8,7 @@ resource "harness_platform_connector_splunk" "username_password" {
   url                = "https://splunk.company.com:8089"
   delegate_selectors = ["harness-delegate"]
   account_id         = "splunk_account_id"
-  
+
   username_password {
     username     = "splunk_user"
     password_ref = "account.splunk_password"
@@ -25,7 +25,7 @@ resource "harness_platform_connector_splunk" "bearer_token" {
   url                = "https://splunk.company.com:8089"
   delegate_selectors = ["harness-delegate"]
   account_id         = "splunk_account_id"
-  
+
   bearer_token {
     bearer_token_ref = "account.splunk_bearer_token"
   }
@@ -41,7 +41,7 @@ resource "harness_platform_connector_splunk" "hec_token" {
   url                = "https://splunk.company.com:8088"
   delegate_selectors = ["harness-delegate"]
   account_id         = "splunk_account_id"
-  
+
   hec_token {
     hec_token_ref = "account.splunk_hec_token"
   }
@@ -57,7 +57,7 @@ resource "harness_platform_connector_splunk" "no_auth" {
   url                = "https://splunk-dev.company.com:8089"
   delegate_selectors = ["harness-delegate"]
   account_id         = "splunk_account_id"
-  
+
   no_authentication {}
 }
 
@@ -71,6 +71,6 @@ resource "harness_platform_connector_splunk" "legacy" {
   url                = "https://splunk.company.com:8089"
   delegate_selectors = ["harness-delegate"]
   account_id         = "splunk_account_id"
-  username           = "username"           # Deprecated
-  password_ref       = "account.secret_id"  # Deprecated
+  username           = "username"          # Deprecated
+  password_ref       = "account.secret_id" # Deprecated
 }

@@ -1,3 +1,0 @@
-```release-note:enhancement
-Add more fields for overrides v2 data source
-```

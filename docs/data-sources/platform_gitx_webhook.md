@@ -41,15 +41,15 @@ resource "harness_platform_gitx_webhook" "test" {
 ### Required
 
 - `identifier` (String) Unique identifier of the resource.
-- `name` (String) Name of the resource.
 
 ### Optional
 
-- `description` (String) Description of the resource.
+- `name` (String) Name of the resource.
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.
-- `tags` (Set of String) Tags to associate with the resource.
 
 ### Read-Only
 
+- `description` (String) Description of the resource.
 - `id` (String) The ID of this resource.
+- `tags` (Set of String) Tags to associate with the resource.

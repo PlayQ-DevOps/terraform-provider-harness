@@ -1,3 +1,0 @@
-```release-note:new-resource
-platform_filters - Added resource to add filters in Harness through terraform
-```

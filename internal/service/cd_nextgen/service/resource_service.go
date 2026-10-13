@@ -35,7 +35,6 @@ func ResourceService() *schema.Resource {
 				Description: "Enable this flag for force deletion of service",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 			"git_details": {
 				Description: "Contains parameters related to Git Experience for remote entities",
@@ -137,13 +136,11 @@ func ResourceService() *schema.Resource {
 				Description: "force import service from remote even if same file path already exist",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 			"import_from_git": {
 				Description: "import service from git",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 		},
 	}
@@ -162,7 +159,11 @@ func resourceServiceRead(ctx context.Context, d *schema.ResourceData, meta inter
 	resp, httpResp, err := c.ServicesApi.GetServiceV2(ctx, id, c.AccountId, svcParams)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
+	}
+
+	if resp.Data == nil || resp.Data.Service == nil {
+		return helpers.ReadMissing(ctx, d, "service "+id)
 	}
 
 	readService(d, resp.Data.Service)
@@ -211,7 +212,7 @@ func resourceServiceCreateOrUpdate(ctx context.Context, d *schema.ResourceData, 
 	}
 
 	if err != nil {
-		return helpers.HandleGitApiErrorWithResourceData(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	if importing {
@@ -229,7 +230,7 @@ func resourceServiceCreateOrUpdate(ctx context.Context, d *schema.ResourceData, 
 			resp, httpResp, err = c.ServicesApi.GetServiceV2(ctx, id, c.AccountId, svcParams)
 
 			if err != nil {
-				return helpers.HandleReadApiError(err, d, httpResp)
+				return helpers.HandleWrite(ctx, d, err, httpResp)
 			}
 		}
 		if resp.Data == nil || resp.Data.Service == nil {
@@ -258,7 +259,7 @@ func resourceServiceEditGitDetails(ctx context.Context, c *nextgen.APIClient, d 
 	resp, httpResp, err := c.ServicesApi.EditGitDetailsForService(ctx, c.AccountId, org_id, project_id, id, gitDetails)
 
 	if err != nil {
-		return helpers.HandleGitApiErrorWithResourceData(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -280,7 +281,7 @@ func resourceServiceDelete(ctx context.Context, d *schema.ResourceData, meta int
 		ForceDelete:       helpers.BuildFieldBool(d, "force_delete"),
 	})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -308,9 +309,9 @@ func readService(d *schema.ResourceData, project *nextgen.ServiceResponseDetails
 	d.Set("tags", helpers.FlattenTags(project.Tags))
 	d.Set("yaml", project.Yaml)
 
-	var store_type = helpers.BuildField(d, "git_details.0.store_type")
-	var base_branch = helpers.BuildField(d, "git_details.0.base_branch")
-	var commit_message = helpers.BuildField(d, "git_details.0.commit_message")
+	var store_type = helpers.ConfigOnly(d, "git_details.0.store_type")
+	var base_branch = helpers.ConfigOnly(d, "git_details.0.base_branch")
+	var commit_message = helpers.ConfigOnly(d, "git_details.0.commit_message")
 	var connector_ref = project.ConnectorRef
 
 	if project.EntityGitDetails != nil {

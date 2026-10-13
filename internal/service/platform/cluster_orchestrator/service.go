@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -16,6 +17,10 @@ var clusterOrchNotFoundMarkers = []string{
 	"invalid cluster id",
 	"could not find cluster orchestrator",
 }
+
+// clusterOrchNotFound treats the API's "invalid cluster id" and "could not find cluster
+// orchestrator" answers as a missing object, whatever their status.
+var clusterOrchNotFound = helpers.NotFoundWhen(helpers.MessageContains(clusterOrchNotFoundMarkers...))
 
 func isClusterOrchestratorNotFound(err error, httpResp *http.Response) bool {
 	if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {

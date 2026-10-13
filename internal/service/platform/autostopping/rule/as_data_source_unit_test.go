@@ -17,14 +17,14 @@ import (
 	"testing"
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 // --- K8s ---
 
 func TestUnitDataSourceK8sRuleSchemaNoArgs(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testDataSourceConfig("harness_autostopping_rule_k8s", "test", ""),
@@ -37,8 +37,8 @@ func TestUnitDataSourceK8sRuleSchemaNoArgs(t *testing.T) {
 // --- VM ---
 
 func TestUnitDataSourceVMRuleSchemaNoArgs(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testDataSourceConfig("harness_autostopping_rule_vm", "test", ""),
@@ -51,8 +51,8 @@ func TestUnitDataSourceVMRuleSchemaNoArgs(t *testing.T) {
 // --- ECS ---
 
 func TestUnitDataSourceECSRuleSchemaNoArgs(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testDataSourceConfig("harness_autostopping_rule_ecs", "test", ""),
@@ -65,8 +65,8 @@ func TestUnitDataSourceECSRuleSchemaNoArgs(t *testing.T) {
 // --- RDS ---
 
 func TestUnitDataSourceRDSRuleSchemaNoArgs(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testDataSourceConfig("harness_autostopping_rule_rds", "test", ""),
@@ -79,8 +79,8 @@ func TestUnitDataSourceRDSRuleSchemaNoArgs(t *testing.T) {
 // --- Scale Group ---
 
 func TestUnitDataSourceScaleGroupRuleSchemaNoArgs(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testDataSourceConfig("harness_autostopping_rule_scale_group", "test", ""),
@@ -93,8 +93,8 @@ func TestUnitDataSourceScaleGroupRuleSchemaNoArgs(t *testing.T) {
 // --- Invalid regex (fails before any API call) ---
 
 func TestUnitDataSourceK8sRuleInvalidRegex(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testDataSourceConfig("harness_autostopping_rule_k8s", "test", `name = "[invalid"`),
@@ -105,8 +105,8 @@ func TestUnitDataSourceK8sRuleInvalidRegex(t *testing.T) {
 }
 
 func TestUnitDataSourceVMRuleInvalidRegex(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config:      testDataSourceConfig("harness_autostopping_rule_vm", "test", `name = "[invalid"`),

@@ -23,7 +23,7 @@ func ResourcePipeline() *schema.Resource {
 		UpdateContext: resourcePipelineCreateOrUpdate,
 		DeleteContext: resourcePipelineDelete,
 		CreateContext: resourcePipelineCreateOrUpdate,
-		Importer:      helpers.ProjectResourceImporter,
+		Importer:      helpers.ProjectResourceWithBranchImporter,
 
 		Schema: map[string]*schema.Schema{
 			"yaml": {
@@ -113,7 +113,7 @@ func ResourcePipeline() *schema.Resource {
 			"template_applied_pipeline_yaml": {
 				Description: "Pipeline YAML after resolving Templates (returned as a String).",
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 			},
 			"import_from_git": {
 				Description: "Flag to set if importing from Git",
@@ -189,14 +189,12 @@ func resourcePipelineRead(ctx context.Context, d *schema.ResourceData, meta inte
 	id := d.Id()
 	org_id := d.Get("org_id").(string)
 	project_id := d.Get("project_id").(string)
-	template_applied := d.Get("template_applied").(bool)
 	var branch_name optional.String
 	branch_name = helpers.BuildField(d, "git_details.0.branch_name")
-	var store_type = helpers.BuildField(d, "git_details.0.store_type")
-	var base_branch = helpers.BuildField(d, "git_details.0.base_branch")
-	var commit_message = helpers.BuildField(d, "git_details.0.commit_message")
-	var connector_ref = helpers.BuildField(d, "git_details.0.connector_ref")
-	var object_id = helpers.BuildField(d, "git_details.0.object_id")
+	var store_type = helpers.ConfigOnly(d, "git_details.0.store_type")
+	var base_branch = helpers.ConfigOnly(d, "git_details.0.base_branch")
+	var commit_message = helpers.ConfigOnly(d, "git_details.0.commit_message")
+	var connector_ref = helpers.ConfigOnly(d, "git_details.0.connector_ref")
 	resp, httpResp, err := c.PipelinesApi.GetPipeline(ctx,
 		org_id,
 		project_id,
@@ -204,18 +202,11 @@ func resourcePipelineRead(ctx context.Context, d *schema.ResourceData, meta inte
 		&nextgen.PipelinesApiGetPipelineOpts{HarnessAccount: optional.NewString(c.AccountId), BranchName: branch_name},
 	)
 
-	if httpResp.StatusCode == 404 {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
-
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
-	print(object_id.Value())
 
-	readPipeline(d, resp, org_id, project_id, template_applied, store_type, base_branch, commit_message, connector_ref)
+	readPipeline(d, resp, org_id, project_id, store_type, base_branch, commit_message, connector_ref)
 
 	return nil
 }
@@ -234,7 +225,6 @@ func resourcePipelineCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 	id := d.Id()
 	org_id := d.Get("org_id").(string)
 	project_id := d.Get("project_id").(string)
-	template_applied := d.Get("template_applied").(bool)
 
 	if id == "" {
 		if d.Get("import_from_git").(bool) {
@@ -286,7 +276,7 @@ func resourcePipelineCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 				HarnessAccount: optional.NewString(c.AccountId),
 			})
 			if err != nil {
-				return helpers.HandleApiError(err, d, httpResp)
+				return helpers.HandleWriteGit(ctx, d, err, httpResp)
 			}
 		}
 		_, httpResp, err = c.PipelinesApi.UpdatePipeline(ctx, pipeline, org_id, project_id, id,
@@ -298,17 +288,17 @@ func resourcePipelineCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	// The create/update methods don't return the yaml in the response, so we need to query for it again.
 	resp, httpResp, err := c.PipelinesApi.GetPipeline(ctx, org_id, project_id, pipeline_id,
 		&nextgen.PipelinesApiGetPipelineOpts{HarnessAccount: optional.NewString(c.AccountId), BranchName: optional.NewString(branch_name)})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
-	readPipeline(d, resp, org_id, project_id, template_applied, store_type, base_branch, commit_message, connector_ref)
+	readPipeline(d, resp, org_id, project_id, store_type, base_branch, commit_message, connector_ref)
 
 	return nil
 }
@@ -327,7 +317,7 @@ func resourcePipelineEditGitDetials(ctx context.Context, d *schema.ResourceData,
 	resp, httpResp, err := c.PipelinesApi.EditGitDetialsForPipeline(ctx, c.AccountId, org_id, project_id, id, gitDetails)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	d.SetId(resp.Data.Identifier)
@@ -387,7 +377,7 @@ func resourcePipelineDelete(ctx context.Context, d *schema.ResourceData, meta in
 		HarnessAccount: optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -398,7 +388,7 @@ func buildCreatePipeline(d *schema.ResourceData) (nextgen.PipelineCreateRequestB
 		Identifier:   d.Get("identifier").(string),
 		Name:         d.Get("name").(string),
 		Description:  d.Get("description").(string),
-		Tags:         helpers.ExpandPipelineTags(d.Get("tags").(*schema.Set).List()),
+		Tags:         helpers.ExpandTags(d.Get("tags").(*schema.Set).List()),
 		PipelineYaml: d.Get("yaml").(string),
 	}
 
@@ -451,7 +441,7 @@ func buildUpdatePipeline(d *schema.ResourceData) nextgen.PipelineUpdateRequestBo
 		Identifier:   d.Get("identifier").(string),
 		Name:         d.Get("name").(string),
 		Description:  d.Get("description").(string),
-		Tags:         helpers.ExpandPipelineTags(d.Get("tags").(*schema.Set).List()),
+		Tags:         helpers.ExpandTags(d.Get("tags").(*schema.Set).List()),
 		PipelineYaml: d.Get("yaml").(string),
 	}
 
@@ -486,7 +476,7 @@ func buildUpdatePipeline(d *schema.ResourceData) nextgen.PipelineUpdateRequestBo
 }
 
 // Read response from API out to the stored identifiers
-func readPipeline(d *schema.ResourceData, pipeline nextgen.PipelineGetResponseBody, org_id string, project_id string, template_applied bool, store_type optional.String, base_branch optional.String, commit_message optional.String, connector_ref optional.String) {
+func readPipeline(d *schema.ResourceData, pipeline nextgen.PipelineGetResponseBody, org_id string, project_id string, store_type optional.String, base_branch optional.String, commit_message optional.String, connector_ref optional.String) {
 	d.SetId(pipeline.Identifier)
 	d.Set("identifier", pipeline.Identifier)
 	d.Set("name", pipeline.Name)
@@ -496,7 +486,6 @@ func readPipeline(d *schema.ResourceData, pipeline nextgen.PipelineGetResponseBo
 	d.Set("yaml", pipeline.PipelineYaml)
 	d.Set("description", pipeline.Description)
 	d.Set("template_applied_pipeline_yaml", pipeline.TemplateAppliedPipelineYaml)
-	d.Set("template_applied", template_applied)
 	if pipeline.GitDetails != nil {
 		d.Set("git_details", []interface{}{readGitDetails(pipeline, store_type, base_branch, commit_message, connector_ref)})
 	}
@@ -519,12 +508,15 @@ func readGitDetails(pipeline nextgen.PipelineGetResponseBody, store_type optiona
 	if commit_message.IsSet() {
 		git_details["commit_message"] = commit_message.Value()
 	}
-	if connector_ref.IsSet() {
-		git_details["connector_ref"] = connector_ref.Value()
+	// The connector reference comes from the API; the configured one is kept only when the
+	// API omits it (Harness Code repositories have none).
+	connectorRef := pipeline.GitDetails.ConnectorRef
+	if connectorRef == "" && connector_ref.IsSet() {
+		connectorRef = connector_ref.Value()
 	}
-
-	if connector_ref.Value() == "" {
-		git_details["is_harness_code_repo"] = true
+	if connectorRef != "" {
+		git_details["connector_ref"] = connectorRef
 	}
+	git_details["is_harness_code_repo"] = pipeline.GitDetails.IsHarnessCodeRepo || connectorRef == ""
 	return git_details
 }

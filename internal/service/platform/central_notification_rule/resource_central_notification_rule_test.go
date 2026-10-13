@@ -2,15 +2,16 @@ package central_notification_rule_test
 
 import (
 	"fmt"
-	"github.com/antihax/optional"
-	"github.com/harness/harness-go-sdk/harness/nextgen"
-	"github.com/harness/harness-go-sdk/harness/utils"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"net/http"
 	"testing"
 
+	"github.com/antihax/optional"
+	"github.com/harness/harness-go-sdk/harness/nextgen"
+	"github.com/harness/harness-go-sdk/harness/utils"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
+
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccResourceCentralNotificationRule(t *testing.T) {
@@ -21,8 +22,8 @@ func TestAccResourceCentralNotificationRule(t *testing.T) {
 	resourceName := "harness_platform_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceCentralNotificationRuleConfig(rName, id),

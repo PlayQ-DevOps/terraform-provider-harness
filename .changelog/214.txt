@@ -1,6 +1,0 @@
-```release-note:new-resource
-harness_platform_gitops_agent
-```
-```release-note:new-resource
-harness_platform_gitops_cluster
-```

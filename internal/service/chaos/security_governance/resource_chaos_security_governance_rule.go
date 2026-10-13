@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"regexp"
 	"strings"
 	"time"
@@ -13,6 +12,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/chaos/graphql/model"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -356,7 +356,7 @@ func resourceChaosSecurityGovernanceRuleCreate(ctx context.Context, d *schema.Re
 
 	accountID := c.AccountId
 	if accountID == "" {
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("account ID must be configured in the provider"), d, "create_chaos_security_governance_rule")
+		return helpers.HandleWrite(ctx, d, fmt.Errorf("account ID must be configured in the provider"), nil)
 	}
 
 	identifiers := getRuleIdentifiers(d, accountID)
@@ -368,20 +368,18 @@ func resourceChaosSecurityGovernanceRuleCreate(ctx context.Context, d *schema.Re
 	// Generate a unique rule ID
 	ruleID := fmt.Sprintf("tf-rule-%d", time.Now().UnixNano())
 	ruleInput.RuleID = ruleID
-
-	log.Printf("[DEBUG] Creating rule with input: %+v", ruleInput)
+	tflog.Debug(ctx, fmt.Sprintf("Creating rule with input: %+v", ruleInput))
 
 	resp, err := client.Create(ctx, identifiers, *ruleInput)
 	if err != nil {
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("failed to create security governance rule (account: %s, org: %s, project: %s): %v",
+		return helpers.HandleWrite(ctx, d, fmt.Errorf("failed to create security governance rule (account: %s, org: %s, project: %s): %v",
 			identifiers.AccountIdentifier,
 			identifiers.OrgIdentifier,
 			identifiers.ProjectIdentifier,
 			err,
-		), d, "create_chaos_security_governance_rule")
+		), nil)
 	}
-
-	log.Printf("[DEBUG] Created rule with response: %+v", resp)
+	tflog.Debug(ctx, fmt.Sprintf("Created rule with response: %+v", resp))
 
 	// The response contains the rule in the Response field as a JSON string
 	var ruleIDStr string
@@ -400,7 +398,7 @@ func resourceChaosSecurityGovernanceRuleCreate(ctx context.Context, d *schema.Re
 	if ruleIDStr == "" {
 		// Fallback to the generated rule ID if we couldn't extract it from the response
 		ruleIDStr = ruleID
-		log.Printf("[WARN] Could not extract rule ID from response, using generated ID: %s", ruleIDStr)
+		tflog.Warn(ctx, fmt.Sprintf("Could not extract rule ID from response, using generated ID: %s", ruleIDStr))
 	}
 
 	d.SetId(ruleIDStr)
@@ -416,27 +414,18 @@ func resourceChaosSecurityGovernanceRuleRead(ctx context.Context, d *schema.Reso
 	ruleID := d.Id()
 	accountID := c.AccountId
 	if accountID == "" {
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("account ID must be configured in the provider"), d, "read_chaos_security_governance_rule")
+		return diag.Errorf("account ID must be configured in the provider")
 	}
 	identifiers := getRuleIdentifiers(d, accountID)
-
-	log.Printf("[DEBUG] Reading rule with ID: %s, Account: %s, Org: %v, Project: %v",
-		ruleID, accountID, identifiers.OrgIdentifier, identifiers.ProjectIdentifier)
+	tflog.Debug(ctx, fmt.Sprintf("Reading rule with ID: %s, Account: %s, Org: %v, Project: %v", ruleID, accountID, identifiers.OrgIdentifier, identifiers.ProjectIdentifier))
 
 	resp, err := client.Get(ctx, identifiers, ruleID)
 	if err != nil {
-		// If the rule is not found, it might have been deleted outside of Terraform
-		if strings.Contains(err.Error(), "no documents in result") ||
-			strings.Contains(err.Error(), "not found") {
-			log.Printf("[WARN] Rule not found, removing from state: %s", d.Id())
-			d.SetId("")
-			return nil
-		}
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("failed to read security governance rule: %v", err), d, "read_chaos_security_governance_rule")
+		return helpers.HandleRead(ctx, d, err, nil, helpers.NotFoundWhen(helpers.MessageContains("not found", "no documents in result")))
 	}
 
 	if resp == nil || resp.Rule == nil {
-		log.Printf("[WARN] Rule not found, removing from state: %s", d.Id())
+		tflog.Warn(ctx, fmt.Sprintf("Rule not found, removing from state: %s", d.Id()))
 		d.SetId("")
 		return nil
 	}
@@ -574,12 +563,11 @@ func resourceChaosSecurityGovernanceRuleUpdate(ctx context.Context, d *schema.Re
 	}
 
 	ruleInput.RuleID = ruleID
-
-	log.Printf("[DEBUG] Updating rule with input: %+v", ruleInput)
+	tflog.Debug(ctx, fmt.Sprintf("Updating rule with input: %+v", ruleInput))
 
 	_, err = client.Update(ctx, identifiers, *ruleInput)
 	if err != nil {
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("failed to update security governance rule: %v", err), d, "update_chaos_security_governance_rule")
+		return helpers.HandleWrite(ctx, d, fmt.Errorf("failed to update security governance rule: %v", err), nil)
 	}
 
 	return resourceChaosSecurityGovernanceRuleRead(ctx, d, meta)
@@ -595,13 +583,11 @@ func resourceChaosSecurityGovernanceRuleDelete(ctx context.Context, d *schema.Re
 		return diag.Errorf("account ID must be configured in the provider")
 	}
 	identifiers := getRuleIdentifiers(d, accountID)
-
-	log.Printf("[DEBUG] Deleting rule with ID: %s, Account: %s, Org: %v, Project: %v",
-		ruleID, identifiers.AccountIdentifier, identifiers.OrgIdentifier, identifiers.ProjectIdentifier)
+	tflog.Debug(ctx, fmt.Sprintf("Deleting rule with ID: %s, Account: %s, Org: %v, Project: %v", ruleID, identifiers.AccountIdentifier, identifiers.OrgIdentifier, identifiers.ProjectIdentifier))
 
 	_, err := client.Delete(ctx, identifiers, ruleID)
 	if err != nil {
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("failed to delete security governance rule: %v", err), d, "delete_chaos_security_governance_rule")
+		return helpers.HandleDelete(ctx, d, err, nil, helpers.GraphQLNotFound())
 	}
 
 	d.SetId("")
@@ -614,7 +600,10 @@ func resourceChaosSecurityGovernanceRuleImport(ctx context.Context, d *schema.Re
 	// 2. Org level: "org_id/rule_id"
 	// 3. Project level: "org_id/project_id/rule_id"
 	importID := d.Id()
-	parts := strings.Split(importID, "/")
+	parts, err := helpers.SplitImportID(importID, 1, 3)
+	if err != nil {
+		return nil, err
+	}
 
 	var ruleID, orgID, projectID string
 

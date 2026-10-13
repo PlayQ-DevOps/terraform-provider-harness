@@ -82,9 +82,6 @@ func ResourceChaosHub() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					return !d.HasChange("tags")
-				},
 			},
 			"is_default": {
 				Description: "Whether this is the default chaos hub",

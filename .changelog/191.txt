@@ -1,3 +1,0 @@
-```release-note:bug
-resource/harness_platform_connector_artifactory: Fix bug in artifactory connector resource
-```

@@ -1,0 +1,1 @@
+terraform import harness_platform_infra_provider.example <provider_id>

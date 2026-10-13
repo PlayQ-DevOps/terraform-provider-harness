@@ -12,12 +12,12 @@ func DatasourceConnectorAwsKms() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"arn_ref": {
-				Description: "A reference to the Harness secret containing the ARN of the AWS KMS." + secret_ref_text,
+				Description: "A reference to the Harness secret containing the ARN of the AWS KMS." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
 			"arn_plaintext": {
-				Description: "The ARN of the AWS KMS in plaintext. This is used when the ARN is not stored in a Harness secret." + secret_ref_text,
+				Description: "The ARN of the AWS KMS in plaintext. This is used when the ARN is not stored in a Harness secret." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
@@ -55,12 +55,12 @@ func DatasourceConnectorAwsKms() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"access_key_ref": {
-										Description: "The reference to the Harness secret containing the AWS access key." + secret_ref_text,
+										Description: "The reference to the Harness secret containing the AWS access key." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
 									"secret_key_ref": {
-										Description: "The reference to the Harness secret containing the AWS secret key." + secret_ref_text,
+										Description: "The reference to the Harness secret containing the AWS secret key." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},

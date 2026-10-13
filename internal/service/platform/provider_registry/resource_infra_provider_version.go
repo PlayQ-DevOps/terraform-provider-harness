@@ -4,12 +4,11 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
-	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -69,7 +68,7 @@ func resourceInfraProviderVersionRead(ctx context.Context, d *schema.ResourceDat
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleRead(ctx, d, err, httpRes)
 	}
 	readProviderVersion(d, &resp, providerId, version)
 	return nil
@@ -82,7 +81,7 @@ func resourceInfraProviderVersionCreate(ctx context.Context, d *schema.ResourceD
 	version := d.Get("version").(string)
 
 	createVersion := buildCreateProviderVersionRequestBody(d)
-	log.Printf("[DEBUG] Creating provider version %s for provider %s with body %v", version, providerId, createVersion)
+	tflog.Debug(ctx, fmt.Sprintf("Creating provider version %s for provider %s with body %v", version, providerId, createVersion))
 
 	httpRes, err := c.ProviderRegistryApi.ProviderRegistryCreateProviderVersion(
 		ctx,
@@ -92,12 +91,12 @@ func resourceInfraProviderVersionCreate(ctx context.Context, d *schema.ResourceD
 	)
 
 	if err != nil {
-		log.Printf("[ERROR] Failed to create provider version: %v, HTTP Response: %+v", err, httpRes)
+		tflog.Error(ctx, fmt.Sprintf("Failed to create provider version: %v, HTTP Response: %+v", err, httpRes))
 		if httpRes != nil && httpRes.Body != nil {
 			bodyBytes, _ := io.ReadAll(httpRes.Body)
-			log.Printf("[ERROR] Response body: %s", string(bodyBytes))
+			tflog.Error(ctx, fmt.Sprintf("Response body: %s", string(bodyBytes)))
 		}
-		return parseError(err, httpRes)
+		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
 
 	d.SetId(fmt.Sprintf("%s/%s", providerId, version))
@@ -117,19 +116,13 @@ func resourceInfraProviderVersionDelete(ctx context.Context, d *schema.ResourceD
 		c.AccountId,
 	)
 	if err != nil {
-		// If resource is already gone (404), treat as success
-		if httpRes != nil && httpRes.StatusCode == 404 {
-			log.Printf("[INFO] Version %s not found, already deleted. Removing from state.", version)
-			d.SetId("")
-			return nil
-		}
 		// If we get a 400/409 error indicating the version is published and cannot be deleted
 		if httpRes != nil && (httpRes.StatusCode == 400 || httpRes.StatusCode == 409) {
-			log.Printf("[WARN] Version %s is published and cannot be deleted independently. It will be deleted when provider %s is deleted. Removing from state.", version, providerId)
+			tflog.Warn(ctx, fmt.Sprintf("Version %s is published and cannot be deleted independently. It will be deleted when provider %s is deleted. Removing from state.", version, providerId))
 			d.SetId("")
 			return nil
 		}
-		return parseError(err, httpRes)
+		return helpers.HandleDelete(ctx, d, err, httpRes)
 	}
 	return nil
 }
@@ -142,7 +135,7 @@ func resourceInfraProviderVersionUpdate(ctx context.Context, d *schema.ResourceD
 
 	if d.HasChanges("gpg_key_id", "protocols") {
 		updateVersion := buildUpdateProviderVersionRequestBody(d)
-		log.Printf("[DEBUG] Updating provider version %s for provider %s with body %v", version, providerId, updateVersion)
+		tflog.Debug(ctx, fmt.Sprintf("Updating provider version %s for provider %s with body %v", version, providerId, updateVersion))
 
 		httpRes, err := c.ProviderRegistryApi.ProviderRegistryUpdateProviderVersion(
 			ctx,
@@ -152,7 +145,7 @@ func resourceInfraProviderVersionUpdate(ctx context.Context, d *schema.ResourceD
 			version,
 		)
 		if err != nil {
-			return parseError(err, httpRes)
+			return helpers.HandleWrite(ctx, d, err, httpRes)
 		}
 	}
 
@@ -160,19 +153,14 @@ func resourceInfraProviderVersionUpdate(ctx context.Context, d *schema.ResourceD
 }
 
 func resourceInfraProviderVersionImport(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
-	parts := strings.Split(d.Id(), "/")
-	if len(parts) != 2 {
-		return nil, fmt.Errorf("invalid import ID format, expected: provider_id/version")
+	parts, err := helpers.SplitImportID(d.Id(), 2, 2)
+	if err != nil {
+		return nil, fmt.Errorf("%w; expected provider_id/version", err)
 	}
 
 	d.Set("provider_id", parts[0])
 	d.Set("version", parts[1])
 	d.SetId(d.Id())
-
-	diags := resourceInfraProviderVersionRead(ctx, d, m)
-	if diags.HasError() {
-		return nil, fmt.Errorf("failed to read provider version: %v", diags)
-	}
 
 	return []*schema.ResourceData{d}, nil
 }

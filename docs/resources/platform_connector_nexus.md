@@ -54,7 +54,7 @@ resource "harness_platform_connector_nexus" "test" {
 
 ### Optional
 
-- `credentials` (Block List, Max: 1) Credentials to use for authentication. (see [below for nested schema](#nestedblock--credentials))
+- `credentials` (Block List) Credentials to use for authentication. (see [below for nested schema](#nestedblock--credentials))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
 - `org_id` (String) Unique identifier of the organization.

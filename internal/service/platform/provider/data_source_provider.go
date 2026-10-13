@@ -32,13 +32,12 @@ func dataSourceProviderRead(ctx context.Context, d *schema.ResourceData, meta in
 
 	resp, httpResp, err := c.ProviderApi.GetProvider(ctx, identifier, c.AccountId)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+		return diag.Errorf("provider not found: no object matched the given arguments")
+
 	}
 
 	readProvider(d, resp.Data)

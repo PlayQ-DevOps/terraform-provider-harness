@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	splitsdk "github.com/harness/harness-go-sdk/harness/split"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -141,20 +142,20 @@ func resourceFMETrafficTypeRead(ctx context.Context, d *schema.ResourceData, met
 	}
 	tt, err := client.TrafficTypes.FindByID(wsID, d.Id())
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if tt == nil {
-		d.SetId("")
-		return nil
+		return helpers.ReadMissing(ctx, d, "FME traffic type "+d.Id())
+
 	}
 	if err := d.Set("name", tt.Name); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("display_attribute_id", tt.DisplayAttributeID); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("traffic_type_id", tt.ID); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	return nil
 }
@@ -169,7 +170,7 @@ func resourceFMETrafficTypeDelete(ctx context.Context, d *schema.ResourceData, m
 		return diags
 	}
 	if err := client.TrafficTypes.Delete(wsID, d.Id()); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 	return nil
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/utils"
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccDataSourceGitopsCluster(t *testing.T) {
@@ -24,9 +24,9 @@ func TestAccDataSourceGitopsCluster(t *testing.T) {
 	clusterServer := os.Getenv("HARNESS_TEST_GITOPS_CLUSTER_SERVER")
 	clusterToken := os.Getenv("HARNESS_TEST_GITOPS_CLUSTER_TOKEN")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceGitopsCluster(id, accountId, name, agentId, clusterName, clusterServer, clusterToken),
@@ -54,9 +54,9 @@ func TestAccDataSourceGitopsClusterIAM(t *testing.T) {
 	caData := os.Getenv("HARNESS_TEST_AWS_CLUSTER_CA_DATA")
 	resourceName := "data.harness_platform_gitops_cluster.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceGitopsClusterIAM(id, accountId, name, agentId, clusterName, clusterServer, roleARN, awsClusterName, caData),

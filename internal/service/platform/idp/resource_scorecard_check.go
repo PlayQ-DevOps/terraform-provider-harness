@@ -175,7 +175,7 @@ func ResourceScorecardCheck() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
-		Schema:        scorecardCheckSchema(false),
+		Schema:        helpers.WithIdentity(scorecardCheckSchema(false), "identifier"),
 		CustomizeDiff: resourceScorecardCheckCustomizeDiff,
 	}
 }
@@ -224,17 +224,12 @@ func resourceScorecardCheckRead(ctx context.Context, d *schema.ResourceData, met
 		Custom:         optional.NewBool(true),
 	})
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {
-			d.SetId("")
-			return nil
-		}
-		if isNotFoundError(err) {
-			d.SetId("")
-			return nil
-		}
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp, idpNotFound)
 	}
 
+	if resp.CheckDetails == nil {
+		return helpers.ReadMissing(ctx, d, "scorecard check "+id)
+	}
 	if err := readScorecardCheck(d, resp.CheckDetails); err != nil {
 		return diag.Errorf("failed to read IDP scorecard check: %v", err)
 	}
@@ -261,7 +256,7 @@ func resourceScorecardCheckCreateOrUpdate(ctx context.Context, d *schema.Resourc
 		})
 	}
 	if err != nil {
-		return handleIDPWriteApiError("harness_platform_idp_scorecard_check", err, d, httpResp)
+		return idpHandleWrite(ctx, d, "harness_platform_idp_scorecard_check", err, httpResp)
 	}
 
 	d.SetId(req.CheckDetails.Identifier)
@@ -276,13 +271,7 @@ func resourceScorecardCheckDelete(ctx context.Context, d *schema.ResourceData, m
 	}
 	httpResp, err := c.ChecksApi.DeleteCheck(ctx, d.Id(), opts)
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {
-			return nil
-		}
-		if isNotFoundError(err) {
-			return nil
-		}
-		return handleIDPApiError(err, d, httpResp)
+		return idpHandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

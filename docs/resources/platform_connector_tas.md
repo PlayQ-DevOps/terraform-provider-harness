@@ -56,12 +56,12 @@ resource "harness_platform_connector_tas" "tas" {
 
 ### Required
 
-- `credentials` (Block List, Min: 1, Max: 1) Contains Tas connector credentials. (see [below for nested schema](#nestedblock--credentials))
 - `identifier` (String) Unique identifier of the resource.
 - `name` (String) Name of the resource.
 
 ### Optional
 
+- `credentials` (Block List) Contains Tas connector credentials. (see [below for nested schema](#nestedblock--credentials))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
 - `execute_on_delegate` (Boolean) Execute on delegate or not.
@@ -78,8 +78,11 @@ resource "harness_platform_connector_tas" "tas" {
 
 Required:
 
-- `tas_manual_details` (Block List, Min: 1, Max: 1) Authenticate to Tas using manual details. (see [below for nested schema](#nestedblock--credentials--tas_manual_details))
 - `type` (String) Type can be ManualConfig.
+
+Optional:
+
+- `tas_manual_details` (Block List) Authenticate to Tas using manual details. (see [below for nested schema](#nestedblock--credentials--tas_manual_details))
 
 <a id="nestedblock--credentials--tas_manual_details"></a>
 ### Nested Schema for `credentials.tas_manual_details`

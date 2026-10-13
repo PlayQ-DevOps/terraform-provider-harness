@@ -2,15 +2,16 @@ package featureflagtargetgroup_test
 
 import (
 	"fmt"
-	featureflagtargetgroup "github.com/harness/terraform-provider-harness/internal/service/platform/feature_flag_target_group"
 	"reflect"
 	"testing"
+
+	featureflagtargetgroup "github.com/harness/terraform-provider-harness/internal/service/platform/feature_flag_target_group"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccResourceFeatureFlagTargetGroup(t *testing.T) {
@@ -20,10 +21,10 @@ func TestAccResourceFeatureFlagTargetGroup(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_environment.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceFeatureFlagTargetGroupDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceFeatureFlagTargetGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFeatureFlagTargetGroup(id, name),

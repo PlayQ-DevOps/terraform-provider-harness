@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/harness/harness-go-sdk/harness/cd/cac"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -18,9 +19,7 @@ func ResourceAWSCodeDeployService() *schema.Resource {
 		UpdateContext: resourceAWSCodeDeployServiceCreateOrUpdate,
 		DeleteContext: resourceServiceDelete,
 		Schema:        commonServiceSchema(),
-		Importer: &schema.ResourceImporter{
-			State: serviceStateImporter,
-		},
+		Importer:      serviceImporter,
 	}
 }
 
@@ -34,11 +33,10 @@ func resourceAWSCodeDeployServiceRead(ctx context.Context, d *schema.ResourceDat
 	var err error
 
 	if svc, err = c.CDClient.ConfigAsCodeClient.GetServiceById(appId, svcId); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	} else if svc == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+		return helpers.ReadMissing(ctx, d, "AWS CodeDeploy service "+d.Id())
+
 	}
 
 	return readServiceCodeDeploy(d, svc)

@@ -8,8 +8,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 // EMAIL Channel Tests
@@ -19,10 +19,10 @@ func TestAccCentralNotificationChannel_Email(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelEmailAccount(id, name),
@@ -45,10 +45,10 @@ func TestOrgCentralNotificationChannel_Email(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelEmailOrg(id, name),
@@ -69,10 +69,10 @@ func TestProjectCentralNotificationChannel_Email(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelEmailProject(id, name),
@@ -93,10 +93,10 @@ func TestOrgCentralNotificationChannel_Slack(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelSlackOrg(id, name),
@@ -116,10 +116,10 @@ func TestProjectCentralNotificationChannel_Slack(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelSlackProject(id, name),
@@ -140,10 +140,10 @@ func TestOrgCentralNotificationChannel_MSTeams(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelMSTeamsOrg(id, name),
@@ -163,10 +163,10 @@ func TestProjectCentralNotificationChannel_MSTeams(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelMSTeamsProject(id, name),
@@ -187,10 +187,10 @@ func TestOrgCentralNotificationChannel_PagerDuty(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelPagerDutyOrg(id, name),
@@ -210,10 +210,10 @@ func TestProjectCentralNotificationChannel_PagerDuty(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelPagerDutyProject(id, name),
@@ -234,10 +234,10 @@ func TestOrgCentralNotificationChannel_Webhook(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelWebhookOrg(id, name),
@@ -257,10 +257,10 @@ func TestProjectCentralNotificationChannel_Webhook(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelWebhookProject(id, name),
@@ -283,10 +283,10 @@ func TestAccCentralNotificationChannel_Datadog(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelDatadogAccount(id, name),
@@ -307,10 +307,10 @@ func TestAccCentralNotificationChannel_Slack(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelSlackAccount(id, name),
@@ -333,10 +333,10 @@ func TestAccCentralNotificationChannel_MSTeams(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelMSTeamsAccount(id, name),
@@ -359,10 +359,10 @@ func TestAccCentralNotificationChannel_PagerDuty(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelPagerDutyAccount(id, name),
@@ -385,10 +385,10 @@ func TestAccCentralNotificationChannel_Webhook(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelWebhookAccount(id, name),
@@ -411,10 +411,10 @@ func TestOrgCentralNotificationChannel_Datadog(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelDatadogOrg(id, name),
@@ -434,10 +434,10 @@ func TestProjectCentralNotificationChannel_Datadog(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", name, utils.RandStringBytes(5))
 	resourceName := "harness_platform_central_notification_channel.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCheckCentralNotificationChannelDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCheckCentralNotificationChannelDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCentralNotificationChannelDatadogProject(id, name),

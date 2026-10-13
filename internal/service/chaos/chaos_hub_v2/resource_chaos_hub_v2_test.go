@@ -6,8 +6,8 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 // TestAccResourceChaosHubV2_basic verifies the basic resource functionality for Chaos Hub V2.
@@ -17,9 +17,9 @@ func TestAccResourceChaosHubV2_basic(t *testing.T) {
 	resourceName := "harness_chaos_hub_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosHubV2Destroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosHubV2Destroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosHubV2ConfigBasic(id, name),
@@ -48,9 +48,9 @@ func TestAccResourceChaosHubV2_Update(t *testing.T) {
 	resourceName := "harness_chaos_hub_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosHubV2Destroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosHubV2Destroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosHubV2ConfigBasic(id, name),
@@ -79,9 +79,9 @@ func TestAccResourceChaosHubV2_Import(t *testing.T) {
 	resourceName := "harness_chaos_hub_v2.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosHubV2Destroy(resourceName),
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosHubV2Destroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosHubV2ConfigBasic(id, name),

@@ -3,7 +3,7 @@
 page_title: "harness_platform_infra_provider_version_publish Resource - terraform-provider-harness"
 subcategory: "Next Gen"
 description: |-
-  Resource for publishing Terraform/OpenTofu Provider Versions in the IaCM Provider Registry.
+  Resource for publishing Terraform/OpenTofu Provider Versions in the IaCM Provider Registry. Publishing makes the provider version available for use.
 ---
 
 # harness_platform_infra_provider_version_publish (Resource)
@@ -82,7 +82,7 @@ resource "harness_platform_infra_provider_version_publish" "aws_v5" {
 
 ### Read-Only
 
-- `id` (String) The ID of this resource in the format `provider_id/version`.
+- `id` (String) The ID of this resource.
 - `published` (Boolean) Indicates if the provider version is published.
 
 ## Import
@@ -94,11 +94,3 @@ The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/c
 ```shell
 terraform import harness_platform_infra_provider_version_publish.example <provider_id>/<version>
 ```
-
-## Notes
-
-- Publishing is a **one-way operation**. Once a provider version is published, it cannot be unpublished through Terraform.
-- When this resource is destroyed, it is only removed from Terraform state. The provider version remains published in the registry.
-- Use `depends_on` to ensure all required files are uploaded before publishing the version.
-- A published version becomes available for use in Terraform/OpenTofu configurations.
-- Best practice: Publish only after uploading all platform binaries, SHA256SUMS, and signature files.

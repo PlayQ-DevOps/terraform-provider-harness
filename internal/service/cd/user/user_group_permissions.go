@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/cd/graphql"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -25,17 +26,13 @@ func ResourceUserGroupPermissions() *schema.Resource {
 				Description: "Unique identifier of the user group.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"account_permissions": getUserGroupAccountPermissionsSchema(),
 			"app_permissions":     getUserGroupAppPermissionsSchema(),
 		},
 
-		Importer: &schema.ResourceImporter{
-			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
-				d.Set("user_group_id", d.Id())
-				return []*schema.ResourceData{d}, nil
-			},
-		},
+		Importer: helpers.NewImporter(helpers.ImportSpec{Parts: []string{"user_group_id"}}),
 	}
 }
 
@@ -84,13 +81,11 @@ func resourceUserGroupPermissionsRead(ctx context.Context, d *schema.ResourceDat
 
 	userGroup, err := c.UserClient.GetUserGroupById(id)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 
 	if userGroup == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return diag.FromErr(fmt.Errorf("user group %s does not exist", id))
+		return helpers.ReadMissing(ctx, d, "user group "+id)
 	}
 
 	return readUserGroupPermissions(d, userGroup)
@@ -119,7 +114,7 @@ func resourceUserGroupPermissionsDelete(ctx context.Context, d *schema.ResourceD
 
 	ug, err := c.UserClient.GetUserGroupById(id)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	if ug == nil {
@@ -132,7 +127,7 @@ func resourceUserGroupPermissionsDelete(ctx context.Context, d *schema.ResourceD
 
 	updatedUg, err := c.UserClient.UpdateUserGroup(ug)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	if len(updatedUg.Permissions.AccountPermissions.AccountPermissionTypes) > 0 {

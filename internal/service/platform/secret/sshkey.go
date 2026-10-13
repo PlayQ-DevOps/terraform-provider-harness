@@ -191,11 +191,8 @@ func resourceSecretSSHKeyRead(ctx context.Context, d *schema.ResourceData, meta 
 	}
 
 	if secret == nil {
-		id := d.Id()
-		if id == "" {
-			id = d.Get("identifier").(string)
-		}
-		return diag.Errorf("SSH key secret '%s' not found", id)
+		// The base read removed the missing secret from state.
+		return nil
 	}
 
 	if err := readSecretSSHKey(d, secret); err != nil {

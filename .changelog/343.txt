@@ -1,3 +1,0 @@
-```release-note:bug
-resource/harness_platform_environment: Handle case when environment is deleted from somewhere else and refresh fails
-```

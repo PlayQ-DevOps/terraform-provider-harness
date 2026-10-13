@@ -9,8 +9,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccResourceResourceGroup(t *testing.T) {
@@ -20,10 +20,10 @@ func TestAccResourceResourceGroup(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceResourceGroup(id, name, accountId),
@@ -63,10 +63,10 @@ func TestProjectResourceResourceGroup(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectResourceResourceGroup(id, name, accountId),
@@ -106,10 +106,10 @@ func TestOrgResourceResourceGroup(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgResourceResourceGroup(id, name, accountId),
@@ -149,10 +149,10 @@ func TestAccResourceResourceGroup_emptyAttributeFilter(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceResourceGroupEmptyAttributeFilter(id, name, accountId),
@@ -191,10 +191,10 @@ func TestProjectResourceResourceGroup_emptyAttributeFilter(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectResourceResourceGroupEmptyAttributeFilter(id, name, accountId),
@@ -233,10 +233,10 @@ func TestOrgResourceResourceGroup_emptyAttributeFilter(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgResourceResourceGroupEmptyAttributeFilter(id, name, accountId),
@@ -276,10 +276,10 @@ func TestAccResourceResourceGroup_TagsAttributeFilter(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceResourceGroupTagsAttributeFilter(id, name, accountId),
@@ -318,10 +318,10 @@ func TestOrgResourceResourceGroup_TagsAttributeFilter(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgResourceResourceGroupTagsAttributeFilter(id, name, accountId),
@@ -361,10 +361,10 @@ func TestProjectResourceResourceGroup_TagsAttributeFilter(t *testing.T) {
 	resourceName := "harness_platform_resource_group.test"
 	accountId := os.Getenv("HARNESS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceGroupDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceGroupDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectResourceResourceGroupTagsAttributeFilter(id, name, accountId),

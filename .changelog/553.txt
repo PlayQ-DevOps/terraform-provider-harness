@@ -1,3 +1,0 @@
-```release-note:fix
-resource/harness_platform_connector_github: adding support for execute_on_delegate.
-```

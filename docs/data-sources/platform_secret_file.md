@@ -31,7 +31,6 @@ data "harness_platform_secret_file" "example" {
 - `name` (String) Name of the resource.
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.
-- `force_delete` (Boolean) Enable this flag for force deletion of connector
 
 ### Read-Only
 
@@ -53,7 +52,7 @@ Optional:
 
 Optional:
 
-- `version` (String) Version of the secret (for AWS/Azure Secret Manager)
+- `gcp_project_id` (String) GCP Project ID (for GCP Secret Manager)
 - `kms_key_id` (String) KMS Key ID (for AWS Secret Manager)
 - `regions` (String) GCP region for the secret (for GCP Secret Manager)
-- `gcp_project_id` (String) GCP Project ID (for GCP Secret Manager)
+- `version` (String) Version of the secret (for AWS/Azure Secret Manager)

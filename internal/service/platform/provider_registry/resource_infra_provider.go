@@ -2,13 +2,13 @@ package provider_registry
 
 import (
 	"context"
-	"encoding/json"
-	"log"
-	"net/http"
+
+	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -89,16 +89,13 @@ func ResourceInfraProvider() *schema.Resource {
 func resourceInfraProviderRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c, ctx := m.(*internal.Session).GetPlatformClientWithContext(ctx)
 	id := d.Id()
-	if id == "" {
-		d.MarkNewResource()
-	}
 	resp, httpRes, err := c.ProviderRegistryApi.ProviderRegistryGetProvider(
 		ctx,
 		id,
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleRead(ctx, d, err, httpRes)
 	}
 	readProvider(d, &resp)
 	return nil
@@ -112,15 +109,14 @@ func resourceInfraProviderCreate(ctx context.Context, d *schema.ResourceData, m 
 	}
 	createProvider := buildCreateProviderRequestBody(d)
 	providerType := d.Get("type").(string)
-	log.Printf("[DEBUG] Creating provider with type %s and body %v", providerType, createProvider)
+	tflog.Debug(ctx, fmt.Sprintf("Creating provider with type %s and body %v", providerType, createProvider))
 	provRes, httpRes, err := c.ProviderRegistryApi.ProviderRegistryCreateProvider(ctx, createProvider, c.AccountId, providerType)
 
 	if err != nil {
-		return parseError(err, httpRes)
+		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
 	setProviderId(d, &provRes)
-	resourceInfraProviderRead(ctx, d, m)
-	return nil
+	return helpers.ReadAfterWrite(ctx, d, m, 0, resourceInfraProviderRead)
 }
 
 func resourceInfraProviderDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -131,7 +127,7 @@ func resourceInfraProviderDelete(ctx context.Context, d *schema.ResourceData, m 
 	}
 	httpRes, err := c.ProviderRegistryApi.ProviderRegistryDeleteProvider(ctx, id, c.AccountId)
 	if err != nil {
-		return parseError(err, httpRes)
+		return helpers.HandleDelete(ctx, d, err, httpRes)
 	}
 	return nil
 }
@@ -175,27 +171,4 @@ func buildCreateProviderRequestBody(d *schema.ResourceData) nextgen.CreateProvid
 	}
 
 	return provider
-}
-
-func parseError(err error, httpResp *http.Response) diag.Diagnostics {
-	if httpResp != nil && httpResp.StatusCode == 401 {
-		return diag.Errorf("%s\nHint:\n1) Please check if token has expired or is wrong.\n2) Harness Provider is misconfigured. For firstgen resources please give the correct api_key and for nextgen resources please give the correct platform_api_key.", httpResp.Status)
-	}
-	if httpResp != nil && httpResp.StatusCode == 403 {
-		return diag.Errorf("%s\nHint:\n1) Please check if the token has required permission for this operation.\n2) Please check if the token has expired or is wrong.", httpResp.Status)
-	}
-
-	se, ok := err.(nextgen.GenericSwaggerError)
-	if !ok {
-		diag.FromErr(err)
-	}
-
-	iacmErrBody := se.Body()
-	iacmErr := nextgen.IacmError{}
-	jsonErr := json.Unmarshal(iacmErrBody, &iacmErr)
-	if jsonErr != nil {
-		return diag.Errorf("%s", err.Error())
-	}
-
-	return diag.Errorf("%s\nHint:\n1) %s", httpResp.Status, iacmErr.Message)
 }

@@ -9,8 +9,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/stretchr/testify/require"
 )
 
@@ -28,10 +28,10 @@ func TestAccResourceUser(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", expectedName)
 	resourceName := "harness_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUser(expectedName, expectedEmail),
@@ -66,10 +66,10 @@ func TestAccResourceUser_DeleteUnderlyingResource(t *testing.T) {
 	expectedEmail := fmt.Sprintf("%s@example.com", expectedName)
 	resourceName := "harness_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUser(expectedName, expectedEmail),
@@ -105,10 +105,10 @@ func TestAccResourceUser_WithUserGroups(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", expectedName)
 	resourceName := "harness_user.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccUserDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccUserDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceUser_WithUserGroups(expectedName, expectedEmail),

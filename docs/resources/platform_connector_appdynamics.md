@@ -58,13 +58,13 @@ resource "harness_platform_connector_appdynamics" "test" {
 
 ### Optional
 
-- `api_token` (Block List, Max: 1) Authenticate to App Dynamics using api token. (see [below for nested schema](#nestedblock--api_token))
+- `api_token` (Block List) Authenticate to App Dynamics using api token. (see [below for nested schema](#nestedblock--api_token))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.
 - `tags` (Set of String) Tags to associate with the resource.
-- `username_password` (Block List, Max: 1) Authenticate to App Dynamics using username and password. (see [below for nested schema](#nestedblock--username_password))
+- `username_password` (Block List) Authenticate to App Dynamics using username and password. (see [below for nested schema](#nestedblock--username_password))
 
 ### Read-Only
 

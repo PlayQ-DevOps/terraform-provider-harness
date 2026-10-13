@@ -21,9 +21,8 @@ Use `type = "customer"` after applying overrides to verify that the correct cust
 
 ## Example Usage
 
-### CI — read Harness default images
-
 ```terraform
+# CI — read Harness default images
 data "harness_platform_default_images" "ci_defaults" {
   kind = "ci"
 }
@@ -31,11 +30,8 @@ data "harness_platform_default_images" "ci_defaults" {
 output "ci_default_images" {
   value = data.harness_platform_default_images.ci_defaults.images
 }
-```
 
-### CI — read customer-configured overrides
-
-```terraform
+# CI — read customer-configured overrides
 data "harness_platform_default_images" "ci_customer" {
   kind = "ci"
   type = "customer"
@@ -44,11 +40,8 @@ data "harness_platform_default_images" "ci_customer" {
 output "ci_lite_engine_override" {
   value = data.harness_platform_default_images.ci_customer.images["liteEngineTag"]
 }
-```
 
-### IACM — read Harness default images
-
-```terraform
+# IACM — read Harness default images
 data "harness_platform_default_images" "iacm_defaults" {
   kind = "iacm"
 }
@@ -56,11 +49,8 @@ data "harness_platform_default_images" "iacm_defaults" {
 output "iacm_default_images" {
   value = data.harness_platform_default_images.iacm_defaults.images
 }
-```
 
-### IACM — read customer-configured overrides
-
-```terraform
+# IACM — read customer-configured overrides
 data "harness_platform_default_images" "iacm_customer" {
   kind = "iacm"
   type = "customer"
@@ -69,11 +59,8 @@ data "harness_platform_default_images" "iacm_customer" {
 output "iacm_aws_cdk_override" {
   value = data.harness_platform_default_images.iacm_customer.images["iacmAwsCdk"]
 }
-```
 
-### IDP — read Harness default images
-
-```terraform
+# IDP — read Harness default images
 data "harness_platform_default_images" "idp_defaults" {
   kind = "idp"
 }
@@ -81,11 +68,8 @@ data "harness_platform_default_images" "idp_defaults" {
 output "idp_default_images" {
   value = data.harness_platform_default_images.idp_defaults.images
 }
-```
 
-### IDP — read customer-configured overrides
-
-```terraform
+# IDP — read customer-configured overrides
 data "harness_platform_default_images" "idp_customer" {
   kind = "idp"
   type = "customer"
@@ -106,7 +90,7 @@ output "idp_register_catalog_override" {
 ### Optional
 
 - `infra_type` (String) The infrastructure type passed to the execution config API (e.g. `K8`, `VM`). Defaults to `K8`.
-- `type` (String) The configuration type to retrieve. `default` returns Harness-managed default image tags; `customer` returns only the image fields that have been explicitly overridden at the account level. Defaults to `default`.
+- `type` (String) The configuration type to retrieve. Use `default` for Harness default images or `customer` for customer-configured overrides. Defaults to `default`.
 
 ### Read-Only
 

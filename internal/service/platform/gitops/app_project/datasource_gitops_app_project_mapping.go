@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -17,7 +16,6 @@ func DatasourceGitopsAppProjectMapping() *schema.Resource {
 		Description: "Resource for managing the Harness GitOps Application Project Mappings.",
 
 		ReadContext: datasourceGitopsAppProjectMappingRead,
-		Importer:    helpers.GitopsAppProjectMappingImporter,
 
 		Schema: map[string]*schema.Schema{
 			"account_id": {
@@ -47,24 +45,23 @@ func DatasourceGitopsAppProjectMapping() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
-		"argo_project_name": {
-			Description: "ArgoCD Project name which is to be mapped to the Harness project.",
-			Type:        schema.TypeString,
-			Required:    true,
+			"argo_project_name": {
+				Description: "ArgoCD Project name which is to be mapped to the Harness project.",
+				Type:        schema.TypeString,
+				Required:    true,
+			},
+			"auto_create_service_env": {
+				Description: "Enable automated creation of service, environment and cluster-env link. Defaults to false.",
+				Type:        schema.TypeBool,
+				Computed:    true,
+			},
 		},
-		"auto_create_service_env": {
-			Description: "Enable automated creation of service, environment and cluster-env link. Defaults to false.",
-			Type:        schema.TypeBool,
-			Computed:    true,
-		},
-	},
-}
+	}
 	return resource
 }
 
 func datasourceGitopsAppProjectMappingRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := d.Get("agent_id").(string)
 	identifier := d.Get("identifier").(string)
 	argo_proj_name := d.Get("argo_project_name").(string)
@@ -80,14 +77,9 @@ func datasourceGitopsAppProjectMappingRead(ctx context.Context, d *schema.Resour
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 	readAppProjectMapping(d, &resp)
 	return nil
 }

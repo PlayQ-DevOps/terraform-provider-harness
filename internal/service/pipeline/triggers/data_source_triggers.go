@@ -52,7 +52,7 @@ func dataTriggersRead(ctx context.Context, d *schema.ResourceData, meta interfac
 		d.Get("project_id").(string), d.Get("target_id").(string), id)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	readTriggers(d, resp.Data)

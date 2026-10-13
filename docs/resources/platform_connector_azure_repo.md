@@ -18,14 +18,14 @@ Resource for creating a Azure Repo connector.
 ### Required
 
 - `connection_type` (String) Whether the connection we're making is to a azure repository or a azure account. Valid values are Project, Repo.
-- `credentials` (Block List, Min: 1, Max: 1) Credentials to use for the connection. (see [below for nested schema](#nestedblock--credentials))
 - `identifier` (String) Unique identifier of the resource.
 - `name` (String) Name of the resource.
 - `url` (String) URL of the azure repository or account.
 
 ### Optional
 
-- `api_authentication` (Block List, Max: 1) Configuration for using the azure api. API Access is required for using “Git Experience”, for creation of Git based triggers, Webhooks management and updating Git statuses. (see [below for nested schema](#nestedblock--api_authentication))
+- `api_authentication` (Block List) Configuration for using the azure api. API Access is required for using “Git Experience”, for creation of Git based triggers, Webhooks management and updating Git statuses. (see [below for nested schema](#nestedblock--api_authentication))
+- `credentials` (Block List) Credentials to use for the connection. (see [below for nested schema](#nestedblock--credentials))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
 - `execute_on_delegate` (Boolean) Execute on delegate or not.
@@ -38,13 +38,21 @@ Resource for creating a Azure Repo connector.
 
 - `id` (String) The ID of this resource.
 
+<a id="nestedblock--api_authentication"></a>
+### Nested Schema for `api_authentication`
+
+Required:
+
+- `token_ref` (String) Personal access token for interacting with the azure api. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
+
+
 <a id="nestedblock--credentials"></a>
 ### Nested Schema for `credentials`
 
 Optional:
 
-- `http` (Block List, Max: 1) Authenticate using Username and token over http(s) for the connection. (see [below for nested schema](#nestedblock--credentials--http))
-- `ssh` (Block List, Max: 1) Authenticate using SSH for the connection. (see [below for nested schema](#nestedblock--credentials--ssh))
+- `http` (Block List) Authenticate using Username and token over http(s) for the connection. (see [below for nested schema](#nestedblock--credentials--http))
+- `ssh` (Block List) Authenticate using SSH for the connection. (see [below for nested schema](#nestedblock--credentials--ssh))
 
 <a id="nestedblock--credentials--http"></a>
 ### Nested Schema for `credentials.http`
@@ -65,12 +73,3 @@ Optional:
 Required:
 
 - `ssh_key_ref` (String) Reference to the Harness secret containing the ssh key. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
-
-
-
-<a id="nestedblock--api_authentication"></a>
-### Nested Schema for `api_authentication`
-
-Required:
-
-- `token_ref` (String) Personal access token for interacting with the azure api. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.

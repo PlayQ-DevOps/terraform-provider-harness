@@ -6,7 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 // TestAccDataSourceChaosImageRegistry verifies the basic data source functionality for Chaos Image Registry at the account level.
@@ -26,9 +26,9 @@ func TestAccDataSourceChaosImageRegistry(t *testing.T) {
 	dataSourceName := "data.harness_chaos_image_registry.test"
 	resourceName := "harness_chaos_image_registry.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceChaosImageRegistryConfig(rName, id, "docker.io", "test-account"),
@@ -50,9 +50,9 @@ func TestAccDataSourceChaosImageRegistry_CheckOverride(t *testing.T) {
 	rName := id
 	dataSourceName := "data.harness_chaos_image_registry.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceChaosImageRegistryCheckOverrideConfig(rName, id, "docker.io", "test-account"),
@@ -72,9 +72,9 @@ func TestAccDataSourceChaosImageRegistry_ProjectLevel(t *testing.T) {
 	dataSourceName := "data.harness_chaos_image_registry.test"
 	resourceName := "harness_chaos_image_registry.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceChaosImageRegistryProjectLevelConfig(rName, id, "docker.io", "test-account"),

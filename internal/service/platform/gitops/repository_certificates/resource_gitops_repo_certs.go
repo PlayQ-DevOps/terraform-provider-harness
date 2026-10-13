@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -63,8 +62,8 @@ func ResourceGitopsRepoCerts() *schema.Resource {
 						"certificates": {
 							Description: "certificates details.",
 							Type:        schema.TypeList,
-							Optional:    true,
 							Computed:    true,
+							Optional:    true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"metadata": {
@@ -145,7 +144,6 @@ func ResourceGitopsRepoCerts() *schema.Resource {
 
 func resourceGitopsRepoCertsCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 
 	var agentIdentifier, accountIdentifier, orgIdentifier, projectIdentifier string
 	accountIdentifier = c.AccountId
@@ -169,22 +167,17 @@ func resourceGitopsRepoCertsCreateOrUpdate(ctx context.Context, d *schema.Resour
 		})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	setGitopsRepositoriesCertificates(d, &resp, accountIdentifier, agentIdentifier)
 	return nil
 }
 
 func resourceGitopsRepoCertsRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 
 	agentIdentifier := d.Get("agent_id").(string)
 
@@ -194,23 +187,19 @@ func resourceGitopsRepoCertsRead(ctx context.Context, d *schema.ResourceData, me
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
+	}
+	if len(resp.Items) == 0 {
+		// The API answers an empty list, not 404, when the agent holds no certificate.
+		return helpers.ReadMissing(ctx, d, "repository certificates of agent "+agentIdentifier)
 	}
 
-	// Soft delete lookup error handling
-	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 	setGitopsRepositoriesCertificates(d, &resp, c.AccountId, agentIdentifier)
 	return nil
 }
 
 func resourceGitopsRepoCertsDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := d.Get("agent_id").(string)
 
 	_, httpResp, err := c.RepositoryCertificatesApi.AgentCertificateServiceDelete(ctx, agentIdentifier, &nextgen.RepositoryCertificatesApiAgentCertificateServiceDeleteOpts{
@@ -221,13 +210,13 @@ func resourceGitopsRepoCertsDelete(ctx context.Context, d *schema.ResourceData, 
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }
 
 func setGitopsRepositoriesCertificates(d *schema.ResourceData, repoCert *nextgen.CertificatesRepositoryCertificateList, accountIdentifier string, agentIdentifier string) {
-	d.SetId("1234") // assigning temp id.
+	d.SetId(agentIdentifier) // one certificate list per agent
 	d.Set("account_id", accountIdentifier)
 	d.Set("agent_id", agentIdentifier)
 	var repoCertDetails nextgen.Applicationv1alpha1RepositoryCertificateList

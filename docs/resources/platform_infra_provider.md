@@ -53,9 +53,9 @@ resource "harness_platform_infra_provider" "google" {
 
 Read-Only:
 
-- `files` (List of String) List of uploaded files for this version.
-- `synced` (Boolean) Whether the version is synced.
-- `version` (String) Version number.
+- `files` (List of String)
+- `synced` (Boolean)
+- `version` (String)
 
 ## Import
 

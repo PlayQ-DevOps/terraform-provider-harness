@@ -29,7 +29,7 @@ func DataSourceWebhook() *schema.Resource {
 		},
 	}
 
-	helpers.SetMultiLevelResourceSchema(resource.Schema)
+	helpers.SetMultiLevelDatasourceSchemaIdentifierRequired(resource.Schema)
 	return resource
 }
 
@@ -53,12 +53,11 @@ func dataSourceWebhookRead(ctx context.Context, d *schema.ResourceData, meta int
 			HarnessAccount: optional.NewString(c.AccountId),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 		if len(resp.WebhookIdentifier) <= 0 {
-			d.SetId("")
-			d.MarkNewResource()
-			return nil
+			return diag.Errorf("gitx webhook not found: no object matched the given arguments")
+
 		}
 		setWebhookUpdateDetails(d, c.AccountId, orgIdentifier, projectIdentifier, &resp)
 
@@ -67,12 +66,11 @@ func dataSourceWebhookRead(ctx context.Context, d *schema.ResourceData, meta int
 			HarnessAccount: optional.NewString(c.AccountId),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 		if len(resp.WebhookIdentifier) <= 0 {
-			d.SetId("")
-			d.MarkNewResource()
-			return nil
+			return diag.Errorf("gitx webhook not found: no object matched the given arguments")
+
 		}
 		setWebhookUpdateDetails(d, c.AccountId, orgIdentifier, projectIdentifier, &resp)
 	} else {
@@ -80,12 +78,11 @@ func dataSourceWebhookRead(ctx context.Context, d *schema.ResourceData, meta int
 			HarnessAccount: optional.NewString(c.AccountId),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 		if len(resp.WebhookIdentifier) <= 0 {
-			d.SetId("")
-			d.MarkNewResource()
-			return nil
+			return diag.Errorf("gitx webhook not found: no object matched the given arguments")
+
 		}
 		setWebhookUpdateDetails(d, c.AccountId, orgIdentifier, projectIdentifier, &resp)
 	}

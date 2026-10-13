@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 // TestAccResourceECSRule_CCM32010_UpdateInPlaceAddsDepends verifies that an existing
@@ -25,9 +25,9 @@ func TestAccResourceECSRule_CCM32010_UpdateInPlaceAddsDepends(t *testing.T) {
 	resourceName := "harness_autostopping_rule_ecs.second"
 	resourceNameFirst := "harness_autostopping_rule_ecs.first"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testECSCCM32010Step1NoDepends(nameFirst, nameSecond, proxyName, apiKey, true),
@@ -71,9 +71,9 @@ func TestAccResourceECSRule_CCM32012_DependsOrderNoPerpetualPlan(t *testing.T) {
 	var proxyID string
 	resourceName := "harness_autostopping_rule_ecs.leaf"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testECSCCM32012Stack(nameA, nameB, nameC, proxyName, apiKey, true),
@@ -113,12 +113,12 @@ func TestAccResourceVMRule_DryRunFalseOnUpdate(t *testing.T) {
 
 	var proxyID string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.TestAccPreCheck(t)
 			cleanupStaleRulesForVM(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testVMRule(name, proxyName, apiKey, true),
@@ -155,7 +155,7 @@ func TestAccResourceVMRule_DryRunFalseOnUpdate(t *testing.T) {
 //
 // Regression test for CCM-32336. The bug was that the lwd GET rule API returned
 // HTTP 500 (`Error finding service by id ... : <nil>`) for a deleted rule;
-// the provider only handles 404 + ENTITY_NOT_FOUND in helpers.HandleReadApiError.
+// the provider only handles 404 + ENTITY_NOT_FOUND in helpers.HandleRead.
 // The fix changes the API to return 404 with body `{"code": "ENTITY_NOT_FOUND", ...}`
 // so terraform plan no longer fails on missing rules.
 func TestAccResourceECSRule_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
@@ -166,9 +166,9 @@ func TestAccResourceECSRule_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 	var proxyID, ruleIDBefore string
 	resourceName := "harness_autostopping_rule_ecs.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testECSCCM32336Rule(name, proxyName, apiKey),

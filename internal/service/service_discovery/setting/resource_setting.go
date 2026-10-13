@@ -133,7 +133,7 @@ func resourceSettingCreateOrUpdate(ctx context.Context, d *schema.ResourceData, 
 	// Make the API call
 	_, httpResp, err := c.SettingApi.SaveSetting(ctx, req, accountID, opts)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Set the ID and read back the resource to ensure the state is consistent
@@ -168,7 +168,7 @@ func resourceSettingRead(ctx context.Context, d *schema.ResourceData, meta inter
 	// Make the API call
 	resp, httpResp, err := c.SettingApi.GetSetting(ctx, accountID, opts)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Set the ID and settings
@@ -218,7 +218,7 @@ func resourceSettingDelete(ctx context.Context, d *schema.ResourceData, meta int
 	// Make the API call to reset settings
 	_, httpResp, err := c.SettingApi.ResetImageRegistrySetting(ctx, svcdiscovery.ServiceEmpty{}, accountID, opts)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	// Resource is deleted, remove from state

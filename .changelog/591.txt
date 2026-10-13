@@ -1,3 +1,0 @@
-```release-note:enhancement
-resource/harness_platform_connector_jira: Enhanced jira connector resource to support newer PersonalAccessToken authentication beans.
-```

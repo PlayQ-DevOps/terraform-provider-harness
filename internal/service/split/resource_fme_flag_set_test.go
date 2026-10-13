@@ -8,7 +8,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 // testAccRandomFlagSetSuffix returns n lowercase alphanumeric characters (no underscores).
@@ -37,9 +37,9 @@ func TestAccFMEFlagSet_dataSourceMatchesResource(t *testing.T) {
 	ds := "data.harness_fme_flag_set.lookup"
 	var flagSetID string
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccFMEFlagSetWithDataSource(id, fsName, "acceptance test flag set"),

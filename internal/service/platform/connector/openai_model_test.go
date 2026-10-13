@@ -70,7 +70,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 // ---------------------------------------------------------------------------
@@ -101,8 +101,8 @@ func openaiDelegateSelectorCount(csv string) int {
 // ============================================================================
 
 func TestResourceConnectorOpenAIModel_TokenAuthWithVertexBlock(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: `
@@ -128,8 +128,8 @@ resource "harness_platform_connector_openai_model" "test" {
 }
 
 func TestResourceConnectorOpenAIModel_VertexAuthWithTokenBlock(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: `
@@ -169,10 +169,10 @@ func TestAccResourceConnectorOpenAIModel_Token(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorOpenAIModel_token(id, name, tokenRef, delegateHCL),
@@ -219,10 +219,10 @@ func TestAccResourceConnectorOpenAIModel_Vertex(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorOpenAIModel_vertex(id, name, saKeyRef, projectID, region, delegateHCL),
@@ -268,10 +268,10 @@ func TestOrgResourceConnectorOpenAIModel_Token(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorOpenAIModel_tokenOrg(id, name, tokenRef, orgID, delegateHCL),
@@ -306,10 +306,10 @@ func TestOrgResourceConnectorOpenAIModel_Vertex(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorOpenAIModel_vertexOrg(id, name, saKeyRef, projectID, region, orgID, delegateHCL),
@@ -347,10 +347,10 @@ func TestProjectResourceConnectorOpenAIModel_Token(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorOpenAIModel_tokenProject(id, name, tokenRef, orgID, projectID, delegateHCL),
@@ -387,10 +387,10 @@ func TestProjectResourceConnectorOpenAIModel_Vertex(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_connector_openai_model.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccConnectorDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccConnectorDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceConnectorOpenAIModel_vertexProject(id, name, saKeyRef, gcpProjectID, region, orgID, projectID, delegateHCL),
@@ -582,4 +582,3 @@ resource "harness_platform_connector_openai_model" "test" {
   }
 }`, id, name, orgID, projectID, delegateBlock, saKeyRef, gcpProjectID, region)
 }
-

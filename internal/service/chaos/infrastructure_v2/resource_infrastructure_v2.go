@@ -11,6 +11,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -66,13 +67,12 @@ func resourceInfrastructureV2Create(ctx context.Context, d *schema.ResourceData,
 		},
 	)
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Set the ID
 	d.SetId(resp.Identity)
-
-	log.Printf("Created infrastructure with ID: %s", d.Id())
+	tflog.Debug(ctx, fmt.Sprintf("Created infrastructure with ID: %s", d.Id()))
 
 	// Check if we need to perform an immediate update for fields not supported in create
 	needsUpdate := d.HasChanges(
@@ -80,7 +80,7 @@ func resourceInfrastructureV2Create(ctx context.Context, d *schema.ResourceData,
 		"annotation", "containers", "insecure_skip_verify",
 	)
 	if needsUpdate {
-		log.Printf("[DEBUG] Performing immediate update after creation for additional fields")
+		tflog.Debug(ctx, "Performing immediate update after creation for additional fields")
 		return resourceInfrastructureV2Update(ctx, d, meta)
 	}
 
@@ -113,15 +113,17 @@ func resourceInfrastructureV2Read(ctx context.Context, d *schema.ResourceData, m
 	if err != nil {
 		// Use graceful destroy handling for infrastructure read errors
 		// This handles 404 and certain 500 errors (resource not found/inconsistent state)
-		return helpers.HandleChaosReadApiErrorWithGracefulDestroy(err, d, httpResp, []string{
+		return helpers.HandleRead(ctx, d, err, httpResp, helpers.GracefulNotFound(500, []string{
 			"no matching infra",
 			"not a k8s infra",
-		})
+		}...),
+		)
 	}
 
-	// Check if infra.Identifier is nil
+	// A 200 without the identity block is how the API reports an infrastructure it no
+	// longer knows about.
 	if infra.Identifier == nil {
-		return diag.FromErr(fmt.Errorf("identifier is nil"))
+		return helpers.ReadMissing(ctx, d, "chaos infrastructure "+infraID)
 	}
 
 	// Set the fields
@@ -219,9 +221,10 @@ func resourceInfrastructureV2Read(ctx context.Context, d *schema.ResourceData, m
 	if err := d.Set("node_selector", infra.NodeSelector); err != nil {
 		return diag.FromErr(fmt.Errorf("failed to set node_selector: %v", err))
 	}
+	tflog.
 
-	// Debug log the entire infra object to see what we got from the API
-	log.Printf("[DEBUG] Infrastructure details from API: %+v", infra)
+		// Debug log the entire infra object to see what we got from the API
+		Debug(ctx, fmt.Sprintf("Infrastructure details from API: %+v", infra))
 
 	// Set the image registry if it exists
 	if infra.ImageRegistry != nil {
@@ -229,12 +232,12 @@ func resourceInfrastructureV2Read(ctx context.Context, d *schema.ResourceData, m
 		if infra.ImageRegistry.InfraID == "" {
 			ensureRegistryInfraID(infra.ImageRegistry, environmentID, infraID)
 		}
-		log.Printf("[DEBUG] Setting image_registry from API: %+v", infra.ImageRegistry)
+		tflog.Debug(ctx, fmt.Sprintf("Setting image_registry from API: %+v", infra.ImageRegistry))
 		if err := setImageRegistry(d, infra.ImageRegistry); err != nil {
 			return diag.FromErr(fmt.Errorf("failed to set image_registry: %v", err))
 		}
 	} else {
-		log.Printf("[DEBUG] No image_registry in API response, using default values")
+		tflog.Debug(ctx, "No image_registry in API response, using default values")
 		// If no image_registry in API response, set default values to match the schema
 		defaultRegistry := &chaos.ImageRegistryImageRegistryV2{
 			RegistryServer:    "docker.io",
@@ -306,7 +309,7 @@ func resourceInfrastructureV2Update(ctx context.Context, d *schema.ResourceData,
 		},
 	)
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	return resourceInfrastructureV2Read(ctx, d, meta)
@@ -337,14 +340,15 @@ func resourceInfrastructureV2Delete(ctx context.Context, d *schema.ResourceData,
 	if err != nil {
 		// Use graceful destroy handling for infrastructure delete errors
 		// This handles 404 and certain 500 errors (resource not found/inconsistent state)
-		diags := helpers.HandleChaosReadApiErrorWithGracefulDestroy(err, d, httpResp, []string{
+		diags := helpers.HandleDelete(ctx, d, err, httpResp, helpers.GracefulNotFound(500, []string{
 			"no matching infra",
 			"not a k8s infra",
 			"failed to delete infra",
-		})
+		}...),
+		)
 		// If the helper cleared the state (SetId("")), we're done
 		if d.Id() == "" {
-			log.Printf("[DEBUG] Infrastructure delete handled gracefully: %s", infraID)
+			tflog.Debug(ctx, fmt.Sprintf("Infrastructure delete handled gracefully: %s", infraID))
 			return diags
 		}
 		// Otherwise, it's a real error
@@ -1092,8 +1096,7 @@ func resourceInfrastructureV2Import(ctx context.Context, d *schema.ResourceData,
 	if err != nil {
 		return nil, err
 	}
-
-	log.Printf("[DEBUG] Importing infrastructure with ID: %s/%s/%s/%s", orgID, projectID, environmentID, infraID)
+	tflog.Debug(ctx, fmt.Sprintf("Importing infrastructure with ID: %s/%s/%s/%s", orgID, projectID, environmentID, infraID))
 
 	// Set the ID in the format that our Read function expects
 	d.SetId(infraID)
@@ -1117,18 +1120,19 @@ func resourceInfrastructureV2Import(ctx context.Context, d *schema.ResourceData,
 
 	// Get the client
 	c, ctx := meta.(*internal.Session).GetChaosClientWithContext(ctx)
+	tflog.
 
-	// Verify the infrastructure exists
-	log.Printf("[DEBUG] Verifying infrastructure exists with params: account_id=%s, org_id=%s, project_id=%s, environment_id=%s, infra_id=%s",
-		c.AccountId, orgID, projectID, environmentID, infraID)
+		// Verify the infrastructure exists
+		Debug(ctx, fmt.Sprintf("Verifying infrastructure exists with params: account_id=%s, org_id=%s, project_id=%s, environment_id=%s, infra_id=%s", c.AccountId, orgID, projectID, environmentID, infraID))
+	tflog.
 
-	// Log the request details for debugging
-	log.Printf("[DEBUG] Request details for GetInfraV2:")
-	log.Printf("[DEBUG]   - infraID: %s", infraID)
-	log.Printf("[DEBUG]   - accountID: %s", c.AccountId)
-	log.Printf("[DEBUG]   - orgID: %s", orgID)
-	log.Printf("[DEBUG]   - projectID: %s", projectID)
-	log.Printf("[DEBUG]   - environmentID: %s", environmentID)
+		// Log the request details for debugging
+		Debug(ctx, "Request details for GetInfraV2:")
+	tflog.Debug(ctx, fmt.Sprintf("- infraID: %s", infraID))
+	tflog.Debug(ctx, fmt.Sprintf("- accountID: %s", c.AccountId))
+	tflog.Debug(ctx, fmt.Sprintf("- orgID: %s", orgID))
+	tflog.Debug(ctx, fmt.Sprintf("- projectID: %s", projectID))
+	tflog.Debug(ctx, fmt.Sprintf("- environmentID: %s", environmentID))
 
 	// First, try to get the infrastructure
 	infra, httpResp, err := c.ChaosSdkApi.GetInfraV2(
@@ -1143,21 +1147,21 @@ func resourceInfrastructureV2Import(ctx context.Context, d *schema.ResourceData,
 	if err != nil {
 		// Log detailed error information
 		errMsg := fmt.Sprintf("Error getting infrastructure: %v", err)
-		log.Printf("[ERROR] %s", errMsg)
+		tflog.Error(ctx, errMsg)
 
 		// If we have an HTTP response, log its details
 		if httpResp != nil {
-			log.Printf("[ERROR] Response status: %s", httpResp.Status)
-			log.Printf("[ERROR] Response headers: %v", httpResp.Header)
+			tflog.Error(ctx, fmt.Sprintf("Response status: %s", httpResp.Status))
+			tflog.Error(ctx, fmt.Sprintf("Response headers: %v", httpResp.Header))
 
 			// Try to read the response body for more details
 			if httpResp.Body != nil {
 				defer httpResp.Body.Close()
 				body, readErr := io.ReadAll(httpResp.Body)
 				if readErr != nil {
-					log.Printf("[ERROR] Failed to read response body: %v", readErr)
+					tflog.Error(ctx, fmt.Sprintf("Failed to read response body: %v", readErr))
 				} else {
-					log.Printf("[ERROR] Response body: %s", string(body))
+					tflog.Error(ctx, fmt.Sprintf("Response body: %s", string(body)))
 					errMsg = fmt.Sprintf("%s\nResponse body: %s", errMsg, string(body))
 				}
 			}
@@ -1181,16 +1185,15 @@ func resourceInfrastructureV2Import(ctx context.Context, d *schema.ResourceData,
 		// If we get here, we don't have an HTTP response
 		return nil, fmt.Errorf("%s (no response from server)", errMsg)
 	}
+	tflog.Debug(ctx, fmt.Sprintf("Found infrastructure: %+v", infra))
+	tflog.
 
-	log.Printf("[DEBUG] Found infrastructure: %+v", infra)
-
-	// Call the read function to populate the rest of the state
-	log.Printf("[DEBUG] Calling read function to populate state...")
+		// Call the read function to populate the rest of the state
+		Debug(ctx, "Calling read function to populate state...")
 	diags := resourceInfrastructureV2Read(ctx, d, meta)
 	if diags.HasError() {
 		return nil, fmt.Errorf("error reading infrastructure: %v", diags)
 	}
-
-	log.Printf("[DEBUG] Successfully imported infrastructure: %s", d.Id())
+	tflog.Debug(ctx, fmt.Sprintf("Successfully imported infrastructure: %s", d.Id()))
 	return []*schema.ResourceData{d}, nil
 }

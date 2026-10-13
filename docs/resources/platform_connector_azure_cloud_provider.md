@@ -127,13 +127,13 @@ resource "harness_platform_connector_azure_cloud_provider" "oidc_authentication"
 
 ### Required
 
-- `credentials` (Block List, Min: 1, Max: 1) Contains Azure connector credentials. (see [below for nested schema](#nestedblock--credentials))
 - `identifier` (String) Unique identifier of the resource.
 - `name` (String) Name of the resource.
 
 ### Optional
 
 - `azure_environment_type` (String) Specifies the Azure Environment type, which is AZURE by default. Can either be AZURE or AZURE_US_GOVERNMENT
+- `credentials` (Block List) Contains Azure connector credentials. (see [below for nested schema](#nestedblock--credentials))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
 - `execute_on_delegate` (Boolean) Execute on delegate or not.
@@ -155,16 +155,16 @@ Required:
 
 Optional:
 
-- `azure_inherit_from_delegate_details` (Block List, Max: 1) Authenticate to Azure Cloud Provider using details inheriting from delegate. (see [below for nested schema](#nestedblock--credentials--azure_inherit_from_delegate_details))
-- `azure_manual_details` (Block List, Max: 1) Authenticate to Azure Cloud Provider using manual details. (see [below for nested schema](#nestedblock--credentials--azure_manual_details))
-- `azure_oidc_spec` (Block List, Max: 1) Authenticate to Azure Cloud Provider using OIDC. (see [below for nested schema](#nestedblock--credentials--azure_oidc_spec))
+- `azure_inherit_from_delegate_details` (Block List) Authenticate to Azure Cloud Provider using details inheriting from delegate. (see [below for nested schema](#nestedblock--credentials--azure_inherit_from_delegate_details))
+- `azure_manual_details` (Block List) Authenticate to Azure Cloud Provider using manual details. (see [below for nested schema](#nestedblock--credentials--azure_manual_details))
+- `azure_oidc_spec` (Block List) Authenticate to Azure Cloud Provider using OIDC. (see [below for nested schema](#nestedblock--credentials--azure_oidc_spec))
 
 <a id="nestedblock--credentials--azure_inherit_from_delegate_details"></a>
 ### Nested Schema for `credentials.azure_inherit_from_delegate_details`
 
 Optional:
 
-- `auth` (Block List, Max: 1) Auth to authenticate to Azure Cloud Provider using details inheriting from delegate. (see [below for nested schema](#nestedblock--credentials--azure_inherit_from_delegate_details--auth))
+- `auth` (Block List) Auth to authenticate to Azure Cloud Provider using details inheriting from delegate. (see [below for nested schema](#nestedblock--credentials--azure_inherit_from_delegate_details--auth))
 
 <a id="nestedblock--credentials--azure_inherit_from_delegate_details--auth"></a>
 ### Nested Schema for `credentials.azure_inherit_from_delegate_details.auth`
@@ -175,7 +175,7 @@ Required:
 
 Optional:
 
-- `azure_msi_auth_ua` (Block List, Max: 1) Azure UserAssigned MSI auth details. (see [below for nested schema](#nestedblock--credentials--azure_inherit_from_delegate_details--auth--azure_msi_auth_ua))
+- `azure_msi_auth_ua` (Block List) Azure UserAssigned MSI auth details. (see [below for nested schema](#nestedblock--credentials--azure_inherit_from_delegate_details--auth--azure_msi_auth_ua))
 
 <a id="nestedblock--credentials--azure_inherit_from_delegate_details--auth--azure_msi_auth_ua"></a>
 ### Nested Schema for `credentials.azure_inherit_from_delegate_details.auth.azure_msi_auth_ua`
@@ -193,7 +193,7 @@ Optional:
 Optional:
 
 - `application_id` (String) Application ID of the Azure App.
-- `auth` (Block List, Max: 1) Contains Azure auth details. (see [below for nested schema](#nestedblock--credentials--azure_manual_details--auth))
+- `auth` (Block List) Contains Azure auth details. (see [below for nested schema](#nestedblock--credentials--azure_manual_details--auth))
 - `tenant_id` (String) The Azure Active Directory (AAD) directory ID where you created your application.
 
 <a id="nestedblock--credentials--azure_manual_details--auth"></a>
@@ -201,8 +201,8 @@ Optional:
 
 Optional:
 
-- `azure_client_key_cert` (Block List, Max: 1) Azure client key certificate details. (see [below for nested schema](#nestedblock--credentials--azure_manual_details--auth--azure_client_key_cert))
-- `azure_client_secret_key` (Block List, Max: 1) Azure Client Secret Key details. (see [below for nested schema](#nestedblock--credentials--azure_manual_details--auth--azure_client_secret_key))
+- `azure_client_key_cert` (Block List) Azure client key certificate details. (see [below for nested schema](#nestedblock--credentials--azure_manual_details--auth--azure_client_key_cert))
+- `azure_client_secret_key` (Block List) Azure Client Secret Key details. (see [below for nested schema](#nestedblock--credentials--azure_manual_details--auth--azure_client_secret_key))
 - `type` (String) Type can either be Certificate or Secret.
 
 <a id="nestedblock--credentials--azure_manual_details--auth--azure_client_key_cert"></a>

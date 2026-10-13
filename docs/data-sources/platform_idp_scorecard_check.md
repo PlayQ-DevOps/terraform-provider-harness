@@ -30,7 +30,7 @@ data "harness_platform_idp_scorecard_check" "readme" {
 - `custom` (Boolean) Whether this is a custom check. Always true for checks created through Terraform.
 - `default_behaviour` (String) Default behaviour when the check cannot be evaluated. Valid values are PASS and FAIL.
 - `description` (String) Description of the resource.
-- `expression` (String) JEXL expression used for advanced check rules.
+- `expression` (String) JEXL expression used for advanced check rules. Required when rule_strategy is ADVANCED.
 - `fail_message` (String) Message shown when the check fails.
 - `harness_managed` (Boolean) Whether the check is managed by Harness.
 - `id` (String) The ID of this resource.
@@ -38,7 +38,7 @@ data "harness_platform_idp_scorecard_check" "readme" {
 - `percentage` (Number) Pass percentage for the check.
 - `rule_description` (String) Description of the check rule set.
 - `rule_strategy` (String) How multiple rules are combined. Valid values are ALL_OF, ANY_OF, and ADVANCED.
-- `rules` (List of Object) Basic rules evaluated by the check. (see [below for nested schema](#nestedatt--rules))
+- `rules` (List of Object) Basic rules evaluated by the check. Required when rule_strategy is ALL_OF or ANY_OF. (see [below for nested schema](#nestedatt--rules))
 - `tags` (Set of String) Tags to associate with the resource.
 
 <a id="nestedatt--rules"></a>

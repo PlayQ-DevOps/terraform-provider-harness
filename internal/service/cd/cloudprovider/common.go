@@ -2,11 +2,14 @@ package cloudprovider
 
 import (
 	"context"
-	"log"
 
+	"fmt"
+
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/service/cd/usagescope"
 	"github.com/harness/terraform-provider-harness/internal/utils"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -29,7 +32,7 @@ func commonCloudProviderSchema() map[string]*schema.Schema {
 }
 
 func resourceCloudProviderDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	log.Printf("[DEBUG] Deleting cloud provider %s", d.Get("name"))
+	tflog.Debug(ctx, fmt.Sprintf("Deleting cloud provider %s", d.Get("name")))
 	c := meta.(*internal.Session).CDClient
 	if c == nil {
 		return diag.Errorf(utils.CDClientAPIKeyError)
@@ -38,7 +41,7 @@ func resourceCloudProviderDelete(ctx context.Context, d *schema.ResourceData, me
 	err := c.CloudProviderClient.DeleteCloudProvider(id)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	return nil

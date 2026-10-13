@@ -1,27 +1,33 @@
 package helpers
 
 import (
+	"sort"
 	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 )
 
+// ExpandTags converts Terraform "key:value" tag strings to the map the Harness APIs take.
+// Only the first colon separates key from value, so values may themselves contain colons
+// (URLs, Harness expressions such as "<+condition?a:b>", timestamps). A tag without a
+// colon is a key with an empty value.
 func ExpandTags(tags []interface{}) map[string]string {
-	result := map[string]string{}
-
+	result := make(map[string]string, len(tags))
 	for _, tag := range tags {
-		parts := strings.Split(tag.(string), ":")
+		parts := strings.SplitN(tag.(string), ":", 2)
 		if len(parts) == 1 {
-			parts = append(parts, "")
+			result[parts[0]] = ""
+		} else {
+			result[parts[0]] = parts[1]
 		}
-		result[parts[0]] = parts[1]
 	}
-
 	return result
 }
 
+// FlattenTags is the inverse of ExpandTags. The result is sorted so list-typed tag
+// attributes do not show spurious ordering diffs.
 func FlattenTags(tags map[string]string) []string {
-	var result []string
+	result := make([]string, 0, len(tags))
 	for k, v := range tags {
 		if v == "" {
 			result = append(result, k)
@@ -29,6 +35,7 @@ func FlattenTags(tags map[string]string) []string {
 			result = append(result, k+":"+v)
 		}
 	}
+	sort.Strings(result)
 	return result
 }
 
@@ -54,47 +61,3 @@ func ExpandField(permissions []interface{}) []string {
 	}
 	return result
 }
-
-// ExpandPipelineTags converts Terraform tag strings to a map for Pipeline API.
-// Unlike ExpandTags(), this function splits on the FIRST colon only, preserving
-// any additional colons in the tag value. This is critical for pipeline tags that
-// contain Harness expressions, URLs, timestamps, or other colon-separated values.
-//
-// Examples:
-//   Input:  "ImagePush:<+condition?value1:value2>"
-//   Output: {ImagePush: "<+condition?value1:value2>"}
-//
-//   Input:  "registry:https://example.com:5000/repo"
-//   Output: {registry: "https://example.com:5000/repo"}
-//
-// Fixes: PIPE-30810 - Pipeline tags with colons were being truncated
-func ExpandPipelineTags(tags []interface{}) map[string]string {
-	result := make(map[string]string)
-
-	for _, tag := range tags {
-		tagStr := tag.(string)
-		// Split on first colon only - everything after first : is the value
-		parts := strings.SplitN(tagStr, ":", 2)
-
-		if len(parts) == 1 {
-			// Tag has no colon, treat as key with empty value
-			result[parts[0]] = ""
-		} else {
-			// Tag has "key:value" format where value may contain colons
-			result[parts[0]] = parts[1]
-		}
-	}
-
-	return result
-}
-
-// func ExpandKeyValueTags(tags []interface{}) map[string]string {
-// 	result := map[string]string{}
-
-// 	for _, tag := range tags {
-// 		parts := strings.Split(tag.(string), ":")
-// 		result[parts[0]] = parts[1]
-// 	}
-
-// 	return result
-// }

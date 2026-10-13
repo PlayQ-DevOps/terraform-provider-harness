@@ -91,15 +91,14 @@ func dataSourceResourceEnvironmentClustersMappingRead(ctx context.Context, d *sc
 	resp, httpResp, err := c.ClustersApi.GetClusterList(ctx, c.AccountId, envId, clustersApiGetClusterListOpts)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
 	if resp.Data == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+		return diag.Errorf("environment clusters mapping not found: no object matched the given arguments")
+
 	}
 
 	readEnvironmentClustersMapping(d, &resp.Data.Content)

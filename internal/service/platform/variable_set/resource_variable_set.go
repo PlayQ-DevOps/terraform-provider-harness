@@ -2,7 +2,6 @@ package variable_set
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -36,11 +35,13 @@ func ResourceVariableSet() *schema.Resource {
 				Description: "Organization identifier of the organization the Variable Set resides in.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project identifier of the project the Variable Set resides in.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"name": {
 				Description: "Name of the Variable Set.",
@@ -201,7 +202,7 @@ func resourceVarsetRead(ctx context.Context, d *schema.ResourceData, meta interf
 	}
 
 	if err != nil {
-		return helpers.HandleIacmReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readVariableSet(d, &resp)
@@ -241,7 +242,7 @@ func resourceVarsetDelete(ctx context.Context, d *schema.ResourceData, meta inte
 	}
 
 	if err != nil {
-		return parseError(err, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -262,7 +263,7 @@ func resourceVarsetCreate(ctx context.Context, d *schema.ResourceData, meta inte
 	case Project:
 		req, err2 := buildCreateVarSetReqProjLevel(d)
 		if err2 != nil {
-			return diag.Errorf(err2.Error())
+			return diag.Errorf("%s", err2.Error())
 		}
 		_, httpResp, err = c.VariableSetsApi.VariableSetsCreateVariableSetProjLevel(
 			ctx,
@@ -274,7 +275,7 @@ func resourceVarsetCreate(ctx context.Context, d *schema.ResourceData, meta inte
 	case Org:
 		req, err2 := buildCreateVarSetReqOrgLevel(d)
 		if err2 != nil {
-			return diag.Errorf(err2.Error())
+			return diag.Errorf("%s", err2.Error())
 		}
 		_, httpResp, err = c.VariableSetsApi.VariableSetsCreateVariableSetOrgLevel(
 			ctx,
@@ -285,7 +286,7 @@ func resourceVarsetCreate(ctx context.Context, d *schema.ResourceData, meta inte
 	default:
 		req, err2 := buildCreateVarSetReqAccountLevel(d)
 		if err2 != nil {
-			return diag.Errorf(err2.Error())
+			return diag.Errorf("%s", err2.Error())
 		}
 		_, httpResp, err = c.VariableSetsApi.VariableSetsCreateVariableSetAccountLevel(
 			ctx,
@@ -295,11 +296,13 @@ func resourceVarsetCreate(ctx context.Context, d *schema.ResourceData, meta inte
 	}
 
 	if err != nil {
-		return parseError(err, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
-	resourceVarsetRead(ctx, d, meta)
-	return nil
+	if d.Id() == "" {
+		d.SetId(d.Get("identifier").(string))
+	}
+	return helpers.ReadAfterWrite(ctx, d, meta, 0, resourceVarsetRead)
 }
 
 func resourceVarsetUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -314,7 +317,7 @@ func resourceVarsetUpdate(ctx context.Context, d *schema.ResourceData, meta inte
 	case Project:
 		req, err2 := buildUpdateVarSetReqProjLevel(d)
 		if err2 != nil {
-			return diag.Errorf(err2.Error())
+			return diag.Errorf("%s", err2.Error())
 		}
 		_, httpResp, err = c.VariableSetsApi.VariableSetsUpdateVariableSetProjLevel(
 			ctx,
@@ -327,7 +330,7 @@ func resourceVarsetUpdate(ctx context.Context, d *schema.ResourceData, meta inte
 	case Org:
 		req, err2 := buildUpdateVarSetReqOrgLevel(d)
 		if err2 != nil {
-			return diag.Errorf(err2.Error())
+			return diag.Errorf("%s", err2.Error())
 		}
 		_, httpResp, err = c.VariableSetsApi.VariableSetsUpdateVariableSetOrgLevel(
 			ctx,
@@ -339,7 +342,7 @@ func resourceVarsetUpdate(ctx context.Context, d *schema.ResourceData, meta inte
 	default:
 		req, err2 := buildUpdateVarSetReqAccountLevel(d)
 		if err2 != nil {
-			return diag.Errorf(err2.Error())
+			return diag.Errorf("%s", err2.Error())
 		}
 		_, httpResp, err = c.VariableSetsApi.VariableSetsUpdateVariableSetAccountLevel(
 			ctx,
@@ -350,11 +353,13 @@ func resourceVarsetUpdate(ctx context.Context, d *schema.ResourceData, meta inte
 	}
 
 	if err != nil {
-		return parseError(err, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
-	resourceVarsetRead(ctx, d, meta)
-	return nil
+	if d.Id() == "" {
+		d.SetId(d.Get("identifier").(string))
+	}
+	return helpers.ReadAfterWrite(ctx, d, meta, 0, resourceVarsetRead)
 }
 
 func readVariableSet(d *schema.ResourceData, vs *nextgen.VariableSetsGetVariableSetAccountLevelResponseBody) {
@@ -586,38 +591,6 @@ func buildVariables(d *schema.ResourceData, attribute string) (map[string]nextge
 		}
 	}
 	return variables, nil
-}
-
-// iacm errors are in a different format from other harness services
-// this function parses iacm errors and attempts to return them in way
-// that is consistent with the provider.
-func parseError(err error, httpResp *http.Response) diag.Diagnostics {
-	// copied from helpers/errors.go
-	if httpResp != nil && httpResp.StatusCode == 401 {
-		return diag.Errorf(httpResp.Status + "\n" + "Hint:\n" +
-			"1) Please check if token has expired or is wrong.\n" +
-			"2) Harness Provider is misconfigured. For firstgen resources please give the correct api_key and for nextgen resources please give the correct platform_api_key.")
-	}
-	if httpResp != nil && httpResp.StatusCode == 403 {
-		return diag.Errorf(httpResp.Status + "\n" + "Hint:\n" +
-			"1) Please check if the token has required permission for this operation.\n" +
-			"2) Please check if the token has expired or is wrong.")
-	}
-
-	se, ok := err.(nextgen.GenericSwaggerError)
-	if !ok {
-		diag.FromErr(err)
-	}
-
-	iacmErrBody := se.Body()
-	iacmErr := nextgen.IacmError{}
-	jsonErr := json.Unmarshal(iacmErrBody, &iacmErr)
-	if jsonErr != nil {
-		return diag.Errorf(err.Error())
-	}
-
-	return diag.Errorf(httpResp.Status + "\n" + "Hint:\n" +
-		"1) " + iacmErr.Message)
 }
 
 type Scope struct {

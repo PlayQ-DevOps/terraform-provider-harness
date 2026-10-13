@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 // GCP proxy test requires a real GCP project ID; skip when not set to avoid 403 from Secret Manager.
@@ -24,9 +24,9 @@ func TestResourceGCPProxy(t *testing.T) {
 	name := fmt.Sprintf("terr-gcpproxy-%s", randAlnum(5))
 	resourceName := "harness_autostopping_gcp_proxy.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		//		CheckDestroy:      testAWSProxyDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{

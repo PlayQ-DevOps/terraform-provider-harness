@@ -14,9 +14,8 @@ By default, customers will often want to pull the most recent version of the del
 
 ## Example Usage
 
-### Account level — implicit account from provider
-
 ```terraform
+# Account level — implicit account from provider
 data "harness_platform_delegate_default_version" "account" {
 }
 
@@ -27,11 +26,8 @@ output "delegate_version" {
 output "delegate_minimal_version" {
   value = data.harness_platform_delegate_default_version.account.minimal_version
 }
-```
 
-### Org level — implicit account from provider
-
-```terraform
+# Org level — implicit account from provider
 data "harness_platform_delegate_default_version" "org_implicit" {
   org_id = "your_org_id"
 }
@@ -39,11 +35,8 @@ data "harness_platform_delegate_default_version" "org_implicit" {
 output "delegate_version_org_implicit" {
   value = data.harness_platform_delegate_default_version.org_implicit.version
 }
-```
 
-### Project level — implicit account from provider
-
-```terraform
+# Project level — implicit account from provider
 data "harness_platform_delegate_default_version" "project" {
   org_id     = "your_org_id"
   project_id = "your_project_id"

@@ -1,3 +1,0 @@
-```release-note:new-resource
-platform_template - Added template resource in Harness terraform provider
-```

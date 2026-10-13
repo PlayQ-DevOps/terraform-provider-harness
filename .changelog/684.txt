@@ -1,3 +1,0 @@
-```release-note:enhancement
-harness_platform_feature_flag - Add support to add targets with feature flags
-```

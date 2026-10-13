@@ -129,7 +129,7 @@ resource "harness_platform_connector_gcp_kms" "gcp_kms_oidc_delegate_default" {
 - `default` (Boolean) Set this flag to set this secret manager as default secret manager.
 - `description` (String) Description of the resource.
 - `execute_on_delegate` (Boolean) Enable this flag to execute on Delegate.
-- `manual` (Block List, Max: 1) Manual credential configuration. (see [below for nested schema](#nestedblock--manual))
+- `manual` (Block List) Manual credential configuration. (see [below for nested schema](#nestedblock--manual))
 - `oidc_authentication` (Block List) Authentication using harness oidc. (see [below for nested schema](#nestedblock--oidc_authentication))
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.

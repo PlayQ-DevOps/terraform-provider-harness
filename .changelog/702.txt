@@ -1,3 +1,0 @@
-```release-note:tests
-monitored_service/resource_monitored_service_test.go -  Added tests for AppD, GCP Logs, Splunk Logs, Newrelic and Dynatrace
-```

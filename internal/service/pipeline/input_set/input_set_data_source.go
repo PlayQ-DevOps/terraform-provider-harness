@@ -132,7 +132,7 @@ func dataSourceInputSetRead(ctx context.Context, d *schema.ResourceData, meta in
 	)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	readInputSet(d, &resp, pipelineId, store_type, base_branch, commit_message, connector_ref)

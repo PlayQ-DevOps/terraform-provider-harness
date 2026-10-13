@@ -91,16 +91,15 @@ func dataSourceDelegateTokenRead(ctx context.Context, d *schema.ResourceData, me
 			Status:            helpers.BuildField(d, "token_status"),
 		})
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 		if resp.Resource != nil && len(resp.Resource) > 0 {
 			delegateToken = &resp.Resource[0]
 		}
 
 		if delegateToken == nil {
-			d.SetId("")
-			d.MarkNewResource()
-			return nil
+			return diag.Errorf("delegate token not found: no object matched the given arguments")
+
 		}
 	} else {
 		return diag.FromErr(errors.New("Name must be specified"))

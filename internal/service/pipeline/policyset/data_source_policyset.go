@@ -110,7 +110,7 @@ func dataSourceProjectRead(ctx context.Context, d *schema.ResourceData, meta int
 	var httpResp *http.Response
 
 	if id != "" {
-		policyset, _, _ = c.PolicysetsApi.PolicysetsFind(ctx, id, &policymgmt.PolicysetsApiPolicysetsFindOpts{
+		policyset, httpResp, err = c.PolicysetsApi.PolicysetsFind(ctx, id, &policymgmt.PolicysetsApiPolicysetsFindOpts{
 			AccountIdentifier: optional.NewString(meta.(*internal.Session).AccountId),
 			XApiKey:           optional.NewString(meta.(*internal.Session).PLClient.ApiKey),
 		})
@@ -118,14 +118,13 @@ func dataSourceProjectRead(ctx context.Context, d *schema.ResourceData, meta int
 		return diag.FromErr(errors.New("identifier must be specified"))
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	bla := policymgmt.PolicySet{}
 	if policyset.Identifier == bla.Identifier {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+		return diag.Errorf("policy set not found: no object matched the given arguments")
+
 	}
 
 	readPolicyset(d, policyset)

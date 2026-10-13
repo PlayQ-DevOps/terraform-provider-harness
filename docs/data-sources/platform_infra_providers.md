@@ -37,9 +37,9 @@ output "provider_types" {
 
 Read-Only:
 
-- `account` (String) Account that owns the provider.
-- `created` (Number) Timestamp when the provider was created.
-- `description` (String) Description of the provider.
-- `id` (String) Unique identifier of the provider.
-- `type` (String) Provider type.
-- `updated` (Number) Timestamp when the provider was last updated.
+- `account` (String)
+- `created` (Number)
+- `description` (String)
+- `id` (String)
+- `type` (String)
+- `updated` (Number)

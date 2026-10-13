@@ -7,6 +7,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	u "github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,7 +19,7 @@ func ResourceConnectorAwsCC() *schema.Resource {
 		ReadContext:   resourceConnectorAwsCCRead,
 		CreateContext: resourceConnectorAwsCCCreateOrUpdate,
 		UpdateContext: resourceConnectorAwsCCCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -32,7 +33,7 @@ func ResourceConnectorAwsCC() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    false,
 				Computed:    false,
-                                Optional:    true,
+				Optional:    true,
 			},
 			// "region": {
 			// 	Description: "The AWS region.",
@@ -44,7 +45,7 @@ func ResourceConnectorAwsCC() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    false,
 				Computed:    false,
-                                Optional:    true,
+				Optional:    true,
 			},
 			// "s3_prefix": {
 
@@ -84,7 +85,7 @@ func ResourceConnectorAwsCC() *schema.Resource {
 }
 
 func resourceConnectorAwsCCRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.CEAws)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.CEAws)
 	if err != nil {
 		return err
 	}
@@ -103,7 +104,7 @@ func resourceConnectorAwsCCRead(ctx context.Context, d *schema.ResourceData, met
 func resourceConnectorAwsCCCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorAwsCC(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

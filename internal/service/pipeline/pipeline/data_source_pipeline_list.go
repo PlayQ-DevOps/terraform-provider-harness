@@ -92,13 +92,12 @@ func dataSourcePipelineListRead(ctx context.Context, d *schema.ResourceData, met
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if pipelines == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+		return diag.Errorf("pipeline list not found: no object matched the given arguments")
+
 	}
 
 	d.SetId(project_id)

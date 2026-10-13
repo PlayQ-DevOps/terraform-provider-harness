@@ -29,6 +29,7 @@ func ResourceGitOpsFilters() *schema.Resource {
 				Description: "Unique identifier of the resource.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"name": {
 				Description: "Name of the GitOps filters.",
@@ -40,16 +41,19 @@ func ResourceGitOpsFilters() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"APPLICATION"}, false),
+				ForceNew:     true,
 			},
 			"org_id": {
 				Description: "Organization Identifier for the Entity.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project Identifier for the Entity.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"filter_properties": {
 				Description: "Properties of the filters entity defined in Harness as a JSON string. All values should be arrays of strings. Example: jsonencode({\"healthStatus\": [\"Healthy\", \"Degraded\"], \"syncStatus\": [\"Synced\"]})",
@@ -58,19 +62,19 @@ func ResourceGitOpsFilters() *schema.Resource {
 				ValidateFunc: func(v interface{}, k string) (warns []string, errs []error) {
 					jsonStr := v.(string)
 					var props map[string]interface{}
-					
+
 					if err := json.Unmarshal([]byte(jsonStr), &props); err != nil {
 						errs = append(errs, fmt.Errorf("invalid JSON for filter_properties: %s", err))
 						return
 					}
-					
+
 					// Validate that all values are arrays
 					for key, val := range props {
 						if _, ok := val.([]interface{}); !ok {
 							errs = append(errs, fmt.Errorf("property %s must be an array", key))
 						}
 					}
-					
+
 					return
 				},
 			},
@@ -100,7 +104,7 @@ func resourceGitOpsFiltersRead(ctx context.Context, d *schema.ResourceData, meta
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	d.SetId(resp.Identifier)
@@ -127,7 +131,7 @@ func resourceGitOpsFiltersRead(ctx context.Context, d *schema.ResourceData, meta
 					props[k] = []interface{}{}
 				}
 			}
-			
+
 			// Convert to JSON string
 			jsonBytes, err := json.Marshal(props)
 			if err == nil {
@@ -152,7 +156,7 @@ func resourceGitOpsFiltersCreateOrUpdate(ctx context.Context, d *schema.Resource
 		})
 
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 
 		d.SetId(resp.Identifier)
@@ -166,7 +170,7 @@ func resourceGitOpsFiltersCreateOrUpdate(ctx context.Context, d *schema.Resource
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Read the updated resource to get all properties
@@ -187,7 +191,7 @@ func resourceGitOpsFiltersDelete(ctx context.Context, d *schema.ResourceData, me
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -222,7 +226,7 @@ func buildV1Filter(d *schema.ResourceData) *nextgen.V1Filter {
 	if attr, ok := d.GetOk("filter_properties"); ok {
 		jsonString := attr.(string)
 		var filterProps map[string]interface{}
-		
+
 		if err := json.Unmarshal([]byte(jsonString), &filterProps); err == nil {
 			// Ensure all values are arrays of strings
 			for k, v := range filterProps {
@@ -240,7 +244,7 @@ func buildV1Filter(d *schema.ResourceData) *nextgen.V1Filter {
 					filterProps[k] = []string{}
 				}
 			}
-			
+
 			// Set filter properties as interface
 			filterPropsInterface := interface{}(filterProps)
 			filter.FilterProperties = &filterPropsInterface

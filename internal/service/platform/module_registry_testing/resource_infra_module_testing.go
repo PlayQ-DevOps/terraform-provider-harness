@@ -2,14 +2,14 @@ package module_registry_testing
 
 import (
 	"context"
-	"encoding/json"
-	"log"
-	"net/http"
 	"strconv"
+
+	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -245,7 +245,7 @@ func resourceInfraModuleTestingRead(ctx context.Context, d *schema.ResourceData,
 		c.AccountId,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleRead(ctx, d, err, httpRes)
 	}
 	readModule(d, &resp)
 	return nil
@@ -269,7 +269,7 @@ func readModule(d *schema.ResourceData, module *nextgen.ModuleResource) {
 	d.Set("system", module.System)
 	d.Set("tags", module.Tags)
 	d.Set("testing_enabled", module.TestingEnabled)
-	
+
 	// Set testing_metadata as a list with one item
 	if module.TestingMetadata != nil {
 		testingMetadataList := []interface{}{
@@ -286,7 +286,7 @@ func readModule(d *schema.ResourceData, module *nextgen.ModuleResource) {
 		}
 		d.Set("testing_metadata", testingMetadataList)
 	}
-	
+
 	d.Set("updated", module.Updated)
 	d.Set("versions", module.Versions)
 }
@@ -299,11 +299,11 @@ func resourceInfraModuleTestingCreate(ctx context.Context, d *schema.ResourceDat
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	log.Printf("[DEBUG] Enabling module testing with value %v", createModule)
+	tflog.Debug(ctx, fmt.Sprintf("Enabling module testing with value %v", createModule))
 	httpRes, err := c.ModuleRegistryApi.ModuleRegistryEnableTesting(ctx, createModule, c.AccountId, moduleId)
 
 	if err != nil {
-		return parseError(err, httpRes)
+		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
 
 	// Set the Terraform resource ID
@@ -337,34 +337,6 @@ func buildCreateModuleRequestTestingBody(d *schema.ResourceData) (nextgen.Enable
 	return module, nil
 }
 
-func parseError(err error, httpResp *http.Response) diag.Diagnostics {
-	if httpResp != nil && httpResp.StatusCode == 401 {
-		return diag.Errorf(httpResp.Status + "\n" + "Hint:\n" +
-			"1) Please check if token has expired or is wrong.\n" +
-			"2) Harness Provider is misconfigured. For firstgen resources please give the correct api_key and for nextgen resources please give the correct platform_api_key.")
-	}
-	if httpResp != nil && httpResp.StatusCode == 403 {
-		return diag.Errorf(httpResp.Status + "\n" + "Hint:\n" +
-			"1) Please check if the token has required permission for this operation.\n" +
-			"2) Please check if the token has expired or is wrong.")
-	}
-
-	se, ok := err.(nextgen.GenericSwaggerError)
-	if !ok {
-		diag.FromErr(err)
-	}
-
-	iacmErrBody := se.Body()
-	iacmErr := nextgen.IacmError{}
-	jsonErr := json.Unmarshal(iacmErrBody, &iacmErr)
-	if jsonErr != nil {
-		return diag.Errorf(err.Error())
-	}
-
-	return diag.Errorf(httpResp.Status + "\n" + "Hint:\n" +
-		"1) " + iacmErr.Message)
-}
-
 func resourceInfraModuleTestingDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c, ctx := m.(*internal.Session).GetPlatformClientWithContext(ctx)
 	id := d.Id()
@@ -377,7 +349,7 @@ func resourceInfraModuleTestingDelete(ctx context.Context, d *schema.ResourceDat
 	}
 	httpRes, err := c.ModuleRegistryApi.ModuleRegistryDisableTesting(ctx, idInt64, c.AccountId)
 	if err != nil {
-		return parseError(err, httpRes)
+		return helpers.HandleDelete(ctx, d, err, httpRes)
 	}
 	return nil
 }
@@ -390,11 +362,11 @@ func resourceInfraModuleTestingUpdate(ctx context.Context, d *schema.ResourceDat
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	log.Printf("[DEBUG] Updating module testing with value %v", updateModule)
+	tflog.Debug(ctx, fmt.Sprintf("Updating module testing with value %v", updateModule))
 	httpRes, err := c.ModuleRegistryApi.ModuleRegistryUpdateModuleTesting(ctx, updateModule, c.AccountId, moduleId)
 
 	if err != nil {
-		return parseError(err, httpRes)
+		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
 
 	return resourceInfraModuleTestingRead(ctx, d, m)

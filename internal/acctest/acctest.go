@@ -3,9 +3,12 @@ package acctest
 import (
 	"context"
 	"fmt"
+	"os"
 	"strings"
 	"sync"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-go/tfprotov5"
 
 	"github.com/harness/harness-go-sdk/harness/cd/graphql"
 	"github.com/harness/harness-go-sdk/harness/code"
@@ -19,9 +22,10 @@ import (
 	openapi_client_nextgen "github.com/harness/harness-openapi-go-client/nextgen"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/provider"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	sdkterraform "github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 const (
@@ -44,11 +48,37 @@ func TestAccConfigureProvider() {
 			"platform_api_key": helpers.EnvVars.PlatformApiKey.Get(),
 		}
 
-		TestAccProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(config))
+		TestAccProvider.Configure(context.Background(), sdkterraform.NewResourceConfigRaw(config))
 	})
 }
 
+// TestAccSkipIfNotAcc skips the calling test unless TF_ACC is set. Use it at the top of
+// acceptance tests that read environment configuration before calling resource.Test,
+// so that `go test ./...` without credentials skips them instead of failing.
+func TestAccSkipIfNotAcc(t *testing.T) {
+	t.Helper()
+	if os.Getenv(resource.EnvTfAcc) == "" {
+		t.Skipf("set %s=1 (plus Harness credentials) to run this acceptance test against the live Harness API", resource.EnvTfAcc)
+	}
+}
+
 func TestAccPreCheck(t *testing.T) {
+	t.Helper()
+	// A test that calls this outside resource.Test (the FirstGen delegate tests start a
+	// Docker container first) must not reach the live API, or Docker, without TF_ACC.
+	if os.Getenv(resource.EnvTfAcc) == "" {
+		t.Skipf("acceptance test: set %s=1 and the HARNESS_* variables to run it against the live Harness API", resource.EnvTfAcc)
+	}
+	var missing []string
+	if helpers.EnvVars.AccountId.Get() == "" {
+		missing = append(missing, helpers.EnvVars.AccountId.String())
+	}
+	if helpers.EnvVars.PlatformApiKey.Get() == "" && helpers.EnvVars.ApiKey.Get() == "" {
+		missing = append(missing, helpers.EnvVars.PlatformApiKey.String()+" (or "+helpers.EnvVars.ApiKey.String()+" for FirstGen resources)")
+	}
+	if len(missing) > 0 {
+		t.Fatalf("TF_ACC is set, so this acceptance test would run against the live Harness API, but required configuration is missing: %s", strings.Join(missing, ", "))
+	}
 	TestAccConfigureProvider()
 }
 
@@ -378,12 +408,16 @@ func ChaosTemplateImportStateIdFunc(resourceName string) resource.ImportStateIdF
 	}
 }
 
-// providerFactories are used to instantiate a provider during acceptance testing.
-// The factory function will be invoked for every Terraform CLI command executed
-// to create a provider server to which the CLI can reattach.
-var ProviderFactories = map[string]func() (*schema.Provider, error){
-	"harness": func() (*schema.Provider, error) {
-		return provider.Provider("dev")(), nil
+// ProtoV5ProviderFactories serves the muxed provider (the SDK v2 and plugin-framework
+// halves) to acceptance tests against the real API. A factory is invoked for every
+// Terraform CLI command, which reattaches to the in-process provider server.
+var ProtoV5ProviderFactories = map[string]func() (tfprotov5.ProviderServer, error){
+	"harness": func() (tfprotov5.ProviderServer, error) {
+		server, err := provider.NewMuxServer(context.Background(), "dev")
+		if err != nil {
+			return nil, err
+		}
+		return server(), nil
 	},
 }
 

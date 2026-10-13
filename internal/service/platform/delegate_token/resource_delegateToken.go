@@ -2,13 +2,15 @@ package delegatetoken
 
 import (
 	"context"
-	"log"
 	"net/http"
+
+	"fmt"
 
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -22,7 +24,7 @@ func ResourceDelegateToken() *schema.Resource {
 		CreateContext: resourceDelegateTokenCreate,
 		UpdateContext: resourceDelegateTokenRevoke,
 		DeleteContext: resourceDelegateTokenRevoke,
-		Importer:      helpers.MultiLevelResourceImporter,
+		Importer:      delegateTokenImporter,
 
 		Schema: map[string]*schema.Schema{
 			"name": {
@@ -91,22 +93,25 @@ func ResourceDelegateToken() *schema.Resource {
 func resourceDelegateTokenRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 
+	// The token name is the resource ID. The API has no get-by-name, so list by name in the
+	// scope and pick the exact match; a revoked token is still listed, with its status.
+	name := d.Id()
 	resp, httpResp, err := c.DelegateTokenResourceApi.GetCgDelegateTokens(ctx, c.AccountId, &nextgen.DelegateTokenResourceApiGetCgDelegateTokensOpts{
 		OrgIdentifier:     helpers.BuildField(d, "org_id"),
 		ProjectIdentifier: helpers.BuildField(d, "project_id"),
-		Name:              helpers.BuildField(d, "name"),
-		Status:            helpers.BuildField(d, "token_status"),
+		Name:              optional.NewString(name),
 	})
-
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if resp.Resource != nil && (len(resp.Resource) > 0) {
-		readDelegateToken(d, &resp.Resource[0])
+	for i := range resp.Resource {
+		if resp.Resource[i].Name == name {
+			readDelegateToken(d, &resp.Resource[i])
+			return nil
+		}
 	}
-
-	return nil
+	return helpers.ReadMissing(ctx, d, "delegate token "+name)
 }
 
 func resourceDelegateTokenCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -130,10 +135,10 @@ func resourceDelegateTokenCreate(ctx context.Context, d *schema.ResourceData, me
 	resp, httpResp, err = c.DelegateTokenResourceApi.CreateDelegateToken(ctx, c.AccountId, delegateToken.Name, opts)
 
 	if err != nil && httpResp != nil {
-		log.Printf("[INFO] Failed to create delegate token %q. This may happen if a token with the same name already exists in the scope or was recently deleted (within the 30-day purge window). Enable Terraform debug logs to view the full API error response.", delegateToken.Name)
-		return helpers.HandleApiError(err, d, httpResp)
+		tflog.Info(ctx, fmt.Sprintf("Failed to create delegate token %q. This may happen if a token with the same name already exists in the scope or was recently deleted (within the 30-day purge window). Enable Terraform debug logs to view the full API error response.", delegateToken.Name))
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	} else if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readDelegateToken(d, resp.Resource)
@@ -156,7 +161,7 @@ func resourceDelegateTokenRevoke(ctx context.Context, d *schema.ResourceData, me
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	readDelegateToken(d, resp.Resource)
@@ -220,3 +225,6 @@ func readCreatedByData(userType string, name_ string, details map[string]string)
 
 	return result
 }
+
+// delegateTokenImporter: [<org_id>/[<project_id>/]]<name>; the token name is the resource ID.
+var delegateTokenImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org_id", "project_id", "name"}, OptionalPrefix: 2})

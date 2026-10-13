@@ -8,8 +8,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccServiceOverrides_ProjectScope(t *testing.T) {
@@ -18,10 +18,10 @@ func TestAccServiceOverrides_ProjectScope(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_service_overrides_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccServiceOverridesDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccServiceOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccServiceOverridesProjectScope(id, name),
@@ -46,10 +46,10 @@ func TestAccServiceOverrides_OrgScope(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_service_overrides_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccServiceOverridesDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccServiceOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccServiceOverridesOrgScope(id, name),
@@ -73,10 +73,10 @@ func TestAccServiceOverrides_AccountScope(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_service_overrides_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccServiceOverridesDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccServiceOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccServiceOverridesAccountScope(id, name),
@@ -97,10 +97,10 @@ func TestAccRemoteServiceOverrides(t *testing.T) {
 	name := id
 	resourceName := "harness_platform_service_overrides_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccServiceOverridesDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccServiceOverridesDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config:             testRemoteServiceOverrides(id, name),
@@ -135,10 +135,10 @@ func TestAccServiceOverridesEditGitDetails(t *testing.T) {
 	path1 := fmt.Sprintf("test-path-%s-1", utils.RandStringBytes(6))
 	path2 := fmt.Sprintf("test-path-%s-2", utils.RandStringBytes(6))
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccServiceOverridesDestroy(resourceName1),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccServiceOverridesDestroy(resourceName1),
 		Steps: []resource.TestStep{
 			{
 				Config:             testAccServiceOverridesGitDetailsWithIdentifier(baseId1, name1, "main", path1, identifier1, "test1"),

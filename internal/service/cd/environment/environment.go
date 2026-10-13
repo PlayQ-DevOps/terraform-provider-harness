@@ -2,9 +2,9 @@ package environment
 
 import (
 	"context"
-	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/cd/cac"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -80,16 +80,8 @@ func ResourceEnvironment() *schema.Resource {
 			},
 		},
 
-		Importer: &schema.ResourceImporter{
-			State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-				// <app_id>/<env_id>
-				parts := strings.Split(d.Id(), "/")
-				d.Set("app_id", parts[0])
-				d.SetId(parts[1])
-
-				return []*schema.ResourceData{d}, nil
-			},
-		},
+		// <app_id>/<env_id>
+		Importer: helpers.NewImporter(helpers.ImportSpec{Parts: []string{"app_id", ""}}),
 	}
 }
 
@@ -105,11 +97,10 @@ func resourceEnvironmentRead(ctx context.Context, d *schema.ResourceData, meta i
 	appId := d.Get("app_id").(string)
 
 	if env, err = c.ConfigAsCodeClient.GetEnvironmentById(appId, envId); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	} else if env == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+		return helpers.ReadMissing(ctx, d, "environment "+d.Id())
+
 	}
 
 	return readEnvironment(d, env)
@@ -222,12 +213,12 @@ func resourceEnvironmentDelete(ctx context.Context, d *schema.ResourceData, meta
 
 	app, err := c.ApplicationClient.GetApplicationById(appId)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	err = c.ConfigAsCodeClient.DeleteEnvironment(app.Name, envName)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	return nil

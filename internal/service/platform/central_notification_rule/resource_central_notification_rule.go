@@ -26,6 +26,7 @@ func ResourceCentralNotificationRule() *schema.Resource {
 			"identifier": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"name": {
 				Type:     schema.TypeString,
@@ -174,7 +175,7 @@ func resourceCentralNotificationRuleCreate(ctx context.Context, d *schema.Resour
 		})
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	d.SetId(resp.Identifier)
@@ -209,7 +210,7 @@ func resourceCentralNotificationRuleRead(ctx context.Context, d *schema.Resource
 			})
 	}
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readCentralNotificationRule(accountID, d, resp)
@@ -251,7 +252,7 @@ func resourceCentralNotificationRuleUpdate(ctx context.Context, d *schema.Resour
 			})
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	return readCentralNotificationRule(accountID, d, resp)
@@ -284,7 +285,7 @@ func resourceCentralNotificationRuleDelete(ctx context.Context, d *schema.Resour
 			})
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return readCentralNotificationRule(accountID, d, resp)
@@ -338,7 +339,7 @@ func expandNotificationConditions(raw []interface{}) []nextgen.NotificationCondi
 				} else if directMap, ok := rawEventData.(map[string]interface{}); ok {
 					eventDataMap = directMap
 				}
-				
+
 				if eventDataMap != nil {
 					if typeStr, ok := eventDataMap["type"].(string); ok && typeStr != "" {
 						t := nextgen.ResourceTypeEnum(typeStr)
@@ -426,13 +427,9 @@ func buildCentralNotificationRule(d *schema.ResourceData, accountID string) next
 func readCentralNotificationRule(accountIdentifier string, d *schema.ResourceData, notificationRuleDto nextgen.NotificationRuleDto) diag.Diagnostics {
 	d.SetId(notificationRuleDto.Identifier)
 	d.Set("account", accountIdentifier)
-	if notificationRuleDto.Org != "" {
-		d.Set("org", notificationRuleDto.Org)
-	}
+	d.Set("org", notificationRuleDto.Org)
 
-	if notificationRuleDto.Project != "" {
-		d.Set("project", notificationRuleDto.Project)
-	}
+	d.Set("project", notificationRuleDto.Project)
 	d.Set("identifier", notificationRuleDto.Identifier)
 	d.Set("name", notificationRuleDto.Name)
 	d.Set("status", notificationRuleDto.Status)
@@ -445,7 +442,7 @@ func readCentralNotificationRule(accountIdentifier string, d *schema.ResourceDat
 		var eventConfigs []map[string]interface{}
 		for _, cfg := range cond.NotificationEventConfigs {
 			eventData := make(map[string]interface{})
-			
+
 			// Handle notification event data - it can be null when scope_identifiers is empty
 			if cfg.PipelineEventNotificationParamsDto != nil && cfg.PipelineEventNotificationParamsDto.Type_ != nil {
 				eventData["type"] = string(*cfg.PipelineEventNotificationParamsDto.Type_)
@@ -477,12 +474,12 @@ func readCentralNotificationRule(accountIdentifier string, d *schema.ResourceDat
 				"notification_event":  cfg.NotificationEvent,
 				"entity_identifiers":  entityIdentifiers,
 			}
-			
+
 			// Only set notification_event_data if we actually have data to set
 			if len(eventData) > 0 {
 				eventConfig["notification_event_data"] = eventData
 			}
-			
+
 			eventConfigs = append(eventConfigs, eventConfig)
 		}
 

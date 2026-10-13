@@ -1,3 +1,0 @@
-```release-note:fix
-harness_platform_gitops_repository: add argocd project validation for repo and cluster, force recreate repo if url changed.
-```

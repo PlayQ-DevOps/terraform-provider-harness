@@ -3,7 +3,6 @@ package ansible_inventory
 import (
 	"context"
 	"encoding/json"
-	"net/http"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
@@ -48,6 +47,7 @@ func inventorySchema(dataSource bool) map[string]*schema.Schema {
 	if dataSource {
 		inventoryType.Required = false
 		inventoryType.Computed = true
+		inventoryType.ForceNew = false
 		inventoryType.ValidateFunc = nil
 	}
 
@@ -319,7 +319,7 @@ func resourceAnsibleInventoryRead(ctx context.Context, d *schema.ResourceData, m
 		nil,
 	)
 	if err != nil {
-		return helpers.HandleIacmReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	return readInventory(d, &resp)
@@ -339,7 +339,7 @@ func resourceAnsibleInventoryDelete(ctx context.Context, d *schema.ResourceData,
 		c.AccountId,
 	)
 	if err != nil {
-		return parseError(err, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }
@@ -357,7 +357,7 @@ func resourceAnsibleInventoryCreate(ctx context.Context, d *schema.ResourceData,
 		d.Get("project_id").(string),
 	)
 	if err != nil {
-		return parseError(err, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	d.SetId(body.Identifier)
@@ -669,27 +669,4 @@ func flattenVariableMap(vars map[string]nextgen.AnsibleVariable) []interface{} {
 		})
 	}
 	return out
-}
-
-func parseError(err error, httpResp *http.Response) diag.Diagnostics {
-	if httpResp != nil && httpResp.StatusCode == 401 {
-		return diag.Errorf("%s\nHint:\n1) Please check if token has expired or is wrong.\n2) Harness Provider is misconfigured.", httpResp.Status)
-	}
-	if httpResp != nil && httpResp.StatusCode == 403 {
-		return diag.Errorf("%s\nHint:\n1) Please check if the token has required permission for this operation.\n2) Please check if the token has expired or is wrong.", httpResp.Status)
-	}
-
-	se, ok := err.(nextgen.GenericSwaggerError)
-	if !ok {
-		return diag.FromErr(err)
-	}
-
-	iacmErr := nextgen.IacmError{}
-	if jsonErr := json.Unmarshal(se.Body(), &iacmErr); jsonErr == nil && iacmErr.Message != "" {
-		if httpResp != nil {
-			return diag.Errorf("%s\nHint:\n1) %s", httpResp.Status, iacmErr.Message)
-		}
-		return diag.Errorf("%s", iacmErr.Message)
-	}
-	return diag.Errorf("%s", err.Error())
 }

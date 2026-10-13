@@ -12,7 +12,7 @@ import (
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -57,6 +57,7 @@ func ResourceProject() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 			},
 			"upsert": {
 				Description: "Indicates if the argo project should be updated if existing and inserted if not.",
@@ -329,19 +330,8 @@ func ResourceProject() *schema.Resource {
 									"orphaned_resources": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Description: "OrphanedResources specifies if agent should monitor orphaned resources of apps in this project",
-										DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
-											// from API we always get warn = false, even if this is not set in the resource.tf file
-											// getchange will compare and deserialize this into a map where null will be converted to false
-											oldWarn, newWarn := d.GetChange("project.0.spec.0.orphaned_resources.0.warn")
-											oldWarnValue := oldWarn.(bool)
-											newWarnValue := newWarn.(bool)
-											// short circuit to not suppress diff if ignorevalues are diferent
-											if d.HasChange("project.0.spec.0.orphaned_resources.0.ignore") {
-												return false
-											}
-											return oldWarnValue == newWarnValue
-										},
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"warn": {
@@ -548,7 +538,7 @@ func resourceProjectCreate(ctx context.Context, d *schema.ResourceData, meta int
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
@@ -599,14 +589,9 @@ func resourceProjectRead(ctx context.Context, d *schema.ResourceData, meta inter
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 	setProjectDetails(d, accountIdentifier, &resp)
 
 	return nil
@@ -639,7 +624,7 @@ func resourceProjectUpdate(ctx context.Context, d *schema.ResourceData, meta int
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
@@ -683,23 +668,23 @@ func resourceProjectDelete(ctx context.Context, d *schema.ResourceData, meta int
 	var lastHTTPResp *http.Response
 	var lastErr error
 
-	err := resource.RetryContext(ctx, d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
+	err := retry.RetryContext(ctx, d.Timeout(schema.TimeoutDelete), func() *retry.RetryError {
 		_, lastHTTPResp, lastErr = c.ProjectGitOpsApi.AgentProjectServiceDelete(ctx, agentIdentifier, query_name, accountIdentifier, orgIdentifier, &nextgen.ProjectsApiAgentProjectServiceDeleteOpts{
 			ProjectIdentifier: optional.NewString(projectIdentifier),
 		})
 
 		if lastErr != nil {
 			if isGitopsProjectReferencedByApplicationsError(lastErr) {
-				return resource.RetryableError(lastErr)
+				return retry.RetryableError(lastErr)
 			}
-			return resource.NonRetryableError(lastErr)
+			return retry.NonRetryableError(lastErr)
 		}
 
 		return nil
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, lastHTTPResp)
+		return helpers.HandleDelete(ctx, d, err, lastHTTPResp)
 	}
 
 	return nil

@@ -1,3 +1,0 @@
-```release-note:bug
-resource/harness_platform_environment_group: Fix bug in update env group
-```

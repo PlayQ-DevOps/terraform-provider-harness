@@ -1,3 +1,0 @@
-```release-note:new-resource
-  resource/harness_platform_apikey: Added ApiKey resource.
-```

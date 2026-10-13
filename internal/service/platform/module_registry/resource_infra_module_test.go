@@ -2,12 +2,13 @@ package module_registry_test
 
 import (
 	"fmt"
-	"github.com/harness/harness-go-sdk/harness/nextgen"
-	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"strings"
 	"testing"
+
+	"github.com/harness/harness-go-sdk/harness/nextgen"
+	"github.com/harness/terraform-provider-harness/internal/acctest"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccResourceModule(t *testing.T) {
@@ -16,10 +17,10 @@ func TestAccResourceModule(t *testing.T) {
 	system := strings.ToLower(t.Name())
 	updatedName := fmt.Sprintf("%s_updated", name)
 	updatedSystem := fmt.Sprintf("%supdated", system)
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceWorkspaceDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceWorkspaceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceModule(name, system),

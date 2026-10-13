@@ -36,7 +36,7 @@ func dataSourceRegistryRead(ctx context.Context, d *schema.ResourceData, meta in
 	if id != "" && registryRef != "" {
 		resp, httpResp, err = c.RegistriesApi.GetRegistry(ctx, registryRef)
 		if err != nil {
-			return helpers.HandleReadApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 
 		registry = resp.Data

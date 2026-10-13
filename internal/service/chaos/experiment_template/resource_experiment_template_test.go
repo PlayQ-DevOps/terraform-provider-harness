@@ -6,8 +6,8 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccResourceExperimentTemplate_basic(t *testing.T) {
@@ -15,8 +15,8 @@ func TestAccResourceExperimentTemplate_basic(t *testing.T) {
 	resourceName := "harness_chaos_experiment_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceExperimentTemplate_basic(name),
@@ -47,8 +47,8 @@ func TestAccResourceExperimentTemplate_update(t *testing.T) {
 	updatedName := name + "_updated"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceExperimentTemplate_basic(name),
@@ -74,8 +74,8 @@ func TestAccResourceExperimentTemplate_cleanupPolicyRetain(t *testing.T) {
 	resourceName := "harness_chaos_experiment_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceExperimentTemplate_cleanupPolicyRetain(name),
@@ -241,8 +241,8 @@ func TestAccResourceExperimentTemplate_nestedNoDrift(t *testing.T) {
 	resourceName := "harness_chaos_experiment_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceExperimentTemplate_nested(name),
@@ -277,8 +277,8 @@ func TestAccResourceExperimentTemplate_accountScopeImportShortForm(t *testing.T)
 	resourceName := "harness_chaos_experiment_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceExperimentTemplate_accountScope(name),
@@ -427,8 +427,8 @@ func TestAccResourceExperimentTemplate_orgScopeImport(t *testing.T) {
 	resourceName := "harness_chaos_experiment_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceExperimentTemplate_orgScope(name),
@@ -503,8 +503,8 @@ func TestAccResourceExperimentTemplate_conditionsV2FaultAction(t *testing.T) {
 	resourceName := "harness_chaos_experiment_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceExperimentTemplate_conditionsV2FaultAction(name),

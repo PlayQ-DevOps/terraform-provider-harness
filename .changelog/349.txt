@@ -1,3 +1,0 @@
-```release-note:bug
-resource/harness_yaml_config: Fix yaml config resource
-```

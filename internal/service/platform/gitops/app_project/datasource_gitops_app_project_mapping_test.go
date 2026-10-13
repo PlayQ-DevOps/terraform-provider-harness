@@ -8,7 +8,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccDatasourceGitopsAppProjectMapping(t *testing.T) {
@@ -19,9 +19,9 @@ func TestAccDatasourceGitopsAppProjectMapping(t *testing.T) {
 	resourceName := "harness_platform_gitops_app_project_mapping.test"
 	dataSourceName := "data.harness_platform_gitops_app_project_mapping.test1"
 	argoProject := "test123"
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				// Test Case 1: Data source reads auto_create_service_env = true

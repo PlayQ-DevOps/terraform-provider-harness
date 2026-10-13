@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -29,16 +28,19 @@ func ResourceSloService() *schema.Resource {
 				Description: "Identifier of the organization in which the SLO is configured.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Identifier of the project in which the SLO is configured.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"identifier": {
 				Description: "Identifier of the SLO.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"request": {
 				Description: "Request for creating or updating SLO.",
@@ -138,7 +140,6 @@ func ResourceSloService() *schema.Resource {
 
 func resourceSloCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier, orgIdentifier, projectIdentifier, identifier string
 	accountIdentifier = c.AccountId
 	if attr, ok := d.GetOk("org_id"); ok {
@@ -157,7 +158,7 @@ func resourceSloCreate(ctx context.Context, d *schema.ResourceData, meta interfa
 		})
 
 	if errCreate != nil {
-		return helpers.HandleApiError(errCreate, d, httpRespCreate)
+		return helpers.HandleWrite(ctx, d, errCreate, httpRespCreate)
 	}
 
 	readSlo(d, &respCreate.Resource)
@@ -166,7 +167,6 @@ func resourceSloCreate(ctx context.Context, d *schema.ResourceData, meta interfa
 
 func resourceSloRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier, orgIdentifier, projectIdentifier string
 	identifier := d.Get("identifier").(string)
 	accountIdentifier = c.AccountId
@@ -181,19 +181,14 @@ func resourceSloRead(ctx context.Context, d *schema.ResourceData, meta interface
 	if err != nil {
 		if err.Error() == "404 Not Found" {
 			d.SetId("")
-			d.MarkNewResource()
+
 			return nil
 		}
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 
 	readSlo(d, &resp.Resource)
 	return nil
@@ -201,7 +196,6 @@ func resourceSloRead(ctx context.Context, d *schema.ResourceData, meta interface
 
 func resourceSloUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier, orgIdentifier, projectIdentifier, identifier string
 	accountIdentifier = c.AccountId
 	if attr, ok := d.GetOk("org_id"); ok {
@@ -220,7 +214,7 @@ func resourceSloUpdate(ctx context.Context, d *schema.ResourceData, meta interfa
 		})
 
 	if errCreate != nil {
-		return helpers.HandleApiError(errCreate, d, httpRespCreate)
+		return helpers.HandleWrite(ctx, d, errCreate, httpRespCreate)
 	}
 
 	readSlo(d, &respCreate.Resource)
@@ -229,7 +223,6 @@ func resourceSloUpdate(ctx context.Context, d *schema.ResourceData, meta interfa
 
 func resourceSloDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier, orgIdentifier, projectIdentifier string
 	identifier := d.Get("identifier").(string)
 	accountIdentifier = c.AccountId
@@ -243,7 +236,7 @@ func resourceSloDelete(ctx context.Context, d *schema.ResourceData, meta interfa
 	_, httpResp, err := c.SloApi.DeleteSLODataNg(ctx, accountIdentifier, orgIdentifier, projectIdentifier, identifier)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

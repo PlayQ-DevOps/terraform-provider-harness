@@ -77,7 +77,6 @@ resource "harness_platform_triggers" "example" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-- `webhook_url` (String) The webhook URL if the trigger is type `Webhook`.
 
 ## Import
 

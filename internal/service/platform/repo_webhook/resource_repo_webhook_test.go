@@ -8,8 +8,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/code"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 const (
@@ -21,10 +21,10 @@ const (
 func TestProjResourceRepoWebhook(t *testing.T) {
 	identifier := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testWebhookDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testWebhookDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjResourceRepoWebhook(identifier, description),
@@ -54,10 +54,10 @@ func TestProjResourceRepoWebhook(t *testing.T) {
 func TestProjResourceRepoWebhookWithSecret(t *testing.T) {
 	identifier := identifier(t.Name())
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testWebhookDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testWebhookDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testProjResourceRepoWebhookWithSecret(identifier, description),

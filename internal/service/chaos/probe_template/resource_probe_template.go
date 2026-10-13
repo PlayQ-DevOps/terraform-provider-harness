@@ -3,7 +3,6 @@ package probe_template
 import (
 	"context"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -98,13 +98,12 @@ func resourceProbeTemplateCreate(ctx context.Context, d *schema.ResourceData, me
 
 	// Build variables
 	buildVariablesSimplified(d, &req)
-
-	log.Printf("[DEBUG] Creating probe template: %s in hub: %s", identity, hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Creating probe template: %s in hub: %s", identity, hubIdentity))
 
 	// Create the probe template
 	resp, httpResp, err := c.DefaultApi.CreateProbeTemplate(ctx, req, accountID, orgID, projectID)
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Set the ID
@@ -117,8 +116,7 @@ func resourceProbeTemplateCreate(ctx context.Context, d *schema.ResourceData, me
 	}
 	d.Set("is_default", resp.IsDefault)
 	d.Set("hub_ref", resp.HubRef)
-
-	log.Printf("[DEBUG] Created probe template: %s", identity)
+	tflog.Debug(ctx, fmt.Sprintf("Created probe template: %s", identity))
 
 	return resourceProbeTemplateRead(ctx, d, meta)
 }
@@ -136,22 +134,16 @@ func resourceProbeTemplateRead(ctx context.Context, d *schema.ResourceData, meta
 	if err != nil {
 		return diag.FromErr(err)
 	}
-
-	log.Printf("[DEBUG] Reading probe template: %s from hub: %s", identity, hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Reading probe template: %s from hub: %s", identity, hubIdentity))
 
 	// Get the probe template
 	resp, httpResp, err := c.DefaultApi.GetProbeTemplate(ctx, accountID, orgID, projectID, hubIdentity, identity, nil)
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			log.Printf("[WARN] Probe template not found, removing from state: %s", identity)
-			d.SetId("")
-			return nil
-		}
-		return helpers.HandleChaosReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
-		log.Printf("[WARN] Probe template data is nil, removing from state: %s", identity)
+		tflog.Warn(ctx, fmt.Sprintf("Probe template data is nil, removing from state: %s", identity))
 		d.SetId("")
 		return nil
 	}
@@ -215,8 +207,7 @@ func resourceProbeTemplateUpdate(ctx context.Context, d *schema.ResourceData, me
 
 	// Build variables
 	buildVariablesSimplified(d, &req)
-
-	log.Printf("[DEBUG] Updating probe template: %s", identity)
+	tflog.Debug(ctx, fmt.Sprintf("Updating probe template: %s", identity))
 
 	// Update the probe template with isDefault=true to ensure changes are persisted
 	opts := &chaos.DefaultApiUpdateProbeTemplateOpts{
@@ -224,10 +215,9 @@ func resourceProbeTemplateUpdate(ctx context.Context, d *schema.ResourceData, me
 	}
 	_, httpResp, err := c.DefaultApi.UpdateProbeTemplate(ctx, req, accountID, orgID, projectID, identity, opts)
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
-
-	log.Printf("[DEBUG] Updated probe template: %s", identity)
+	tflog.Debug(ctx, fmt.Sprintf("Updated probe template: %s", identity))
 
 	return resourceProbeTemplateRead(ctx, d, meta)
 }
@@ -245,20 +235,14 @@ func resourceProbeTemplateDelete(ctx context.Context, d *schema.ResourceData, me
 	if err != nil {
 		return diag.FromErr(err)
 	}
-
-	log.Printf("[DEBUG] Deleting probe template: %s from hub: %s", identity, hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Deleting probe template: %s from hub: %s", identity, hubIdentity))
 
 	// Delete the probe template
 	_, httpResp, err := c.DefaultApi.DeleteProbeTemplate(ctx, accountID, orgID, projectID, hubIdentity, identity, nil)
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			log.Printf("[WARN] Probe template not found during delete: %s", identity)
-			return nil
-		}
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
-
-	log.Printf("[DEBUG] Deleted probe template: %s", identity)
+	tflog.Debug(ctx, fmt.Sprintf("Deleted probe template: %s", identity))
 
 	return nil
 }
@@ -309,8 +293,7 @@ func resourceProbeTemplateImport(ctx context.Context, d *schema.ResourceData, me
 	}
 	d.Set("hub_identity", hubIdentity)
 	d.Set("identity", identity)
-
-	log.Printf("[DEBUG] Importing probe template: %s from hub: %s", identity, hubIdentity)
+	tflog.Debug(ctx, fmt.Sprintf("Importing probe template: %s from hub: %s", identity, hubIdentity))
 
 	diags := resourceProbeTemplateRead(ctx, d, meta)
 	if diags.HasError() {

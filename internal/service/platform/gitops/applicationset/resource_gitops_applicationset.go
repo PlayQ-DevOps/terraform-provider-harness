@@ -79,16 +79,19 @@ func ResourceGitopsApplicationSet() *schema.Resource {
 				Description: "Organization identifier of the GitOps applicationset.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project identifier of the GitOps applicationset.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"agent_id": {
 				Description: "Agent identifier of the GitOps applicationset.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"upsert": {
 				Description: "Indicates if the GitOps application should be updated if existing and inserted if not.",
@@ -117,8 +120,8 @@ func ResourceGitopsApplicationSet() *schema.Resource {
 									"namespace": {
 										Description: "Namespace of the GitOps application. An empty namespace is equivalent to the namespace of the GitOps agent.",
 										Type:        schema.TypeString,
-										Optional:    true,
 										Computed:    true,
+										Optional:    true,
 									},
 									"generation": {
 										Description: "A sequence number representing a specific generation of the desired state. This is a read-only value populated by the system.",
@@ -381,15 +384,10 @@ func resourceGitopsApplicationsetCreate(ctx context.Context, d *schema.ResourceD
 		AgentIdentifier:   optional.NewString(agentIdentifier),
 	})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 
 	err = setApplicationSet(d, &resp)
 	if err != nil {
@@ -426,16 +424,11 @@ func resourceGitopsApplicationsetRead(ctx context.Context, d *schema.ResourceDat
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 
 	err = setApplicationSet(d, &resp)
 	if err != nil {
@@ -473,16 +466,11 @@ func resourceGitopsApplicationsetUpdate(ctx context.Context, d *schema.ResourceD
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
 
 	err = setApplicationSet(d, &resp)
 	if err != nil {
@@ -516,7 +504,7 @@ func resourceGitopsApplicationsetDelete(ctx context.Context, d *schema.ResourceD
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

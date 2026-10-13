@@ -49,14 +49,14 @@ locals {
 
 Read-Only:
 
-- `platforms` (List of Object) Supported platforms. (see [below for nested schema](#nestedobjatt--versions--platforms))
-- `protocols` (List of String) Supported Terraform protocol versions.
-- `version` (String) Version number.
+- `platforms` (List of Object) (see [below for nested schema](#nestedobjatt--versions--platforms))
+- `protocols` (List of String)
+- `version` (String)
 
 <a id="nestedobjatt--versions--platforms"></a>
 ### Nested Schema for `versions.platforms`
 
 Read-Only:
 
-- `arch` (String) Architecture.
-- `os` (String) Operating system.
+- `arch` (String)
+- `os` (String)

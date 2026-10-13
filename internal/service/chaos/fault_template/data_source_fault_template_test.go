@@ -6,7 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccDataSourceFaultTemplate_byIdentity(t *testing.T) {
@@ -14,8 +14,8 @@ func TestAccDataSourceFaultTemplate_byIdentity(t *testing.T) {
 	resourceName := "data.harness_chaos_fault_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceFaultTemplate_byIdentity(name),
@@ -41,7 +41,7 @@ func TestAccDataSourceFaultTemplate_byIdentity(t *testing.T) {
 //
 // 	resource.Test(t, resource.TestCase{
 // 		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-// 		ProviderFactories: acctest.ProviderFactories,
+// 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 // 		Steps: []resource.TestStep{
 // 			{
 // 				Config: testAccDataSourceFaultTemplate_byName(name),
@@ -60,8 +60,8 @@ func TestAccDataSourceFaultTemplate_withKubernetesSpec(t *testing.T) {
 	resourceName := "data.harness_chaos_fault_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceFaultTemplate_withKubernetesSpec(name),
@@ -82,8 +82,8 @@ func TestAccDataSourceFaultTemplate_withTargets(t *testing.T) {
 	resourceName := "data.harness_chaos_fault_template.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceFaultTemplate_withTargets(name),

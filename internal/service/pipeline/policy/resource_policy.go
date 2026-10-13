@@ -34,6 +34,7 @@ func ResourcePolicy() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Computed:    false,
+				ForceNew:    true,
 			},
 			"rego": {
 				Description: "Rego code for the policy.",
@@ -121,7 +122,7 @@ func resourcePolicyRead(ctx context.Context, d *schema.ResourceData, meta interf
 	policy, httpResp, err := c.PoliciesApi.PoliciesFind(ctx, id, &localVarOptionals)
 
 	if err != nil {
-		return helpers.HandlePolicyApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readPolicy(d, policy)
@@ -190,12 +191,7 @@ func resourcePolicyCreateOrUpdate(ctx context.Context, d *schema.ResourceData, m
 		}
 		updateResp, err := c.PoliciesApi.PoliciesUpdate(ctx, body, id, &localVarOptionals)
 		if err != nil {
-			// For update operations, if we get a 404, we should trigger recreation
-			if updateResp != nil && updateResp.StatusCode == http.StatusNotFound {
-				d.SetId("")
-				return nil
-			}
-			return diag.Errorf("error updating policy: %v", err)
+			return helpers.HandleWrite(ctx, d, err, updateResp)
 		}
 
 		if updateResp.StatusCode == http.StatusNoContent {
@@ -213,19 +209,7 @@ func resourcePolicyCreateOrUpdate(ctx context.Context, d *schema.ResourceData, m
 			}
 			responsePolicy, findResp, err = c.PoliciesApi.PoliciesFind(ctx, id, &findLocalVarOptionals)
 			if err != nil {
-				// Check error message first
-				if err.Error() == "Not Found" {
-					d.SetId("")
-					return nil
-				}
-				// Use a local variable to handle nil check more safely
-				if findResp != nil {
-					if findResp.StatusCode == http.StatusNotFound {
-						d.SetId("")
-						return nil
-					}
-				}
-				return diag.Errorf("error reading policy after update: %v", err)
+				return helpers.HandleWrite(ctx, d, err, findResp)
 			}
 		}
 	}
@@ -251,7 +235,7 @@ func resourcePolicyDelete(ctx context.Context, d *schema.ResourceData, meta inte
 	httpResp, err := c.PoliciesApi.PoliciesDelete(ctx, d.Id(), &localVarOptionals)
 
 	if err != nil {
-		return helpers.HandlePolicyApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

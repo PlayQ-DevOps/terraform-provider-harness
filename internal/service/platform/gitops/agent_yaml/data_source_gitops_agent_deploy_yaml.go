@@ -185,16 +185,12 @@ func dataSourceGitopsAgentDeployYamlRead(ctx context.Context, d *schema.Resource
 	}(), agentIdentifier)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	readAgentYaml(agentIdentifier, d, resp)
 	return nil
 }

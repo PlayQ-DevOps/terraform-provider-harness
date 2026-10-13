@@ -2,9 +2,7 @@ package apikey
 
 import (
 	"context"
-	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
@@ -31,11 +29,13 @@ func ResourceApiKey() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"USER", "SERVICE_ACCOUNT"}, false),
+				ForceNew:     true,
 			},
 			"parent_id": {
 				Description: "Parent Entity Identifier of the API Key",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"default_time_to_expire_token": {
 				Description: "Default expiration time of the Token within API Key",
@@ -68,7 +68,7 @@ func resourceApiKeyRead(ctx context.Context, d *schema.ResourceData, meta interf
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readApiKey(d, resp.Data.ApiKey)
@@ -93,7 +93,7 @@ func resourceApiKeyCreateOrUpdate(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -119,7 +119,7 @@ func resourceApiKeyDelete(ctx context.Context, d *schema.ResourceData, meta inte
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -183,42 +183,5 @@ func readApiKey(d *schema.ResourceData, apiKey *nextgen.ApiKey) {
 	d.Set("org_id", apiKey.OrgIdentifier)
 }
 
-var MultiLevelResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-
-		partCount := len(parts)
-		isAccountToken := partCount == 3
-		isOrgToken := partCount == 4
-		isProjectToken := partCount == 5
-
-		if isAccountToken {
-			d.SetId(parts[1])
-			d.Set("parent_id", parts[0])
-			d.Set("identifier", parts[1])
-			d.Set("apikey_type", parts[2])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		if isOrgToken {
-			d.SetId(parts[2])
-			d.Set("org_id", parts[0])
-			d.Set("parent_id", parts[1])
-			d.Set("identifier", parts[2])
-			d.Set("apikey_type", parts[3])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		if isProjectToken {
-			d.SetId(parts[3])
-			d.Set("org_id", parts[0])
-			d.Set("project_id", parts[1])
-			d.Set("parent_id", parts[2])
-			d.Set("identifier", parts[3])
-			d.Set("apikey_type", parts[4])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		return nil, fmt.Errorf("invalid identifier: %s", d.Id())
-	},
-}
+// MultiLevelResourceImporter: [<org_id>/[<project_id>/]]<parent_id>/<identifier>/<apikey_type>.
+var MultiLevelResourceImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org_id", "project_id", "parent_id", "identifier", "apikey_type"}, OptionalPrefix: 2, IDFrom: "identifier"})

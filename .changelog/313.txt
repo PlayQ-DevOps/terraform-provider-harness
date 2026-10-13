@@ -1,3 +1,0 @@
-```release-note:enhancement
-platform_user_group - Added support for "Send email to all users" in user group notification configuration.
-```

@@ -51,7 +51,7 @@ resource "harness_platform_connector_oci_helm" "test" {
 
 ### Optional
 
-- `credentials` (Block List, Max: 1) Credentials to use for authentication. (see [below for nested schema](#nestedblock--credentials))
+- `credentials` (Block List) Credentials to use for authentication. (see [below for nested schema](#nestedblock--credentials))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
 - `force_delete` (Boolean) Enable this flag for force deletion of connector

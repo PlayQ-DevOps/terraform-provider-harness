@@ -9,10 +9,10 @@ import (
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccResourcePipelineCentralNotificationRule_basic(t *testing.T) {
@@ -22,8 +22,8 @@ func TestAccResourcePipelineCentralNotificationRule_basic(t *testing.T) {
 	resourceName := "harness_platform_pipeline_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineCentralNotificationRuleConfig(rName, id),
@@ -50,8 +50,8 @@ func TestAccResourcePipelineCentralNotificationRule_accountLevel(t *testing.T) {
 	expectedRuleIdentifier := id + "_channel_account"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineCentralNotificationRuleAccountConfig(rName, id),
@@ -76,8 +76,8 @@ func TestAccResourcePipelineCentralNotificationRule_projectLevel(t *testing.T) {
 	resourceName := "harness_platform_pipeline_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineCentralNotificationRuleProjectConfig(rName, id),
@@ -103,8 +103,8 @@ func TestAccResourcePipelineCentralNotificationRule_orgLevel(t *testing.T) {
 	expectedRuleIdentifier := id + "_channel_org"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineCentralNotificationRuleOrgConfig(rName, id),
@@ -129,8 +129,8 @@ func TestAccResourcePipelineCentralNotificationRule_multipleEvents(t *testing.T)
 	resourceName := "harness_platform_pipeline_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineCentralNotificationRuleMultipleEventsConfig(rName, id),
@@ -158,8 +158,8 @@ func TestAccResourcePipelineCentralNotificationRule_multipleChannels(t *testing.
 	resourceName := "harness_platform_pipeline_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineCentralNotificationRuleMultipleChannelsConfig(rName, id),
@@ -181,8 +181,8 @@ func TestAccResourcePipelineCentralNotificationRule_disabled(t *testing.T) {
 	resourceName := "harness_platform_pipeline_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineCentralNotificationRuleDisabledConfig(rName, id),
@@ -203,8 +203,8 @@ func TestAccResourcePipelineCentralNotificationRule_withNotificationEventData(t 
 	resourceName := "harness_platform_pipeline_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineCentralNotificationRuleScopeIdentifiersConfig(rName, id),
@@ -241,8 +241,8 @@ func TestAccResourcePipelineCentralNotificationRule_allPipelineEvents(t *testing
 	resourceName := "harness_platform_pipeline_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineCentralNotificationRuleAllEventsConfig(rName, id),
@@ -270,8 +270,8 @@ func TestAccResourcePipelineCentralNotificationRule_pipelineStartEvent(t *testin
 	resourceName := "harness_platform_pipeline_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineCentralNotificationRuleSingleEventConfig(rName, id, "PIPELINE_START"),
@@ -291,8 +291,8 @@ func TestAccResourcePipelineCentralNotificationRule_pipelineSuccessEvent(t *test
 	resourceName := "harness_platform_pipeline_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineCentralNotificationRuleSingleEventConfig(rName, id, "PIPELINE_SUCCESS"),
@@ -312,8 +312,8 @@ func TestAccResourcePipelineCentralNotificationRule_stageStartEvent(t *testing.T
 	resourceName := "harness_platform_pipeline_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineCentralNotificationRuleSingleEventConfig(rName, id, "STAGE_START"),
@@ -333,8 +333,8 @@ func TestAccResourcePipelineCentralNotificationRule_stageSuccessEvent(t *testing
 	resourceName := "harness_platform_pipeline_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineCentralNotificationRuleSingleEventConfig(rName, id, "STAGE_SUCCESS"),
@@ -354,8 +354,8 @@ func TestAccResourcePipelineCentralNotificationRule_stageFailedEvent(t *testing.
 	resourceName := "harness_platform_pipeline_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineCentralNotificationRuleSingleEventConfig(rName, id, "STAGE_FAILED"),

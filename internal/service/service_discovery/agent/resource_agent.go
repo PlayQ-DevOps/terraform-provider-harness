@@ -3,9 +3,6 @@ package agent
 import (
 	"context"
 	"fmt"
-	"log"
-	"net/http"
-	"strings"
 
 	"github.com/antihax/optional"
 	"github.com/google/uuid"
@@ -16,6 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	svcdiscovery "github.com/harness/harness-go-sdk/harness/svcdiscovery"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 // ResourceServiceDiscoveryAgent returns a new Terraform resource for Harness Service Discovery Agent
@@ -50,50 +48,12 @@ func ResourceServiceDiscoveryAgent() *schema.Resource {
 		// 	StateContext: resourceServiceDiscoveryAgentImport,
 		// },
 		Importer: MultiLevelResourceImporter,
-		Schema:   AgentResourceSchema(),
+		Schema:   helpers.WithIdentity(AgentResourceSchema(), "environment_identifier", "infra_identifier", "org_identifier", "project_identifier"),
 	}
 }
 
-var MultiLevelResourceImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-		parts := strings.Split(d.Id(), "/")
-		partCount := len(parts)
-
-		// Handle format: org_id/project_id/environment_identifier/infra_identifier
-		if partCount == 4 {
-			d.SetId(parts[3]) // infra_identifier
-			d.Set("org_identifier", parts[0])
-			d.Set("project_identifier", parts[1])
-			d.Set("environment_identifier", parts[2])
-			d.Set("infra_identifier", parts[3])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		// Original handling for other formats
-		isAccountConnector := partCount == 2
-		isOrgConnector := partCount == 3
-
-		if isAccountConnector {
-			d.SetId(parts[1])
-			d.Set("environment_identifier", parts[0])
-			d.Set("infra_identifier", parts[1])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		if isOrgConnector {
-			d.SetId(parts[2])
-			d.Set("org_identifier", parts[0])
-			d.Set("environment_identifier", parts[1])
-			d.Set("infra_identifier", parts[2])
-			return []*schema.ResourceData{d}, nil
-		}
-
-		return nil, fmt.Errorf("invalid import format. Expected one of:\n" +
-			"- <environment_identifier>/<infra_identifier> (account level)\n" +
-			"- <org_id>/<environment_identifier>/<infra_identifier> (org level)\n" +
-			"- <org_id>/<project_id>/<environment_identifier>/<infra_identifier> (project level)")
-	},
-}
+// MultiLevelResourceImporter: [<org_identifier>/[<project_identifier>/]]<environment_identifier>/<infra_identifier>.
+var MultiLevelResourceImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org_identifier", "project_identifier", "environment_identifier", "infra_identifier"}, OptionalPrefix: 2})
 
 // validateAgentInput validates the required fields for agent operations
 func validateAgentInput(d *schema.ResourceData) diag.Diagnostics {
@@ -222,7 +182,7 @@ func resourceServiceDiscoveryAgentCreate(ctx context.Context, d *schema.Resource
 	// Create the agent
 	agent, httpResp, err := c.AgentApi.CreateAgent(ctx, req, accountIdentifier, opts)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Set the ID and read back the agent
@@ -265,7 +225,7 @@ func resourceServiceDiscoveryAgentRead(ctx context.Context, d *schema.ResourceDa
 	)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Set the basic fields
@@ -342,12 +302,12 @@ func resourceServiceDiscoveryAgentRead(ctx context.Context, d *schema.ResourceDa
 
 	// Handle installation details
 	if agent.InstallationDetails != nil {
-		log.Printf("[DEBUG] Raw installation details: %+v", agent.InstallationDetails)
+		tflog.Debug(ctx, fmt.Sprintf("Raw installation details: %+v", agent.InstallationDetails))
 		installationDetails, err := convert.FlattenInstallationDetails(agent.InstallationDetails)
 		if err != nil {
 			return diag.FromErr(fmt.Errorf("failed to flatten installation details: %w", err))
 		}
-		log.Printf("[DEBUG] Flattened installation details: %+v", installationDetails)
+		tflog.Debug(ctx, fmt.Sprintf("Flattened installation details: %+v", installationDetails))
 
 		// Only set if we have data
 		if len(installationDetails) > 0 {
@@ -411,7 +371,7 @@ func resourceServiceDiscoveryAgentUpdate(ctx context.Context, d *schema.Resource
 		readOpts,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// Prepare the update request with the current config
@@ -423,7 +383,7 @@ func resourceServiceDiscoveryAgentUpdate(ctx context.Context, d *schema.Resource
 	// If config is explicitly provided in the update, use it
 	if d.HasChange("config") {
 		if v, ok := d.GetOk("config"); ok && len(v.([]interface{})) > 0 {
-			log.Printf("[DEBUG] Config provided in update: %+v", v)
+			tflog.Debug(ctx, fmt.Sprintf("Config provided in update: %+v", v))
 			config, err := convert.ExpandAgentConfig(v.([]interface{}))
 			if err != nil {
 				return diag.FromErr(err)
@@ -445,14 +405,13 @@ func resourceServiceDiscoveryAgentUpdate(ctx context.Context, d *schema.Resource
 	if v, ok := d.GetOk("project_identifier"); ok {
 		opts.ProjectIdentifier = optional.NewString(v.(string))
 	}
-
-	log.Printf("[DEBUG] Update agent request: %+v, opts: %+v, config: %+v", req, opts, req.Config)
+	tflog.Debug(ctx, fmt.Sprintf("Update agent request: %+v, opts: %+v, config: %+v", req, opts, req.Config))
 
 	// Update the agent
 	_, updateHttpResp, updateErr := c.AgentApi.UpdateAgent(ctx, req, accountIdentifier, environmentIdentifier,
 		agentIdentity, opts)
 	if updateErr != nil {
-		return helpers.HandleApiError(updateErr, d, updateHttpResp)
+		return helpers.HandleWrite(ctx, d, updateErr, updateHttpResp)
 	}
 
 	// Read back the agent
@@ -500,12 +459,7 @@ func resourceServiceDiscoveryAgentDelete(ctx context.Context, d *schema.Resource
 	// Try to get the agent first to check if it exists
 	_, getHttpResp, getErr := c.AgentApi.GetAgent(ctx, agentIdentity, accountID, envID, getOpts)
 	if getErr != nil {
-		// If the agent is already deleted, we're done
-		if getHttpResp != nil && getHttpResp.StatusCode == http.StatusNotFound {
-			d.SetId("")
-			return nil
-		}
-		return helpers.HandleApiError(getErr, d, getHttpResp)
+		return helpers.HandleDelete(ctx, d, getErr, getHttpResp)
 	}
 
 	// Delete the agent
@@ -518,12 +472,7 @@ func resourceServiceDiscoveryAgentDelete(ctx context.Context, d *schema.Resource
 	)
 
 	if err != nil {
-		// If the agent is already deleted, that's fine
-		if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {
-			d.SetId("")
-			return nil
-		}
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	// Clear the ID to remove from state

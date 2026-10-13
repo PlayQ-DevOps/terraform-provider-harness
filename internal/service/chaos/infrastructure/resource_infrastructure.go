@@ -2,12 +2,13 @@ package infrastructure
 
 import (
 	"context"
-	"log"
+
+	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/chaos"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -20,23 +21,26 @@ func ResourceChaosInfrastructure() *schema.Resource {
 		UpdateContext: resourceChaosInfrastructureUpdate,
 		DeleteContext: resourceChaosInfrastructureDelete,
 		CreateContext: resourceChaosInfrastructureCreate,
-		Importer:      helpers.MultiLevelResourceImporter,
+		Importer:      chaosInfrastructureImporter,
 
 		Schema: map[string]*schema.Schema{
 			"org_id": {
 				Description: "Identifier of the organization in which the chaos infrastructure is configured.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Identifier of the project in which the chaos infrastructure is configured.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"identifier": {
 				Description: "Identifier of the chaos infrastructure.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"name": {
 				Description: "Name of the chaos infrastructure.",
@@ -52,6 +56,7 @@ func ResourceChaosInfrastructure() *schema.Resource {
 				Description: "Environment ID of the chaos infrastructure.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"namespace": {
 				Description: "Namespace of the chaos infrastructure.",
@@ -98,12 +103,10 @@ func resourceChaosInfrastructureRead(ctx context.Context, d *schema.ResourceData
 	resp, httpResp, err := c.ChaosSdkApi.GetInfraV2(ctx, identifier, accountIdentifier, orgIdentifier, projectIdentifier, envIdentifier)
 
 	if err != nil {
-		if err.Error() == "404 Not Found" {
-			d.SetId("")
-			d.MarkNewResource()
-			return nil
-		}
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp, helpers.GracefulNotFound(500, "no matching infra"))
+	}
+	if resp.Identity == "" {
+		return helpers.ReadMissing(ctx, d, "chaos infrastructure "+identifier)
 	}
 	readChaosInfrastructure(d, resp)
 
@@ -125,7 +128,7 @@ func resourceChaosInfrastructureUpdate(ctx context.Context, d *schema.ResourceDa
 	_, httpRespUpdate, errUpdate := c.ChaosSdkApi.UpdateInfraV2(ctx, *updateInfraRequest, accountIdentifier, orgIdentifier, projectIdentifier, &chaos.ChaosSdkApiUpdateInfraV2Opts{})
 
 	if errUpdate != nil {
-		return helpers.HandleChaosApiError(errUpdate, d, httpRespUpdate)
+		return helpers.HandleWrite(ctx, d, errUpdate, httpRespUpdate)
 	}
 	readInfraUpdate(d, updateInfraRequest.Identity, updateInfraRequest.EnvironmentID)
 	return nil
@@ -186,7 +189,7 @@ func resourceChaosInfrastructureDelete(ctx context.Context, d *schema.ResourceDa
 	_, httpResp, err := c.ChaosSdkApi.DeleteInfraV2(ctx, identifier, environmentID, accountIdentifier, orgIdentifier, projectIdentifier)
 
 	if err != nil {
-		return helpers.HandleChaosApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -200,9 +203,8 @@ func readInfraCreate(d *schema.ResourceData, infraResponse *chaos.InfraV2Registe
 
 func resourceChaosInfrastructureCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetChaosClientWithContext(ctx)
-	log.Printf("Debugging message: %v", c)
+	tflog.Debug(ctx, fmt.Sprintf("Debugging message: %v", c))
 
-	ctx = context.WithValue(ctx, chaos.ContextAccessToken, hh.EnvVars.BearerToken.Get()) // do we need it
 	var accountIdentifier, orgIdentifier, projectIdentifier string
 	createInfraRequest := buildInfraCreateRequest(d)
 	identifiers := chaos.InfraV2Identifiers{}
@@ -220,7 +222,7 @@ func resourceChaosInfrastructureCreate(ctx context.Context, d *schema.ResourceDa
 
 	resp, httpRespUpdate, errUpdate := c.ChaosSdkApi.RegisterInfraV2(ctx, createInfraRequest, accountIdentifier, orgIdentifier, projectIdentifier, &chaos.ChaosSdkApiRegisterInfraV2Opts{})
 	if errUpdate != nil {
-		return helpers.HandleChaosApiError(errUpdate, d, httpRespUpdate)
+		return helpers.HandleWrite(ctx, d, errUpdate, httpRespUpdate)
 	}
 	readInfraCreate(d, &resp, createInfraRequest.EnvironmentID)
 	defer httpRespUpdate.Body.Close()
@@ -262,11 +264,16 @@ func buildInfraCreateRequest(d *schema.ResourceData) chaos.InfraV2RegisterInfras
 
 func readChaosInfrastructure(d *schema.ResourceData, infra chaos.InfraV2KubernetesInfrastructureV2Details) {
 	d.SetId(infra.Identity)
-	d.Set("org_id", infra.Identifier.OrgIdentifier)
-	d.Set("project_id", infra.Identifier.ProjectIdentifier)
+	if infra.Identifier != nil {
+		d.Set("org_id", infra.Identifier.OrgIdentifier)
+		d.Set("project_id", infra.Identifier.ProjectIdentifier)
+	}
 	d.Set("identifier", infra.Identity)
 	d.Set("name", infra.Name)
 	d.Set("description", infra.Description)
 	d.Set("infra_id", infra.InfraID)
 	d.Set("environment_id", infra.EnvironmentID)
 }
+
+// chaosInfrastructureImporter: [<org_id>/[<project_id>/]]<environment_id>/<identifier>.
+var chaosInfrastructureImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org_id", "project_id", "environment_id", "identifier"}, OptionalPrefix: 2})

@@ -1,3 +1,0 @@
-```release-note:bug
-resource/harness_platform_usergroup: Fix users and user_emails field in user group schema.
-```

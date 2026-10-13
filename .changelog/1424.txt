@@ -1,3 +1,0 @@
-```release-note:enhancement
-resource/harness_platform_connector_jdbc: Added support for OIDC authentication type with GCP provider for keyless database authentication.
-```

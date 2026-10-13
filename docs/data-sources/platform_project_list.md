@@ -3,12 +3,12 @@
 page_title: "harness_platform_project_list Data Source - terraform-provider-harness"
 subcategory: "Next Gen"
 description: |-
-  Data source for retrieving a Harness project.
+  Data source for retrieving the projects of a Harness organization.
 ---
 
 # harness_platform_project_list (Data Source)
 
-Data source for retrieving a Harness project.
+Data source for retrieving the projects of a Harness organization.
 
 
 
@@ -22,15 +22,15 @@ Data source for retrieving a Harness project.
 ### Optional
 
 - `identifier` (String) Unique identifier of the resource.
-- `limit` (Number)
+- `limit` (Number) Number of projects per page.
 - `name` (String) Name of the resource.
-- `page` (Number)
+- `page` (Number) Page index of the project list to return (zero based).
 
 ### Read-Only
 
 - `description` (String) Description of the resource.
 - `id` (String) The ID of this resource.
-- `projects` (List of Object) (see [below for nested schema](#nestedatt--projects))
+- `projects` (List of Object) Projects in the organization: objects with the project identifier and name. (see [below for nested schema](#nestedatt--projects))
 - `tags` (Set of String) Tags to associate with the resource.
 
 <a id="nestedatt--projects"></a>

@@ -1,3 +1,0 @@
-```release-note:bug
- Fixed the example documentation for service overrides
-```

@@ -27,7 +27,7 @@ func dataSourceScorecardRead(ctx context.Context, d *schema.ResourceData, meta i
 		HarnessAccount: optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 	if err := readScorecard(d, resp); err != nil {
 		return diag.Errorf("failed to read IDP scorecard from data source: %v", err)

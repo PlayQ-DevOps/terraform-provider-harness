@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestExpandPipelineTags(t *testing.T) {
+func TestExpandTags(t *testing.T) {
 	tests := []struct {
 		name     string
 		input    []interface{}
@@ -85,19 +85,19 @@ func TestExpandPipelineTags(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := ExpandPipelineTags(tt.input)
+			result := ExpandTags(tt.input)
 			if !reflect.DeepEqual(result, tt.expected) {
-				t.Errorf("ExpandPipelineTags() = %v, want %v", result, tt.expected)
+				t.Errorf("ExpandTags() = %v, want %v", result, tt.expected)
 			}
 		})
 	}
 }
 
-// TestExpandPipelineTags_EdgeCases tests specific edge cases
-func TestExpandPipelineTags_EdgeCases(t *testing.T) {
+// TestExpandTags_EdgeCases tests specific edge cases
+func TestExpandTags_EdgeCases(t *testing.T) {
 	t.Run("preserves nested Harness expressions", func(t *testing.T) {
 		input := []interface{}{"tag:<+<+var1>:<+var2>:<+var3>>"}
-		result := ExpandPipelineTags(input)
+		result := ExpandTags(input)
 
 		expected := "<+<+var1>:<+var2>:<+var3>>"
 		if result["tag"] != expected {
@@ -107,7 +107,7 @@ func TestExpandPipelineTags_EdgeCases(t *testing.T) {
 
 	t.Run("handles consecutive colons", func(t *testing.T) {
 		input := []interface{}{"key:::value"}
-		result := ExpandPipelineTags(input)
+		result := ExpandTags(input)
 
 		if result["key"] != "::value" {
 			t.Errorf("Failed to handle consecutive colons: got %q, want %q", result["key"], "::value")
@@ -115,9 +115,9 @@ func TestExpandPipelineTags_EdgeCases(t *testing.T) {
 	})
 }
 
-// TestExpandPipelineTagsThenFlattenTags verifies round-trip consistency
+// TestExpandTagsThenFlattenTags verifies round-trip consistency
 // This is critical for PIPE-30810 - tags must survive expand/flatten cycle
-func TestExpandPipelineTagsThenFlattenTags(t *testing.T) {
+func TestExpandTagsThenFlattenTags(t *testing.T) {
 	tests := []struct {
 		name  string
 		input []interface{}
@@ -143,7 +143,7 @@ func TestExpandPipelineTagsThenFlattenTags(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Expand then flatten - should get back the same tags
-			expanded := ExpandPipelineTags(tt.input)
+			expanded := ExpandTags(tt.input)
 			flattened := FlattenTags(expanded)
 
 			// Convert to maps for comparison (order doesn't matter)

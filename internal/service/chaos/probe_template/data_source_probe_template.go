@@ -2,11 +2,13 @@ package probe_template
 
 import (
 	"context"
-	"log"
+
+	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -31,12 +33,14 @@ func DataSourceProbeTemplate() *schema.Resource {
 // schema drifts out of sync with the resource.
 func dataSourceProbeTemplateSchema() map[string]*schema.Schema {
 	dsSchema := resourceProbeTemplateSchema()
+	for _, s := range dsSchema {
+		s.ForceNew = false // a data source only looks an object up; nothing is replaced
+	}
 
 	// Lookup by identity (recommended) or name; both optional + computed.
 	dsSchema["identity"].Required = false
 	dsSchema["identity"].Optional = true
 	dsSchema["identity"].Computed = true
-	dsSchema["identity"].ForceNew = false
 
 	dsSchema["name"].Required = false
 	dsSchema["name"].Optional = true
@@ -45,7 +49,6 @@ func dataSourceProbeTemplateSchema() map[string]*schema.Schema {
 	// hub_identity is required so we know which hub to search.
 	dsSchema["hub_identity"].Required = true
 	dsSchema["hub_identity"].Optional = false
-	dsSchema["hub_identity"].ForceNew = false
 
 	// type is read from the API, not supplied by the user.
 	dsSchema["type"].Required = false
@@ -70,11 +73,11 @@ func dataSourceProbeTemplateRead(ctx context.Context, d *schema.ResourceData, me
 	// If identity is provided, fetch directly
 	if identity, ok := d.GetOk("identity"); ok {
 		identityStr := identity.(string)
-		log.Printf("[DEBUG] Fetching probe template by identity: %s", identityStr)
+		tflog.Debug(ctx, fmt.Sprintf("Fetching probe template by identity: %s", identityStr))
 
 		resp, httpResp, apiErr := c.DefaultApi.GetProbeTemplate(ctx, accountID, orgID, projectID, hubIdentity, identityStr, nil)
 		if apiErr != nil {
-			return helpers.HandleChaosReadApiError(apiErr, d, httpResp)
+			return helpers.HandleError(ctx, d, apiErr, httpResp)
 		}
 
 		if resp.Data == nil {
@@ -89,11 +92,11 @@ func dataSourceProbeTemplateRead(ctx context.Context, d *schema.ResourceData, me
 	} else if name, ok := d.GetOk("name"); ok {
 		// If name is provided, list and filter
 		nameStr := name.(string)
-		log.Printf("[DEBUG] Fetching probe template by name: %s", nameStr)
+		tflog.Debug(ctx, fmt.Sprintf("Fetching probe template by name: %s", nameStr))
 
 		resp, httpResp, apiErr := c.DefaultApi.ListProbeTemplate(ctx, accountID, orgID, projectID, hubIdentity, 0, 100, nameStr, nil)
 		if apiErr != nil {
-			return helpers.HandleChaosReadApiError(apiErr, d, httpResp)
+			return helpers.HandleError(ctx, d, apiErr, httpResp)
 		}
 
 		if resp.Data == nil || len(resp.Data) == 0 {

@@ -100,6 +100,24 @@ resource "harness_platform_connector_aws" "aws" {
     iam_role_arn       = "test"
     delegate_selectors = ["harness-delegate"]
     region             = "aws_region"
+    oidc_session_tag_keys = [
+      "account_id",
+      "organization_id",
+      "project_id",
+      "environment_id",
+      "environment_type",
+      "pipeline_id",
+      "connector_id",
+      "connector_name",
+      "delegate_selectors",
+      "context",
+      "step_type",
+      "stage_type",
+      "triggered_by_email",
+      "triggered_by_name",
+      "service_name",
+      "service_id",
+    ]
   }
 }
 ```
@@ -114,17 +132,17 @@ resource "harness_platform_connector_aws" "aws" {
 
 ### Optional
 
-- `cross_account_access` (Block List, Max: 1) Select this option if you want to use one AWS account for the connection, but you want to deploy or build in a different AWS account. In this scenario, the AWS account used for AWS access in Credentials will assume the IAM role you specify in Cross-account role ARN setting. This option uses the AWS Security Token Service (STS) feature. (see [below for nested schema](#nestedblock--cross_account_access))
+- `cross_account_access` (Block List) Select this option if you want to use one AWS account for the connection, but you want to deploy or build in a different AWS account. In this scenario, the AWS account used for AWS access in Credentials will assume the IAM role you specify in Cross-account role ARN setting. This option uses the AWS Security Token Service (STS) feature. (see [below for nested schema](#nestedblock--cross_account_access))
 - `description` (String) Description of the resource.
-- `equal_jitter_backoff_strategy` (Block List, Max: 1) Equal Jitter BackOff Strategy. (see [below for nested schema](#nestedblock--equal_jitter_backoff_strategy))
+- `equal_jitter_backoff_strategy` (Block List) Equal Jitter BackOff Strategy. (see [below for nested schema](#nestedblock--equal_jitter_backoff_strategy))
 - `execute_on_delegate` (Boolean) Enable this flag to execute on Delegate
-- `fixed_delay_backoff_strategy` (Block List, Max: 1) Fixed Delay BackOff Strategy. (see [below for nested schema](#nestedblock--fixed_delay_backoff_strategy))
+- `fixed_delay_backoff_strategy` (Block List) Fixed Delay BackOff Strategy. (see [below for nested schema](#nestedblock--fixed_delay_backoff_strategy))
 - `force_delete` (Boolean) Enable this flag for force deletion of connector
-- `full_jitter_backoff_strategy` (Block List, Max: 1) Full Jitter BackOff Strategy. (see [below for nested schema](#nestedblock--full_jitter_backoff_strategy))
-- `inherit_from_delegate` (Block List, Max: 1) Inherit credentials from the delegate. (see [below for nested schema](#nestedblock--inherit_from_delegate))
-- `irsa` (Block List, Max: 1) Use IAM role for service accounts. (see [below for nested schema](#nestedblock--irsa))
-- `manual` (Block List, Max: 1) Use IAM role for service accounts. (see [below for nested schema](#nestedblock--manual))
-- `oidc_authentication` (Block List, Max: 1) Authentication using harness oidc. (see [below for nested schema](#nestedblock--oidc_authentication))
+- `full_jitter_backoff_strategy` (Block List) Full Jitter BackOff Strategy. (see [below for nested schema](#nestedblock--full_jitter_backoff_strategy))
+- `inherit_from_delegate` (Block List) Inherit credentials from the delegate. (see [below for nested schema](#nestedblock--inherit_from_delegate))
+- `irsa` (Block List) Use IAM role for service accounts. (see [below for nested schema](#nestedblock--irsa))
+- `manual` (Block List) Use IAM role for service accounts. (see [below for nested schema](#nestedblock--manual))
+- `oidc_authentication` (Block List) Authentication using harness oidc. (see [below for nested schema](#nestedblock--oidc_authentication))
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.
 - `tags` (Set of String) Tags to associate with the resource.
@@ -224,7 +242,7 @@ Required:
 Optional:
 
 - `delegate_selectors` (Set of String) The delegates to inherit the credentials from.
-- `oidc_session_tag_keys` (List of String) List of Harness context keys to pass as AWS OIDC session tags when assuming the IAM role. Supported values include `account_id`, `organization_id`, `project_id`, `environment_id`, `environment_type`, `pipeline_id`, `connector_id`, `connector_name`, `delegate_selectors`, `context`, `step_type`, `stage_type`, `triggered_by_email`, `triggered_by_name`, `service_name`, and `service_id`.
+- `oidc_session_tag_keys` (List of String) List of Harness context keys to pass as AWS OIDC session tags when assuming the IAM role. Supported values include account_id, organization_id, project_id, environment_id, environment_type, pipeline_id, connector_id, connector_name, delegate_selectors, context, step_type, stage_type, triggered_by_email, triggered_by_name, service_name, and service_id.
 - `region` (String) Test Region to perform Connection test of AWS Connector. To reference a secret at the organization scope, prefix 'org' to the expression: org.{identifier}. To reference a secret at the account scope, prefix 'account` to the expression: account.{identifier}.
 
 ## Import

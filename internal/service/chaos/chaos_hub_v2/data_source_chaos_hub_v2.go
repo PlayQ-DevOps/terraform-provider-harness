@@ -172,7 +172,7 @@ func dataSourceChaosHubV2Read(ctx context.Context, d *schema.ResourceData, meta 
 			hubIdentity,
 		)
 		if err != nil {
-			return helpers.HandleChaosApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 		hub = &resp
 	} else if name, ok := d.GetOk("name"); ok {
@@ -191,7 +191,7 @@ func dataSourceChaosHubV2Read(ctx context.Context, d *schema.ResourceData, meta 
 			100,
 		)
 		if err != nil {
-			return helpers.HandleChaosApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 
 		// Find the hub with exact name match

@@ -38,7 +38,7 @@ data "harness_platform_token" "test" {
 ### Optional
 
 - `email` (String) Email Id of the user who created the Token
-- `encoded_password` (String) Encoded password of the Token
+- `encoded_password` (String, Sensitive) Encoded password of the Token
 - `name` (String) Name of the resource.
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.

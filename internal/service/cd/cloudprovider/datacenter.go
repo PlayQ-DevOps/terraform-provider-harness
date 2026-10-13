@@ -5,6 +5,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/cd"
 	"github.com/harness/harness-go-sdk/harness/cd/cac"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/service/cd/usagescope"
 	"github.com/harness/terraform-provider-harness/internal/utils"
@@ -38,10 +39,10 @@ func resourceCloudProviderDataCenterRead(ctx context.Context, d *schema.Resource
 	}
 	cp := &cac.PhysicalDatacenterCloudProvider{}
 	if err := c.ConfigAsCodeClient.GetCloudProviderById(d.Id(), cp); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	} else if cp.IsEmpty() {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -55,7 +56,7 @@ func readCloudProviderDataCenter(c *cd.ApiClient, d *schema.ResourceData, cp *ca
 
 	scope, err := usagescope.FlattenUsageRestrictions(c, cp.UsageRestrictions)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(context.TODO(), d, err, nil)
 	}
 	d.Set("usage_scope", scope)
 

@@ -40,7 +40,6 @@ func DataSourceDashboard() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Type:        schema.TypeList,
 				Computed:    true,
-				ForceNew:    true,
 			},
 			"description": {
 				Description: "Description of the Dashboard.",
@@ -51,7 +50,6 @@ func DataSourceDashboard() *schema.Resource {
 				Description: "Unique identifier of the Folder.",
 				Type:        schema.TypeString,
 				Computed:    true,
-				ForceNew:    true,
 			},
 			"models": {
 				Description: "Data Models within the Dashboard.",
@@ -112,13 +110,12 @@ func dataSourceDashboardRead(ctx context.Context, d *schema.ResourceData, meta i
 	dashboard = resp.Resource
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if dashboard == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+		return diag.Errorf("dashboard not found: no object matched the given arguments")
+
 	}
 
 	readDashboard(d, dashboard)

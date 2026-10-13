@@ -2,14 +2,15 @@ package monitored_service_test
 
 import (
 	"fmt"
-	"github.com/antihax/optional"
 	"testing"
+
+	"github.com/antihax/optional"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccResourceMonitoredService(t *testing.T) {
@@ -18,10 +19,10 @@ func TestAccResourceMonitoredService(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_monitored_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccMonitoredServiceDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccMonitoredServiceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceMonitoredService(id, name),
@@ -196,10 +197,10 @@ func TestMonitoredServiceWithoutChangeSource(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_monitored_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccMonitoredServiceDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccMonitoredServiceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testMonitoredServiceWithoutChangeSource(id, name),
@@ -276,10 +277,10 @@ func TestMonitoredServiceWithoutEnabled(t *testing.T) {
 	updatedName := fmt.Sprintf("%s_updated", name)
 	resourceName := "harness_platform_monitored_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccMonitoredServiceDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccMonitoredServiceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testMonitoredServiceWithoutEnabled(id, name),
@@ -355,10 +356,10 @@ func TestAccResourceMonitoredServiceWithAppD(t *testing.T) {
 
 	resourceName := "harness_platform_monitored_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccMonitoredServiceDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccMonitoredServiceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceMonitoredServiceWithAppD(id, name),
@@ -382,10 +383,10 @@ func TestAccResourceMonitoredServiceWithGCPLogs(t *testing.T) {
 
 	resourceName := "harness_platform_monitored_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccMonitoredServiceDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccMonitoredServiceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceMonitoredServiceWithGCPLogs(id, name),
@@ -409,10 +410,10 @@ func TestAccResourceMonitoredServiceWithSplunkLogs(t *testing.T) {
 
 	resourceName := "harness_platform_monitored_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccMonitoredServiceDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccMonitoredServiceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceMonitoredServiceWithSplunkLogs(id, name),
@@ -435,10 +436,10 @@ func TestAccResourceMonitoredServiceWithDynatrace(t *testing.T) {
 
 	resourceName := "harness_platform_monitored_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccMonitoredServiceDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccMonitoredServiceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceMonitoredServiceWithDynatrace(id, name),
@@ -462,10 +463,10 @@ func TestAccResourceMonitoredServiceWithNewRelic(t *testing.T) {
 
 	resourceName := "harness_platform_monitored_service.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccMonitoredServiceDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccMonitoredServiceDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceMonitoredServiceWithNewRelic(id, name),

@@ -6,6 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,7 +19,7 @@ func ResourceConnectorJDBC() *schema.Resource {
 		ReadContext:   resourceConnectorJDBCRead,
 		CreateContext: resourceConnectorJDBCCreateOrUpdate,
 		UpdateContext: resourceConnectorJDBCCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
@@ -69,7 +70,7 @@ func ResourceConnectorJDBC() *schema.Resource {
 							},
 						},
 						"username_ref": {
-							Description:   "The reference to the Harness secret containing the username to use for the database server." + secret_ref_text,
+							Description:   "The reference to the Harness secret containing the username to use for the database server." + helpers.Descriptions.SecretRefText.String(),
 							Type:          schema.TypeString,
 							Optional:      true,
 							ConflictsWith: []string{"credentials.0.username", "credentials.0.username_password", "credentials.0.service_account", "credentials.0.key_pair", "credentials.0.inherit_from_delegate", "credentials.0.oidc"},
@@ -84,7 +85,7 @@ func ResourceConnectorJDBC() *schema.Resource {
 							},
 						},
 						"password_ref": {
-							Description:   "The reference to the Harness secret containing the password to use for the database server." + secret_ref_text,
+							Description:   "The reference to the Harness secret containing the password to use for the database server." + helpers.Descriptions.SecretRefText.String(),
 							Type:          schema.TypeString,
 							Optional:      true,
 							ConflictsWith: []string{"credentials.0.username_password", "credentials.0.service_account", "credentials.0.key_pair", "credentials.0.inherit_from_delegate", "credentials.0.oidc"},
@@ -124,7 +125,7 @@ func ResourceConnectorJDBC() *schema.Resource {
 										},
 									},
 									"username_ref": {
-										Description:   "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+										Description:   "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:          schema.TypeString,
 										Optional:      true,
 										ConflictsWith: []string{"credentials.0.username_password.0.username"},
@@ -134,7 +135,7 @@ func ResourceConnectorJDBC() *schema.Resource {
 										},
 									},
 									"password_ref": {
-										Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
@@ -158,7 +159,7 @@ func ResourceConnectorJDBC() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"token_ref": {
-										Description: "Reference to a secret containing the token to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the token to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
@@ -192,7 +193,7 @@ func ResourceConnectorJDBC() *schema.Resource {
 										},
 									},
 									"username_ref": {
-										Description:   "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+										Description:   "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:          schema.TypeString,
 										Optional:      true,
 										ConflictsWith: []string{"credentials.0.key_pair.0.username"},
@@ -202,12 +203,12 @@ func ResourceConnectorJDBC() *schema.Resource {
 										},
 									},
 									"private_key_file_ref": {
-										Description: "Reference to a secret containing the private key file to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the private key file to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Required:    true,
 									},
 									"private_key_passphrase_ref": {
-										Description: "Reference to a secret containing the passphrase for the private key file." + secret_ref_text,
+										Description: "Reference to a secret containing the passphrase for the private key file." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Optional:    true,
 									},
@@ -237,7 +238,7 @@ func ResourceConnectorJDBC() *schema.Resource {
 										ConflictsWith: []string{"credentials.0.inherit_from_delegate.0.username_ref"},
 									},
 									"username_ref": {
-										Description:   "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+										Description:   "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:          schema.TypeString,
 										Optional:      true,
 										ConflictsWith: []string{"credentials.0.inherit_from_delegate.0.username"},
@@ -312,7 +313,7 @@ func ResourceConnectorJDBC() *schema.Resource {
 }
 
 func resourceConnectorJDBCRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.JDBC)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.JDBC)
 	if err != nil {
 		return err
 	}
@@ -329,9 +330,12 @@ func resourceConnectorJDBCRead(ctx context.Context, d *schema.ResourceData, meta
 }
 
 func resourceConnectorJDBCCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn := buildConnectorJDBC(d)
+	conn, buildErr := buildConnectorJDBC(d)
+	if buildErr != nil {
+		return diag.FromErr(buildErr)
+	}
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}
@@ -343,7 +347,7 @@ func resourceConnectorJDBCCreateOrUpdate(ctx context.Context, d *schema.Resource
 	return nil
 }
 
-func buildConnectorJDBC(d *schema.ResourceData) *nextgen.ConnectorInfo {
+func buildConnectorJDBC(d *schema.ResourceData) (*nextgen.ConnectorInfo, error) {
 	config := d.Get("credentials").([]interface{})[0].(map[string]interface{})
 	authType := config["auth_type"].(string)
 
@@ -471,14 +475,14 @@ func buildConnectorJDBC(d *schema.ResourceData) *nextgen.ConnectorInfo {
 			}
 		}
 	default:
-		panic(fmt.Sprintf("unknown jdbc auth method type %s", authType))
+		return nil, fmt.Errorf("unknown jdbc auth method type %q", authType)
 	}
 
 	if attr, ok := d.GetOk("delegate_selectors"); ok {
 		connector1.JDBC.DelegateSelectors = utils.InterfaceSliceToStringSlice(attr.(*schema.Set).List())
 	}
 
-	return connector1
+	return connector1, nil
 }
 
 func readConnectorJDBC(d *schema.ResourceData, connector *nextgen.ConnectorInfo) error {

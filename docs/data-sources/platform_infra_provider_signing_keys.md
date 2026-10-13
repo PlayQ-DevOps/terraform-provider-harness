@@ -41,10 +41,10 @@ locals {
 
 Read-Only:
 
-- `ascii_armor` (String, Sensitive) ASCII-armored GPG public key.
-- `created_at` (String) Creation timestamp.
-- `id` (String) Unique identifier of the signing key.
-- `key_id` (String) GPG key ID.
-- `key_name` (String) GPG key name.
-- `updated_at` (String) Last updated timestamp.
-- `user` (String) User who uploaded the key.
+- `ascii_armor` (String)
+- `created_at` (String)
+- `id` (String)
+- `key_id` (String)
+- `key_name` (String)
+- `updated_at` (String)
+- `user` (String)

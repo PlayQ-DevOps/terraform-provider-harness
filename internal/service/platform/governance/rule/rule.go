@@ -38,9 +38,10 @@ func ResourceRule() *schema.Resource {
 				ValidateFunc: validation.StringInSlice([]string{"AWS", "GCP", "AZURE"}, false),
 			},
 			"rules_yaml": {
-				Description: "The policy YAML of the rule",
-				Type:        schema.TypeString,
-				Required:    true,
+				Description:      "The policy YAML of the rule",
+				Type:             schema.TypeString,
+				Required:         true,
+				DiffSuppressFunc: helpers.YamlDiffSuppressFunction,
 			},
 			"rule_id": {
 				Description: "Id of the rule.",
@@ -60,7 +61,7 @@ func resourceRuleRead(ctx context.Context, d *schema.ResourceData, meta interfac
 	resp, httpResp, err := c.RuleApi.GetPolicies(ctx, readRuleRequest(id), c.AccountId, nil)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data != nil {
@@ -72,7 +73,7 @@ func resourceRuleRead(ctx context.Context, d *schema.ResourceData, meta interfac
 
 		err := readRuleResponse(d, resp.Data)
 		if err != nil {
-			return helpers.HandleReadApiError(err, d, httpResp)
+			return helpers.HandleRead(ctx, d, err, httpResp)
 		}
 	}
 
@@ -114,7 +115,7 @@ func resourceRuleCreateOrUpdate(ctx context.Context, d *schema.ResourceData, met
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data != nil {
@@ -161,7 +162,7 @@ func resourceRuleDelete(ctx context.Context, d *schema.ResourceData, meta interf
 	_, httpResp, err := c.RuleApi.DeleteRule(ctx, c.AccountId, id)
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

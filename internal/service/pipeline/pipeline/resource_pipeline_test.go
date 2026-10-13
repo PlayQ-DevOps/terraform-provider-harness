@@ -8,8 +8,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/harness-openapi-go-client/nextgen"
 	openapi_client_nextgen "github.com/harness/harness-openapi-go-client/nextgen"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/stretchr/testify/require"
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
@@ -24,10 +24,10 @@ func TestAccResourcePipeline(t *testing.T) {
 
 	resourceName := "harness_platform_pipeline.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPipelineDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPipelineDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipeline(baseId1, name1, filePath),
@@ -63,10 +63,10 @@ func TestAccResourcePipelineInline(t *testing.T) {
 
 	resourceName := "harness_platform_pipeline.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPipelineDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPipelineDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineInline(id, name),
@@ -96,10 +96,10 @@ func TestAccResourcePipelineImportFromGit(t *testing.T) {
 
 	resourceName := "harness_platform_pipeline.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPipelineDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPipelineDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineImportFromGit(),
@@ -126,9 +126,9 @@ func TestAccResourcePipeline_DeleteUnderlyingResource(t *testing.T) {
 	org_id := id
 	resourceName := "harness_platform_pipeline.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineInline(id, name),
@@ -574,10 +574,10 @@ func TestAccResourcePipelineHarnessCode(t *testing.T) {
 
 	resourceName := "harness_platform_pipeline.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccPipelineDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccPipelineDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourcePipelineHC(id, name),
@@ -625,10 +625,10 @@ func TestAccResourcePipelineInlineImplicit(t *testing.T) {
 	for _, tc := range testCases {
 		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
-			resource.UnitTest(t, resource.TestCase{
-				PreCheck:          func() { acctest.TestAccPreCheck(t) },
-				ProviderFactories: acctest.ProviderFactories,
-				CheckDestroy:      testAccPipelineDestroy(resourceName),
+			resource.Test(t, resource.TestCase{
+				PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+				ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+				CheckDestroy:             testAccPipelineDestroy(resourceName),
 				Steps: []resource.TestStep{
 					{
 						Config: testAccResourceImplicitInlineConfig(id, tc.includeGitBlock),

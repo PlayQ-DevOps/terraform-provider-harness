@@ -121,12 +121,7 @@ func resourceDashboardRead(ctx context.Context, d *schema.ResourceData, meta int
 	})
 
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			// Dashboard not found, remove from state
-			d.SetId("")
-			return nil
-		}
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Resource == nil {
@@ -149,7 +144,7 @@ func resourceDashboardUpdate(ctx context.Context, d *schema.ResourceData, meta i
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readUpdateDashboard(d, resp.Resource)
@@ -167,7 +162,7 @@ func resourceDashboardClone(ctx context.Context, d *schema.ResourceData, meta in
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readClonedDashboard(d, resp.Resource)
@@ -185,7 +180,7 @@ func resourceDashboardDelete(ctx context.Context, d *schema.ResourceData, meta i
 		AccountId: optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

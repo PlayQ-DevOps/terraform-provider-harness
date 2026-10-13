@@ -28,7 +28,7 @@ func DatasourceConnectorElasticSearch() *schema.Resource {
 							Computed:    true,
 						},
 						"password_ref": {
-							Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+							Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},
@@ -42,7 +42,7 @@ func DatasourceConnectorElasticSearch() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"client_secret_ref": {
-							Description: "Reference to the Harness secret containing the ElasticSearch client secret." + secret_ref_text,
+							Description: "Reference to the Harness secret containing the ElasticSearch client secret." + helpers.Descriptions.SecretRefText.String(),
 							Type:        schema.TypeString,
 							Computed:    true,
 						},

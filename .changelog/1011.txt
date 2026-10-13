@@ -1,3 +1,0 @@
-```release-note:enhancement
-harness_platform_gitops_app_project: Rename the file name
-```

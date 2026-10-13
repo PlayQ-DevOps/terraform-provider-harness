@@ -54,6 +54,12 @@ Import is supported using the following syntax:
 The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
-# Import using the Harness chaos_infra_id.
-terraform import harness_chaos_infrastructure.example <chaos_infra_id>
+# Import an account level chaos infrastructure using the environment it is registered in
+terraform import harness_chaos_infrastructure.example <environment_id>/<infra_id>
+
+# Import an org level chaos infrastructure
+terraform import harness_chaos_infrastructure.example <org_id>/<environment_id>/<infra_id>
+
+# Import a project level chaos infrastructure
+terraform import harness_chaos_infrastructure.example <org_id>/<project_id>/<environment_id>/<infra_id>
 ```

@@ -54,8 +54,8 @@ resource "harness_platform_connector_azure_cloud_cost" "example" {
 
 ### Optional
 
-- `billing_export_spec` (Block List, Max: 1) Returns billing details for the Azure account. (see [below for nested schema](#nestedblock--billing_export_spec))
-- `billing_export_spec2` (Block List, Max: 1) Returns billing details for the Azure account. (see [below for nested schema](#nestedblock--billing_export_spec2))
+- `billing_export_spec` (Block List) Returns billing details for the Azure account. (see [below for nested schema](#nestedblock--billing_export_spec))
+- `billing_export_spec2` (Block List) Returns billing details for the Azure account. (see [below for nested schema](#nestedblock--billing_export_spec2))
 - `description` (String) Description of the resource.
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.

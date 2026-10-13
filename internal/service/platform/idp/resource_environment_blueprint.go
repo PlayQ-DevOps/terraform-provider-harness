@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/idp"
@@ -25,7 +24,7 @@ func ResourceEnvironmentBlueprint() *schema.Resource {
 		DeleteContext: resourceEnvironmentBlueprintDelete,
 		Importer:      blueprintImporter,
 		Schema: map[string]*schema.Schema{
-			"identifier": helpers.GetIdentifierSchema(helpers.SchemaFlagTypes.Required),
+			"identifier": helpers.Identity(helpers.GetIdentifierSchema(helpers.SchemaFlagTypes.Required)),
 			"version": {
 				Type:        schema.TypeString,
 				Description: "Version of the catalog entity",
@@ -73,11 +72,7 @@ func resourceEnvironmentBlueprintRead(ctx context.Context, d *schema.ResourceDat
 		HarnessAccount: optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		if isNotFoundError(err) {
-			httpResp.StatusCode = 404
-		}
-
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp, idpNotFound)
 	}
 
 	readEnvironmentBlueprint(d, resp)
@@ -131,7 +126,7 @@ func resourceEnvironmentBlueprintCreateOrUpdate(ctx context.Context, d *schema.R
 		})
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readEnvironmentBlueprint(d, resp)
@@ -149,34 +144,19 @@ func resourceEnvironmentBlueprintDelete(ctx context.Context, d *schema.ResourceD
 		HarnessAccount: optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		// Ignore deletions of versions that are already gone
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			d.SetId("")
-			return nil
-		}
-
-		if isNotFoundError(err) {
-			d.SetId("")
-			return nil
-		}
-
-		if httpResp != nil && httpResp.StatusCode == 400 {
-			if isOnlyVersionDeleteError(err) {
-				// If there only is one version. We can safely delete the parent as well.
-				// We should move this logic to idp-service in the future.
-				_, delErr := c.EntitiesApi.DeleteEntity(ctx, "account", environmentBlueprintKind, id, &idp.EntitiesApiDeleteEntityOpts{
-					HarnessAccount: optional.NewString(c.AccountId),
-				})
-				if delErr != nil {
-					fmt.Printf("Error deleting parent entity after version deletion: %+v\n", delErr)
-					return helpers.HandleApiError(delErr, d, httpResp)
-				}
-				d.SetId("")
-				return nil
+		if helpers.StatusOf(httpResp) == 400 && isOnlyVersionDeleteError(err) {
+			// The last version cannot be deleted on its own: delete the parent entity instead.
+			// This belongs in idp-service.
+			_, delErr := c.EntitiesApi.DeleteEntity(ctx, "account", environmentBlueprintKind, id, &idp.EntitiesApiDeleteEntityOpts{
+				HarnessAccount: optional.NewString(c.AccountId),
+			})
+			if delErr != nil {
+				return helpers.HandleDelete(ctx, d, delErr, httpResp, idpNotFound)
 			}
+			return nil
 		}
 
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp, idpNotFound)
 	}
 
 	return nil
@@ -197,19 +177,18 @@ func readEnvironmentBlueprint(d *schema.ResourceData, entityVersion idp.EntityVe
 }
 
 var blueprintImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+	StateContext: func(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 		// Expected format: <identifier>/<version>
 		id := d.Id()
-		parts := strings.Split(id, "/")
-
-		if len(parts) != 2 {
-			return nil, fmt.Errorf("invalid import ID format: %s. Expected: <identifier>/<version>", id)
+		parts, err := helpers.SplitImportID(id, 2, 2)
+		if err != nil {
+			return nil, fmt.Errorf("%w; expected <identifier>/<version>", err)
 		}
 
 		identifier := parts[0]
 		version := parts[1]
 
-		c, ctx := meta.(*internal.Session).GetIDPClientWithContext(context.Background())
+		c, ctx := meta.(*internal.Session).GetIDPClientWithContext(ctx)
 
 		resp, _, err := c.EntitiesApi.GetEntityVersion(ctx, "account", environmentBlueprintKind, identifier, version, &idp.EntitiesApiGetEntityVersionOpts{
 			HarnessAccount: optional.NewString(c.AccountId),

@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 const awsProxyCloudConnectorID = "DoNotDelete_LightwingNonProd"
@@ -22,12 +22,12 @@ func TestResourceAWSProxy(t *testing.T) {
 	resourceName := "harness_autostopping_aws_proxy.test"
 	var proxyID string
 
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.TestAccPreCheck(t)
 			cleanupStaleAWSProxies(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAWSProxy(name, apiKey),

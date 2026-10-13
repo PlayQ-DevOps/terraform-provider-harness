@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	splitsdk "github.com/harness/harness-go-sdk/harness/split"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -159,37 +160,33 @@ func resourceFMEFeatureFlagRead(ctx context.Context, d *schema.ResourceData, met
 	}
 	sp, err := client.Splits.Get(wsID, d.Id())
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if sp == nil {
-		d.SetId("")
-		return nil
+		return helpers.ReadMissing(ctx, d, "FME feature flag "+d.Id())
+
 	}
 	if err := d.Set("name", sp.Name); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("description", sp.Description); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("flag_id", sp.ID); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
-	switch {
-	case sp.TrafficType != nil && sp.TrafficType.ID != "":
+	if sp.TrafficType != nil && sp.TrafficType.ID != "" {
 		if err := d.Set("traffic_type_id", sp.TrafficType.ID); err != nil {
-			return diag.FromErr(err)
-		}
-	default:
-		if err := d.Set("traffic_type_id", d.Get("traffic_type_id")); err != nil {
-			return diag.FromErr(err)
+			return helpers.HandleRead(ctx, d, err, nil)
 		}
 	}
+
 	tagNames := make([]interface{}, 0, len(sp.Tags))
 	for _, t := range sp.Tags {
 		tagNames = append(tagNames, t.Name)
 	}
 	if err := d.Set("tags", schema.NewSet(schema.HashString, tagNames)); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	return nil
 }
@@ -227,7 +224,7 @@ func resourceFMEFeatureFlagDelete(ctx context.Context, d *schema.ResourceData, m
 		return diags
 	}
 	if err := client.Splits.Delete(wsID, d.Id()); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 	return nil
 }

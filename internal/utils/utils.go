@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"hash/crc32"
 	"regexp"
-	"strings"
 )
 
 const CacDescription string = "This resource uses the config-as-code API's. When updating the `name` or `path` of this resource you should typically also set the `create_before_destroy = true` lifecycle setting."
@@ -47,25 +46,6 @@ func InterfaceSliceToStringSlice(slice []interface{}) []string {
 	}
 
 	return ss
-}
-
-func ExpandTags(tags []interface{}) map[string]string {
-	result := map[string]string{}
-
-	for _, tag := range tags {
-		parts := strings.Split(tag.(string), ":")
-		result[parts[0]] = parts[1]
-	}
-
-	return result
-}
-
-func FlattenTags(tags map[string]string) []string {
-	var result []string
-	for k, v := range tags {
-		result = append(result, k+":"+v)
-	}
-	return result
 }
 
 func GetConflictsWithSlice(source []string, self string) []string {

@@ -2,11 +2,13 @@ package provider_registry
 
 import (
 	"context"
-	"log"
+
+	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -67,7 +69,7 @@ func resourceInfraProviderSigningKeyRead(ctx context.Context, d *schema.Resource
 	c, ctx := m.(*internal.Session).GetPlatformClientWithContext(ctx)
 	id := d.Id()
 	if id == "" {
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -78,7 +80,7 @@ func resourceInfraProviderSigningKeyRead(ctx context.Context, d *schema.Resource
 		nil,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleRead(ctx, d, err, httpRes)
 	}
 
 	// Find the signing key by ID
@@ -103,7 +105,7 @@ func resourceInfraProviderSigningKeyCreate(ctx context.Context, d *schema.Resour
 	c, ctx := m.(*internal.Session).GetPlatformClientWithContext(ctx)
 
 	createKey := buildUploadSigningKeyRequest(d)
-	log.Printf("[DEBUG] Creating signing key with key_id %s ", createKey.KeyId)
+	tflog.Debug(ctx, fmt.Sprintf("Creating signing key with key_id %s ", createKey.KeyId))
 
 	httpRes, err := c.ProviderRegistryApi.ProviderRegistryUploadSigningKey(
 		ctx,
@@ -112,8 +114,8 @@ func resourceInfraProviderSigningKeyCreate(ctx context.Context, d *schema.Resour
 	)
 
 	if err != nil {
-		log.Printf("[ERROR] Failed to create signing key: %v, HTTP Status: %v", err, httpRes)
-		return parseError(err, httpRes)
+		tflog.Error(ctx, fmt.Sprintf("Failed to create signing key: %v, HTTP Status: %v", err, httpRes))
+		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
 
 	listResp, httpRes, err := c.ProviderRegistryApi.ProviderRegistryListSigningKeys(
@@ -122,16 +124,15 @@ func resourceInfraProviderSigningKeyCreate(ctx context.Context, d *schema.Resour
 		nil,
 	)
 	if err != nil {
-		log.Printf("[ERROR] Failed to list signing keys after creation: %v", err)
-		return parseError(err, httpRes)
+		tflog.Error(ctx, fmt.Sprintf("Failed to list signing keys after creation: %v", err))
+		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
-
-	log.Printf("[DEBUG] Found %d signing keys, searching for key_id %s", len(listResp), createKey.KeyId)
+	tflog.Debug(ctx, fmt.Sprintf("Found %d signing keys, searching for key_id %s", len(listResp), createKey.KeyId))
 
 	// Find the newly created key by key_id
 	for _, key := range listResp {
 		if key.KeyId == createKey.KeyId {
-			log.Printf("[DEBUG] Found created signing key with ID: %s", key.Id)
+			tflog.Debug(ctx, fmt.Sprintf("Found created signing key with ID: %s", key.Id))
 			d.SetId(key.Id)
 			readSigningKey(d, &key)
 			return nil
@@ -154,7 +155,7 @@ func resourceInfraProviderSigningKeyDelete(ctx context.Context, d *schema.Resour
 		c.AccountId,
 	)
 	if err != nil {
-		return parseError(err, httpRes)
+		return helpers.HandleDelete(ctx, d, err, httpRes)
 	}
 	return nil
 }
@@ -165,7 +166,7 @@ func resourceInfraProviderSigningKeyUpdate(ctx context.Context, d *schema.Resour
 
 	if d.HasChanges("key_name", "ascii_armor", "key_id", "user") {
 		updateKey := buildUploadSigningKeyRequest(d)
-		log.Printf("[DEBUG] Updating signing key %s", id)
+		tflog.Debug(ctx, fmt.Sprintf("Updating signing key %s", id))
 
 		httpRes, err := c.ProviderRegistryApi.ProviderRegistryUpdateSigningKey(
 			ctx,
@@ -174,7 +175,7 @@ func resourceInfraProviderSigningKeyUpdate(ctx context.Context, d *schema.Resour
 			id,
 		)
 		if err != nil {
-			return parseError(err, httpRes)
+			return helpers.HandleWrite(ctx, d, err, httpRes)
 		}
 	}
 

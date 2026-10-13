@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -22,22 +21,23 @@ func ResourceCentralNotificationChannel() *schema.Resource {
 		ReadContext:   resourceCentralNotificationChannelRead,
 		UpdateContext: resourceCentralNotificationChannelUpdate,
 		DeleteContext: resourceCentralNotificationChannelDelete,
-		Importer: &schema.ResourceImporter{
-			StateContext: schema.ImportStatePassthroughContext,
-		},
+		Importer:      centralNotificationChannelImporter,
 
 		Schema: map[string]*schema.Schema{
 			"identifier": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"org": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"name": {
 				Type:     schema.TypeString,
@@ -84,8 +84,9 @@ func ResourceCentralNotificationChannel() *schema.Resource {
 						"datadog_urls":                stringListSchema(),
 						"delegate_selectors":          stringListSchema(),
 						"api_key": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:      schema.TypeString,
+							Optional:  true,
+							Sensitive: true,
 						},
 						"execute_on_delegate": {
 							Type:     schema.TypeBool,
@@ -115,7 +116,6 @@ func ResourceCentralNotificationChannel() *schema.Resource {
 
 func resourceCentralNotificationChannelCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	accountID := c.AccountId
 	id := d.Id()
 	if id == "" {
@@ -149,7 +149,7 @@ func resourceCentralNotificationChannelCreate(ctx context.Context, d *schema.Res
 			})
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	d.SetId(resp.Identifier)
 	return readCentralNotificationChannel(accountID, d, resp)
@@ -159,6 +159,9 @@ func resourceCentralNotificationChannelRead(ctx context.Context, d *schema.Resou
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 	accountID := c.AccountId
 	identifier := d.Get("identifier").(string)
+	if identifier == "" {
+		identifier = d.Id()
+	}
 	scope := getScope(d)
 
 	var resp nextgen.NotificationChannelDto
@@ -183,7 +186,7 @@ func resourceCentralNotificationChannelRead(ctx context.Context, d *schema.Resou
 	}
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readCentralNotificationChannel(accountID, d, resp)
@@ -193,7 +196,6 @@ func resourceCentralNotificationChannelRead(ctx context.Context, d *schema.Resou
 
 func resourceCentralNotificationChannelUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	accountID := c.AccountId
 	identifier := d.Get("identifier").(string)
 	scope := getScope(d)
@@ -223,7 +225,7 @@ func resourceCentralNotificationChannelUpdate(ctx context.Context, d *schema.Res
 			})
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	d.SetId(resp.Identifier)
 	return readCentralNotificationChannel(accountID, d, resp)
@@ -231,7 +233,6 @@ func resourceCentralNotificationChannelUpdate(ctx context.Context, d *schema.Res
 
 func resourceCentralNotificationChannelDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	accountID := c.AccountId
 	identifier := d.Get("identifier").(string)
 	scope := getScope(d)
@@ -256,7 +257,7 @@ func resourceCentralNotificationChannelDelete(ctx context.Context, d *schema.Res
 			})
 	}
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }
@@ -346,12 +347,8 @@ func expandHeaders(raw []interface{}) []nextgen.WebHookHeaders {
 
 func readCentralNotificationChannel(accountIdentifier string, d *schema.ResourceData, notificationChannelDto nextgen.NotificationChannelDto) diag.Diagnostics {
 	d.SetId(notificationChannelDto.Identifier)
-	if notificationChannelDto.Org != "" {
-		d.Set("org", notificationChannelDto.Org)
-	}
-	if notificationChannelDto.Project != "" {
-		d.Set("project", notificationChannelDto.Project)
-	}
+	d.Set("org", notificationChannelDto.Org)
+	d.Set("project", notificationChannelDto.Project)
 	d.Set("identifier", notificationChannelDto.Identifier)
 	d.Set("name", notificationChannelDto.Name)
 	d.Set("notification_channel_type", notificationChannelDto.NotificationChannelType)
@@ -444,3 +441,6 @@ func getScope(d *schema.ResourceData) *Scope {
 		scope:   scope,
 	}
 }
+
+// centralNotificationChannelImporter: [<org>/[<project>/]]<identifier>.
+var centralNotificationChannelImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org", "project", "identifier"}, OptionalPrefix: 2})

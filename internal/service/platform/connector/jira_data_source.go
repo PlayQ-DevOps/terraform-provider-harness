@@ -22,12 +22,12 @@ func DatasourceConnectorJira() *schema.Resource {
 				Computed:    true,
 			},
 			"username_ref": {
-				Description: "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+				Description: "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
 			"password_ref": {
-				Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+				Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
@@ -60,12 +60,12 @@ func DatasourceConnectorJira() *schema.Resource {
 										Computed:    true,
 									},
 									"username_ref": {
-										Description: "Reference to a secret containing the username to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the username to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
 									"password_ref": {
-										Description: "Reference to a secret containing the password to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the password to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
@@ -73,19 +73,19 @@ func DatasourceConnectorJira() *schema.Resource {
 							},
 						},
 						"personal_access_token": {
-							Description:   "Authenticate using personal access token.",
-							Type:          schema.TypeList,
-							Computed:      true,	
+							Description: "Authenticate using personal access token.",
+							Type:        schema.TypeList,
+							Computed:    true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"pat_ref": {
-										Description: "Reference to a secret containing the personal access token to use for authentication." + secret_ref_text,
+										Description: "Reference to a secret containing the personal access token to use for authentication." + helpers.Descriptions.SecretRefText.String(),
 										Type:        schema.TypeString,
 										Computed:    true,
 									},
 								},
 							},
-						},					
+						},
 					},
 				},
 			},

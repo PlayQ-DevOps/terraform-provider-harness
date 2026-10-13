@@ -1,3 +1,0 @@
-```release-note:bug
-Fixed missing nextgen auth configuration in the provider.
-```

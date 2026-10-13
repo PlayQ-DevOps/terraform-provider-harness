@@ -342,6 +342,7 @@ func resourceRegistrySchema(readOnly bool) map[string]*schema.Schema {
 	}
 
 	if readOnly {
+		mainSchema["identifier"].ForceNew = false
 		mainSchema["is_public"] = &schema.Schema{
 			Description: "Whether the registry is public. When true, the registry is publicly accessible without authentication.",
 			Type:        schema.TypeBool,

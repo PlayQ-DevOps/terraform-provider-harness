@@ -14,9 +14,8 @@ Setting `value` overrides the named image field for the account. Omitting or rem
 
 ## Example Usage
 
-### CI — override the lite-engine image
-
 ```terraform
+# CI — override the lite-engine image
 resource "harness_platform_default_images" "ci_lite_engine" {
   kind  = "ci"
   field = "liteEngineTag"
@@ -32,20 +31,14 @@ data "harness_platform_default_images" "ci_customer" {
 output "ci_lite_engine_tag" {
   value = data.harness_platform_default_images.ci_customer.images["liteEngineTag"]
 }
-```
 
-### CI — reset the lite-engine image to the Harness default
-
-```terraform
+# CI — reset the lite-engine image to the Harness default
 resource "harness_platform_default_images" "ci_lite_engine" {
   kind  = "ci"
   field = "liteEngineTag"
 }
-```
 
-### IACM — override the AWS CDK image
-
-```terraform
+# IACM — override the AWS CDK image
 resource "harness_platform_default_images" "iacm_aws_cdk" {
   kind  = "iacm"
   field = "iacmAwsCdk"
@@ -60,20 +53,14 @@ data "harness_platform_default_images" "iacm_defaults" {
 output "iacm_aws_cdk_tag" {
   value = data.harness_platform_default_images.iacm_defaults.images["iacmAwsCdk"]
 }
-```
 
-### IACM — reset to default
-
-```terraform
+# IACM — reset to default
 resource "harness_platform_default_images" "iacm_aws_cdk" {
   kind  = "iacm"
   field = "iacmAwsCdk"
 }
-```
 
-### IDP — override the register-catalog image
-
-```terraform
+# IDP — override the register-catalog image
 resource "harness_platform_default_images" "idp_register_catalog" {
   kind  = "idp"
   field = "registerCatalog"
@@ -88,11 +75,8 @@ data "harness_platform_default_images" "idp_defaults" {
 output "idp_register_catalog_tag" {
   value = data.harness_platform_default_images.idp_defaults.images["registerCatalog"]
 }
-```
 
-### IDP — reset to default
-
-```terraform
+# IDP — reset to default
 resource "harness_platform_default_images" "idp_register_catalog" {
   kind  = "idp"
   field = "registerCatalog"
@@ -115,6 +99,3 @@ resource "harness_platform_default_images" "idp_register_catalog" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-
-## Import
-

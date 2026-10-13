@@ -70,7 +70,7 @@ resource "harness_platform_secret_text" "gcp_secret_manager_with_project" {
 
   additional_metadata {
     values {
-      regions    = "us-east1"
+      regions        = "us-east1"
       gcp_project_id = "my-gcp-project-id"
     }
   }
@@ -112,7 +112,6 @@ resource "harness_platform_secret_text" "aws_secret_manager" {
 - `project_id` (String) Unique identifier of the project.
 - `tags` (Set of String) Tags to associate with the resource.
 - `value` (String, Sensitive) Value of the Secret
-- `force_delete` (Boolean) Enable this flag for force deletion of connector
 
 ### Read-Only
 
@@ -130,16 +129,14 @@ Optional:
 
 Optional:
 
-- `version` (String) Version of the secret (for AWS/Azure Secret Manager)
+- `gcp_project_id` (String) GCP Project ID (for GCP Secret Manager)
 - `kms_key_id` (String) KMS Key ID (for AWS Secret Manager)
 - `regions` (String) GCP region for the secret (for GCP Secret Manager)
-- `gcp_project_id` (String) GCP Project ID (for GCP Secret Manager)
+- `version` (String) Version of the secret (for AWS/Azure Secret Manager)
 
 ## Import
 
 Import is supported using the following syntax:
-
-The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
 # Import account level secret text

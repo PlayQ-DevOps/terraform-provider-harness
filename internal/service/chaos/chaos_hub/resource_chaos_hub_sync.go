@@ -3,13 +3,13 @@ package chaos_hub
 import (
 	"context"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/harness-go-sdk/harness/chaos/graphql/model"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -72,8 +72,8 @@ func resourceChaosHubSyncCreate(ctx context.Context, d *schema.ResourceData, met
 		// Account level hub ID
 		hubID = parts[0]
 	default:
-		return helpers.HandleChaosGraphQLError(fmt.Errorf("invalid hub ID format: expected org_id/project_id/hub_id or project_id/hub_id or hub_id got: %s",
-			hubID), d, "sync_chaos_hub")
+		return helpers.HandleWrite(ctx, d, fmt.Errorf("invalid hub ID format: expected org_id/project_id/hub_id or project_id/hub_id or hub_id got: %s",
+			hubID), nil)
 	}
 
 	// Convert to model.IdentifiersRequest
@@ -89,12 +89,11 @@ func resourceChaosHubSyncCreate(ctx context.Context, d *schema.ResourceData, met
 	// Trigger the sync
 	syncID, err := hubClient.Sync(ctx, hubID, modelIdentifiers)
 	if err != nil {
-		return helpers.HandleChaosGraphQLError(err, d, "sync_chaos_hub")
+		return helpers.HandleWrite(ctx, d, err, nil)
 	}
 
 	d.SetId(hubID)
-
-	log.Printf("[DEBUG] Synced Chaos Hub %s with sync ID: %s", hubID, syncID)
+	tflog.Debug(ctx, fmt.Sprintf("Synced Chaos Hub %s with sync ID: %s", hubID, syncID))
 	return resourceChaosHubSyncRead(ctx, d, meta)
 }
 
@@ -117,10 +116,12 @@ func resourceChaosHubSyncRead(ctx context.Context, d *schema.ResourceData, meta 
 	hubClient := chaos.NewChaosHubClient(c)
 	hub, err := hubClient.Get(ctx, modelIdentifiers, hubID)
 	if err != nil {
-		return helpers.HandleChaosGraphQLReadError(err, d, "get_chaos_hub")
+		return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound(
+
+		// Update the status
+		))
 	}
 
-	// Update the status
 	d.SetId(hubID)
 	d.Set("last_synced_at", hub.LastSyncedAt)
 	d.Set("org_id", orgID)

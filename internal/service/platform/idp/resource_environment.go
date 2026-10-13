@@ -46,9 +46,9 @@ func ResourceEnvironment() *schema.Resource {
 			Delete: schema.DefaultTimeout(60 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
-			"identifier": helpers.GetIdentifierSchema(helpers.SchemaFlagTypes.Required),
-			"org_id":     helpers.GetOrgIdSchema(helpers.SchemaFlagTypes.Required),
-			"project_id": helpers.GetProjectIdSchema(helpers.SchemaFlagTypes.Required),
+			"identifier": helpers.Identity(helpers.GetIdentifierSchema(helpers.SchemaFlagTypes.Required)),
+			"org_id":     helpers.Identity(helpers.GetOrgIdSchema(helpers.SchemaFlagTypes.Required)),
+			"project_id": helpers.Identity(helpers.GetProjectIdSchema(helpers.SchemaFlagTypes.Required)),
 			"name":       helpers.GetNameSchema(helpers.SchemaFlagTypes.Optional),
 			"owner": {
 				Type:        schema.TypeString,
@@ -116,7 +116,7 @@ func resourceEnvironmentRead(ctx context.Context, d *schema.ResourceData, meta i
 		HarnessAccount:    optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if err := readEnvironment(d, resp); err != nil {
@@ -138,12 +138,13 @@ func resourceEnvironmentUpdateOrCreate(ctx context.Context, d *schema.ResourceDa
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
-	resourceEnvironmentRead(ctx, d, meta)
-
-	return nil
+	if d.Id() == "" {
+		d.SetId(d.Get("identifier").(string))
+	}
+	return helpers.ReadAfterWrite(ctx, d, meta, idpReadAfterWriteWindow, resourceEnvironmentRead)
 }
 
 func resourceEnvironmentDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -164,17 +165,7 @@ func resourceEnvironmentDelete(ctx context.Context, d *schema.ResourceData, meta
 	})
 
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {
-			d.SetId("")
-			return nil
-		}
-
-		if isNotFoundError(err) {
-			d.SetId("")
-			return nil
-		}
-
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp, idpNotFound)
 	}
 
 	return nil
@@ -266,14 +257,13 @@ func updateEnvironment(ctx context.Context, d *schema.ResourceData, meta interfa
 }
 
 var environmentImporter = &schema.ResourceImporter{
-	State: func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+	StateContext: func(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 		// Expected format: <scope>/<identifier>
 		// Scope examples: "org.project"
 		id := d.Id()
-		parts := strings.Split(id, "/")
-
-		if len(parts) != 2 {
-			return nil, fmt.Errorf("invalid import ID format: %s. Expected: <scope>/<identifier>", id)
+		parts, err := helpers.SplitImportID(id, 2, 2)
+		if err != nil {
+			return nil, fmt.Errorf("%w; expected <scope>/<identifier>", err)
 		}
 
 		scope := parts[0]
@@ -288,7 +278,7 @@ var environmentImporter = &schema.ResourceImporter{
 		orgId = optional.NewString(scopeParts[0])
 		projectId = optional.NewString(scopeParts[1])
 
-		c, ctx := meta.(*internal.Session).GetIDPClientWithContext(context.Background())
+		c, ctx := meta.(*internal.Session).GetIDPClientWithContext(ctx)
 
 		resp, _, err := c.EntitiesApi.GetEntity(ctx, fmt.Sprintf("account.%s", scope), environmentKind, identifier, &idp.EntitiesApiGetEntityOpts{
 			OrgIdentifier:     orgId,

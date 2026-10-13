@@ -152,7 +152,7 @@ func dataSourceInfraModulesRead(ctx context.Context, d *schema.ResourceData, m i
 		nil,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleError(ctx, d, err, httpRes)
 	}
 
 	// Flatten the modules list

@@ -11,8 +11,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/stretchr/testify/require"
 )
 
@@ -23,10 +23,10 @@ func TestAccResourceInfraProviderVersionFile(t *testing.T) {
 	filename := "terraform-provider-test_1.0.0_linux_amd64.zip"
 	resourceName := "harness_platform_infra_provider_version_file.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccInfraProviderVersionFileDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccInfraProviderVersionFileDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceInfraProviderVersionFile(providerType, version, keyId, filename),
@@ -55,10 +55,10 @@ func TestAccResourceInfraProviderVersionFile_DerivedFilename(t *testing.T) {
 	filename := "terraform-provider-test_1.0.0_darwin_amd64.zip"
 	resourceName := "harness_platform_infra_provider_version_file.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccInfraProviderVersionFileDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccInfraProviderVersionFileDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceInfraProviderVersionFileDerivedFilename(providerType, version, keyId, filename),

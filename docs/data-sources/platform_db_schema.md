@@ -34,6 +34,7 @@ data "harness_platform_db_schema" "example" {
 - `migration_type` (String) DB Migration tool type. Valid values are: Liquibase, Flyway
 - `name` (String) Name of the resource.
 - `type` (String) Type of the database schema. Valid values are: Repository, Script
+- `use_percona` (Boolean) If percona-toolkit is enabled for the database schema
 
 ### Read-Only
 
@@ -43,7 +44,6 @@ data "harness_platform_db_schema" "example" {
 - `schema_source` (List of Object) Provides a connector and path at which to find the database schema representation. For Harness Code Repository, connector will be empty. (see [below for nested schema](#nestedatt--schema_source))
 - `service` (String) The service associated with schema
 - `tags` (Set of String) Tags to associate with the resource.
-- `use_percona` (Boolean) If percona-toolkit is enabled for the database schema.
 
 <a id="nestedatt--changelog_script"></a>
 ### Nested Schema for `changelog_script`
@@ -54,7 +54,7 @@ Read-Only:
 - `image` (String)
 - `location` (String)
 - `shell` (String)
-- `toml` (String) [Optional] For flyway migration type only
+- `toml` (String)
 
 
 <a id="nestedatt--schema_source"></a>
@@ -66,4 +66,4 @@ Read-Only:
 - `connector` (String)
 - `location` (String)
 - `repo` (String)
-- `toml` (String) [Optional] For flyway migration type only
+- `toml` (String)

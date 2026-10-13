@@ -1,3 +1,0 @@
-```release-note:bug
-harness_platform_secret_text : fix value field in secret text resource
-```

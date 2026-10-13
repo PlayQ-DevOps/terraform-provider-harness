@@ -57,8 +57,8 @@ resource "harness_platform_connector_jdbc" "test" {
   credentials {
     auth_type = "KeyPair"
     key_pair {
-      username_ref               = "account.user_ref"
-      private_key_file_ref       = "account.private_key_secret"
+      username_ref         = "account.user_ref"
+      private_key_file_ref = "account.private_key_secret"
     }
   }
 }
@@ -73,8 +73,8 @@ resource "harness_platform_connector_jdbc" "test" {
   credentials {
     auth_type = "KeyPair"
     key_pair {
-      username                   = "admin"
-      private_key_file_ref       = "account.private_key_secret"
+      username             = "admin"
+      private_key_file_ref = "account.private_key_secret"
     }
   }
 }

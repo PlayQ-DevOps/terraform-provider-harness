@@ -2,6 +2,7 @@ package provider_registry
 
 import (
 	"context"
+
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -66,7 +67,7 @@ func dataSourceInfraProviderSigningKeyRead(ctx context.Context, d *schema.Resour
 		nil,
 	)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpRes)
+		return helpers.HandleError(ctx, d, err, httpRes)
 	}
 
 	// Find the signing key by ID

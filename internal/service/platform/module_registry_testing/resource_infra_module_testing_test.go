@@ -7,8 +7,8 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccResourceModuleTesting(t *testing.T) {
@@ -21,10 +21,10 @@ func TestAccResourceModuleTesting(t *testing.T) {
 	provisionerVersion := "1.5.0"
 	updatedProvisionerVersion := "1.6.0"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceModuleTestingDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceModuleTestingDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceModuleTesting(name, system, org, project, provisionerType, provisionerVersion),
@@ -61,10 +61,10 @@ func TestAccResourceModuleTestingWithReleasePipeline(t *testing.T) {
 	provisionerType := "terraform"
 	provisionerVersion := "1.5.0"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccResourceModuleTestingDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccResourceModuleTestingDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceModuleTestingWithReleasePipeline(name, system, org, project, provisionerType, provisionerVersion),

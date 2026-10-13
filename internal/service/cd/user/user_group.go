@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/cd/graphql"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -157,8 +158,8 @@ func ResourceUserGroup() *schema.Resource {
 func resourceUserGroupCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c := meta.(*internal.Session).CDClient
 	if c == nil {
-    return diag.Errorf(utils.CDClientAPIKeyError)
-  }
+		return diag.Errorf(utils.CDClientAPIKeyError)
+	}
 	input := &graphql.UserGroup{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
@@ -185,19 +186,18 @@ func resourceUserGroupCreate(ctx context.Context, d *schema.ResourceData, meta i
 func resourceUserGroupRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c := meta.(*internal.Session).CDClient
 	if c == nil {
-    return diag.Errorf(utils.CDClientAPIKeyError)
-  }
+		return diag.Errorf(utils.CDClientAPIKeyError)
+	}
 	id := d.Get("id").(string)
 
 	userGroup, err := c.UserClient.GetUserGroupById(id)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 
 	if userGroup == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+		return helpers.ReadMissing(ctx, d, "user group "+d.Id())
+
 	}
 
 	return readUserGroup(d, userGroup)
@@ -232,8 +232,8 @@ func readUserGroup(d *schema.ResourceData, userGroup *graphql.UserGroup) diag.Di
 func resourceUserGroupUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c := meta.(*internal.Session).CDClient
 	if c == nil {
-    return diag.Errorf(utils.CDClientAPIKeyError)
-  }
+		return diag.Errorf(utils.CDClientAPIKeyError)
+	}
 	input := &graphql.UserGroup{
 		Id:   d.Id(),
 		Name: d.Get("name").(string),
@@ -255,10 +255,10 @@ func resourceUserGroupUpdate(ctx context.Context, d *schema.ResourceData, meta i
 func resourceUserGroupDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c := meta.(*internal.Session).CDClient
 	if c == nil {
-    return diag.Errorf(utils.CDClientAPIKeyError)
-  }
+		return diag.Errorf(utils.CDClientAPIKeyError)
+	}
 	if err := c.UserClient.DeleteUserGroup(d.Id()); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	d.SetId("")

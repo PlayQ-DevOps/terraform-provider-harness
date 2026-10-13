@@ -221,7 +221,7 @@ func ResourceScorecard() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
-		Schema: scorecardSchema(false),
+		Schema: helpers.WithIdentity(scorecardSchema(false), "identifier"),
 	}
 }
 
@@ -236,17 +236,12 @@ func resourceScorecardRead(ctx context.Context, d *schema.ResourceData, meta int
 		HarnessAccount: optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {
-			d.SetId("")
-			return nil
-		}
-		if isNotFoundError(err) {
-			d.SetId("")
-			return nil
-		}
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp, idpNotFound)
 	}
 
+	if resp.Scorecard == nil {
+		return helpers.ReadMissing(ctx, d, "scorecard "+id)
+	}
 	if err := readScorecard(d, resp); err != nil {
 		return diag.Errorf("failed to read IDP scorecard: %v", err)
 	}
@@ -269,7 +264,7 @@ func resourceScorecardCreateOrUpdate(ctx context.Context, d *schema.ResourceData
 		})
 	}
 	if err != nil {
-		return handleIDPWriteApiError("harness_platform_idp_scorecard", err, d, httpResp)
+		return idpHandleWrite(ctx, d, "harness_platform_idp_scorecard", err, httpResp)
 	}
 
 	d.SetId(req.Scorecard.Identifier)
@@ -282,13 +277,7 @@ func resourceScorecardDelete(ctx context.Context, d *schema.ResourceData, meta i
 		HarnessAccount: optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {
-			return nil
-		}
-		if isNotFoundError(err) {
-			return nil
-		}
-		return helpers.HandleApiError(err, d, httpResp)
+		return idpHandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

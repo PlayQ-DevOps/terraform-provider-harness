@@ -10,6 +10,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -120,7 +121,7 @@ func resourceProviderRead(ctx context.Context, d *schema.ResourceData, meta inte
 	resp, httpResp, err := c.ProviderApi.GetProvider(ctx, id, c.AccountId)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readProvider(d, resp.Data)
@@ -143,7 +144,7 @@ func resourceProviderCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 		resp, httpResp, err = c.ProviderApi.CreateProvider(ctx, c.AccountId, &providerParams)
 
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 
 		readCreateProvider(d, resp.Data)
@@ -154,7 +155,7 @@ func resourceProviderCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 		resp, httpResp, err = c.ProviderApi.UpdateProvider(ctx, id, c.AccountId, &providerParams)
 
 		if err != nil {
-			return helpers.HandleApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 
 		readUpdateProvider(d, resp.Data)
@@ -168,7 +169,7 @@ func resourceProviderDelete(ctx context.Context, d *schema.ResourceData, meta in
 
 	resp, httpResp, err := c.ProviderApi.DeleteProvider(ctx, d.Id(), c.AccountId)
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	readDeleteProvider(d, resp.Data)
@@ -182,18 +183,11 @@ func createProvider(d *schema.ResourceData) *nextgen.ProviderCreateRequest {
 	if len(specData) > 0 {
 		specMap := specData[0].(map[string]interface{})
 
-		delegateInterfaces, ok := specMap["delegate_selectors"].([]interface{})
-		if !ok {
-			log.Fatalf("delegate_selectors is not a []interface{}")
-		}
-
+		// The schema guarantees a list of strings; anything else is simply ignored rather than
+		// aborting the whole plugin process.
 		var delegateSelectors []string
-		for _, v := range delegateInterfaces {
-			str, ok := v.(string)
-			if !ok {
-				log.Fatalf("One of the delegate_selectors is not a string")
-			}
-			delegateSelectors = append(delegateSelectors, str)
+		if delegateInterfaces, ok := specMap["delegate_selectors"].([]interface{}); ok {
+			delegateSelectors = utils.InterfaceSliceToStringSlice(delegateInterfaces)
 		}
 
 		if specMap["type"] == "BITBUCKET_SERVER" {

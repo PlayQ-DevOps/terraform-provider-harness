@@ -27,6 +27,7 @@ func ResourceTemplateFilters() *schema.Resource {
 				Description: "Unique identifier of the resource.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"name": {
 				Description: "Name of the template filters.",
@@ -38,16 +39,19 @@ func ResourceTemplateFilters() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"Template"}, false),
+				ForceNew:     true,
 			},
 			"org_id": {
 				Description: "Organization Identifier for the Entity.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project Identifier for the Entity.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"filter_properties": {
 				Description: "Properties of the filters entity defined in Harness.",
@@ -97,7 +101,7 @@ func resourceTemplateFiltersRead(ctx context.Context, d *schema.ResourceData, me
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readTemplateFilter(d, resp.Data)
@@ -122,7 +126,7 @@ func resourceTemplateFiltersCreateOrUpdate(ctx context.Context, d *schema.Resour
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readTemplateFilter(d, resp.Data)
@@ -141,7 +145,7 @@ func resourceTemplateFiltersDelete(ctx context.Context, d *schema.ResourceData, 
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

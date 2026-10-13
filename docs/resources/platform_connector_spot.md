@@ -65,12 +65,12 @@ resource "harness_platform_connector_spot" "spot" {
 
 - `identifier` (String) Unique identifier of the resource.
 - `name` (String) Name of the resource.
-- `permanent_token` (Block List, Min: 1, Max: 1) Authenticate to Spot using account id and permanent token. (see [below for nested schema](#nestedblock--permanent_token))
 
 ### Optional
 
 - `description` (String) Description of the resource.
 - `org_id` (String) Unique identifier of the organization.
+- `permanent_token` (Block List) Authenticate to Spot using account id and permanent token. (see [below for nested schema](#nestedblock--permanent_token))
 - `project_id` (String) Unique identifier of the project.
 - `tags` (Set of String) Tags to associate with the resource.
 

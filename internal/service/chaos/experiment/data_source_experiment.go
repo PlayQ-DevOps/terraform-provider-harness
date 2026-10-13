@@ -9,6 +9,7 @@ import (
 	"github.com/harness/harness-go-sdk/harness/chaos"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -209,7 +210,7 @@ func dataSourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta 
 
 	// Option 1: Lookup by identity (direct GET)
 	if identity, ok := d.GetOk("identity"); ok {
-		log.Printf("[DEBUG] Looking up experiment by identity: %s", identity.(string))
+		tflog.Debug(ctx, fmt.Sprintf("Looking up experiment by identity: %s", identity.(string)))
 
 		experiment, httpResp, err := c.DefaultApi.GetChaosV2Experiment(
 			ctx,
@@ -220,7 +221,7 @@ func dataSourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta 
 		)
 
 		if err != nil {
-			return helpers.HandleChaosReadApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 
 		// Set ID
@@ -232,7 +233,7 @@ func dataSourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta 
 
 	// Option 2: Lookup by name (LIST with filter)
 	if name, ok := d.GetOk("name"); ok {
-		log.Printf("[DEBUG] Looking up experiment by name: %s", name.(string))
+		tflog.Debug(ctx, fmt.Sprintf("Looking up experiment by name: %s", name.(string)))
 
 		opts := &chaos.DefaultApiListChaosV2ExperimentOpts{
 			ExperimentName: optional.NewString(name.(string)),
@@ -249,7 +250,7 @@ func dataSourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta 
 		)
 
 		if err != nil {
-			return helpers.HandleChaosReadApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 
 		if len(resp.Data) == 0 {
@@ -264,8 +265,7 @@ func dataSourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta 
 		experiment := resp.Data[0]
 		// TypesExperimentV2 uses ExperimentID field
 		experimentIdentity := experiment.ExperimentID
-
-		log.Printf("[DEBUG] Found experiment with identity: %s, fetching full details", experimentIdentity)
+		tflog.Debug(ctx, fmt.Sprintf("Found experiment with identity: %s, fetching full details", experimentIdentity))
 
 		fullExperiment, httpResp, err := c.DefaultApi.GetChaosV2Experiment(
 			ctx,
@@ -276,7 +276,7 @@ func dataSourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta 
 		)
 
 		if err != nil {
-			return helpers.HandleChaosReadApiError(err, d, httpResp)
+			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 
 		d.SetId(fmt.Sprintf("%s/%s/%s", orgID, projectID, fullExperiment.Identity))

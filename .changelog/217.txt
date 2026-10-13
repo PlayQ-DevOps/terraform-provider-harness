@@ -1,3 +1,0 @@
-```release-note:bug
-resource/harness_platform_service_account: Fix email field in service account
-```

@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	splitsdk "github.com/harness/harness-go-sdk/harness/split"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -134,29 +135,24 @@ func resourceFMESegmentRead(ctx context.Context, d *schema.ResourceData, meta in
 	}
 	seg, err := client.Segments.Get(wsID, d.Id())
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if seg == nil {
-		d.SetId("")
-		return nil
+		return helpers.ReadMissing(ctx, d, "FME segment "+d.Id())
+
 	}
 	if err := d.Set("name", seg.Name); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("description", seg.Description); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
-	switch {
-	case seg.TrafficType != nil && seg.TrafficType.ID != "":
+	if seg.TrafficType != nil && seg.TrafficType.ID != "" {
 		if err := d.Set("traffic_type_id", seg.TrafficType.ID); err != nil {
-			return diag.FromErr(err)
-		}
-	default:
-		// Split list/get may omit trafficType; keep configured state.
-		if err := d.Set("traffic_type_id", d.Get("traffic_type_id")); err != nil {
-			return diag.FromErr(err)
+			return helpers.HandleRead(ctx, d, err, nil)
 		}
 	}
+
 	return nil
 }
 
@@ -170,7 +166,7 @@ func resourceFMESegmentDelete(ctx context.Context, d *schema.ResourceData, meta 
 		return diags
 	}
 	if err := client.Segments.Delete(wsID, d.Id()); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 	return nil
 }

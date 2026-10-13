@@ -1,3 +1,0 @@
-```release-note:bug
-data-source/harness_platform_delegatetoken: Fixed panic when fetching default delegate tokens with nil CreatedByNgUser field
-```

@@ -1,3 +1,0 @@
-```release-note:bug
- - Removed type support from the service dependencies since we only support inside the dependencyMetadata.
-```

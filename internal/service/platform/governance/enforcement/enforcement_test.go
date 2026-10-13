@@ -9,8 +9,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 func TestAccResourceRuleEnforcement(t *testing.T) {
@@ -21,10 +21,10 @@ func TestAccResourceRuleEnforcement(t *testing.T) {
 	resourceName := "harness_governance_rule_enforcement.test"
 	awsAccountId := os.Getenv("AWS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRuleEnforcementDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRuleEnforcementDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRuleEnforcement(name, awsAccountId),
@@ -99,7 +99,7 @@ func TestAccResourceRuleEnforcement(t *testing.T) {
 // create instead of erroring out with "giving up after 11 attempt(s)".
 //
 // Regression test for CCM-32336. The enforcement Read() routes through
-// helpers.HandleReadApiError which clears state on 404 + ENTITY_NOT_FOUND.
+// helpers.HandleRead which clears state on 404 + ENTITY_NOT_FOUND.
 func TestAccResourceRuleEnforcement_CCM32336_OutOfBandDeleteRecreates(t *testing.T) {
 	name := fmt.Sprintf("%s_%s", t.Name(), utils.RandStringBytes(5))
 	resourceName := "harness_governance_rule_enforcement.test"
@@ -107,10 +107,10 @@ func TestAccResourceRuleEnforcement_CCM32336_OutOfBandDeleteRecreates(t *testing
 
 	var enforcementIDBefore string
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRuleEnforcementDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRuleEnforcementDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRuleEnforcement(name, awsAccountId),
@@ -157,10 +157,10 @@ func TestAccResourceRuleEnforcementWithFalseBooleans(t *testing.T) {
 	resourceName := "harness_governance_rule_enforcement.test"
 	awsAccountId := os.Getenv("AWS_ACCOUNT_ID")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccRuleEnforcementDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccRuleEnforcementDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRuleEnforcementWithFalseBooleans(name, awsAccountId),

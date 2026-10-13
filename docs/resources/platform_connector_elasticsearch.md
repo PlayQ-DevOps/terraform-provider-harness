@@ -66,14 +66,14 @@ resource "harness_platform_connector_elasticsearch" "no_authentication" {
 
 ### Optional
 
-- `api_token` (Block List, Max: 1) Authenticate to ElasticSearch using api token. (see [below for nested schema](#nestedblock--api_token))
+- `api_token` (Block List) Authenticate to ElasticSearch using api token. (see [below for nested schema](#nestedblock--api_token))
 - `delegate_selectors` (Set of String) Tags to filter delegates for connection.
 - `description` (String) Description of the resource.
-- `no_authentication` (Block List, Max: 1) No Authentication to ElasticSearch (see [below for nested schema](#nestedblock--no_authentication))
+- `no_authentication` (Block List) No Authentication to ElasticSearch (see [below for nested schema](#nestedblock--no_authentication))
 - `org_id` (String) Unique identifier of the organization.
 - `project_id` (String) Unique identifier of the project.
 - `tags` (Set of String) Tags to associate with the resource.
-- `username_password` (Block List, Max: 1) Authenticate to ElasticSearch using username and password. (see [below for nested schema](#nestedblock--username_password))
+- `username_password` (Block List) Authenticate to ElasticSearch using username and password. (see [below for nested schema](#nestedblock--username_password))
 
 ### Read-Only
 

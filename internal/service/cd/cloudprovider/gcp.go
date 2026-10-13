@@ -64,10 +64,10 @@ func resourceCloudProviderGcpRead(ctx context.Context, d *schema.ResourceData, m
 	}
 	cp := &cac.GcpCloudProvider{}
 	if err := c.ConfigAsCodeClient.GetCloudProviderById(d.Id(), cp); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	} else if cp.IsEmpty() {
 		d.SetId("")
-		d.MarkNewResource()
+
 		return nil
 	}
 
@@ -86,7 +86,7 @@ func readCloudProviderGcp(c *cd.ApiClient, d *schema.ResourceData, cp *cac.GcpCl
 
 	scope, err := usagescope.FlattenUsageRestrictions(c, cp.UsageRestrictions)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(context.TODO(), d, err, nil)
 	}
 	d.Set("usage_scope", scope)
 

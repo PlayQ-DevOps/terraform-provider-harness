@@ -63,7 +63,7 @@ import (
 	"testing"
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 // --- Environment variable constants ---
@@ -112,9 +112,9 @@ func TestResourceVMRuleCrossAccountHTTP(t *testing.T) {
 	name := fmt.Sprintf("terr-xvm-h-%s", randAlnum(5))
 	resourceName := "harness_autostopping_rule_vm.xacct"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testVMCrossAccountHTTP(name, env, true),
@@ -143,9 +143,9 @@ func TestResourceVMRuleCrossAccountTCP(t *testing.T) {
 	name := fmt.Sprintf("terr-xvm-t-%s", randAlnum(5))
 	resourceName := "harness_autostopping_rule_vm.xacct"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testVMCrossAccountTCP(name, env, true),

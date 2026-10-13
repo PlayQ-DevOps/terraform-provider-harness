@@ -1,2 +1,0 @@
-```release-note:fix
-resource: platform_gitops_applications: Fixed multi-source GitOps application configuration handling. This resolves the issue with "Invalid address to set" errors when using multiple sources in GitOps applications.```

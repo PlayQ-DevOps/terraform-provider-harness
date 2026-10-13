@@ -5,6 +5,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
+	"github.com/harness/terraform-provider-harness/internal/service/platform/connector/connectorbase"
 	"github.com/harness/terraform-provider-harness/internal/utils"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -16,12 +17,12 @@ func ResourceConnectorGCPSecretManager() *schema.Resource {
 		ReadContext:   resourceConnectorGcpSMRead,
 		CreateContext: resourceConnectorGcpSMCreateOrUpdate,
 		UpdateContext: resourceConnectorGcpSMCreateOrUpdate,
-		DeleteContext: resourceConnectorDelete,
+		DeleteContext: connectorbase.Delete,
 		Importer:      helpers.MultiLevelResourceImporter,
 
 		Schema: map[string]*schema.Schema{
 			"credentials_ref": {
-				Description: "Reference to the secret containing credentials of IAM service account for Google Secret Manager." + secret_ref_text,
+				Description: "Reference to the secret containing credentials of IAM service account for Google Secret Manager." + helpers.Descriptions.SecretRefText.String(),
 				Type:        schema.TypeString,
 				Optional:    true,
 				ConflictsWith: []string{
@@ -128,7 +129,7 @@ func ResourceConnectorGCPSecretManager() *schema.Resource {
 }
 
 func resourceConnectorGcpSMRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	conn, err := resourceConnectorReadBase(ctx, d, meta, nextgen.ConnectorTypes.GcpSecretManager)
+	conn, err := connectorbase.Read(ctx, d, meta, nextgen.ConnectorTypes.GcpSecretManager)
 	if err != nil {
 		return err
 	}
@@ -147,7 +148,7 @@ func resourceConnectorGcpSMRead(ctx context.Context, d *schema.ResourceData, met
 func resourceConnectorGcpSMCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	conn := buildConnectorGcpSM(d)
 
-	newConn, err := resourceConnectorCreateOrUpdateBase(ctx, d, meta, conn)
+	newConn, err := connectorbase.CreateOrUpdate(ctx, d, meta, conn)
 	if err != nil {
 		return err
 	}

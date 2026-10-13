@@ -212,7 +212,7 @@ func TestResourceSettingImportSearchesCategories(t *testing.T) {
 
 	d := schema.TestResourceDataRaw(t, ResourceSetting().Schema, map[string]interface{}{})
 	d.SetId("org/" + testSettingId)
-	imported, err := ResourceSetting().Importer.State(d, session)
+	imported, err := ResourceSetting().Importer.StateContext(context.Background(), d, session)
 	require.NoError(t, err)
 	d = imported[0]
 
@@ -230,7 +230,7 @@ func TestResourceSettingImportUnknownSetting(t *testing.T) {
 
 	d := schema.TestResourceDataRaw(t, ResourceSetting().Schema, map[string]interface{}{})
 	d.SetId("does_not_exist")
-	imported, err := ResourceSetting().Importer.State(d, session)
+	imported, err := ResourceSetting().Importer.StateContext(context.Background(), d, session)
 	require.NoError(t, err)
 
 	diags := resourceSettingRead(context.Background(), imported[0], session)
@@ -242,7 +242,7 @@ func importSettingData(t *testing.T, session *internal.Session, id string) *sche
 	t.Helper()
 	d := schema.TestResourceDataRaw(t, ResourceSetting().Schema, map[string]interface{}{})
 	d.SetId(id)
-	imported, err := ResourceSetting().Importer.State(d, session)
+	imported, err := ResourceSetting().Importer.StateContext(context.Background(), d, session)
 	require.NoError(t, err)
 	return imported[0]
 }

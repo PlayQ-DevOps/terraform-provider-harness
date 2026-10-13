@@ -2,11 +2,12 @@ package central_notification_rule_test
 
 import (
 	"fmt"
-	"github.com/harness/harness-go-sdk/harness/utils"
-	"github.com/harness/terraform-provider-harness/internal/acctest"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/harness/harness-go-sdk/harness/utils"
+	"github.com/harness/terraform-provider-harness/internal/acctest"
+
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccDataSourceCentralNotificationRule_basic(t *testing.T) {
@@ -15,8 +16,8 @@ func TestAccDataSourceCentralNotificationRule_basic(t *testing.T) {
 	resourceName := "data.harness_platform_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceCentralNotificationRuleConfig(rName, id),
@@ -38,8 +39,8 @@ func TestAccDataSourceCentralNotificationRule_multipleConditions(t *testing.T) {
 	resourceName := "data.harness_platform_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceCentralNotificationRuleMultipleConditions(rName, id),
@@ -61,8 +62,8 @@ func TestAccDataSourceCentralNotificationRule_multipleChannels(t *testing.T) {
 	resourceName := "data.harness_platform_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceCentralNotificationRuleMultipleChannels(rName, id),
@@ -83,8 +84,8 @@ func TestAccDataSourceCentralNotificationRule_disabled(t *testing.T) {
 	resourceName := "data.harness_platform_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceCentralNotificationRuleDisabled(rName, id),
@@ -104,8 +105,8 @@ func TestAccDataSourceCentralNotificationRule_deploymentEvents(t *testing.T) {
 	resourceName := "data.harness_platform_central_notification_rule.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceCentralNotificationRuleDeploymentEvents(rName, id),

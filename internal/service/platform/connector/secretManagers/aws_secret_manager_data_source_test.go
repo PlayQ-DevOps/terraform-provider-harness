@@ -6,7 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccDataSourceConnectorAwsSM_inherit(t *testing.T) {
@@ -16,9 +16,9 @@ func TestAccDataSourceConnectorAwsSM_inherit(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceConnectorAwsSM_inherit(name),
@@ -44,9 +44,9 @@ func TestProjectDataSourceConnectorAwsSM_inherit(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectDataSourceConnectorAwsSM_inherit(name),
@@ -72,9 +72,9 @@ func TestOrgDataSourceConnectorAwsSM_inherit(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgDataSourceConnectorAwsSM_inherit(name),
@@ -101,9 +101,9 @@ func TestAccDataSourceConnectorAwsSM_manual(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -132,9 +132,9 @@ func TestAccDataSourceConnectorAwsSM_manualWithUsePutSecretTrue(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -163,9 +163,9 @@ func TestProjectDataSourceConnectorAwsSM_manual(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -192,9 +192,9 @@ func TestOrgDataSourceConnectorAwsSM_manual(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"time": {},
 		},
@@ -222,9 +222,9 @@ func TestAccDataSourceConnectorAwsSM_assumerole(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceConnectorAwsSM_assumerole(name),
@@ -251,9 +251,9 @@ func TestProjectDataSourceConnectorAwsSM_assumerole(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectDataSourceConnectorAwsSM_assumerole(name),
@@ -280,9 +280,9 @@ func TestOrgDataSourceConnectorAwsSM_assumerole(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgDataSourceConnectorAwsSM_assumerole(name),
@@ -310,9 +310,9 @@ func TestAccDataSourceConnectorAwsSM_oidc_platform(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceConnectorAwsSM_oidc_platform(name),
@@ -339,9 +339,9 @@ func TestOrgDataSourceConnectorAwsSM_oidc_platform(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgDataSourceConnectorAwsSM_oidc_platform(name),
@@ -369,9 +369,9 @@ func TestProjectDataSourceConnectorAwsSM_oidc_platform(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectDataSourceConnectorAwsSM_oidc_platform(name),
@@ -400,9 +400,9 @@ func TestAccDataSourceConnectorAwsSM_oidc_delegate(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceConnectorAwsSM_oidc_delegate(name),
@@ -431,9 +431,9 @@ func TestOrgDataSourceConnectorAwsSM_oidc_delegate(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testOrgDataSourceConnectorAwsSM_oidc_delegate(name),
@@ -463,9 +463,9 @@ func TestProjectDataSourceConnectorAwsSM_oidc_delegate(t *testing.T) {
 		resourceName = "data.harness_platform_connector_aws_secret_manager.test"
 	)
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testProjectDataSourceConnectorAwsSM_oidc_delegate(name),

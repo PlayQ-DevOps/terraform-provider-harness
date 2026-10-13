@@ -8,8 +8,8 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 // SanitizeK8sResourceName converts a string to be compatible with Kubernetes resource name requirements
@@ -43,10 +43,10 @@ func TestAccResourceChaosInfrastructureV2_basic(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_infrastructure_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosInfrastructureV2Destroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosInfrastructureV2Destroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosInfrastructureV2ConfigBasic(rName, id, "KUBERNETESV2", "NAMESPACE"),
@@ -79,10 +79,10 @@ func TestAccResourceChaosInfrastructureV2_Update(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_infrastructure_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosInfrastructureV2Destroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosInfrastructureV2Destroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosInfrastructureV2ConfigBasic(rName, id, "KUBERNETESV2", "NAMESPACE"),
@@ -121,10 +121,10 @@ func TestAccResourceChaosInfrastructureV2_Resources(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_infrastructure_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosInfrastructureV2Destroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosInfrastructureV2Destroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosInfrastructureV2ConfigResources(rName, id, "KUBERNETESV2", "NAMESPACE"),
@@ -153,10 +153,10 @@ func TestAccResourceChaosInfrastructureV2_KubernetesType(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_infrastructure_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccChaosInfrastructureV2Destroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccChaosInfrastructureV2Destroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosInfrastructureV2ConfigBasic(rName, id, "KUBERNETESV2", "NAMESPACE"),
@@ -175,9 +175,9 @@ func TestAccResourceChaosInfrastructureV2_Import(t *testing.T) {
 	rName := id
 	resourceName := "harness_chaos_infrastructure_v2.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceChaosInfrastructureV2ConfigBasic(rName, id, "KUBERNETESV2", "NAMESPACE"),

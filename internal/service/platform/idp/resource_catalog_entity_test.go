@@ -9,8 +9,8 @@ import (
 	"github.com/harness/harness-go-sdk/harness/idp"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 )
@@ -21,10 +21,10 @@ func TestAccResourceCatalogEntity(t *testing.T) {
 	updatedDescription := fmt.Sprintf("%s_updated", description)
 	resourceName := "harness_platform_idp_catalog_entity.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCatalogEntityDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCatalogEntityDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceCatalogEntity(id, description),
@@ -55,10 +55,10 @@ func TestAccResourceCatalogEntityDetectsDrift(t *testing.T) {
 	driftedDescription := fmt.Sprintf("%s_drifted", description)
 	resourceName := "harness_platform_idp_catalog_entity.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCatalogEntityDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCatalogEntityDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceCatalogEntity(id, description),
@@ -122,10 +122,10 @@ func TestAccResourceRemoteCatalogEntity(t *testing.T) {
 	id := fmt.Sprintf("%s_%s", description, utils.RandStringBytes(5))
 	resourceName := "harness_platform_idp_catalog_entity.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCatalogEntityDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCatalogEntityDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceRemoteCatalogEntity(id, description),
@@ -221,10 +221,10 @@ func TestAccResourceImportRemoteCatalogEntity(t *testing.T) {
 
 	resourceName := "harness_platform_idp_catalog_entity.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      testAccCatalogEntityDestroy(resourceName),
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
+		CheckDestroy:             testAccCatalogEntityDestroy(resourceName),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceImportRemoteCatalogEntity(),

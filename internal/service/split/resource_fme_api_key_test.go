@@ -6,7 +6,7 @@ import (
 
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 // TestAccResourceFMEApiKey_basic creates a real server-side API key in Split (destroyed at end of test).
@@ -19,9 +19,9 @@ func TestAccResourceFMEApiKey_basic(t *testing.T) {
 	keyName := "tf_acc_key_" + testAccFMEAlphanum(8)
 	res := "harness_fme_api_key.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFMEApiKey(id, envName, keyName, "server_side"),
@@ -83,9 +83,9 @@ func TestAccResourceFMEApiKey_clientSide(t *testing.T) {
 	keyName := "tf_acc_cs_key_" + testAccFMEAlphanum(8)
 	res := "harness_fme_api_key.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFMEApiKey(id, envName, keyName, "client_side"),

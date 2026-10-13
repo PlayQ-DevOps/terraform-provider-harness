@@ -1,3 +1,0 @@
-```release-note:bug
-docs: Remove invalid identifier from harness_governance_rule and harness_governance_rule_enforcement examples (CCM-32943)
-```

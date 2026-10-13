@@ -3,8 +3,6 @@ package applications
 import (
 	"context"
 	"fmt"
-	"reflect"
-	"sort"
 
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
@@ -25,35 +23,6 @@ func ResourceGitopsApplication() *schema.Resource {
 		DeleteContext: resourceGitopsApplicationDelete,
 		Importer:      helpers.GitopsAgentApplicationImporter,
 
-		CustomizeDiff: func(ctx context.Context, diff *schema.ResourceDiff, i interface{}) error {
-			var e error
-			if diff.HasChange("project_id") && diff.Id() != "" {
-				e = fmt.Errorf("field 'project_id' cannot be changed after the resource is created")
-			}
-			if diff.HasChange("org_id") && diff.Id() != "" {
-				if e != nil {
-					e = fmt.Errorf("field 'org_id' cannot be changed after the resource is created:%w", e)
-				} else {
-					e = fmt.Errorf("field 'org_id' cannot be changed after the resource is created")
-				}
-			}
-			if diff.HasChange("agent_id") && diff.Id() != "" {
-				if e != nil {
-					e = fmt.Errorf("field 'agent_id' cannot be changed after the resource is created:%v", e)
-				} else {
-					e = fmt.Errorf("field 'agent_id' cannot be changed after the resource is created")
-				}
-			}
-			if diff.HasChange("name") && diff.Id() != "" {
-				if e != nil {
-					e = fmt.Errorf("field 'name' cannot be changed after the resource is created:%w", e)
-				} else {
-					e = fmt.Errorf("field 'name' cannot be changed after the resource is created")
-				}
-			}
-			return e
-		},
-
 		Schema: map[string]*schema.Schema{
 			"account_id": {
 				Description: "Account identifier of the GitOps application.",
@@ -66,26 +35,27 @@ func ResourceGitopsApplication() *schema.Resource {
 				Description: "Organization identifier of the GitOps application.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project identifier of the GitOps application.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"identifier": {
 				Description: "Identifier of the GitOps application.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Deprecated:  "This field is deprecated and will be removed in a future release.",
-				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					// Implement logic to suppress the diff here
-					return true
-				},
+				ForceNew:    true,
 			},
 			"agent_id": {
 				Description: "Agent identifier of the GitOps application.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"cluster_id": {
 				Description: "Cluster identifier of the GitOps application.",
@@ -99,27 +69,10 @@ func ResourceGitopsApplication() *schema.Resource {
 			},
 			"repo_ids": {
 				Description: "List of repository identifiers of the GitOps for Multi-Source application. Not required if skipRepoValidation is set to true.",
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
-				},
-				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					// Convert old and new string lists into slices
-					oldIF, newIF := d.GetChange("repo_ids")
-					oldSlice := oldIF.([]interface{})
-					newSlice := newIF.([]interface{})
-
-					// Sort the slices to ignore order differences
-					sort.Slice(oldSlice, func(i, j int) bool {
-						return oldSlice[i].(string) < oldSlice[j].(string)
-					})
-					sort.Slice(newSlice, func(i, j int) bool {
-						return newSlice[i].(string) < newSlice[j].(string)
-					})
-
-					// Compare sorted slices
-					return reflect.DeepEqual(oldSlice, newSlice)
 				},
 			},
 			"upsert": {
@@ -135,8 +88,8 @@ func ResourceGitopsApplication() *schema.Resource {
 			"project": {
 				Description: "The ArgoCD project name corresponding to this GitOps application. An empty string means that the GitOps application belongs to the default project created by Harness.",
 				Type:        schema.TypeString,
-				Optional:    true,
 				Computed:    true,
+				Optional:    true,
 			},
 			"kind": {
 				Description: "Kind of the GitOps application.",
@@ -167,6 +120,7 @@ func ResourceGitopsApplication() *schema.Resource {
 				Description: "Name of the GitOps application.",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"skip_repo_validation": {
 				Description:   "Indicates if the GitOps application should skip validate repository definition exists.",
@@ -201,8 +155,8 @@ func ResourceGitopsApplication() *schema.Resource {
 									"namespace": {
 										Description: "Namespace of the GitOps application. An empty namespace is equivalent to the namespace of the GitOps agent.",
 										Type:        schema.TypeString,
-										Optional:    true,
 										Computed:    true,
+										Optional:    true,
 									},
 									"generation": {
 										Description: "A sequence number representing a specific generation of the desired state. This is a read-only value populated by the system.",
@@ -332,7 +286,7 @@ func resourceGitopsApplicationCreate(ctx context.Context, d *schema.ResourceData
 		skipRepoValidation = attr.(bool)
 	}
 	if attr, ok := d.GetOk("repo_ids"); ok {
-		repoIdentifiers := attr.([]interface{})
+		repoIdentifiers := attr.(*schema.Set).List()
 		repoIdentifiersList = make([]string, len(repoIdentifiers))
 		for i, repo := range repoIdentifiers {
 			repoIdentifiersList[i] = repo.(string)
@@ -350,15 +304,11 @@ func resourceGitopsApplicationCreate(ctx context.Context, d *schema.ResourceData
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	err = setApplication(d, &resp)
 	if err != nil {
 		return diag.FromErr(err)
@@ -392,16 +342,12 @@ func resourceGitopsApplicationRead(ctx context.Context, d *schema.ResourceData, 
 		QueryRepo: optional.NewString(repoIdentifier),
 	})
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	err = setApplication(d, &resp)
 	if err != nil {
 		return diag.FromErr(err)
@@ -485,7 +431,7 @@ func resourceGitopsApplicationUpdate(ctx context.Context, d *schema.ResourceData
 		skipRepoValidation = attr.(bool)
 	}
 	if attr, ok := d.GetOk("repo_ids"); ok {
-		repoIdentifiers := attr.([]interface{})
+		repoIdentifiers := attr.(*schema.Set).List()
 		repoIdentifiersList = make([]string, len(repoIdentifiers))
 		for i, repo := range repoIdentifiers {
 			repoIdentifiersList[i] = repo.(string)
@@ -500,15 +446,11 @@ func resourceGitopsApplicationUpdate(ctx context.Context, d *schema.ResourceData
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
-	if &resp == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
+
 	err = setApplication(d, &resp)
 	if err != nil {
 		return diag.FromErr(err)
@@ -557,7 +499,7 @@ func resourceGitopsApplicationDelete(ctx context.Context, d *schema.ResourceData
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

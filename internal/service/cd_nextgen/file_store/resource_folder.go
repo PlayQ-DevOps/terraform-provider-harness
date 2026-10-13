@@ -102,11 +102,11 @@ func resourceFileStoreNodeFolderRead(ctx context.Context, d *schema.ResourceData
 	})
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
-		return nil
+		return helpers.ReadMissing(ctx, d, "folder "+id)
 	}
 
 	readFolderNode(d, resp.Data, optional.EmptyInterface())
@@ -126,21 +126,21 @@ func resourceFileStoreNodeFolderCreateOrUpdate(ctx context.Context, d *schema.Re
 	if id == "" {
 		createRequest, internalErr := buildFileStoreApiFolderCreateRequest(d)
 		if internalErr != nil {
-			return helpers.HandleApiError(internalErr, d, httpResp)
+			return helpers.HandleWrite(ctx, d, internalErr, httpResp)
 		}
 		fileContent = createRequest.Content
 		resp, httpResp, err = c.FileStoreApi.Create(ctx, c.AccountId, createRequest)
 	} else {
 		updateRequest, internalErr := buildFileStoreApiFolderUpdateRequest(d)
 		if internalErr != nil {
-			return helpers.HandleApiError(internalErr, d, httpResp)
+			return helpers.HandleWrite(ctx, d, internalErr, httpResp)
 		}
 		fileContent = updateRequest.Content
 		resp, httpResp, err = c.FileStoreApi.Update(ctx, c.AccountId, id, updateRequest)
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readFolderNode(d, resp.Data, fileContent)
@@ -157,7 +157,7 @@ func resourceFileStoreNodeFolderDelete(ctx context.Context, d *schema.ResourceDa
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

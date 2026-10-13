@@ -25,11 +25,11 @@ func resourceSecretReadBase(ctx context.Context, d *schema.ResourceData, meta in
 
 	resp, httpResp, err := c.SecretsApi.GetSecretV2(ctx, id, c.AccountId, getReadSecretOpts(d))
 	if err != nil {
-		return nil, helpers.HandleReadApiError(err, d, httpResp)
+		return nil, helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if resp.Data == nil {
-		return nil, nil
+	if resp.Data == nil || resp.Data.Secret == nil {
+		return nil, helpers.ReadMissing(ctx, d, "secret "+id)
 	}
 
 	if secretType != resp.Data.Secret.Type_ {
@@ -73,7 +73,7 @@ func resourceSecretCreateOrUpdateBase(ctx context.Context, d *schema.ResourceDat
 	}
 
 	if err != nil {
-		return nil, helpers.HandleApiError(err, d, httpResp)
+		return nil, helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil || resp.Data.Secret == nil {
@@ -96,24 +96,16 @@ func buildField(d *schema.ResourceData, field string) optional.String {
 	return optional.EmptyString()
 }
 
-func BuildFieldBool(d *schema.ResourceData, field string) optional.Bool {
-	if b, ok := d.GetOk(field); ok {
-		return optional.NewBool(b.(bool))
-	}
-
-	return optional.EmptyBool()
-}
-
 func resourceSecretDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 
 	_, httpResp, err := c.SecretsApi.DeleteSecretV2(ctx, d.Id(), c.AccountId, &nextgen.SecretsApiDeleteSecretV2Opts{
 		OrgIdentifier:     buildField(d, "org_id"),
 		ProjectIdentifier: buildField(d, "project_id"),
-		ForceDelete:       BuildFieldBool(d, "force_delete"),
+		ForceDelete:       helpers.BuildFieldBool(d, "force_delete"),
 	})
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

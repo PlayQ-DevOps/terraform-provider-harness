@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/harness/terraform-provider-harness/internal/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
 /*
@@ -28,9 +28,9 @@ func TestAccDataSourceDelegateDefaultVersion(t *testing.T) {
 	t.Setenv("HARNESS_PLATFORM_API_KEY", os.Getenv("HARNESS_PLATFORM_ACCOUNT_LEVEL_API_KEY"))
 	resourceName := "data.harness_platform_delegate_default_version.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDelegateDefaultVersionImplicitAccount(),
@@ -50,9 +50,9 @@ func TestAccDataSourceDelegateDefaultVersionOrgLevelImplicitAccount(t *testing.T
 	orgId := os.Getenv("LATEST_DELEGATE_ORGANIZATION_ID")
 	resourceName := "data.harness_platform_delegate_default_version.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDelegateDefaultVersionOrgLevelImplicitAccount(orgId),
@@ -74,9 +74,9 @@ func TestAccDataSourceDelegateDefaultVersionProjectLevel(t *testing.T) {
 	projectId := os.Getenv("LATEST_DELEGATE_PROJECT_ID")
 	resourceName := "data.harness_platform_delegate_default_version.test"
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { acctest.TestAccPreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { acctest.TestAccPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceDelegateDefaultVersionProjectLevel(orgId, projectId),
@@ -140,4 +140,3 @@ data "harness_platform_delegate_default_version" "test" {
 }
 `, orgId, projectId)
 }
-

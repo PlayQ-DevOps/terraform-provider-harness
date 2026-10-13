@@ -40,16 +40,16 @@ func ResourceEnvironment() *schema.Resource {
 				ValidateFunc: validation.StringInSlice(nextgen.EnvironmentTypeValues, false),
 			},
 			"yaml": {
-				Description:      "Environment YAML." + helpers.Descriptions.YamlText.String(),
+				Description:      "Environment YAML." + helpers.Descriptions.YamlText.String() + " When omitted, the YAML Harness generates is read into state.",
 				Type:             schema.TypeString,
 				Optional:         true,
+				Computed:         true,
 				DiffSuppressFunc: helpers.YamlDiffSuppressFunction,
 			},
 			"force_delete": {
 				Description: "Enable this flag for force deletion of environments",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 			},
 			"git_details": {
 				Description: "Contains parameters related to creating an Entity for Git Experience.",
@@ -154,13 +154,11 @@ func ResourceEnvironment() *schema.Resource {
 							Description: "force import environment from remote even if same file path already exist",
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Computed:    true,
 						},
 						"import_from_git": {
 							Description: "import environment from git",
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Computed:    true,
 						},
 					},
 				},
@@ -192,7 +190,7 @@ func resourceEnvironmentRead(ctx context.Context, d *schema.ResourceData, meta i
 	resp, httpResp, err := c.EnvironmentsApi.GetEnvironmentV2(ctx, d.Id(), c.AccountId, envParams)
 
 	if err != nil {
-		return helpers.HandleReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readEnvironment(d, resp.Data.Environment)
@@ -243,7 +241,7 @@ func resourceEnvironmentCreateOrUpdate(ctx context.Context, d *schema.ResourceDa
 	}
 
 	if err != nil {
-		return helpers.HandleGitApiErrorWithResourceData(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	if d.Get("git_details.0.import_from_git").(bool) {
@@ -261,7 +259,7 @@ func resourceEnvironmentCreateOrUpdate(ctx context.Context, d *schema.ResourceDa
 			resp, httpResp, err = c.EnvironmentsApi.GetEnvironmentV2(ctx, d.Id(), c.AccountId, envParams)
 
 			if err != nil {
-				return helpers.HandleReadApiError(err, d, httpResp)
+				return helpers.HandleWrite(ctx, d, err, httpResp)
 			}
 		}
 		if resp.Data == nil || resp.Data.Environment == nil {
@@ -290,7 +288,7 @@ func resourceEnviornmentEditGitDetails(ctx context.Context, c *nextgen.APIClient
 	resp, httpResp, err := c.EnvironmentsApi.EditGitDetailsForEnviornment(ctx, c.AccountId, org_id, project_id, id, gitDetails)
 
 	if err != nil {
-		return helpers.HandleGitApiErrorWithResourceData(err, d, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
@@ -313,7 +311,7 @@ func resourceEnvironmentDelete(ctx context.Context, d *schema.ResourceData, meta
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -382,30 +380,18 @@ func readEnvironment(d *schema.ResourceData, env *nextgen.EnvironmentResponseDet
 	d.Set("project_id", env.ProjectIdentifier)
 	d.Set("name", env.Name)
 	d.Set("color", env.Color)
-	if env.Description != "" {
-		d.Set("description", env.Description)
-	}
+	d.Set("description", env.Description)
 	d.Set("tags", helpers.FlattenTags(env.Tags))
 	d.Set("type", env.Type_.String())
-	if d.Get("yaml").(string) != "" {
-		d.Set("yaml", env.Yaml)
-	}
+	d.Set("yaml", env.Yaml)
 
-	var store_type = helpers.BuildField(d, "git_details.0.store_type")
-	var base_branch = helpers.BuildField(d, "git_details.0.base_branch")
-	var commit_message = helpers.BuildField(d, "git_details.0.commit_message")
+	// Inputs the API does not report back; see helpers.ConfigOnly.
+	var store_type = helpers.ConfigOnly(d, "git_details.0.store_type")
+	var base_branch = helpers.ConfigOnly(d, "git_details.0.base_branch")
+	var commit_message = helpers.ConfigOnly(d, "git_details.0.commit_message")
 	var connector_ref = env.ConnectorRef
-
-	var import_from_git bool
-	var is_force_import bool
-
-	if v, ok := d.GetOk("git_details.0.import_from_git"); ok {
-		import_from_git = v.(bool)
-	}
-
-	if v, ok := d.GetOk("git_details.0.is_force_import"); ok {
-		is_force_import = v.(bool)
-	}
+	import_from_git := helpers.ConfigOnlyBool(d, "git_details.0.import_from_git")
+	is_force_import := helpers.ConfigOnlyBool(d, "git_details.0.is_force_import")
 
 	if env.EntityGitDetails != nil {
 		gitDetails := readGitDetails(env, store_type, base_branch, commit_message, connector_ref)

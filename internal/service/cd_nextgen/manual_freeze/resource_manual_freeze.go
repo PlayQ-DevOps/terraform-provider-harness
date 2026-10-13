@@ -26,6 +26,7 @@ func ResourceManualFreeze() *schema.Resource {
 				Description: "Identifier of the freeze",
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 			},
 			"description": {
 				Description: "Description of the freeze",
@@ -41,11 +42,13 @@ func ResourceManualFreeze() *schema.Resource {
 				Description: "Organization identifier of the freeze",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"project_id": {
 				Description: "Project identifier of the freeze",
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 			},
 			"tags": {
 				Description: "Tags associated with the freeze",
@@ -177,18 +180,12 @@ func resourceManualFreezeRead(ctx context.Context, d *schema.ResourceData, meta 
 		ProjectIdentifier: helpers.BuildField(d, "project_id"),
 	})
 
-	if httpResp.StatusCode == 404 {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
-	}
-
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	if resp.Data == nil {
-		return nil
+		return helpers.ReadMissing(ctx, d, "deployment freeze "+id)
 	}
 
 	readFreezeResponse(d, resp.Data)
@@ -224,7 +221,7 @@ func resourceManualFreezeCreateOrUpdate(ctx context.Context, d *schema.ResourceD
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// The create/update methods don't return the upcoming windows in the response, so we need to query for it again.
@@ -247,7 +244,7 @@ func resourceManualFreezeDelete(ctx context.Context, d *schema.ResourceData, met
 	})
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

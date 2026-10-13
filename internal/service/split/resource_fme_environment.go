@@ -5,6 +5,7 @@ import (
 	"sort"
 
 	splitsdk "github.com/harness/harness-go-sdk/harness/split"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -159,36 +160,24 @@ func resourceFMEEnvironmentRead(ctx context.Context, d *schema.ResourceData, met
 	}
 	env, err := client.Environments.FindByID(wsID, d.Id())
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if env == nil {
-		d.SetId("")
-		return nil
+		return helpers.ReadMissing(ctx, d, "FME environment "+d.Id())
+
 	}
 	if err := d.Set("name", env.Name); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("production", env.Production); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("environment_id", env.ID); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
-	// Split list/get responses omit apiTokens; keep IDs captured at create (or import) in state.
-	preserved := d.Get("bootstrap_api_token_ids")
-	if preserved == nil {
-		preserved = []interface{}{}
-	}
-	sorted := sortInterfaceStringSlice(preserved)
-	if err := d.Set("bootstrap_api_token_ids", sorted); err != nil {
-		return diag.FromErr(err)
-	}
-	// Split Get does not return change_permissions; preserve whatever is already in state.
-	if prev := d.Get("change_permissions"); prev != nil {
-		if err := d.Set("change_permissions", prev); err != nil {
-			return diag.FromErr(err)
-		}
-	}
+
+	// Split list/get responses omit apiTokens and change_permissions: the IDs captured at
+	// create (or import) and the configured permissions stay in state untouched.
 	return nil
 }
 
@@ -230,7 +219,7 @@ func resourceFMEEnvironmentDelete(ctx context.Context, d *schema.ResourceData, m
 	}
 	env, err := client.Environments.FindByID(wsID, d.Id())
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 	if env != nil {
 		for _, tok := range env.ApiTokens {
@@ -244,33 +233,9 @@ func resourceFMEEnvironmentDelete(ctx context.Context, d *schema.ResourceData, m
 		}
 	}
 	if err := client.Environments.Delete(wsID, d.Id()); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 	return nil
-}
-
-func sortInterfaceStringSlice(raw interface{}) []interface{} {
-	list, ok := raw.([]interface{})
-	if !ok || len(list) == 0 {
-		if list == nil {
-			return []interface{}{}
-		}
-		return list
-	}
-	strs := make([]string, 0, len(list))
-	for _, item := range list {
-		s, ok := item.(string)
-		if !ok || s == "" {
-			continue
-		}
-		strs = append(strs, s)
-	}
-	sort.Strings(strs)
-	out := make([]interface{}, len(strs))
-	for i, s := range strs {
-		out[i] = s
-	}
-	return out
 }
 
 func fmeEnvironmentBootstrapTokenIDs(d *schema.ResourceData) []string {

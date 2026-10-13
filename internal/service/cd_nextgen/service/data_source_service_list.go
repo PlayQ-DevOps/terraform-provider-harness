@@ -77,13 +77,12 @@ func dataSourceServiceListRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 
 	if err != nil {
-		return helpers.HandleApiError(err, d, httpResp)
+		return helpers.HandleError(ctx, d, err, httpResp)
 	}
 
 	if services == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+		return diag.Errorf("service list not found: no object matched the given arguments")
+
 	}
 
 	d.SetId(resp.CorrelationId)
