@@ -84,9 +84,7 @@ func resourceUserGroupPermissionsRead(ctx context.Context, d *schema.ResourceDat
 	}
 
 	if userGroup == nil {
-		d.SetId("")
-
-		return diag.FromErr(fmt.Errorf("user group %s does not exist", id))
+		return helpers.ReadMissing(ctx, d, "user group "+id)
 	}
 
 	return readUserGroupPermissions(d, userGroup)

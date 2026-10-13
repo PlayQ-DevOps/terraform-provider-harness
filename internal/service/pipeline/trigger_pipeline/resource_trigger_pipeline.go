@@ -153,15 +153,11 @@ func resourceTriggerPipelineRead(ctx context.Context, d *schema.ResourceData, me
 	projectId := d.Get("project_id").(string)
 
 	resp, httpResp, err := c.ExecutionDetailsApi.GetExecutionDetail(ctx, c.AccountId, orgId, projectId, d.Id(), nil)
-	if httpResp != nil && httpResp.StatusCode == 404 {
-		d.SetId("")
-		return nil
-	}
 	if err != nil {
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 	if resp.Data == nil || resp.Data.PipelineExecutionSummary == nil {
-		return diag.Errorf("no execution summary returned for pipeline execution %s", d.Id())
+		return helpers.ReadMissing(ctx, d, "pipeline execution "+d.Id())
 	}
 
 	d.Set("status", resp.Data.PipelineExecutionSummary.Status)

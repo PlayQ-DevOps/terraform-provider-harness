@@ -36,3 +36,14 @@ resource "harness_platform_iacm_default_pipeline" "example" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+
+## Import
+
+Import is supported using the following syntax:
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
+```shell
+# Import a default pipeline using its provisioner type and operation
+terraform import harness_platform_iacm_default_pipeline.example <org_id>/<project_id>/<provisioner_type>/<operation>
+```

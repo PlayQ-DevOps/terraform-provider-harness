@@ -4,8 +4,6 @@ import (
 	"context"
 	"net/http"
 
-	"log"
-
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -149,19 +147,12 @@ func resourceResourceGroupRead(ctx context.Context, d *schema.ResourceData, meta
 		ProjectIdentifier: helpers.BuildField(d, "project_id"),
 	})
 
-	// This tells TF the resource-group no longer exists
-	if httpResp != nil && httpResp.StatusCode == 404 {
-		log.Printf("Resource group with ID '%s' not found (HTTP 404). Clearing resource ID.", id)
-		d.SetId("")
-		return nil
-	}
-
 	if err != nil {
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if resp.Data == nil {
-		return nil
+	if resp.Data == nil || resp.Data.ResourceGroup == nil {
+		return helpers.ReadMissing(ctx, d, "resource group "+id)
 	}
 
 	readResourceGroup(d, resp.Data.ResourceGroup)

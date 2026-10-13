@@ -22,7 +22,7 @@ func ResourceDelegateToken() *schema.Resource {
 		CreateContext: resourceDelegateTokenCreate,
 		UpdateContext: resourceDelegateTokenRevoke,
 		DeleteContext: resourceDelegateTokenRevoke,
-		Importer:      helpers.MultiLevelResourceImporter,
+		Importer:      delegateTokenImporter,
 
 		Schema: map[string]*schema.Schema{
 			"name": {
@@ -91,22 +91,25 @@ func ResourceDelegateToken() *schema.Resource {
 func resourceDelegateTokenRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 
+	// The token name is the resource ID. The API has no get-by-name, so list by name in the
+	// scope and pick the exact match; a revoked token is still listed, with its status.
+	name := d.Id()
 	resp, httpResp, err := c.DelegateTokenResourceApi.GetCgDelegateTokens(ctx, c.AccountId, &nextgen.DelegateTokenResourceApiGetCgDelegateTokensOpts{
 		OrgIdentifier:     helpers.BuildField(d, "org_id"),
 		ProjectIdentifier: helpers.BuildField(d, "project_id"),
-		Name:              helpers.BuildField(d, "name"),
-		Status:            helpers.BuildField(d, "token_status"),
+		Name:              optional.NewString(name),
 	})
-
 	if err != nil {
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if resp.Resource != nil && (len(resp.Resource) > 0) {
-		readDelegateToken(d, &resp.Resource[0])
+	for i := range resp.Resource {
+		if resp.Resource[i].Name == name {
+			readDelegateToken(d, &resp.Resource[i])
+			return nil
+		}
 	}
-
-	return nil
+	return helpers.ReadMissing(ctx, d, "delegate token "+name)
 }
 
 func resourceDelegateTokenCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -220,3 +223,6 @@ func readCreatedByData(userType string, name_ string, details map[string]string)
 
 	return result
 }
+
+// delegateTokenImporter: [<org_id>/[<project_id>/]]<name>; the token name is the resource ID.
+var delegateTokenImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org_id", "project_id", "name"}, OptionalPrefix: 2})

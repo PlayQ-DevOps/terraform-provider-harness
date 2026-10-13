@@ -130,8 +130,8 @@ func resourceRoleAssignmentsRead(ctx context.Context, d *schema.ResourceData, me
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if resp.Data == nil {
-		return nil
+	if resp.Data == nil || resp.Data.RoleAssignment == nil {
+		return helpers.ReadMissing(ctx, d, "role assignment "+id)
 	}
 
 	ReadRoleAssignments(d, resp.Data.RoleAssignment)

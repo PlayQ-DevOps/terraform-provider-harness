@@ -21,9 +21,7 @@ func ResourceCentralNotificationChannel() *schema.Resource {
 		ReadContext:   resourceCentralNotificationChannelRead,
 		UpdateContext: resourceCentralNotificationChannelUpdate,
 		DeleteContext: resourceCentralNotificationChannelDelete,
-		Importer: &schema.ResourceImporter{
-			StateContext: schema.ImportStatePassthroughContext,
-		},
+		Importer:      centralNotificationChannelImporter,
 
 		Schema: map[string]*schema.Schema{
 			"identifier": {
@@ -157,6 +155,9 @@ func resourceCentralNotificationChannelRead(ctx context.Context, d *schema.Resou
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 	accountID := c.AccountId
 	identifier := d.Get("identifier").(string)
+	if identifier == "" {
+		identifier = d.Id()
+	}
 	scope := getScope(d)
 
 	var resp nextgen.NotificationChannelDto
@@ -440,3 +441,6 @@ func getScope(d *schema.ResourceData) *Scope {
 		scope:   scope,
 	}
 }
+
+// centralNotificationChannelImporter: [<org>/[<project>/]]<identifier>.
+var centralNotificationChannelImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org", "project", "identifier"}, OptionalPrefix: 2})

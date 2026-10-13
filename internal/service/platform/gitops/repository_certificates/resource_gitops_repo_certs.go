@@ -189,9 +189,10 @@ func resourceGitopsRepoCertsRead(ctx context.Context, d *schema.ResourceData, me
 	if err != nil {
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
-
-	// Soft delete lookup error handling
-	// https://harness.atlassian.net/browse/PL-23765
+	if len(resp.Items) == 0 {
+		// The API answers an empty list, not 404, when the agent holds no certificate.
+		return helpers.ReadMissing(ctx, d, "repository certificates of agent "+agentIdentifier)
+	}
 
 	setGitopsRepositoriesCertificates(d, &resp, c.AccountId, agentIdentifier)
 	return nil
@@ -215,7 +216,7 @@ func resourceGitopsRepoCertsDelete(ctx context.Context, d *schema.ResourceData, 
 }
 
 func setGitopsRepositoriesCertificates(d *schema.ResourceData, repoCert *nextgen.CertificatesRepositoryCertificateList, accountIdentifier string, agentIdentifier string) {
-	d.SetId("1234") // assigning temp id.
+	d.SetId(agentIdentifier) // one certificate list per agent
 	d.Set("account_id", accountIdentifier)
 	d.Set("agent_id", agentIdentifier)
 	var repoCertDetails nextgen.Applicationv1alpha1RepositoryCertificateList

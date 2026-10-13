@@ -298,9 +298,10 @@ func resourceClusterOrchestratorConfigRead(ctx context.Context, d *schema.Resour
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if resp.Response != nil {
-		readClusterOrchConfig(d, resp.Response)
+	if resp.Response == nil {
+		return helpers.ReadMissing(ctx, d, "cluster orchestrator config "+Identifier)
 	}
+	readClusterOrchConfig(d, resp.Response)
 
 	return nil
 }

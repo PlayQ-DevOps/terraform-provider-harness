@@ -28,8 +28,8 @@ func resourceSecretReadBase(ctx context.Context, d *schema.ResourceData, meta in
 		return nil, helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if resp.Data == nil {
-		return nil, nil
+	if resp.Data == nil || resp.Data.Secret == nil {
+		return nil, helpers.ReadMissing(ctx, d, "secret "+id)
 	}
 
 	if secretType != resp.Data.Secret.Type_ {

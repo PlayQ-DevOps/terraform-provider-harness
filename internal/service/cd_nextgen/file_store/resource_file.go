@@ -158,7 +158,7 @@ func resourceFileStoreNodeFileRead(ctx context.Context, d *schema.ResourceData, 
 	}
 
 	if resp.Data == nil {
-		return nil
+		return helpers.ReadMissing(ctx, d, "file "+id)
 	}
 
 	// download content

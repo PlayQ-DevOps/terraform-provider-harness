@@ -239,9 +239,9 @@ var TriggerResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "
 // EnvRelatedResourceImporter: [<org_id>/[<project_id>/]]<env_id>/<identifier>.
 var EnvRelatedResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "env_id", "identifier"}, OptionalPrefix: 2})
 
-// ServiceOverrideResourceImporter: [<org_id>/[<project_id>/]]<env_id>; the full import ID
-// stays the resource ID.
-var ServiceOverrideResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "env_id"}, OptionalPrefix: 2, RawID: true})
+// ServiceOverrideResourceImporter: [<org_id>/[<project_id>/]]<env_id>/<service_id>. The
+// resource's Read derives its composite ID from the service and the environment.
+var ServiceOverrideResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "env_id", "service_id"}, OptionalPrefix: 2})
 
 // ServiceOverrideV2ResourceImporter: [<org_id>/[<project_id>/]]<identifier>.
 var ServiceOverrideV2ResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", ""}, OptionalPrefix: 2})
@@ -276,8 +276,9 @@ var GitopsAgentProjectImporter = NewImporter(ImportSpec{Parts: []string{"org_id"
 // RepoRuleResourceImporter: [<org_id>/[<project_id>/]]<repo_identifier>/<identifier>.
 var RepoRuleResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "repo_identifier", "identifier"}, OptionalPrefix: 2})
 
-// GitopsRepoCertResourceImporter: <agent_id>/<identifier>.
-var GitopsRepoCertResourceImporter = NewImporter(ImportSpec{Parts: []string{"agent_id", ""}})
+// GitopsRepoCertResourceImporter: [<org_id>/[<project_id>/]]<agent_id>. An agent holds one
+// certificate list, so the agent identifier is the resource ID.
+var GitopsRepoCertResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "project_id", "agent_id"}, OptionalPrefix: 2})
 
 // OrgResourceImporter: <org_id>/<identifier>.
 var OrgResourceImporter = NewImporter(ImportSpec{Parts: []string{"org_id", "identifier"}})

@@ -2,7 +2,6 @@ package acctest
 
 import (
 	"fmt"
-	"os"
 	"regexp"
 	"strings"
 	"testing"
@@ -246,26 +245,7 @@ func RunLifecycle(t *testing.T, lc Lifecycle) {
 		cells = append(cells, cell{CellEventualConsistent, lc.cellEventuallyConsistent})
 	}
 
-	ran := map[string]bool{}
-	for _, c := range cells {
-		c := c
-		ran[c.name] = true
-		t.Run(c.name, func(t *testing.T) {
-			if reason, known := lc.KnownFailing[c.name]; known && os.Getenv("HARNESS_RUN_KNOWN_FAILING") == "" {
-				t.Skipf("known failing (set HARNESS_RUN_KNOWN_FAILING=1 to run): %s", reason)
-			}
-			f := fakeharness.New(t)
-			if lc.Fake != nil {
-				lc.Fake(f)
-			}
-			c.run(t, f, base)
-		})
-	}
-	for name := range lc.KnownFailing {
-		if !ran[name] {
-			t.Errorf("KnownFailing lists %q, which is not a cell of this lifecycle", name)
-		}
-	}
+	runCells(t, cells, lc.Fake, lc.KnownFailing, base)
 }
 
 func (lc Lifecycle) cellCreateUpdateImport(t *testing.T, f *fakeharness.Server, p LifecycleParams) {

@@ -53,8 +53,8 @@ func resourceServiceAccountRead(ctx context.Context, d *schema.ResourceData, met
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if resp.Data.ServiceAccount == nil {
-		return nil
+	if resp.Data == nil || resp.Data.ServiceAccount == nil {
+		return helpers.ReadMissing(ctx, d, "service account "+id)
 	}
 
 	readServiceAccount(d, resp.Data.ServiceAccount)

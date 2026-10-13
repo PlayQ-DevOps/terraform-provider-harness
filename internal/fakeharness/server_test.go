@@ -382,3 +382,71 @@ func TestIDPEntities(t *testing.T) {
 		t.Fatalf("mutating methods on the kind: %s", got)
 	}
 }
+
+func TestRoutesOnlyFamilies(t *testing.T) {
+	s := New(t, WithMounts(DelegateTokens(), NotificationChannels(), IacmDefaultPipelines(), GitopsRepoCertificates()))
+	do(t, s, "POST", "/ng/api/organizations?accountIdentifier=acct", `{"organization":{"identifier":"o","name":"O"}}`)
+	do(t, s, "POST", "/ng/api/projects?accountIdentifier=acct&orgIdentifier=o", `{"project":{"identifier":"p","name":"P"}}`)
+
+	// Delegate tokens: addressed by name, listed with filters, purged on revoke.
+	if st, m, _, _ := do(t, s, "POST", "/ng/api/delegate-token-ng?accountIdentifier=acct&orgIdentifier=o&projectIdentifier=p&tokenName=tok", ""); st != 200 || data(m, "") != nil && m["resource"] == nil {
+		t.Fatalf("create token: %d %v", st, m)
+	}
+	if st, m, _, _ := do(t, s, "GET", "/ng/api/delegate-token-ng?accountIdentifier=acct&orgIdentifier=o&projectIdentifier=p&name=tok", ""); st != 200 || len(m["resource"].([]any)) != 1 {
+		t.Fatalf("list by name: %d %v", st, m)
+	}
+	if st, m, _, _ := do(t, s, "GET", "/ng/api/delegate-token-ng?accountIdentifier=acct&orgIdentifier=o&projectIdentifier=p&name=tok&status=REVOKED", ""); st != 200 || len(m["resource"].([]any)) != 0 {
+		t.Fatalf("list by status must filter: %d %v", st, m)
+	}
+	if st, m, _, _ := do(t, s, "PUT", "/ng/api/delegate-token-ng?accountIdentifier=acct&orgIdentifier=o&projectIdentifier=p&tokenName=tok", ""); st != 200 || m["resource"].(map[string]any)["status"] != "REVOKED" {
+		t.Fatalf("revoke: %d %v", st, m)
+	}
+	if s.Store().Has(KindDelegateToken, Key{Org: "o", Project: "p", ID: "tok"}) {
+		t.Fatal("a revoked token must leave the store")
+	}
+
+	// Notification channels: three base paths, one kind.
+	if st, _, _, _ := do(t, s, "POST", "/v1/orgs/o/notification-channels", `{"identifier":"chan","name":"Chan","notification_channel_type":"EMAIL","channel":{"email_ids":["a@b.c"]}}`); st != 200 {
+		t.Fatalf("create org channel: %d", st)
+	}
+	if st, _, _, _ := do(t, s, "GET", "/v1/orgs/o/notification-channels/chan", ""); st != 200 {
+		t.Fatalf("get org channel: %d", st)
+	}
+	if st, _, _, _ := do(t, s, "GET", "/v1/notification-channels/chan", ""); st != 404 {
+		t.Fatalf("the org channel must not exist at account scope: %d", st)
+	}
+	if got := s.KindFor("/v1/orgs/o/notification-channels/chan"); got != KindNotificationChannel {
+		t.Fatalf("KindFor with KindPattern: %q", got)
+	}
+	if got := s.MutatingMethods(0, KindNotificationChannel); len(got) != 1 || got[0] != "POST" {
+		t.Fatalf("mutating methods on the channel kind: %v", got)
+	}
+
+	// IaCM default pipelines: upsert, list as an array, delete by body.
+	if st, _, _, _ := do(t, s, "PUT", "/iacm/api/orgs/o/projects/p/settings/default-pipelines", `{"provisioner":"terraform","operation":"plan","pipeline":"pipe"}`); st != 200 {
+		t.Fatalf("upsert default pipeline: %d", st)
+	}
+	if st, _, raw, _ := do(t, s, "GET", "/iacm/api/orgs/o/projects/p/settings/default-pipelines", ""); st != 200 || !strings.Contains(string(raw), `"provisioner":"terraform"`) {
+		t.Fatalf("list default pipelines: %d %s", st, raw)
+	}
+	if st, _, _, _ := do(t, s, "DELETE", "/iacm/api/orgs/o/projects/p/settings/default-pipelines", `{"provisioner":"terraform","operation":"plan"}`); st != 204 {
+		t.Fatalf("delete default pipeline: %d", st)
+	}
+	if st, _, raw, _ := do(t, s, "GET", "/iacm/api/orgs/o/projects/p/settings/default-pipelines", ""); st != 200 || strings.TrimSpace(string(raw)) != "[]" {
+		t.Fatalf("list after delete: %d %s", st, raw)
+	}
+
+	// Repository certificates: an empty list, never a 404, when the agent holds none.
+	if st, m, _, _ := do(t, s, "GET", "/gitops/api/v1/agents/a/certificates?accountIdentifier=acct&orgIdentifier=o&projectIdentifier=p", ""); st != 200 || len(m["items"].([]any)) != 0 {
+		t.Fatalf("empty certificate list: %d %v", st, m)
+	}
+	if st, m, _, _ := do(t, s, "POST", "/gitops/api/v1/agents/a/certificates?accountIdentifier=acct&orgIdentifier=o&projectIdentifier=p", `{"upsert":true,"certificates":{"items":[{"serverName":"git.example.com","certType":"https","certData":"x"}]}}`); st != 200 || len(m["items"].([]any)) != 1 {
+		t.Fatalf("create certificates: %d %v", st, m)
+	}
+	if st, m, _, _ := do(t, s, "DELETE", "/gitops/api/v1/agents/a/certificates?accountIdentifier=acct&orgIdentifier=o&projectIdentifier=p&query.hostNamePattern=git.example.com", ""); st != 200 || len(m["items"].([]any)) != 0 {
+		t.Fatalf("delete certificates: %d %v", st, m)
+	}
+	if s.Store().Has(KindGitopsRepoCert, Key{Org: "o", Project: "p", ID: "a"}) {
+		t.Fatal("an agent with no certificate left must leave the store")
+	}
+}

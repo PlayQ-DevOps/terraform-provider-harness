@@ -19,7 +19,7 @@ func ResourceChaosInfrastructure() *schema.Resource {
 		UpdateContext: resourceChaosInfrastructureUpdate,
 		DeleteContext: resourceChaosInfrastructureDelete,
 		CreateContext: resourceChaosInfrastructureCreate,
-		Importer:      helpers.MultiLevelResourceImporter,
+		Importer:      chaosInfrastructureImporter,
 
 		Schema: map[string]*schema.Schema{
 			"org_id": {
@@ -97,12 +97,10 @@ func resourceChaosInfrastructureRead(ctx context.Context, d *schema.ResourceData
 	resp, httpResp, err := c.ChaosSdkApi.GetInfraV2(ctx, identifier, accountIdentifier, orgIdentifier, projectIdentifier, envIdentifier)
 
 	if err != nil {
-		if err.Error() == "404 Not Found" {
-			d.SetId("")
-
-			return nil
-		}
-		return helpers.HandleRead(ctx, d, err, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp, helpers.GracefulNotFound(500, "no matching infra"))
+	}
+	if resp.Identity == "" {
+		return helpers.ReadMissing(ctx, d, "chaos infrastructure "+identifier)
 	}
 	readChaosInfrastructure(d, resp)
 
@@ -260,11 +258,16 @@ func buildInfraCreateRequest(d *schema.ResourceData) chaos.InfraV2RegisterInfras
 
 func readChaosInfrastructure(d *schema.ResourceData, infra chaos.InfraV2KubernetesInfrastructureV2Details) {
 	d.SetId(infra.Identity)
-	d.Set("org_id", infra.Identifier.OrgIdentifier)
-	d.Set("project_id", infra.Identifier.ProjectIdentifier)
+	if infra.Identifier != nil {
+		d.Set("org_id", infra.Identifier.OrgIdentifier)
+		d.Set("project_id", infra.Identifier.ProjectIdentifier)
+	}
 	d.Set("identifier", infra.Identity)
 	d.Set("name", infra.Name)
 	d.Set("description", infra.Description)
 	d.Set("infra_id", infra.InfraID)
 	d.Set("environment_id", infra.EnvironmentID)
 }
+
+// chaosInfrastructureImporter: [<org_id>/[<project_id>/]]<environment_id>/<identifier>.
+var chaosInfrastructureImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org_id", "project_id", "environment_id", "identifier"}, OptionalPrefix: 2})

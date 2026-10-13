@@ -487,7 +487,6 @@ func deleteSchedule(ctx context.Context, d *schema.ResourceData, meta interface{
 }
 
 func readSchedule(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	diags := diag.Diagnostics{}
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 
 	scheduleID, err := strconv.ParseFloat(d.Id(), 64)
@@ -500,12 +499,7 @@ func readSchedule(ctx context.Context, d *schema.ResourceData, meta interface{})
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 	if resp.Response == nil {
-		d := diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "Schedule not found",
-		}
-		diags = append(diags, d)
-		return diags
+		return helpers.ReadMissing(ctx, d, "autostopping schedule "+d.Id())
 	}
 	return setSchedule(d, resp.Response)
 }

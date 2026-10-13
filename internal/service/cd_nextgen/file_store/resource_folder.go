@@ -106,7 +106,7 @@ func resourceFileStoreNodeFolderRead(ctx context.Context, d *schema.ResourceData
 	}
 
 	if resp.Data == nil {
-		return nil
+		return helpers.ReadMissing(ctx, d, "folder "+id)
 	}
 
 	readFolderNode(d, resp.Data, optional.EmptyInterface())

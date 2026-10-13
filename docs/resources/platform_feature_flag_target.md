@@ -44,3 +44,14 @@ resource "harness_platform_feature_flag_target" "target" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+
+## Import
+
+Import is supported using the following syntax:
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
+```shell
+# Import a feature flag target using the environment it lives in
+terraform import harness_platform_feature_flag_target.example <org_id>/<project_id>/<environment_id>/<target_id>
+```

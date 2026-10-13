@@ -247,6 +247,9 @@ func resourceScorecardRead(ctx context.Context, d *schema.ResourceData, meta int
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
+	if resp.Scorecard == nil {
+		return helpers.ReadMissing(ctx, d, "scorecard "+id)
+	}
 	if err := readScorecard(d, resp); err != nil {
 		return diag.Errorf("failed to read IDP scorecard: %v", err)
 	}

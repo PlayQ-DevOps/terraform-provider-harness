@@ -2,6 +2,7 @@ package environment_service_overrides
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/antihax/optional"
@@ -57,6 +58,7 @@ func resourceEnvironmentServiceOverridesRead(ctx context.Context, d *schema.Reso
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
 
 	envId := d.Get("env_id").(string)
+	serviceId := d.Get("service_id").(string)
 
 	resp, httpResp, err := c.EnvironmentsApi.GetServiceOverridesList(ctx, c.AccountId, envId,
 		&nextgen.EnvironmentsApiGetServiceOverridesListOpts{
@@ -64,20 +66,22 @@ func resourceEnvironmentServiceOverridesRead(ctx context.Context, d *schema.Reso
 			OrgIdentifier:     helpers.BuildField(d, "org_id"),
 			ProjectIdentifier: helpers.BuildField(d, "project_id"),
 		})
-
 	if err != nil {
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if resp.Data == nil || len(resp.Data.Content) == 0 {
-		d.SetId("")
-
-		return nil
+	// The list is filtered by service, but match explicitly so an unfiltered answer can never
+	// make another service's override look like this one.
+	if resp.Data != nil {
+		for i := range resp.Data.Content {
+			so := &resp.Data.Content[i]
+			if so.EnvironmentRef == envId && so.ServiceRef == serviceId {
+				readEnvironmentServiceOverrides(d, so)
+				return nil
+			}
+		}
 	}
-
-	readEnvironmentServiceOverridesList(d, resp.Data)
-
-	return nil
+	return helpers.ReadMissing(ctx, d, fmt.Sprintf("service override of service %s in environment %s", serviceId, envId))
 }
 
 func resourceEnvironmentServiceOverridesCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -96,12 +100,8 @@ func resourceEnvironmentServiceOverridesCreateOrUpdate(ctx context.Context, d *s
 		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
-	// Soft delete lookup error handling
-	// https://harness.atlassian.net/browse/PL-23765
 	if resp.Data == nil {
-		d.SetId("")
-		d.MarkNewResource()
-		return nil
+		return helpers.HandleEmptyCreateUpdateResponse(nil, "service override")
 	}
 
 	readEnvironmentServiceOverrides(d, resp.Data)
@@ -136,13 +136,6 @@ func buildEnvironmentServiceOverride(d *schema.ResourceData) *nextgen.ServiceOve
 		EnvironmentIdentifier: d.Get("env_id").(string),
 		ServiceIdentifier:     d.Get("service_id").(string),
 		Yaml:                  d.Get("yaml").(string),
-	}
-}
-
-func readEnvironmentServiceOverridesList(d *schema.ResourceData, env *nextgen.PageResponseServiceOverrideResponse) {
-	ServiceOverrideList := env.Content
-	for _, value := range ServiceOverrideList {
-		readEnvironmentServiceOverrides(d, &value)
 	}
 }
 

@@ -38,10 +38,11 @@ func resourceASRuleRead(ctx context.Context, d *schema.ResourceData, meta interf
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
-	if resp.Response != nil {
-		readASRule(d, resp.Response.Service)
-		setDependencies(d, resp.Response.Deps)
+	if resp.Response == nil {
+		return helpers.ReadMissing(ctx, d, "autostopping rule "+d.Id())
 	}
+	readASRule(d, resp.Response.Service)
+	setDependencies(d, resp.Response.Deps)
 
 	return nil
 }

@@ -65,3 +65,20 @@ resource "harness_platform_delegatetoken" "expiry_token" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+
+## Import
+
+Import is supported using the following syntax:
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
+```shell
+# Import an account level delegate token by name
+terraform import harness_platform_delegatetoken.example <token_name>
+
+# Import an org level delegate token by name
+terraform import harness_platform_delegatetoken.example <org_id>/<token_name>
+
+# Import a project level delegate token by name
+terraform import harness_platform_delegatetoken.example <org_id>/<project_id>/<token_name>
+```

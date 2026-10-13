@@ -102,10 +102,7 @@ func resourceVariablesRead(ctx context.Context, d *schema.ResourceData, meta int
 	}
 
 	if resp.Data == nil || resp.Data.Variable == nil {
-		tflog.Error(ctx, "Received empty response from variable API during read", map[string]interface{}{
-			"id": id,
-		})
-		return diag.Errorf("received empty response from variable API for id '%s': resp.Data or resp.Data.Variable is nil", id)
+		return helpers.ReadMissing(ctx, d, "variable "+id)
 	}
 
 	readVariable(d, resp.Data.Variable)

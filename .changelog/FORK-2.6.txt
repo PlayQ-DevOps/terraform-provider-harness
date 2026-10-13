@@ -1,0 +1,15 @@
+```release-note:bug
+provider: a read whose API call succeeds but returns no object (an empty page, a list that no longer contains the object, a soft-deleted entity, a nil payload) now removes the resource from state so the next plan recreates it, instead of leaving stale state or failing the plan. Affected: environment group, file store file and folder, resource group, role assignments, service account, every secret type, autostopping rules and schedules, cluster orchestrator config, variables, delegate token, environment service overrides, environment clusters mapping, GitOps repository certificates, chaos infrastructure (v1 and v2), IDP scorecards and checks, trigger pipeline executions, and the FirstGen delegate approval and user group permissions.
+```
+```release-note:breaking-change
+resource/harness_platform_environment_service_overrides: the import ID now names the service as well as the environment, `[<org_id>/[<project_id>/]]<env_id>/<service_id>`. Importing by environment alone used to pick an arbitrary override of that environment.
+```
+```release-note:breaking-change
+resource/harness_platform_gitops_repo_cert: the import ID is now `[<org_id>/[<project_id>/]]<agent_id>`, since an agent holds one certificate list, and the resource ID is the agent identifier instead of a placeholder.
+```
+```release-note:note
+resource/harness_platform_environment_clusters_mapping: the resource ID is now `[<org_id>/[<project_id>/]]<env_id>`, which is also the import ID; existing state is upgraded automatically.
+```
+```release-note:bug
+resource/harness_platform_delegatetoken, resource/harness_platform_feature_flag_target, resource/harness_platform_feature_flag_target_group, resource/harness_platform_iacm_default_pipeline, resource/harness_chaos_infrastructure, resource/harness_platform_central_notification_channel: `terraform import` now works. The import ID carries every attribute the read needs (token name, environment, provisioner type and operation, environment identifier, org and project); see each resource's documentation for the format.
+```

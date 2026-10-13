@@ -120,9 +120,10 @@ func resourceInfrastructureV2Read(ctx context.Context, d *schema.ResourceData, m
 		)
 	}
 
-	// Check if infra.Identifier is nil
+	// A 200 without the identity block is how the API reports an infrastructure it no
+	// longer knows about.
 	if infra.Identifier == nil {
-		return diag.FromErr(fmt.Errorf("identifier is nil"))
+		return helpers.ReadMissing(ctx, d, "chaos infrastructure "+infraID)
 	}
 
 	// Set the fields

@@ -28,7 +28,7 @@ func ResourceFeatureFlagTargetGroup() *schema.Resource {
 		CreateContext: resourceFeatureFlagTargetCreate,
 		UpdateContext: resourceFeatureFlagTargetGroupUpdate,
 		DeleteContext: resourceFeatureFlagTargetGroupDelete,
-		Importer:      helpers.ProjectResourceImporter,
+		Importer:      featureFlagTargetGroupImporter,
 
 		Schema: map[string]*schema.Schema{
 			"identifier": {
@@ -182,10 +182,14 @@ func resourceFeatureFlagTargetGroupRead(ctx context.Context, d *schema.ResourceD
 	}
 
 	qp := buildFFTargetGroupQueryParameters(d)
+	if qp.AcountID == "" {
+		// Imported: the account is the provider's.
+		qp.AcountID = c.AccountId
+	}
 
 	segment, httpResp, err := c.TargetGroupsApi.GetSegment(ctx, c.AccountId, qp.OrgID, id, qp.Project, qp.Environment)
 	if err != nil {
-		return feature_flag.HandleCFApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 	readFeatureFlagTargetGroup(d, &segment, qp)
 
@@ -584,3 +588,6 @@ func arrayToMap(identifiers []string) map[string]struct{} {
 	}
 	return m
 }
+
+// featureFlagTargetGroupImporter: <org_id>/<project_id>/<environment>/<identifier>.
+var featureFlagTargetGroupImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org_id", "project_id", "environment", "identifier"}})

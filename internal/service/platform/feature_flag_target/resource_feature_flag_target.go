@@ -23,7 +23,7 @@ func ResourceFeatureFlagTarget() *schema.Resource {
 		DeleteContext: resourceFeatureFlagTargetDelete,
 		CreateContext: resourceFeatureFlagTargetCreateOrUpdate,
 		UpdateContext: resourceFeatureFlagTargetCreateOrUpdate,
-		Importer:      helpers.ProjectResourceImporter,
+		Importer:      featureFlagTargetImporter,
 
 		Schema: map[string]*schema.Schema{
 			"identifier": {
@@ -103,11 +103,14 @@ func resourceFeatureFlagTargetRead(ctx context.Context, d *schema.ResourceData, 
 	}
 
 	qp := buildFFTargetQueryParameters(d)
+	if qp.AccountID == "" {
+		// Imported: the account is the provider's.
+		qp.AccountID = c.AccountId
+	}
 
 	resp, httpResp, err := c.TargetsApi.GetTarget(ctx, id, c.AccountId, qp.OrganizationID, qp.ProjectID, qp.Environment)
-
 	if err != nil {
-		return feature_flag.HandleCFApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readFeatureFlagTarget(d, &resp, *qp)
@@ -211,3 +214,6 @@ func buildFFTargetPatchOpts(d *schema.ResourceData) *nextgen.TargetsApiPatchTarg
 		Body: optional.NewInterface(opts),
 	}
 }
+
+// featureFlagTargetImporter: <org_id>/<project_id>/<environment>/<identifier>.
+var featureFlagTargetImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org_id", "project_id", "environment", "identifier"}})

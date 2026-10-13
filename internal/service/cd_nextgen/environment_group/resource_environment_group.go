@@ -86,12 +86,11 @@ func resourceEnvironmentGroupRead(ctx context.Context, d *schema.ResourceData, m
 	if err != nil {
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
-	envGroup = resp.Data.EnvGroup
-	// Soft delete lookup error handling
-	// https://harness.atlassian.net/browse/PL-23765
-	if envGroup == nil {
-		return nil
+	// A soft-deleted environment group answers 200 with no object (PL-23765).
+	if resp.Data == nil || resp.Data.EnvGroup == nil {
+		return helpers.ReadMissing(ctx, d, "environment group "+id)
 	}
+	envGroup = resp.Data.EnvGroup
 
 	readEnvironmentGroup(d, envGroup)
 

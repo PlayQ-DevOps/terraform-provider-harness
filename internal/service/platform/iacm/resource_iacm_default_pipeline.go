@@ -21,7 +21,7 @@ func ResourceIacmDefaultPipeline() *schema.Resource {
 		DeleteContext: resourceIacmDefaultPipelineDelete,
 		CreateContext: resourceIacmDefaultPipelineCreate,
 		UpdateContext: resourceIacmDefaultPipelineUpdate,
-		Importer:      helpers.ProjectResourceImporter,
+		Importer:      iacmDefaultPipelineImporter,
 
 		Schema: map[string]*schema.Schema{
 			"org_id": {
@@ -163,3 +163,7 @@ func parseError(err error, httpResp *http.Response) diag.Diagnostics {
 
 	return diag.Errorf("%s\nHint:\n1) %s", httpResp.Status, iacmErr.Message)
 }
+
+// iacmDefaultPipelineImporter: <org_id>/<project_id>/<provisioner_type>/<operation>; Read
+// derives the "<provisioner>-<operation>" resource ID.
+var iacmDefaultPipelineImporter = helpers.NewImporter(helpers.ImportSpec{Parts: []string{"org_id", "project_id", "provisioner_type", "operation"}})

@@ -56,6 +56,10 @@ type Resource struct {
 	// RoutesOnly: the API does not follow the generic CRUD shape, so only Routes are served
 	// (IDPEntities). Kind, BasePath and RequireParents still apply.
 	RoutesOnly bool
+	// KindPattern is a regexp matching every path of the kind, for an API whose base path
+	// varies with the scope (NotificationChannels); it replaces the pattern derived from
+	// BasePath for Match{Kind} and MutatingMethods.
+	KindPattern string
 	// Decorate adds server-side fields to a stored object on create/update.
 	Decorate func(obj map[string]any)
 	// Validate rejects a create/update.
@@ -142,7 +146,11 @@ func (s *Server) Mount(res Resource) {
 	}
 	base := res.BasePath
 	s.mu.Lock()
-	s.kinds[res.Kind] = basePathRegexp(base)
+	if res.KindPattern != "" {
+		s.kinds[res.Kind] = regexp.MustCompile(res.KindPattern)
+	} else {
+		s.kinds[res.Kind] = basePathRegexp(base)
+	}
 	s.mu.Unlock()
 
 	if !res.RoutesOnly {
