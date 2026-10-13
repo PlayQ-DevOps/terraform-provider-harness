@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"github.com/harness/terraform-provider-harness/internal/service/cd_nextgen/connector/artifactRepositories"
 	"github.com/harness/terraform-provider-harness/internal/service/cd_nextgen/connector/cloudProviders"
 	"github.com/harness/terraform-provider-harness/internal/service/cd_nextgen/connector/codeRepositories"
 	"github.com/harness/terraform-provider-harness/internal/service/platform/connectors"
@@ -13,5 +14,6 @@ func ConnectorDefinitions() []connectors.Definition {
 	var defs []connectors.Definition
 	defs = append(defs, codeRepositories.Definitions()...)
 	defs = append(defs, cloudProviders.Definitions()...)
+	defs = append(defs, artifactRepositories.Definitions()...)
 	return defs
 }
