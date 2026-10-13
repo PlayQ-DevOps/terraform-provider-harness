@@ -4,10 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/harness/terraform-provider-harness/internal/service/platform/feature_flag"
-
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -112,7 +111,7 @@ func resourceFFApiKeyRead(ctx context.Context, d *schema.ResourceData, meta inte
 	resp, httpResp, err := c.APIKeysApi.GetAPIKey(ctx, id, qp.ProjectId, qp.EnvironmentId, c.AccountId, qp.OrganizationId)
 
 	if err != nil {
-		return feature_flag.HandleCFApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	readFFApiKey(d, &resp, qp)
@@ -145,7 +144,7 @@ func resourceFFApiKeyCreate(ctx context.Context, d *schema.ResourceData, meta in
 					d.Get("identifier").(string), qp.OrganizationId, qp.ProjectId, qp.EnvironmentId,
 				)
 			}
-			return feature_flag.HandleCFApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 
 		return diag.Errorf("API key creation failed: %v", err)
@@ -167,7 +166,7 @@ func resourceFFApiKeyDelete(ctx context.Context, d *schema.ResourceData, meta in
 
 	httpResp, err := c.APIKeysApi.DeleteAPIKey(ctx, d.Id(), qp.ProjectId, qp.EnvironmentId, c.AccountId, qp.OrganizationId)
 	if err != nil {
-		return feature_flag.HandleCFApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

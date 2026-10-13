@@ -49,7 +49,7 @@ func dataSourceProjectRead(ctx context.Context, d *schema.ResourceData, meta int
 	var httpResp *http.Response
 
 	if id != "" {
-		policy, _, _ = c.PoliciesApi.PoliciesFind(ctx, id, &policymgmt.PoliciesApiPoliciesFindOpts{
+		policy, httpResp, err = c.PoliciesApi.PoliciesFind(ctx, id, &policymgmt.PoliciesApiPoliciesFindOpts{
 			AccountIdentifier: optional.NewString(meta.(*internal.Session).AccountId),
 			XApiKey:           optional.NewString(meta.(*internal.Session).PLClient.ApiKey),
 		})
@@ -62,9 +62,8 @@ func dataSourceProjectRead(ctx context.Context, d *schema.ResourceData, meta int
 
 	bla := policymgmt.Policy{}
 	if policy == bla {
-		d.SetId("")
+		return diag.Errorf("policy not found: no object matched the given arguments")
 
-		return nil
 	}
 
 	readPolicy(d, policy)

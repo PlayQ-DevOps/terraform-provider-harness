@@ -236,15 +236,7 @@ func resourceScorecardRead(ctx context.Context, d *schema.ResourceData, meta int
 		HarnessAccount: optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {
-			d.SetId("")
-			return nil
-		}
-		if isNotFoundError(err) {
-			d.SetId("")
-			return nil
-		}
-		return helpers.HandleRead(ctx, d, err, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp, idpNotFound)
 	}
 
 	if resp.Scorecard == nil {
@@ -272,7 +264,7 @@ func resourceScorecardCreateOrUpdate(ctx context.Context, d *schema.ResourceData
 		})
 	}
 	if err != nil {
-		return handleIDPWriteApiError("harness_platform_idp_scorecard", err, d, httpResp)
+		return idpHandleWrite(ctx, d, "harness_platform_idp_scorecard", err, httpResp)
 	}
 
 	d.SetId(req.Scorecard.Identifier)
@@ -285,13 +277,7 @@ func resourceScorecardDelete(ctx context.Context, d *schema.ResourceData, meta i
 		HarnessAccount: optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {
-			return nil
-		}
-		if isNotFoundError(err) {
-			return nil
-		}
-		return helpers.HandleDelete(ctx, d, err, httpResp)
+		return idpHandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }

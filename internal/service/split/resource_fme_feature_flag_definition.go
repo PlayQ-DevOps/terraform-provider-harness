@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	splitsdk "github.com/harness/harness-go-sdk/harness/split"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -139,26 +140,26 @@ func resourceFMEFeatureFlagDefinitionRead(ctx context.Context, d *schema.Resourc
 	envID := d.Get("environment_id").(string)
 	def, err := client.Splits.GetDefinition(wsID, flagName, envID)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if def == nil {
-		d.SetId("")
-		return nil
+		return helpers.ReadMissing(ctx, d, "FME feature flag definition "+d.Id())
+
 	}
 	defStr, err := splitDefinitionRequestJSONForState(def)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	prior, _ := d.Get("definition").(string)
 	merged, err := splitDefinitionMergePresentationFromPrior(defStr, prior)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("definition", merged); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("definition_id", def.ID); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	return nil
 }
@@ -196,7 +197,7 @@ func resourceFMEFeatureFlagDefinitionDelete(ctx context.Context, d *schema.Resou
 	flagName := d.Get("flag_name").(string)
 	envID := d.Get("environment_id").(string)
 	if err := client.Splits.RemoveDefinition(wsID, flagName, envID); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 	return nil
 }

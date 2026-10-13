@@ -172,19 +172,8 @@ func resourceGitopsAgentRead(ctx context.Context, d *schema.ResourceData, meta i
 		ProjectIdentifier: optional.NewString(d.Get("project_id").(string)),
 	})
 
-	if err != nil && httpResp != nil && httpResp.StatusCode != 404 {
+	if err != nil {
 		return helpers.HandleRead(ctx, d, err, httpResp)
-	}
-	if err != nil && httpResp == nil {
-		return helpers.HandleRead(ctx, d, err, httpResp)
-	}
-
-	// Soft delete lookup error handling
-	// https://harness.atlassian.net/browse/PL-23765
-	if httpResp != nil && httpResp.StatusCode == 404 {
-		d.SetId("")
-
-		return nil
 	}
 	readAgent(d, &resp)
 	return nil

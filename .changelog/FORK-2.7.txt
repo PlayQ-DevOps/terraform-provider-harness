@@ -1,0 +1,12 @@
+```release-note:bug
+provider: the last hand-rolled error handling in resources is gone. Every family now interprets API errors through the shared lifecycle helpers: IaCM (workspaces, variable sets, modules, providers, default pipelines, ansible), feature flags (flags, targets, target groups, API keys), IDP (catalog entities, scorecards, checks, plugins, environments, blueprints), chaos (templates, experiments, hubs, security governance), cluster orchestrator, GitOps agents, dashboards, policies, service discovery, the pipeline and template family (git errors become actionable) and FirstGen. Reads no longer compare HTTP statuses themselves, deletes of an already-missing object succeed, and a soft-deleted chaos experiment or an empty object is removed from state so it can be recreated.
+```
+```release-note:bug
+data sources: a data source whose lookup matches nothing now returns an error naming the object instead of silently returning an empty result (33 data sources, including policies and policy sets, whose lookup errors were previously ignored).
+```
+```release-note:bug
+resource/harness_platform_policy: an update that fails no longer empties the state; the error is reported and the resource kept.
+```
+```release-note:note
+IDP and IaCM error messages are now the API message plus the HTTP status and code; the IDP "already exists, import it" and "referenced by other scorecards" hints are kept.
+```

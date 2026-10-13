@@ -72,11 +72,7 @@ func resourceEnvironmentBlueprintRead(ctx context.Context, d *schema.ResourceDat
 		HarnessAccount: optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		if isNotFoundError(err) {
-			httpResp.StatusCode = 404
-		}
-
-		return helpers.HandleRead(ctx, d, err, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp, idpNotFound)
 	}
 
 	readEnvironmentBlueprint(d, resp)
@@ -148,34 +144,19 @@ func resourceEnvironmentBlueprintDelete(ctx context.Context, d *schema.ResourceD
 		HarnessAccount: optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		// Ignore deletions of versions that are already gone
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			d.SetId("")
-			return nil
-		}
-
-		if isNotFoundError(err) {
-			d.SetId("")
-			return nil
-		}
-
-		if httpResp != nil && httpResp.StatusCode == 400 {
-			if isOnlyVersionDeleteError(err) {
-				// If there only is one version. We can safely delete the parent as well.
-				// We should move this logic to idp-service in the future.
-				_, delErr := c.EntitiesApi.DeleteEntity(ctx, "account", environmentBlueprintKind, id, &idp.EntitiesApiDeleteEntityOpts{
-					HarnessAccount: optional.NewString(c.AccountId),
-				})
-				if delErr != nil {
-					fmt.Printf("Error deleting parent entity after version deletion: %+v\n", delErr)
-					return helpers.HandleDelete(ctx, d, delErr, httpResp)
-				}
-				d.SetId("")
-				return nil
+		if helpers.StatusOf(httpResp) == 400 && isOnlyVersionDeleteError(err) {
+			// The last version cannot be deleted on its own: delete the parent entity instead.
+			// This belongs in idp-service.
+			_, delErr := c.EntitiesApi.DeleteEntity(ctx, "account", environmentBlueprintKind, id, &idp.EntitiesApiDeleteEntityOpts{
+				HarnessAccount: optional.NewString(c.AccountId),
+			})
+			if delErr != nil {
+				return helpers.HandleDelete(ctx, d, delErr, httpResp, idpNotFound)
 			}
+			return nil
 		}
 
-		return helpers.HandleDelete(ctx, d, err, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp, idpNotFound)
 	}
 
 	return nil

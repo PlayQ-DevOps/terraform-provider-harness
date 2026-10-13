@@ -165,17 +165,7 @@ func resourceEnvironmentDelete(ctx context.Context, d *schema.ResourceData, meta
 	})
 
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {
-			d.SetId("")
-			return nil
-		}
-
-		if isNotFoundError(err) {
-			d.SetId("")
-			return nil
-		}
-
-		return helpers.HandleDelete(ctx, d, err, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp, idpNotFound)
 	}
 
 	return nil

@@ -14,7 +14,6 @@ import (
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
-	"github.com/harness/terraform-provider-harness/internal/service/platform/feature_flag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -216,7 +215,7 @@ func resourceFeatureFlagTargetCreate(ctx context.Context, d *schema.ResourceData
 		if httpResp != nil && httpResp.StatusCode == 409 {
 			return diag.Errorf("A target group with identifier [%s] orgIdentifier [%s] project [%s] environment [%s] already exists", segmentRequest.Identifier, qp.OrgID, qp.Project, segmentRequest.Environment)
 		}
-		return feature_flag.HandleCFApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	if httpResp.StatusCode != http.StatusCreated {
@@ -225,7 +224,7 @@ func resourceFeatureFlagTargetCreate(ctx context.Context, d *schema.ResourceData
 
 	segment, httpResp, err = c.TargetGroupsApi.GetSegment(ctx, c.AccountId, qp.OrgID, id, qp.Project, qp.Environment)
 	if err != nil {
-		return feature_flag.HandleCFApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readFeatureFlagTargetGroup(d, &segment, qp)
@@ -248,7 +247,7 @@ func resourceFeatureFlagTargetGroupUpdate(ctx context.Context, d *schema.Resourc
 
 		_, httpResp, err := c.TargetGroupsApi.PatchSegment(ctx, c.AccountId, qp.OrgID, qp.Project, qp.Environment, id, opts)
 		if err != nil {
-			return feature_flag.HandleCFApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 		time.Sleep(1 * time.Second)
 	}
@@ -285,7 +284,7 @@ func resourceFeatureFlagTargetGroupDelete(ctx context.Context, d *schema.Resourc
 
 	httpResp, err := c.TargetGroupsApi.DeleteSegment(ctx, c.AccountId, qp.OrgID, id, qp.Project, qp.Environment)
 	if err != nil {
-		return feature_flag.HandleCFApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

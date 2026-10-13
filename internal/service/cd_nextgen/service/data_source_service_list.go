@@ -81,9 +81,8 @@ func dataSourceServiceListRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 
 	if services == nil {
-		d.SetId("")
+		return diag.Errorf("service list not found: no object matched the given arguments")
 
-		return nil
 	}
 
 	d.SetId(resp.CorrelationId)

@@ -113,7 +113,7 @@ func resourceInfraProviderSigningKeyCreate(ctx context.Context, d *schema.Resour
 
 	if err != nil {
 		log.Printf("[ERROR] Failed to create signing key: %v, HTTP Status: %v", err, httpRes)
-		return parseError(err, httpRes)
+		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
 
 	listResp, httpRes, err := c.ProviderRegistryApi.ProviderRegistryListSigningKeys(
@@ -123,7 +123,7 @@ func resourceInfraProviderSigningKeyCreate(ctx context.Context, d *schema.Resour
 	)
 	if err != nil {
 		log.Printf("[ERROR] Failed to list signing keys after creation: %v", err)
-		return parseError(err, httpRes)
+		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
 
 	log.Printf("[DEBUG] Found %d signing keys, searching for key_id %s", len(listResp), createKey.KeyId)
@@ -154,7 +154,7 @@ func resourceInfraProviderSigningKeyDelete(ctx context.Context, d *schema.Resour
 		c.AccountId,
 	)
 	if err != nil {
-		return parseError(err, httpRes)
+		return helpers.HandleDelete(ctx, d, err, httpRes)
 	}
 	return nil
 }
@@ -174,7 +174,7 @@ func resourceInfraProviderSigningKeyUpdate(ctx context.Context, d *schema.Resour
 			id,
 		)
 		if err != nil {
-			return parseError(err, httpRes)
+			return helpers.HandleWrite(ctx, d, err, httpRes)
 		}
 	}
 

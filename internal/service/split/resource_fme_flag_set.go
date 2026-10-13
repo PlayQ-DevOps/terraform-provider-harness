@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	splitsdk "github.com/harness/harness-go-sdk/harness/split"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -134,20 +135,20 @@ func resourceFMEFlagSetRead(ctx context.Context, d *schema.ResourceData, meta in
 			d.SetId("")
 			return nil
 		}
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if fs == nil {
-		d.SetId("")
-		return nil
+		return helpers.ReadMissing(ctx, d, "FME flag set "+d.Id())
+
 	}
 	if err := d.Set("name", fs.Name); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("description", fs.Description); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("flag_set_id", fs.ID); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	return nil
 }
@@ -161,7 +162,7 @@ func resourceFMEFlagSetDelete(ctx context.Context, d *schema.ResourceData, meta 
 		if splitFlagSetErrLooksNotFound(err) {
 			return nil
 		}
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 	return nil
 }

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/harness/harness-go-sdk/harness/cd/graphql"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/service/cd/usagescope"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -81,11 +82,10 @@ func resourceEncryptedTextRead(ctx context.Context, d *schema.ResourceData, meta
 
 	secret, err := c.CDClient.SecretClient.GetEncryptedTextById(secretId)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	} else if secret == nil {
-		d.SetId("")
+		return helpers.ReadMissing(ctx, d, "encrypted text "+d.Id())
 
-		return nil
 	}
 
 	return readEncryptedText(d, secret)
@@ -202,7 +202,7 @@ func resourceEncryptedTextDelete(ctx context.Context, d *schema.ResourceData, me
 			log.Println("[WARN] Secret is still being used, cannot delete. Retrying in 5s...")
 			time.Sleep(time.Second * 5)
 			if err := c.CDClient.SecretClient.DeleteSecret(d.Get("id").(string), graphql.SecretTypes.EncryptedText); err != nil {
-				return diag.FromErr(err)
+				return helpers.HandleDelete(ctx, d, err, nil)
 			}
 		}
 	}

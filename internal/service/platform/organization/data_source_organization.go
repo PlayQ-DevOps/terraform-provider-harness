@@ -49,9 +49,8 @@ func dataSourceOrganizationRead(ctx context.Context, d *schema.ResourceData, met
 	}
 
 	if org == nil || org.Organization == nil {
-		d.SetId("")
+		return diag.Errorf("organization not found: no object matched the given arguments")
 
-		return nil
 	}
 
 	readOrganization(d, org.Organization)

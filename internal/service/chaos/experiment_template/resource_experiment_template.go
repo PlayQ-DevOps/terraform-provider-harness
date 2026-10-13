@@ -121,11 +121,6 @@ func resourceExperimentTemplateRead(ctx context.Context, d *schema.ResourceData,
 
 	resp, httpResp, err := c.ExperimenttemplateApi.GetExperimentTemplate(ctx, accountID, identity, opts)
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			log.Printf("[WARN] Experiment template not found, removing from state: %s", identity)
-			d.SetId("")
-			return nil
-		}
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
@@ -207,10 +202,6 @@ func resourceExperimentTemplateDelete(ctx context.Context, d *schema.ResourceDat
 
 	_, httpResp, err := c.ExperimenttemplateApi.DeleteExperimentTemplate(ctx, accountID, identity, opts)
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			log.Printf("[WARN] Experiment template already deleted: %s", identity)
-			return nil
-		}
 		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 

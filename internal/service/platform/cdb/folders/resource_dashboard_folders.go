@@ -66,11 +66,6 @@ func resourceFolderRead(ctx context.Context, d *schema.ResourceData, meta interf
 	})
 
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			// Folder not found, remove from state
-			d.SetId("")
-			return nil
-		}
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 

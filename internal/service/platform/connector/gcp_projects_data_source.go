@@ -68,8 +68,8 @@ func dataSourceGcpProjectsRead(ctx context.Context, d *schema.ResourceData, meta
 
 	// Check if response data is nil
 	if resp.Data == nil || resp.Data.Projects == nil {
-		d.SetId("")
-		return nil
+		return diag.Errorf("gcp projects not found: no object matched the given arguments")
+
 	}
 
 	// Convert projects to schema format

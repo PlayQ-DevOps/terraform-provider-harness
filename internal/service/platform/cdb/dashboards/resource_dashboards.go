@@ -121,11 +121,6 @@ func resourceDashboardRead(ctx context.Context, d *schema.ResourceData, meta int
 	})
 
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			// Dashboard not found, remove from state
-			d.SetId("")
-			return nil
-		}
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 

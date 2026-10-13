@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	splitsdk "github.com/harness/harness-go-sdk/harness/split"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -243,7 +244,7 @@ func resourceFMEApiKeyRead(ctx context.Context, d *schema.ResourceData, meta int
 		return diags
 	}
 	if err := d.Set("key_id", d.Id()); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	return nil
 }

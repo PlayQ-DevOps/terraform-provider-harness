@@ -196,9 +196,8 @@ func dataSourceGitOpsRepositoryRead(ctx context.Context, d *schema.ResourceData,
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
 	if resp.Repository == nil {
-		d.SetId("")
+		return diag.Errorf("gitops repository not found: no object matched the given arguments")
 
-		return nil
 	}
 	setRepositoryDetails(d, &resp)
 	return nil

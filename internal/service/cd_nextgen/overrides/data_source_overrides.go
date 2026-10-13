@@ -116,9 +116,8 @@ func dataSourceOverridesRead(ctx context.Context, d *schema.ResourceData, meta i
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
 	if resp.Data == nil {
-		d.SetId("")
+		return diag.Errorf("overrides not found: no object matched the given arguments")
 
-		return nil
 	}
 
 	readOverrides(d, resp.Data)

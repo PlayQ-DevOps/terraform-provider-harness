@@ -70,9 +70,8 @@ func dataSourceEnvironmentListRead(ctx context.Context, d *schema.ResourceData, 
 	}
 
 	if environments == nil {
-		d.SetId("")
+		return diag.Errorf("environment list not found: no object matched the given arguments")
 
-		return nil
 	}
 
 	d.SetId(resp.CorrelationId)

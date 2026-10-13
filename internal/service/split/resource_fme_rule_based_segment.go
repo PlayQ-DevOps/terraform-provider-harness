@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	splitsdk "github.com/harness/harness-go-sdk/harness/split"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -138,11 +139,11 @@ func resourceFMERuleBasedSegmentRead(ctx context.Context, d *schema.ResourceData
 	segName := d.Id()
 	def, err := client.RuleBasedSegments.Get(wsID, segName)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if def == nil {
-		d.SetId("")
-		return nil
+		return helpers.ReadMissing(ctx, d, "FME rule based segment "+d.Id())
+
 	}
 	return nil
 }
@@ -158,7 +159,7 @@ func resourceFMERuleBasedSegmentDelete(ctx context.Context, d *schema.ResourceDa
 	}
 	name := d.Id()
 	if err := client.RuleBasedSegments.Delete(wsID, name); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 	return nil
 }

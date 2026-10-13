@@ -224,7 +224,7 @@ func resourceOverridesCreateOrUpdate(ctx context.Context, d *schema.ResourceData
 	}
 
 	if err != nil {
-		return helpers.HandleWrite(ctx, d, err, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	// Soft delete lookup error handling

@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/harness/terraform-provider-harness/internal/service/platform/feature_flag"
-
 	"github.com/antihax/optional"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
@@ -131,7 +129,7 @@ func resourceFeatureFlagTargetDelete(ctx context.Context, d *schema.ResourceData
 
 	httpResp, err := c.TargetsApi.DeleteTarget(ctx, id, c.AccountId, qp.OrganizationID, qp.ProjectID, qp.Environment)
 	if err != nil {
-		return feature_flag.HandleCFApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 	return nil
 }
@@ -157,7 +155,7 @@ func resourceFeatureFlagTargetCreateOrUpdate(ctx context.Context, d *schema.Reso
 		if httpResp != nil && httpResp.StatusCode == 409 {
 			return diag.Errorf("A target with identifier [%s] orgIdentifier [%s] project [%s] environment [%s] already exists", target.Identifier, qp.OrganizationID, qp.ProjectID, target.Environment)
 		}
-		return feature_flag.HandleCFApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	readFeatureFlagTarget(d, &target, *qp)

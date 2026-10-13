@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	splitsdk "github.com/harness/harness-go-sdk/harness/split"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -156,29 +157,29 @@ func resourceFMETrafficTypeAttributeRead(ctx context.Context, d *schema.Resource
 	ttID := d.Get("traffic_type_id").(string)
 	attr, err := client.Attributes.FindByID(wsID, ttID, d.Id(), nil)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if attr == nil {
-		d.SetId("")
-		return nil
+		return helpers.ReadMissing(ctx, d, "FME traffic type attribute "+d.Id())
+
 	}
 	if err := d.Set("display_name", attr.DisplayName); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("description", attr.Description); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("data_type", strings.ToLower(strings.TrimSpace(attr.DataType))); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("is_searchable", attr.IsSearchable); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("suggested_values", attr.SuggestedValues); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("attribute_id", attr.ID); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	return nil
 }
@@ -211,7 +212,7 @@ func resourceFMETrafficTypeAttributeDelete(ctx context.Context, d *schema.Resour
 	}
 	ttID := d.Get("traffic_type_id").(string)
 	if err := client.Attributes.Delete(wsID, ttID, d.Id()); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 	return nil
 }

@@ -97,11 +97,10 @@ func resourceEnvironmentRead(ctx context.Context, d *schema.ResourceData, meta i
 	appId := d.Get("app_id").(string)
 
 	if env, err = c.ConfigAsCodeClient.GetEnvironmentById(appId, envId); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	} else if env == nil {
-		d.SetId("")
+		return helpers.ReadMissing(ctx, d, "environment "+d.Id())
 
-		return nil
 	}
 
 	return readEnvironment(d, env)
@@ -214,12 +213,12 @@ func resourceEnvironmentDelete(ctx context.Context, d *schema.ResourceData, meta
 
 	app, err := c.ApplicationClient.GetApplicationById(appId)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	err = c.ConfigAsCodeClient.DeleteEnvironment(app.Name, envName)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	return nil

@@ -293,7 +293,7 @@ func resourceInputSetCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 			})
 
 			if err != nil {
-				return helpers.HandleWrite(ctx, d, err, httpResp)
+				return helpers.HandleWriteGit(ctx, d, err, httpResp)
 			}
 		}
 
@@ -310,7 +310,7 @@ func resourceInputSetCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if err != nil {
-		return helpers.HandleWrite(ctx, d, err, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	if importing {
@@ -329,7 +329,7 @@ func resourceInputSetCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 		})
 
 		if err != nil {
-			return helpers.HandleWrite(ctx, d, err, httpResp)
+			return helpers.HandleWriteGit(ctx, d, err, httpResp)
 		}
 
 		readInputSet(d, &resp, pipelineIdentifier, optional.NewString("REMOTE"), optional.EmptyString(), optional.EmptyString(), parent_entity_connector_ref)
@@ -357,7 +357,7 @@ func resourceInputSetEditGitDetials(ctx context.Context, d *schema.ResourceData,
 	resp, httpResp, err := c.InputSetsApi.EditGitDetailsForInputSet(ctx, c.AccountId, org_id, project_id, pipelineIdentifier, id, gitDetails)
 
 	if err != nil {
-		return helpers.HandleWrite(ctx, d, err, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	d.SetId(resp.Data.Identifier)

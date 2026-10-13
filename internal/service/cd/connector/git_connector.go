@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/harness/harness-go-sdk/harness/cd/graphql"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/service/cd/usagescope"
 	"github.com/harness/terraform-provider-harness/internal/utils"
@@ -134,11 +135,10 @@ func resourceGitConnectorRead(ctx context.Context, d *schema.ResourceData, meta 
 
 	conn, err := c.ConnectorClient.GetGitConnectorById(connId)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	} else if conn == nil {
-		d.SetId("")
+		return helpers.ReadMissing(ctx, d, "git connector "+d.Id())
 
-		return nil
 	}
 
 	return readGitConnector(d, conn)
@@ -254,7 +254,7 @@ func resourceGitConnectorDelete(ctx context.Context, d *schema.ResourceData, met
 	err := c.ConnectorClient.DeleteConnector(id)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	return nil

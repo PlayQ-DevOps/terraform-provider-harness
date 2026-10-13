@@ -2,9 +2,7 @@ package provider_registry
 
 import (
 	"context"
-	"encoding/json"
 	"log"
-	"net/http"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
@@ -89,9 +87,6 @@ func ResourceInfraProvider() *schema.Resource {
 func resourceInfraProviderRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c, ctx := m.(*internal.Session).GetPlatformClientWithContext(ctx)
 	id := d.Id()
-	if id == "" {
-
-	}
 	resp, httpRes, err := c.ProviderRegistryApi.ProviderRegistryGetProvider(
 		ctx,
 		id,
@@ -116,7 +111,7 @@ func resourceInfraProviderCreate(ctx context.Context, d *schema.ResourceData, m 
 	provRes, httpRes, err := c.ProviderRegistryApi.ProviderRegistryCreateProvider(ctx, createProvider, c.AccountId, providerType)
 
 	if err != nil {
-		return parseError(err, httpRes)
+		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
 	setProviderId(d, &provRes)
 	return helpers.ReadAfterWrite(ctx, d, m, 0, resourceInfraProviderRead)
@@ -130,7 +125,7 @@ func resourceInfraProviderDelete(ctx context.Context, d *schema.ResourceData, m 
 	}
 	httpRes, err := c.ProviderRegistryApi.ProviderRegistryDeleteProvider(ctx, id, c.AccountId)
 	if err != nil {
-		return parseError(err, httpRes)
+		return helpers.HandleDelete(ctx, d, err, httpRes)
 	}
 	return nil
 }
@@ -174,27 +169,4 @@ func buildCreateProviderRequestBody(d *schema.ResourceData) nextgen.CreateProvid
 	}
 
 	return provider
-}
-
-func parseError(err error, httpResp *http.Response) diag.Diagnostics {
-	if httpResp != nil && httpResp.StatusCode == 401 {
-		return diag.Errorf("%s\nHint:\n1) Please check if token has expired or is wrong.\n2) Harness Provider is misconfigured. For firstgen resources please give the correct api_key and for nextgen resources please give the correct platform_api_key.", httpResp.Status)
-	}
-	if httpResp != nil && httpResp.StatusCode == 403 {
-		return diag.Errorf("%s\nHint:\n1) Please check if the token has required permission for this operation.\n2) Please check if the token has expired or is wrong.", httpResp.Status)
-	}
-
-	se, ok := err.(nextgen.GenericSwaggerError)
-	if !ok {
-		diag.FromErr(err)
-	}
-
-	iacmErrBody := se.Body()
-	iacmErr := nextgen.IacmError{}
-	jsonErr := json.Unmarshal(iacmErrBody, &iacmErr)
-	if jsonErr != nil {
-		return diag.Errorf("%s", err.Error())
-	}
-
-	return diag.Errorf("%s\nHint:\n1) %s", httpResp.Status, iacmErr.Message)
 }

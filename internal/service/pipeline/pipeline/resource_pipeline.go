@@ -278,7 +278,7 @@ func resourcePipelineCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 				HarnessAccount: optional.NewString(c.AccountId),
 			})
 			if err != nil {
-				return helpers.HandleWrite(ctx, d, err, httpResp)
+				return helpers.HandleWriteGit(ctx, d, err, httpResp)
 			}
 		}
 		_, httpResp, err = c.PipelinesApi.UpdatePipeline(ctx, pipeline, org_id, project_id, id,
@@ -290,14 +290,14 @@ func resourcePipelineCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if err != nil {
-		return helpers.HandleWrite(ctx, d, err, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	// The create/update methods don't return the yaml in the response, so we need to query for it again.
 	resp, httpResp, err := c.PipelinesApi.GetPipeline(ctx, org_id, project_id, pipeline_id,
 		&nextgen.PipelinesApiGetPipelineOpts{HarnessAccount: optional.NewString(c.AccountId), BranchName: optional.NewString(branch_name)})
 	if err != nil {
-		return helpers.HandleWrite(ctx, d, err, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	readPipeline(d, resp, org_id, project_id, template_applied, store_type, base_branch, commit_message, connector_ref)
@@ -319,7 +319,7 @@ func resourcePipelineEditGitDetials(ctx context.Context, d *schema.ResourceData,
 	resp, httpResp, err := c.PipelinesApi.EditGitDetialsForPipeline(ctx, c.AccountId, org_id, project_id, id, gitDetails)
 
 	if err != nil {
-		return helpers.HandleWrite(ctx, d, err, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	d.SetId(resp.Data.Identifier)

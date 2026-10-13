@@ -2,9 +2,7 @@ package module_registry
 
 import (
 	"context"
-	"encoding/json"
 	"log"
-	"net/http"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
@@ -153,10 +151,6 @@ func ResourceInfraModule() *schema.Resource {
 
 func resourceInfraModuleRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c, ctx := m.(*internal.Session).GetPlatformClientWithContext(ctx)
-	id := d.Id()
-	if id == "" {
-
-	}
 	resp, httpRes, err := c.ModuleRegistryApi.ModuleRegistryListModulesById(
 		ctx,
 		d.Get("id").(string),
@@ -183,7 +177,7 @@ func resourceInfraModuleCreate(ctx context.Context, d *schema.ResourceData, m in
 	modRes, httpRes, err := c.ModuleRegistryApi.ModuleRegistryCreateModule(ctx, createModule, c.AccountId)
 
 	if err != nil {
-		return parseError(err, httpRes)
+		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
 	setModuleId(d, &modRes)
 	return helpers.ReadAfterWrite(ctx, d, m, 0, resourceInfraModuleRead)
@@ -197,7 +191,7 @@ func resourceInfraModuleDelete(ctx context.Context, d *schema.ResourceData, m in
 	}
 	httpRes, err := c.ModuleRegistryApi.ModuleRegistryDeleteModule(ctx, id, c.AccountId)
 	if err != nil {
-		return parseError(err, httpRes)
+		return helpers.HandleDelete(ctx, d, err, httpRes)
 	}
 	return nil
 }
@@ -214,7 +208,7 @@ func resourceInfraModuleUpdate(ctx context.Context, d *schema.ResourceData, m in
 	}
 	httpRes, err := c.ModuleRegistryApi.ModuleRegistryUpdateModule(ctx, updateModule, c.AccountId, id)
 	if err != nil {
-		return parseError(err, httpRes)
+		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
 	return helpers.ReadAfterWrite(ctx, d, m, 0, resourceInfraModuleRead)
 }
@@ -360,32 +354,4 @@ func buildUpdateModuleRequestBody(d *schema.ResourceData) (nextgen.CreateModuleR
 		module.Tags = tags.(string)
 	}
 	return module, nil
-}
-
-func parseError(err error, httpResp *http.Response) diag.Diagnostics {
-	if httpResp != nil && httpResp.StatusCode == 401 {
-		return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-			"1) Please check if token has expired or is wrong.\n"+
-			"2) Harness Provider is misconfigured. For firstgen resources please give the correct api_key and for nextgen resources please give the correct platform_api_key.")
-	}
-	if httpResp != nil && httpResp.StatusCode == 403 {
-		return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-			"1) Please check if the token has required permission for this operation.\n"+
-			"2) Please check if the token has expired or is wrong.")
-	}
-
-	se, ok := err.(nextgen.GenericSwaggerError)
-	if !ok {
-		diag.FromErr(err)
-	}
-
-	iacmErrBody := se.Body()
-	iacmErr := nextgen.IacmError{}
-	jsonErr := json.Unmarshal(iacmErrBody, &iacmErr)
-	if jsonErr != nil {
-		return diag.Errorf("%s", err.Error())
-	}
-
-	return diag.Errorf("%s", httpResp.Status+"\n"+"Hint:\n"+
-		"1) "+iacmErr.Message)
 }

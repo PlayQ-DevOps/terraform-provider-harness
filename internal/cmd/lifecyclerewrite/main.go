@@ -4,7 +4,15 @@
 // function. It also removes d.MarkNewResource() calls in Read/Delete functions (they are
 // no-ops there) and the always-false `if &x == nil { ... }` checks.
 //
-// Usage: go run ./internal/cmd/lifecyclerewrite [-dry] [-fromerr] <dir>...
+// Usage: go run ./internal/cmd/lifecyclerewrite [-dry] [-fromerr] [-local names] [-dsnotfound] [-nilclear] <dir>...
+//
+//   - -local a,b: package-local `a(err, resp)` error helpers (the IaCM parseError copies)
+//     are rewritten by role like the old wrappers; the family-specific
+//     HandleCFApiError(err, d, resp) is always recognised.
+//   - -dsnotfound: in data-source functions, `d.SetId(""); return nil` (a silent empty
+//     result) becomes a not-found error.
+//   - -nilclear: in read functions, `if x == nil { d.SetId(""); return nil }` becomes
+//     helpers.ReadMissing, so the removal is logged like every other one.
 //
 // Functions whose role cannot be inferred from their name are reported and left alone.
 package main
@@ -21,7 +29,9 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
+	"unicode"
 )
 
 type role int
@@ -38,9 +48,14 @@ func (r role) String() string {
 	return [...]string{"unknown", "read", "delete", "write", "datasource"}[r]
 }
 
+const helpersImport = "github.com/harness/terraform-provider-harness/helpers"
+
 var (
-	dryRun  = flag.Bool("dry", false, "report without writing")
-	fromErr = flag.Bool("fromerr", false, "also rewrite `return diag.FromErr(err)` in read/delete functions to HandleRead/HandleDelete (for clients without an *http.Response)")
+	dryRun     = flag.Bool("dry", false, "report without writing")
+	fromErr    = flag.Bool("fromerr", false, "also rewrite `return diag.FromErr(err)` in read/delete functions to HandleRead/HandleDelete (for clients without an *http.Response)")
+	localNames = flag.String("local", "", "comma-separated names of package-local `name(err, resp)` error helpers to rewrite by role like the old wrappers")
+	dsNotFound = flag.Bool("dsnotfound", false, "in data-source functions, turn `d.SetId(\"\"); return nil` into a not-found error")
+	nilClear   = flag.Bool("nilclear", false, "in read functions, turn `if x == nil { d.SetId(\"\"); return nil }` into helpers.ReadMissing")
 )
 
 type stats struct {
@@ -55,8 +70,14 @@ type stats struct {
 func main() {
 	flag.Parse()
 	if flag.NArg() == 0 {
-		fmt.Fprintln(os.Stderr, "usage: lifecyclerewrite [-dry] [-fromerr] <dir>...")
+		fmt.Fprintln(os.Stderr, "usage: lifecyclerewrite [-dry] [-fromerr] [-local names] [-dsnotfound] [-nilclear] <dir>...")
 		os.Exit(2)
+	}
+	locals := map[string]bool{}
+	for _, n := range strings.Split(*localNames, ",") {
+		if n = strings.TrimSpace(n); n != "" {
+			locals[n] = true
+		}
 	}
 	st := &stats{rewritten: map[string]int{}}
 	for _, dir := range flag.Args() {
@@ -67,7 +88,7 @@ func main() {
 			if d.IsDir() || !strings.HasSuffix(path, ".go") || strings.HasSuffix(path, "_test.go") {
 				return nil
 			}
-			return rewriteFile(path, st)
+			return rewriteFile(path, st, locals)
 		})
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
@@ -122,7 +143,7 @@ func target(old string, r role) (helper string, ok bool) {
 		"HandleCodeReadApiError": true, "HandleChaosReadApiError": true, "HandlePolicyApiError": true,
 	}
 	generic := map[string]bool{
-		"HandleApiError": true, "HandleDBOpsApiError": true, "HandleCodeApiError": true, "HandleChaosApiError": true,
+		"HandleApiError": true, "HandleDBOpsApiError": true, "HandleCodeApiError": true, "HandleChaosApiError": true, "HandleCFApiError": true,
 	}
 	switch {
 	case readish[old] || generic[old]:
@@ -169,22 +190,54 @@ func ctxName(fn *ast.FuncDecl) string {
 	return ""
 }
 
-func helpersCall(call *ast.CallExpr) (string, bool) {
-	sel, ok := call.Fun.(*ast.SelectorExpr)
-	if !ok {
-		return "", false
+// dataName returns the name of the *schema.ResourceData parameter, "d" by default.
+func dataName(fn *ast.FuncDecl) string {
+	if fn.Type.Params != nil {
+		for _, p := range fn.Type.Params.List {
+			if star, ok := p.Type.(*ast.StarExpr); ok {
+				if sel, ok := star.X.(*ast.SelectorExpr); ok && sel.Sel.Name == "ResourceData" && len(p.Names) > 0 {
+					return p.Names[0].Name
+				}
+			}
+		}
 	}
-	x, ok := sel.X.(*ast.Ident)
-	if !ok || x.Name != "helpers" {
-		return "", false
+	return "d"
+}
+
+// callForm classifies a call: "helpers" for helpers.X, "cf3" for the (err, d, resp)
+// HandleCFApiError, "local2" for a package-local (err, resp) helper named in -local.
+func callForm(call *ast.CallExpr, locals map[string]bool) (name, form string) {
+	switch fun := call.Fun.(type) {
+	case *ast.SelectorExpr:
+		x, ok := fun.X.(*ast.Ident)
+		if !ok {
+			return "", ""
+		}
+		switch {
+		case x.Name == "helpers":
+			return fun.Sel.Name, "helpers"
+		case x.Name == "feature_flag" && fun.Sel.Name == "HandleCFApiError":
+			return fun.Sel.Name, "cf3"
+		}
+	case *ast.Ident:
+		switch {
+		case fun.Name == "HandleCFApiError":
+			return fun.Name, "cf3"
+		case locals[fun.Name]:
+			return fun.Name, "local2"
+		}
 	}
-	return sel.Sel.Name, true
+	return "", ""
 }
 
 func ident(name string) *ast.Ident { return &ast.Ident{Name: name} }
 
 func selector(pkg, name string) *ast.SelectorExpr {
 	return &ast.SelectorExpr{X: ident(pkg), Sel: ident(name)}
+}
+
+func strLit(s string) *ast.BasicLit {
+	return &ast.BasicLit{Kind: token.STRING, Value: strconv.Quote(s)}
 }
 
 func ctxExpr(fn *ast.FuncDecl, st *stats, where string) ast.Expr {
@@ -195,7 +248,95 @@ func ctxExpr(fn *ast.FuncDecl, st *stats, where string) ast.Expr {
 	return &ast.CallExpr{Fun: selector("context", "TODO")}
 }
 
-func rewriteFile(path string, st *stats) error {
+// humanName turns resourceGitopsAgentRead or readCloudProviderAws into "gitops agent" or
+// "cloud provider aws", for messages.
+func humanName(fn string) string {
+	name := fn
+	for _, p := range []string{"dataSource", "datasource", "resource"} {
+		if strings.HasPrefix(name, p) {
+			name = name[len(p):]
+			break
+		}
+	}
+	name = strings.TrimSuffix(name, "Read")
+	name = strings.TrimPrefix(name, "read")
+	name = strings.TrimPrefix(name, "Read")
+	var words []string
+	start := 0
+	for i := 1; i <= len(name); i++ {
+		if i == len(name) || (unicode.IsUpper(rune(name[i])) && !unicode.IsUpper(rune(name[i-1]))) {
+			words = append(words, strings.ToLower(name[start:i]))
+			start = i
+		}
+	}
+	return strings.TrimSpace(strings.Join(words, " "))
+}
+
+// isSetIDEmpty reports whether s is `<d>.SetId("")`.
+func isSetIDEmpty(s ast.Stmt, d string) bool {
+	es, ok := s.(*ast.ExprStmt)
+	if !ok {
+		return false
+	}
+	call, ok := es.X.(*ast.CallExpr)
+	if !ok || len(call.Args) != 1 {
+		return false
+	}
+	sel, ok := call.Fun.(*ast.SelectorExpr)
+	if !ok || sel.Sel.Name != "SetId" {
+		return false
+	}
+	if x, ok := sel.X.(*ast.Ident); !ok || x.Name != d {
+		return false
+	}
+	lit, ok := call.Args[0].(*ast.BasicLit)
+	return ok && lit.Kind == token.STRING && lit.Value == `""`
+}
+
+func isMarkNew(s ast.Stmt) bool {
+	es, ok := s.(*ast.ExprStmt)
+	if !ok {
+		return false
+	}
+	call, ok := es.X.(*ast.CallExpr)
+	if !ok {
+		return false
+	}
+	sel, ok := call.Fun.(*ast.SelectorExpr)
+	return ok && sel.Sel.Name == "MarkNewResource"
+}
+
+func isReturnNil(s ast.Stmt) bool {
+	ret, ok := s.(*ast.ReturnStmt)
+	if !ok || len(ret.Results) != 1 {
+		return false
+	}
+	id, ok := ret.Results[0].(*ast.Ident)
+	return ok && id.Name == "nil"
+}
+
+// isSilentClear reports whether a block is `d.SetId(""); [d.MarkNewResource();] return nil`.
+func isSilentClear(b *ast.BlockStmt, d string) bool {
+	stmts := b.List
+	if len(stmts) == 3 && isMarkNew(stmts[1]) {
+		stmts = []ast.Stmt{stmts[0], stmts[2]}
+	}
+	return len(stmts) == 2 && isSetIDEmpty(stmts[0], d) && isReturnNil(stmts[1])
+}
+
+func isNilCompare(cond ast.Expr) bool {
+	bin, ok := cond.(*ast.BinaryExpr)
+	if !ok || bin.Op != token.EQL {
+		return false
+	}
+	if _, isAddr := bin.X.(*ast.UnaryExpr); isAddr {
+		return false
+	}
+	y, ok := bin.Y.(*ast.Ident)
+	return ok && y.Name == "nil"
+}
+
+func rewriteFile(path string, st *stats, locals map[string]bool) error {
 	src, err := os.ReadFile(path)
 	if err != nil {
 		return err
@@ -207,6 +348,7 @@ func rewriteFile(path string, st *stats) error {
 	}
 	changed := false
 	needContext := false
+	needHelpers := false
 
 	for _, decl := range file.Decls {
 		fn, ok := decl.(*ast.FuncDecl)
@@ -215,6 +357,7 @@ func rewriteFile(path string, st *stats) error {
 		}
 		r := roleOf(path, fn)
 		where := fmt.Sprintf("%s:%s", path, fn.Name.Name)
+		dName := dataName(fn)
 
 		// 1. Rewrite helper calls.
 		ast.Inspect(fn.Body, func(n ast.Node) bool {
@@ -222,12 +365,48 @@ func rewriteFile(path string, st *stats) error {
 			if !ok {
 				return true
 			}
-			old, ok := helpersCall(call)
-			if !ok {
+			old, form := callForm(call, locals)
+			if form == "" {
 				return true
 			}
-			switch old {
-			case "HandleChaosReadApiErrorWithGracefulDestroy":
+			switch {
+			case form == "local2":
+				helper, ok := target("HandleApiError", r)
+				if !ok {
+					st.unknown = append(st.unknown, where+" ("+old+")")
+					return true
+				}
+				if len(call.Args) != 2 {
+					return true
+				}
+				c := ctxExpr(fn, st, where)
+				if _, isTODO := c.(*ast.CallExpr); isTODO {
+					needContext = true
+				}
+				call.Fun = selector("helpers", helper)
+				call.Args = []ast.Expr{c, ident(dName), call.Args[0], call.Args[1]}
+				needHelpers = true
+				st.rewritten[old+" -> "+helper]++
+				changed = true
+			case form == "cf3":
+				helper, ok := target("HandleCFApiError", r)
+				if !ok {
+					st.unknown = append(st.unknown, where+" ("+old+")")
+					return true
+				}
+				if len(call.Args) != 3 {
+					return true
+				}
+				c := ctxExpr(fn, st, where)
+				if _, isTODO := c.(*ast.CallExpr); isTODO {
+					needContext = true
+				}
+				call.Fun = selector("helpers", helper)
+				call.Args = []ast.Expr{c, call.Args[1], call.Args[0], call.Args[2]}
+				needHelpers = true
+				st.rewritten[old+" -> "+helper]++
+				changed = true
+			case old == "HandleChaosReadApiErrorWithGracefulDestroy":
 				// (err, d, resp, patterns) -> HandleRead/HandleDelete(ctx, d, err, resp, helpers.GracefulNotFound(500, patterns...))
 				if len(call.Args) != 4 {
 					return true
@@ -248,7 +427,7 @@ func rewriteFile(path string, st *stats) error {
 				call.Args = []ast.Expr{c, call.Args[1], call.Args[0], call.Args[2], pred}
 				st.rewritten[old+" -> "+helper]++
 				changed = true
-			case "HandleChaosGraphQLError", "HandleChaosGraphQLReadError":
+			case old == "HandleChaosGraphQLError" || old == "HandleChaosGraphQLReadError":
 				// (err, d, operation) -> helper(ctx, d, err, nil[, helpers.GraphQLNotFound()])
 				if len(call.Args) != 3 {
 					return true
@@ -298,6 +477,36 @@ func rewriteFile(path string, st *stats) error {
 			return true
 		})
 
+		// transformIf applies -dsnotfound and -nilclear to an if statement and its else-if chain.
+		var transformIf func(ifs *ast.IfStmt)
+		transformIf = func(ifs *ast.IfStmt) {
+			switch {
+			case *dsNotFound && r == roleDataSource && isSilentClear(ifs.Body, dName):
+				msg := humanName(fn.Name.Name) + " not found: no object matched the given arguments"
+				ifs.Body.List = []ast.Stmt{&ast.ReturnStmt{Results: []ast.Expr{
+					&ast.CallExpr{Fun: selector("diag", "Errorf"), Args: []ast.Expr{strLit(msg)}},
+				}}}
+				st.rewritten["data source silent empty -> diag.Errorf"]++
+				changed = true
+			case *nilClear && r == roleRead && isNilCompare(ifs.Cond) && isSilentClear(ifs.Body, dName):
+				c := ctxExpr(fn, st, where)
+				if _, isTODO := c.(*ast.CallExpr); isTODO {
+					needContext = true
+				}
+				what := &ast.BinaryExpr{X: strLit(humanName(fn.Name.Name) + " "), Op: token.ADD,
+					Y: &ast.CallExpr{Fun: selector(dName, "Id")}}
+				ifs.Body.List = []ast.Stmt{&ast.ReturnStmt{Results: []ast.Expr{
+					&ast.CallExpr{Fun: selector("helpers", "ReadMissing"), Args: []ast.Expr{c, ident(dName), what}},
+				}}}
+				needHelpers = true
+				st.rewritten["if x == nil { SetId(\"\") } -> ReadMissing"]++
+				changed = true
+			}
+			if next, ok := ifs.Else.(*ast.IfStmt); ok {
+				transformIf(next)
+			}
+		}
+
 		// 2. Remove d.MarkNewResource() in read/delete/data-source functions and `if &x == nil {}` anywhere;
 		//    optionally rewrite diag.FromErr(err) returns in read/delete functions.
 		var rewriteBlock func(b *ast.BlockStmt)
@@ -323,6 +532,7 @@ func rewriteFile(path string, st *stats) error {
 							continue
 						}
 					}
+					transformIf(stmt)
 				case *ast.ReturnStmt:
 					if *fromErr && (r == roleRead || r == roleDelete) && len(stmt.Results) == 1 {
 						if call, ok := stmt.Results[0].(*ast.CallExpr); ok {
@@ -338,7 +548,8 @@ func rewriteFile(path string, st *stats) error {
 											needContext = true
 										}
 										call.Fun = selector("helpers", helper)
-										call.Args = []ast.Expr{c, ident("d"), ident("err"), ident("nil")}
+										call.Args = []ast.Expr{c, ident(dName), ident("err"), ident("nil")}
+										needHelpers = true
 										st.rewritten["diag.FromErr(err) -> "+helper]++
 										changed = true
 									}
@@ -368,6 +579,9 @@ func rewriteFile(path string, st *stats) error {
 	}
 	if needContext {
 		ensureImport(file, "context")
+	}
+	if needHelpers {
+		ensureImport(file, helpersImport)
 	}
 	var buf bytes.Buffer
 	if err := format.Node(&buf, fset, file); err != nil {

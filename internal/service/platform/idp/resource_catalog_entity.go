@@ -2,7 +2,6 @@ package idp
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -161,7 +160,7 @@ func resourceCatalogEntityRead(ctx context.Context, d *schema.ResourceData, meta
 	resp, httpResp, err := getCatalogEntity(ctx, c, entityInfo)
 
 	if err != nil {
-		return handleIDPReadApiError(err, d, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp, idpNotFound)
 	}
 
 	readCatalogEntity(d, resp)
@@ -224,7 +223,7 @@ func resourceCatalogEntityUpdateOrCreate(ctx context.Context, d *schema.Resource
 				ProjectIdentifier: projectId,
 			})
 			if err != nil {
-				return handleIDPApiError(err, d, httpResp)
+				return helpers.HandleWrite(ctx, d, err, httpResp)
 			}
 			entityInfo = getCatalogEntityInfoFromResponse(resp, entityInfo)
 		} else {
@@ -245,7 +244,7 @@ func resourceCatalogEntityUpdateOrCreate(ctx context.Context, d *schema.Resource
 					HarnessAccount:    optional.NewString(c.AccountId),
 				})
 			if err != nil {
-				return handleIDPApiError(err, d, httpResp)
+				return helpers.HandleWrite(ctx, d, err, httpResp)
 			}
 			entityInfo = getCatalogEntityInfoFromResponse(resp, entityInfo)
 		}
@@ -272,7 +271,7 @@ func resourceCatalogEntityUpdateOrCreate(ctx context.Context, d *schema.Resource
 			HarnessAccount:    optional.NewString(c.AccountId),
 		})
 		if err != nil {
-			return handleIDPApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 
 		if shouldUpdateGitDetails {
@@ -290,7 +289,7 @@ func resourceCatalogEntityUpdateOrCreate(ctx context.Context, d *schema.Resource
 	return helpers.ReadAfterWrite(ctx, d, meta, idpReadAfterWriteWindow, func(ctx context.Context, d *schema.ResourceData, _ interface{}) diag.Diagnostics {
 		resp, httpResp, err := getCatalogEntity(ctx, c, entityInfo)
 		if err != nil {
-			return handleIDPReadApiError(err, d, httpResp)
+			return helpers.HandleRead(ctx, d, err, httpResp, idpNotFound)
 		}
 		readCatalogEntity(d, resp)
 		return nil
@@ -311,91 +310,6 @@ func catalogEntityGetOpts(c *idp.APIClient, info catalogEntityInfo) *idp.Entitie
 
 func getCatalogEntity(ctx context.Context, c *idp.APIClient, info catalogEntityInfo) (idp.EntityResponse, *http.Response, error) {
 	return c.EntitiesApi.GetEntity(ctx, info.Scope, info.Kind, info.Identifier, catalogEntityGetOpts(c, info))
-}
-
-func handleIDPApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
-	if isReferencedError(err) {
-		msg := idpAPIErrorMessage(err)
-		if msg == "" {
-			msg = err.Error()
-		}
-		return diag.Errorf("%s. Remove the check from those scorecards first, then retry destroy.", msg)
-	}
-	if msg := idpAPIErrorMessage(err); msg != "" {
-		return diag.Errorf("%s", msg)
-	}
-
-	return helpers.HandleError(context.TODO(), d, err, httpResp)
-}
-
-func handleIDPWriteApiError(terraformType string, err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
-	if isAlreadyExistsError(err) {
-		id, _ := d.Get("identifier").(string)
-		if id == "" {
-			id = d.Id()
-		}
-		msg := idpAPIErrorMessage(err)
-		if msg == "" {
-			msg = err.Error()
-		}
-		return diag.Errorf("%s. Import the existing resource instead of creating it again: terraform import %s.<name> %s", msg, terraformType, id)
-	}
-	return handleIDPApiError(err, d, httpResp)
-}
-
-func handleIDPReadApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
-	if msg := idpAPIErrorMessage(err); msg != "" && !isIDPNotFoundError(err, httpResp) {
-		return diag.Errorf("%s", msg)
-	}
-
-	return helpers.HandleRead(context.TODO(), d, err, httpResp)
-}
-
-func idpAPIErrorMessage(err error) string {
-	if err == nil {
-		return ""
-	}
-
-	swaggerErr, ok := err.(interface {
-		Body() []byte
-	})
-	if !ok {
-		return ""
-	}
-
-	var body struct {
-		Code    string `json:"code"`
-		Message string `json:"message"`
-	}
-	if json.Unmarshal(swaggerErr.Body(), &body) != nil || body.Message == "" {
-		return ""
-	}
-	if body.Code != "" {
-		return fmt.Sprintf("%s: %s", body.Code, body.Message)
-	}
-	return body.Message
-}
-
-func isIDPNotFoundError(err error, httpResp *http.Response) bool {
-	if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {
-		return true
-	}
-
-	swaggerErr, ok := err.(interface {
-		Body() []byte
-	})
-	if !ok {
-		return false
-	}
-
-	var body struct {
-		Code string `json:"code"`
-	}
-	if json.Unmarshal(swaggerErr.Body(), &body) != nil {
-		return false
-	}
-
-	return body.Code == "ENTITY_NOT_FOUND" || body.Code == "RESOURCE_NOT_FOUND" || isNotFoundError(err)
 }
 
 func resourceCatalogEntityUpdateGitMetadata(ctx context.Context, c *idp.APIClient, d *schema.ResourceData, info catalogEntityInfo) diag.Diagnostics {
@@ -430,17 +344,7 @@ func resourceCatalogEntityDelete(ctx context.Context, d *schema.ResourceData, me
 		HarnessAccount:    optional.NewString(c.AccountId),
 	})
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			d.SetId("")
-			return nil
-		}
-
-		if isNotFoundError(err) {
-			d.SetId("")
-			return nil
-		}
-
-		return handleIDPApiError(err, d, httpResp)
+		return idpHandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil

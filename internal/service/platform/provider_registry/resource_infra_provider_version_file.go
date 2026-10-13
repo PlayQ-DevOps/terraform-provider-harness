@@ -171,7 +171,7 @@ func resourceInfraProviderVersionFileCreate(ctx context.Context, d *schema.Resou
 
 	if err != nil {
 		log.Printf("[ERROR] Failed to upload file: %v", err)
-		return parseError(err, httpRes)
+		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
 
 	log.Printf("[DEBUG] Successfully uploaded file %s", filename)
@@ -205,19 +205,13 @@ func resourceInfraProviderVersionFileDelete(ctx context.Context, d *schema.Resou
 		c.AccountId,
 	)
 	if err != nil {
-		// If resource is already gone (404), treat as success
-		if httpRes != nil && httpRes.StatusCode == 404 {
-			log.Printf("[INFO] File %s not found, already deleted. Removing from state.", filename)
-			d.SetId("")
-			return nil
-		}
 		// If we get a 400/409 error indicating the file is synced, handle gracefully
 		if httpRes != nil && (httpRes.StatusCode == 400 || httpRes.StatusCode == 409) {
 			log.Printf("[WARN] File %s cannot be deleted (likely synced). Removing from state.", filename)
 			d.SetId("")
 			return nil
 		}
-		return parseError(err, httpRes)
+		return helpers.HandleDelete(ctx, d, err, httpRes)
 	}
 	return nil
 }

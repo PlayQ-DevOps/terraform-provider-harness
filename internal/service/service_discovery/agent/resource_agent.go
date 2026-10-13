@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net/http"
 
 	"github.com/antihax/optional"
 	"github.com/google/uuid"
@@ -461,11 +460,6 @@ func resourceServiceDiscoveryAgentDelete(ctx context.Context, d *schema.Resource
 	// Try to get the agent first to check if it exists
 	_, getHttpResp, getErr := c.AgentApi.GetAgent(ctx, agentIdentity, accountID, envID, getOpts)
 	if getErr != nil {
-		// If the agent is already deleted, we're done
-		if getHttpResp != nil && getHttpResp.StatusCode == http.StatusNotFound {
-			d.SetId("")
-			return nil
-		}
 		return helpers.HandleDelete(ctx, d, getErr, getHttpResp)
 	}
 
@@ -479,11 +473,6 @@ func resourceServiceDiscoveryAgentDelete(ctx context.Context, d *schema.Resource
 	)
 
 	if err != nil {
-		// If the agent is already deleted, that's fine
-		if httpResp != nil && httpResp.StatusCode == http.StatusNotFound {
-			d.SetId("")
-			return nil
-		}
 		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 

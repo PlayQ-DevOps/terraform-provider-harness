@@ -3,7 +3,6 @@ package idp
 import (
 	"context"
 	"fmt"
-	"net/http"
 	"strings"
 
 	"github.com/harness/harness-go-sdk/harness/idp"
@@ -160,16 +159,11 @@ func resourcePluginRead(ctx context.Context, d *schema.ResourceData, meta interf
 
 	resp, err := c.PluginAppConfigApi.GetPluginInfo(ctx, pluginId)
 	if err != nil {
-		if isPluginNotFoundError(err) {
-			d.SetId("")
-			return nil
-		}
-		return diag.Errorf("failed to read plugin %s: %s", pluginId, getPluginErrorMessage(err))
+		return helpers.HandleRead(ctx, d, err, nil, idpNotFound)
 	}
 
 	if resp.Plugin == nil {
-		d.SetId("")
-		return nil
+		return helpers.ReadMissing(ctx, d, "plugin "+pluginId)
 	}
 
 	if err := readPluginState(d, resp); err != nil {
@@ -185,10 +179,7 @@ func resourcePluginDelete(ctx context.Context, d *schema.ResourceData, meta inte
 
 	_, err := c.PluginAppConfigApi.Toggle(ctx, pluginId, false)
 	if err != nil {
-		if isPluginNotFoundError(err) {
-			return nil
-		}
-		return diag.Errorf("failed to disable plugin %s: %s", pluginId, getPluginErrorMessage(err))
+		return helpers.HandleDelete(ctx, d, err, nil, idpNotFound)
 	}
 
 	return nil
@@ -303,43 +294,8 @@ func readPluginState(d *schema.ResourceData, resp idp.PluginInfoResponse) error 
 }
 
 func getPluginErrorMessage(err error) string {
-	if msg := idpAPIErrorMessage(err); msg != "" {
+	if msg := idpMessage(err); msg != err.Error() {
 		return msg
 	}
 	return err.Error()
-}
-
-func isPluginNotFoundError(err error) bool {
-	if isNotFoundError(err) {
-		return true
-	}
-	swaggerErr, ok := err.(interface{ Body() []byte })
-	if !ok {
-		return false
-	}
-	_ = swaggerErr
-	return false
-}
-
-func isPluginHTTPNotFound(httpResp *http.Response) bool {
-	return httpResp != nil && httpResp.StatusCode == http.StatusNotFound
-}
-
-// pluginNotFoundFromError checks both error body and the fact that the SDK
-// doesn't return httpResp directly from PluginAppConfigApi methods.
-func pluginNotFoundFromError(err error) bool {
-	if err == nil {
-		return false
-	}
-	if isNotFoundError(err) {
-		return true
-	}
-	swaggerErr, ok := err.(interface {
-		Error() string
-	})
-	if ok {
-		errStr := swaggerErr.Error()
-		return errStr == fmt.Sprintf("%d %s", http.StatusNotFound, http.StatusText(http.StatusNotFound))
-	}
-	return false
 }

@@ -67,9 +67,8 @@ func dataSourceProjectRead(ctx context.Context, d *schema.ResourceData, meta int
 	}
 
 	if proj == nil || proj.Project == nil {
-		d.SetId("")
+		return diag.Errorf("project not found: no object matched the given arguments")
 
-		return nil
 	}
 
 	readProject(d, proj.Project)

@@ -158,7 +158,7 @@ func dataSourceChaosImageRegistryRead(ctx context.Context, d *schema.ResourceDat
 	// Otherwise, use the standard Get API
 	registry, err := c.ImageRegistryApi.Get(ctx, identifiers, infraID)
 	if err != nil {
-		return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound())
+		return helpers.HandleError(ctx, d, err, nil)
 	}
 
 	return setImageRegistryData(d, registry, identifiers)

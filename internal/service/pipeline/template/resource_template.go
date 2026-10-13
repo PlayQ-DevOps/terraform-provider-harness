@@ -427,7 +427,7 @@ func resourceTemplateCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 				}
 			}
 			if err != nil {
-				return helpers.HandleWrite(ctx, d, err, httpResp)
+				return helpers.HandleWriteGit(ctx, d, err, httpResp)
 			}
 		}
 
@@ -453,7 +453,7 @@ func resourceTemplateCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if err != nil {
-		return helpers.HandleWrite(ctx, d, err, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	if isOPADeniedResponse(template_id, resp) {
@@ -505,7 +505,7 @@ func resourceTemplateCreateOrUpdate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if err != nil {
-		return helpers.HandleWrite(ctx, d, err, httpResp)
+		return helpers.HandleWriteGit(ctx, d, err, httpResp)
 	}
 
 	readTemplate(d, respGet, comments, store_type, base_branch, commit_message, connector_ref)

@@ -2,9 +2,7 @@ package iacm
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"net/http"
 
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
@@ -96,7 +94,7 @@ func resourceIacmWorkspaceTemplateRead(ctx context.Context, d *schema.ResourceDa
 	projectId := d.Get("project_id").(string)
 	templateId := d.Get("template_id").(string)
 
-	results, _, err := c.WorkspaceTemplatesApi.WorkspaceTemplatesGetWorkspacesByTemplateID(
+	results, httpResp, err := c.WorkspaceTemplatesApi.WorkspaceTemplatesGetWorkspacesByTemplateID(
 		ctx,
 		c.AccountId,
 		orgId,
@@ -104,8 +102,7 @@ func resourceIacmWorkspaceTemplateRead(ctx context.Context, d *schema.ResourceDa
 		templateId,
 	)
 	if err != nil {
-		d.SetId("")
-		return nil
+		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
 	workspaceId := d.Get("workspace_id").(string)
@@ -121,8 +118,7 @@ func resourceIacmWorkspaceTemplateRead(ctx context.Context, d *schema.ResourceDa
 		}
 	}
 
-	d.SetId("")
-	return nil
+	return helpers.ReadMissing(ctx, d, fmt.Sprintf("workspace %s linked to template %s", workspaceId, templateId))
 }
 
 func resourceIacmWorkspaceTemplateDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -142,7 +138,7 @@ func resourceIacmWorkspaceTemplateDelete(ctx context.Context, d *schema.Resource
 		workspaceId,
 	)
 	if err != nil {
-		return parseIacmError(err, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	d.SetId("")
@@ -172,7 +168,7 @@ func resourceIacmWorkspaceTemplateCreate(ctx context.Context, d *schema.Resource
 		projectId,
 	)
 	if err != nil {
-		return parseIacmError(err, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	d.SetId(fmt.Sprintf("%s/%s", templateId, workspaceId))
@@ -202,31 +198,8 @@ func resourceIacmWorkspaceTemplateUpdate(ctx context.Context, d *schema.Resource
 		workspaceId,
 	)
 	if err != nil {
-		return parseIacmError(err, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	return resourceIacmWorkspaceTemplateRead(ctx, d, meta)
-}
-
-func parseIacmError(err error, httpResp *http.Response) diag.Diagnostics {
-	if httpResp != nil && httpResp.StatusCode == 401 {
-		return diag.Errorf("%s\nHint:\n1) Please check if token has expired or is wrong.\n2) Harness Provider is misconfigured.", httpResp.Status)
-	}
-	if httpResp != nil && httpResp.StatusCode == 403 {
-		return diag.Errorf("%s\nHint:\n1) Please check if the token has required permission for this operation.\n2) Please check if the token has expired or is wrong.", httpResp.Status)
-	}
-
-	se, ok := err.(nextgen.GenericSwaggerError)
-	if !ok {
-		return diag.FromErr(err)
-	}
-
-	iacmErrBody := se.Body()
-	iacmErr := nextgen.IacmError{}
-	jsonErr := json.Unmarshal(iacmErrBody, &iacmErr)
-	if jsonErr != nil {
-		return diag.Errorf("%s", err.Error())
-	}
-
-	return diag.Errorf("%s\nHint:\n1) %s", httpResp.Status, iacmErr.Message)
 }

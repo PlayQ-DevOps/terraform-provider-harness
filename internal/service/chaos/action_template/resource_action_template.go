@@ -133,11 +133,6 @@ func resourceActionTemplateRead(ctx context.Context, d *schema.ResourceData, met
 	// Get the action template
 	resp, httpResp, err := c.DefaultApi.GetActionTemplate(ctx, accountID, orgID, projectID, hubIdentity, identity, nil)
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			log.Printf("[WARN] Action template not found, removing from state: %s", identity)
-			d.SetId("")
-			return nil
-		}
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
@@ -253,11 +248,6 @@ func resourceActionTemplateDelete(ctx context.Context, d *schema.ResourceData, m
 	// Delete the action template
 	_, httpResp, err := c.DefaultApi.DeleteActionTemplate(ctx, accountID, orgID, projectID, hubIdentity, identity, nil)
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			log.Printf("[WARN] Action template not found, already deleted: %s", identity)
-			d.SetId("")
-			return nil
-		}
 		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 

@@ -218,3 +218,75 @@ func TestNoDiscardedReadCalls(t *testing.T) {
 		}
 	}
 }
+
+// A resource Read or Delete that compares an HTTP status itself duplicates, and usually
+// contradicts, the classification the lifecycle helpers already do (a 404 is "gone" for a
+// read and a success for a delete).
+func TestNoManualNotFoundChecks(t *testing.T) {
+	is404 := func(e ast.Expr) bool {
+		switch v := e.(type) {
+		case *ast.BasicLit:
+			return v.Value == "404"
+		case *ast.SelectorExpr:
+			return v.Sel.Name == "StatusNotFound"
+		}
+		return false
+	}
+	for _, path := range serviceFiles(t) {
+		fset, f := parse(t, path)
+		for _, decl := range f.Decls {
+			fn, ok := decl.(*ast.FuncDecl)
+			if !ok || fn.Body == nil {
+				continue
+			}
+			lower := strings.ToLower(fn.Name.Name)
+			if !strings.Contains(lower, "read") && !strings.Contains(lower, "delete") {
+				continue
+			}
+			ast.Inspect(fn.Body, func(n ast.Node) bool {
+				bin, ok := n.(*ast.BinaryExpr)
+				if !ok || (bin.Op != token.EQL && bin.Op != token.NEQ) {
+					return true
+				}
+				if sel, ok := bin.X.(*ast.SelectorExpr); ok && sel.Sel.Name == "StatusCode" && is404(bin.Y) {
+					t.Errorf("%s:%d: %s compares StatusCode to 404 itself; HandleRead and HandleDelete already treat a 404 as gone", rel(path), fset.Position(bin.Pos()).Line, fn.Name.Name)
+				}
+				return true
+			})
+		}
+	}
+}
+
+// A data source must never clear its ID: an empty result is an error, never a silent
+// empty state.
+func TestNoDataSourceClearsID(t *testing.T) {
+	for _, path := range serviceFiles(t) {
+		base := strings.ToLower(filepath.Base(path))
+		fset, f := parse(t, path)
+		for _, decl := range f.Decls {
+			fn, ok := decl.(*ast.FuncDecl)
+			if !ok || fn.Body == nil {
+				continue
+			}
+			isDS := strings.Contains(strings.ToLower(fn.Name.Name), "datasource") ||
+				((strings.HasPrefix(base, "data_source") || strings.HasPrefix(base, "datasource") || strings.HasPrefix(base, "data_")) && strings.Contains(strings.ToLower(fn.Name.Name), "read"))
+			if !isDS {
+				continue
+			}
+			ast.Inspect(fn.Body, func(n ast.Node) bool {
+				call, ok := n.(*ast.CallExpr)
+				if !ok || len(call.Args) != 1 {
+					return true
+				}
+				sel, ok := call.Fun.(*ast.SelectorExpr)
+				if !ok || sel.Sel.Name != "SetId" {
+					return true
+				}
+				if lit, ok := call.Args[0].(*ast.BasicLit); ok && lit.Value == `""` {
+					t.Errorf("%s:%d: data source %s clears its ID; return an error when nothing matched", rel(path), fset.Position(call.Pos()).Line, fn.Name.Name)
+				}
+				return true
+			})
+		}
+	}
+}

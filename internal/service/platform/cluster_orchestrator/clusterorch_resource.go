@@ -78,11 +78,10 @@ func resourceClusterOrchestratorDelete(ctx context.Context, d *schema.ResourceDa
 	httpResp, err := c.CloudCostClusterOrchestratorApi.DeleteClusterOrchestrator(ctx, c.AccountId, orchestratorID)
 
 	if err != nil {
-		if isClusterOrchestratorNotFound(err, httpResp) || clusterOrchestratorMissing(ctx, c, orchestratorID) {
-			d.SetId("")
+		if clusterOrchestratorMissing(ctx, c, orchestratorID) {
 			return nil
 		}
-		return helpers.HandleDelete(ctx, d, err, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp, clusterOrchNotFound)
 	}
 
 	return nil

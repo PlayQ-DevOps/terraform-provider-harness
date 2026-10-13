@@ -95,9 +95,8 @@ func dataSourceProjectListRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 
 	if projects == nil {
-		d.SetId("")
+		return diag.Errorf("project list not found: no object matched the given arguments")
 
-		return nil
 	}
 
 	d.SetId(resp.CorrelationId)

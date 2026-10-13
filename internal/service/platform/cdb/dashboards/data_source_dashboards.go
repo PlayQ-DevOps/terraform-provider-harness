@@ -116,9 +116,8 @@ func dataSourceDashboardRead(ctx context.Context, d *schema.ResourceData, meta i
 	}
 
 	if dashboard == nil {
-		d.SetId("")
+		return diag.Errorf("dashboard not found: no object matched the given arguments")
 
-		return nil
 	}
 
 	readDashboard(d, dashboard)

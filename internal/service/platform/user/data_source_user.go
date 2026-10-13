@@ -81,9 +81,8 @@ func dataSourceUserRead(ctx context.Context, d *schema.ResourceData, meta interf
 	}
 
 	if resp.Data == nil || resp.Data.Empty || len(resp.Data.Content) == 0 {
-		d.SetId("")
+		return diag.Errorf("user not found: no object matched the given arguments")
 
-		return nil
 	}
 
 	if len(resp.Data.Content) > 1 {

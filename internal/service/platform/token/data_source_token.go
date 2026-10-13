@@ -108,9 +108,8 @@ func dataSourceTokenRead(ctx context.Context, d *schema.ResourceData, meta inter
 		tokenList := resp.Data.Content
 
 		if tokenList == nil || len(tokenList) == 0 {
-			d.SetId("")
+			return diag.Errorf("token not found: no object matched the given arguments")
 
-			return nil
 		} else {
 			token = tokenList[0].Token
 		}

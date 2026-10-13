@@ -259,7 +259,7 @@ func resourceCloudProviderK8sRead(ctx context.Context, d *schema.ResourceData, m
 
 	log.Printf("[DEBUG] Terraform: Reading Kubernetes cloud provider %s", id)
 	if err := c.ConfigAsCodeClient.GetCloudProviderById(id, cp); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	} else if cp.IsEmpty() {
 		log.Printf("[DEBUG] Terraform: Could not find cloud provider %s. Marking as new resource", id)
 		d.SetId("")
@@ -278,7 +278,7 @@ func readCloudProviderK8s(c *cd.ApiClient, d *schema.ResourceData, cp *cac.Kuber
 
 	scope, err := usagescope.FlattenUsageRestrictions(c, cp.UsageRestrictions)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(context.TODO(), d, err, nil)
 	}
 	d.Set("usage_scope", scope)
 

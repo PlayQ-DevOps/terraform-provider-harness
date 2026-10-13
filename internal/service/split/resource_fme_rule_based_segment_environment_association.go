@@ -7,6 +7,7 @@ import (
 	"time"
 
 	splitsdk "github.com/harness/harness-go-sdk/harness/split"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -205,11 +206,11 @@ func resourceFMERuleBasedSegmentEnvironmentAssociationRead(ctx context.Context, 
 	segName := d.Get("segment_name").(string)
 	entry, err := ruleBasedSegmentPresentInEnvironment(ctx, client, wsID, envID, segName)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if entry == nil {
-		d.SetId("")
-		return nil
+		return helpers.ReadMissing(ctx, d, "FME rule based segment environment association "+d.Id())
+
 	}
 	priorJSON := ""
 	if v, ok := d.GetOk("definition_json"); ok {
@@ -217,10 +218,10 @@ func resourceFMERuleBasedSegmentEnvironmentAssociationRead(ctx context.Context, 
 	}
 	jsonStr, err := rbsEnvAssocDefinitionJSONForState(ctx, client, wsID, segName, entry, priorJSON)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if err := d.Set("definition_json", jsonStr); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	return nil
 }
@@ -257,7 +258,7 @@ func resourceFMERuleBasedSegmentEnvironmentAssociationDelete(ctx context.Context
 	envID := d.Get("environment_id").(string)
 	segName := d.Get("segment_name").(string)
 	if err := client.RuleBasedSegments.DeleteInEnvironment(envID, segName); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 	return nil
 }

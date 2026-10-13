@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/harness/terraform-provider-harness/internal/service/cd/usagescope"
 	"github.com/harness/terraform-provider-harness/internal/utils"
@@ -38,7 +39,7 @@ func resourceCloudProviderDelete(ctx context.Context, d *schema.ResourceData, me
 	err := c.CloudProviderClient.DeleteCloudProvider(id)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	return nil

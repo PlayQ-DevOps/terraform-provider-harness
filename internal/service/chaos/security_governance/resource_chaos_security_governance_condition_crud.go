@@ -184,7 +184,7 @@ func resourceChaosSecurityGovernanceConditionRead(ctx context.Context, d *schema
 	// Parse the ID to get the account, org, and project information
 	accountID := c.AccountId
 	if accountID == "" {
-		return helpers.HandleRead(ctx, d, fmt.Errorf("account ID must be configured in the provider"), nil, helpers.GraphQLNotFound())
+		return diag.Errorf("account ID must be configured in the provider")
 	}
 
 	log.Printf("[DEBUG] Reading security governance condition with ID: %s", d.Id())
@@ -226,7 +226,7 @@ func resourceChaosSecurityGovernanceConditionRead(ctx context.Context, d *schema
 			return nil
 		}
 		log.Printf("[ERROR] Failed to get condition %s: %v", conditionID, err)
-		return helpers.HandleRead(ctx, d, fmt.Errorf("failed to read security governance condition: %v", err), nil, helpers.GraphQLNotFound())
+		return helpers.HandleRead(ctx, d, err, nil, helpers.GraphQLNotFound())
 	}
 
 	// The Get response should be a ConditionResponse
@@ -558,9 +558,7 @@ func resourceChaosSecurityGovernanceConditionDelete(ctx context.Context, d *sche
 	// Parse the ID to get the account, org, and project information
 	accountID := c.AccountId
 	if accountID == "" {
-		err := "account ID must be configured in the provider"
-		log.Printf("[ERROR] %s", err)
-		return helpers.HandleDelete(ctx, d, fmt.Errorf("%s", err), nil, helpers.GraphQLNotFound())
+		return diag.Errorf("account ID must be configured in the provider")
 	}
 	conditionID := d.Id()
 
@@ -592,9 +590,7 @@ func resourceChaosSecurityGovernanceConditionDelete(ctx context.Context, d *sche
 			d.SetId("")
 			return nil
 		}
-		errMsg := fmt.Sprintf("failed to delete security governance condition: %v", err)
-		log.Printf("[ERROR] %s", errMsg)
-		return helpers.HandleDelete(ctx, d, fmt.Errorf("%s", errMsg), nil, helpers.GraphQLNotFound())
+		return helpers.HandleDelete(ctx, d, err, nil, helpers.GraphQLNotFound())
 	}
 
 	log.Printf("[DEBUG] Successfully deleted condition with ID: %s", conditionID)

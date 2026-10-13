@@ -69,9 +69,6 @@ func dataSourceActionTemplateRead(ctx context.Context, d *schema.ResourceData, m
 
 		resp, httpResp, err := c.DefaultApi.GetActionTemplate(ctx, accountID, orgID, projectID, hubIdentity, identityStr, nil)
 		if err != nil {
-			if httpResp != nil && httpResp.StatusCode == 404 {
-				return diag.Errorf("action template with identity '%s' not found in hub '%s'", identityStr, hubIdentity)
-			}
 			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 
@@ -93,10 +90,6 @@ func dataSourceActionTemplateRead(ctx context.Context, d *schema.ResourceData, m
 		resp, httpResp, err := c.DefaultApi.ListActionTemplate(ctx, accountID, orgID, projectID, hubIdentity, 0, 100, nameStr, opts)
 		if err != nil {
 			return helpers.HandleError(ctx, d, err, httpResp)
-		}
-
-		if httpResp != nil && httpResp.StatusCode != 200 {
-			return diag.Errorf("failed to list action templates: HTTP %d", httpResp.StatusCode)
 		}
 
 		// Find the template with matching name

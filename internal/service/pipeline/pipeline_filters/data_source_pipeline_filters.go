@@ -279,9 +279,8 @@ func dataSourcePipelineFiltersRead(ctx context.Context, d *schema.ResourceData, 
 	}
 
 	if filter == nil {
-		d.SetId("")
+		return diag.Errorf("pipeline filters not found: no object matched the given arguments")
 
-		return nil
 	}
 
 	readPipelineFilter(d, filter)

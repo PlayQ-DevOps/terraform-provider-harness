@@ -56,7 +56,7 @@ func resourceDelegateApprovalRead(ctx context.Context, d *schema.ResourceData, m
 	delegate, err := c.DelegateClient.GetDelegateById(id)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 
 	if delegate == nil {

@@ -98,9 +98,8 @@ func dataSourceServiceRead(ctx context.Context, d *schema.ResourceData, meta int
 	}
 
 	if svc == nil {
-		d.SetId("")
+		return diag.Errorf("service not found: no object matched the given arguments")
 
-		return nil
 	}
 
 	readService(d, svc)

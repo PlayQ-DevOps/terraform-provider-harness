@@ -62,9 +62,8 @@ func dataSourceChaosInfrastructureRead(ctx context.Context, d *schema.ResourceDa
 
 	if err != nil {
 		if err.Error() == "404 Not Found" {
-			d.SetId("")
+			return diag.Errorf("chaos infrastructure not found: no object matched the given arguments")
 
-			return nil
 		}
 		return helpers.HandleError(ctx, d, err, httpResp)
 	}

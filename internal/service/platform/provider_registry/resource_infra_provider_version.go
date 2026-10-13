@@ -96,7 +96,7 @@ func resourceInfraProviderVersionCreate(ctx context.Context, d *schema.ResourceD
 			bodyBytes, _ := io.ReadAll(httpRes.Body)
 			log.Printf("[ERROR] Response body: %s", string(bodyBytes))
 		}
-		return parseError(err, httpRes)
+		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
 
 	d.SetId(fmt.Sprintf("%s/%s", providerId, version))
@@ -116,19 +116,13 @@ func resourceInfraProviderVersionDelete(ctx context.Context, d *schema.ResourceD
 		c.AccountId,
 	)
 	if err != nil {
-		// If resource is already gone (404), treat as success
-		if httpRes != nil && httpRes.StatusCode == 404 {
-			log.Printf("[INFO] Version %s not found, already deleted. Removing from state.", version)
-			d.SetId("")
-			return nil
-		}
 		// If we get a 400/409 error indicating the version is published and cannot be deleted
 		if httpRes != nil && (httpRes.StatusCode == 400 || httpRes.StatusCode == 409) {
 			log.Printf("[WARN] Version %s is published and cannot be deleted independently. It will be deleted when provider %s is deleted. Removing from state.", version, providerId)
 			d.SetId("")
 			return nil
 		}
-		return parseError(err, httpRes)
+		return helpers.HandleDelete(ctx, d, err, httpRes)
 	}
 	return nil
 }
@@ -151,7 +145,7 @@ func resourceInfraProviderVersionUpdate(ctx context.Context, d *schema.ResourceD
 			version,
 		)
 		if err != nil {
-			return parseError(err, httpRes)
+			return helpers.HandleWrite(ctx, d, err, httpRes)
 		}
 	}
 

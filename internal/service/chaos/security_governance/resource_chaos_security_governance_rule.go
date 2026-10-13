@@ -416,7 +416,7 @@ func resourceChaosSecurityGovernanceRuleRead(ctx context.Context, d *schema.Reso
 	ruleID := d.Id()
 	accountID := c.AccountId
 	if accountID == "" {
-		return helpers.HandleRead(ctx, d, fmt.Errorf("account ID must be configured in the provider"), nil, helpers.GraphQLNotFound())
+		return diag.Errorf("account ID must be configured in the provider")
 	}
 	identifiers := getRuleIdentifiers(d, accountID)
 
@@ -425,14 +425,7 @@ func resourceChaosSecurityGovernanceRuleRead(ctx context.Context, d *schema.Reso
 
 	resp, err := client.Get(ctx, identifiers, ruleID)
 	if err != nil {
-		// If the rule is not found, it might have been deleted outside of Terraform
-		if strings.Contains(err.Error(), "no documents in result") ||
-			strings.Contains(err.Error(), "not found") {
-			log.Printf("[WARN] Rule not found, removing from state: %s", d.Id())
-			d.SetId("")
-			return nil
-		}
-		return helpers.HandleRead(ctx, d, fmt.Errorf("failed to read security governance rule: %v", err), nil, helpers.GraphQLNotFound())
+		return helpers.HandleRead(ctx, d, err, nil, helpers.NotFoundWhen(helpers.MessageContains("not found", "no documents in result")))
 	}
 
 	if resp == nil || resp.Rule == nil {
@@ -601,7 +594,7 @@ func resourceChaosSecurityGovernanceRuleDelete(ctx context.Context, d *schema.Re
 
 	_, err := client.Delete(ctx, identifiers, ruleID)
 	if err != nil {
-		return helpers.HandleDelete(ctx, d, fmt.Errorf("failed to delete security governance rule: %v", err), nil, helpers.GraphQLNotFound())
+		return helpers.HandleDelete(ctx, d, err, nil, helpers.GraphQLNotFound())
 	}
 
 	d.SetId("")

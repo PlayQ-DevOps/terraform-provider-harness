@@ -86,7 +86,7 @@ func resourceInfraProviderVersionPublishCreate(ctx context.Context, d *schema.Re
 	)
 
 	if err != nil {
-		return parseError(err, httpRes)
+		return helpers.HandleWrite(ctx, d, err, httpRes)
 	}
 
 	d.SetId(fmt.Sprintf("%s/%s", providerId, version))

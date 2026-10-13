@@ -142,11 +142,6 @@ func resourceProbeTemplateRead(ctx context.Context, d *schema.ResourceData, meta
 	// Get the probe template
 	resp, httpResp, err := c.DefaultApi.GetProbeTemplate(ctx, accountID, orgID, projectID, hubIdentity, identity, nil)
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			log.Printf("[WARN] Probe template not found, removing from state: %s", identity)
-			d.SetId("")
-			return nil
-		}
 		return helpers.HandleRead(ctx, d, err, httpResp)
 	}
 
@@ -251,10 +246,6 @@ func resourceProbeTemplateDelete(ctx context.Context, d *schema.ResourceData, me
 	// Delete the probe template
 	_, httpResp, err := c.DefaultApi.DeleteProbeTemplate(ctx, accountID, orgID, projectID, hubIdentity, identity, nil)
 	if err != nil {
-		if httpResp != nil && httpResp.StatusCode == 404 {
-			log.Printf("[WARN] Probe template not found during delete: %s", identity)
-			return nil
-		}
 		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 

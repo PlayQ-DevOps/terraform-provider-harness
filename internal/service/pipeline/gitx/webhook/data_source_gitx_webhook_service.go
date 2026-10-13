@@ -56,9 +56,8 @@ func dataSourceWebhookRead(ctx context.Context, d *schema.ResourceData, meta int
 			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 		if len(resp.WebhookIdentifier) <= 0 {
-			d.SetId("")
+			return diag.Errorf("gitx webhook not found: no object matched the given arguments")
 
-			return nil
 		}
 		setWebhookUpdateDetails(d, c.AccountId, orgIdentifier, projectIdentifier, &resp)
 
@@ -70,9 +69,8 @@ func dataSourceWebhookRead(ctx context.Context, d *schema.ResourceData, meta int
 			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 		if len(resp.WebhookIdentifier) <= 0 {
-			d.SetId("")
+			return diag.Errorf("gitx webhook not found: no object matched the given arguments")
 
-			return nil
 		}
 		setWebhookUpdateDetails(d, c.AccountId, orgIdentifier, projectIdentifier, &resp)
 	} else {
@@ -83,9 +81,8 @@ func dataSourceWebhookRead(ctx context.Context, d *schema.ResourceData, meta int
 			return helpers.HandleError(ctx, d, err, httpResp)
 		}
 		if len(resp.WebhookIdentifier) <= 0 {
-			d.SetId("")
+			return diag.Errorf("gitx webhook not found: no object matched the given arguments")
 
-			return nil
 		}
 		setWebhookUpdateDetails(d, c.AccountId, orgIdentifier, projectIdentifier, &resp)
 	}

@@ -21,7 +21,7 @@ func resourceServiceDelete(ctx context.Context, d *schema.ResourceData, meta int
 
 	err := c.CDClient.ConfigAsCodeClient.DeleteService(appId, id)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	return nil

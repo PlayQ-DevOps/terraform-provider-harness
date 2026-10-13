@@ -230,11 +230,10 @@ func resourceInfraDefinitionRead(ctx context.Context, d *schema.ResourceData, me
 	log.Printf("[DEBUG] Terraform: Read infrastructure definition %s", id)
 	infraDef, err := c.CDClient.ConfigAsCodeClient.GetInfraDefinitionById(appId, envId, id)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	} else if infraDef == nil {
-		d.SetId("")
+		return helpers.ReadMissing(ctx, d, "infra definition "+d.Id())
 
-		return nil
 	}
 
 	readInfraDefinition(d, infraDef)
@@ -252,7 +251,7 @@ func resourceInfraDefinitionDelete(ctx context.Context, d *schema.ResourceData, 
 	log.Printf("[DEBUG] Terraform: Delete infrastructure definition %s", id)
 	err := c.CDClient.ConfigAsCodeClient.DeleteInfraDefinition(appId, envId, id)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	return nil

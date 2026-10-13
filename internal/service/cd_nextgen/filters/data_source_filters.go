@@ -105,9 +105,8 @@ func dataSourceFiltersRead(ctx context.Context, d *schema.ResourceData, meta int
 	}
 
 	if filter == nil {
-		d.SetId("")
+		return diag.Errorf("filters not found: no object matched the given arguments")
 
-		return nil
 	}
 
 	readFilter(d, filter)

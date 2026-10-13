@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/harness/harness-go-sdk/harness/split"
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -128,7 +129,7 @@ func resourceFMELargeSegmentEnvironmentAssociationRead(ctx context.Context, d *s
 	segName := d.Get("segment_name").(string)
 	present, err := largeSegmentDefinedInEnvironment(ctx, client, wsID, envID, segName)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if !present {
 		d.SetId("")
@@ -145,7 +146,7 @@ func resourceFMELargeSegmentEnvironmentAssociationDelete(ctx context.Context, d 
 	envID := d.Get("environment_id").(string)
 	segName := d.Get("segment_name").(string)
 	if err := client.LargeSegments.DeleteInEnvironment(envID, segName); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 	return nil
 }

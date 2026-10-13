@@ -81,7 +81,7 @@ func resourceAddUserToGroupRead(ctx context.Context, d *schema.ResourceData, met
 
 	ok, err := c.UserClient.IsUserInGroup(userId, groupId)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	if !ok {
 		log.Printf("[WARN] Removing from state because user %s is no longer in group %s", userId, groupId)
@@ -104,7 +104,7 @@ func resourceAddUserToGroupDelete(ctx context.Context, d *schema.ResourceData, m
 
 	ok, err := c.UserClient.RemoveUserFromGroup(userId, groupId)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 	if !ok {
 		return diag.FromErr(errors.New("failed to remove user from group"))

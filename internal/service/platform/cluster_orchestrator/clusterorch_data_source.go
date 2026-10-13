@@ -50,16 +50,11 @@ func resourceClusterOrchestratorRead(ctx context.Context, d *schema.ResourceData
 	resp, httpResp, err := c.CloudCostClusterOrchestratorApi.ClusterOrchestratorDetails(ctx, c.AccountId, Identifier)
 
 	if err != nil {
-		if isClusterOrchestratorNotFound(err, httpResp) {
-			clearClusterOrchestratorFromState(d)
-			return nil
-		}
-		return helpers.HandleRead(ctx, d, err, httpResp)
+		return helpers.HandleRead(ctx, d, err, httpResp, clusterOrchNotFound)
 	}
 
 	if resp.Response == nil {
-		clearClusterOrchestratorFromState(d)
-		return nil
+		return helpers.ReadMissing(ctx, d, "cluster orchestrator "+Identifier)
 	}
 
 	setId(d, resp.Response.ID)
@@ -71,9 +66,4 @@ func resourceClusterOrchestratorRead(ctx context.Context, d *schema.ResourceData
 	}
 
 	return nil
-}
-
-func clearClusterOrchestratorFromState(d *schema.ResourceData) {
-	d.SetId("")
-	d.MarkNewResource()
 }

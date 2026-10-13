@@ -104,14 +104,13 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta i
 
 	app, err := c.ApplicationClient.GetApplicationById(appId)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 
 	// In case the application was deleted since the state was lst updated.
 	if app == nil {
-		d.SetId("")
+		return helpers.ReadMissing(ctx, d, "application "+d.Id())
 
-		return nil
 	}
 
 	applicationRead(d, app)
@@ -195,7 +194,7 @@ func resourceApplicationDelete(ctx context.Context, d *schema.ResourceData, meta
 		return diag.Errorf(utils.CDClientAPIKeyError)
 	}
 	if err := c.ApplicationClient.DeleteApplication(d.Id()); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	d.SetId("")

@@ -201,9 +201,7 @@ func resourceExperimentRead(ctx context.Context, d *schema.ResourceData, meta in
 
 	// Check if experiment is soft-deleted
 	if experiment.IsRemoved {
-		log.Printf("[DEBUG] Experiment %s is soft-deleted, removing from state", experimentID)
-		d.SetId("")
-		return nil
+		return helpers.ReadMissing(ctx, d, "chaos experiment "+experimentID+" (soft-deleted)")
 	}
 
 	// ========== SET ALL FIELDS ==========

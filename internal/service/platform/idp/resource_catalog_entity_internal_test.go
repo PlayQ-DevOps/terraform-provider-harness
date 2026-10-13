@@ -2,7 +2,6 @@ package idp
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -329,14 +328,7 @@ func TestReadGitDetailsWithUnsetConnectorRef(t *testing.T) {
 func TestIDPAPIErrorMessage(t *testing.T) {
 	err := idpErrorWithBody{body: []byte(`{"code":"INVALID_REQUEST","message":"Invalid request: Entity identifier = tf-idp is invalid"}`)}
 
-	require.Equal(t, "INVALID_REQUEST: Invalid request: Entity identifier = tf-idp is invalid", idpAPIErrorMessage(err))
-}
-
-func TestIsIDPNotFoundError(t *testing.T) {
-	require.True(t, isIDPNotFoundError(errors.New("not found"), &http.Response{StatusCode: http.StatusNotFound}))
-	require.True(t, isIDPNotFoundError(idpErrorWithBody{body: []byte(`{"code":"ENTITY_NOT_FOUND","message":"missing"}`)}, nil))
-	require.True(t, isIDPNotFoundError(idpErrorWithBody{body: []byte(`{"message":"Check details not found for checkId [x]"}`)}, &http.Response{StatusCode: http.StatusInternalServerError}))
-	require.False(t, isIDPNotFoundError(idpErrorWithBody{body: []byte(`{"code":"INVALID_REQUEST","message":"bad request"}`)}, nil))
+	require.Equal(t, "INVALID_REQUEST: Invalid request: Entity identifier = tf-idp is invalid", idpMessage(err))
 }
 
 func TestHandleIDPWriteApiErrorAlreadyExists(t *testing.T) {
@@ -347,7 +339,7 @@ func TestHandleIDPWriteApiErrorAlreadyExists(t *testing.T) {
 	})
 	err := idpErrorWithBody{body: []byte(`{"message":"Check [tf_sanity_readme_exists] already created for accountId [account-123]"}`)}
 
-	diags := handleIDPWriteApiError("harness_platform_idp_scorecard_check", err, data, &http.Response{StatusCode: http.StatusInternalServerError})
+	diags := idpHandleWrite(context.Background(), data, "harness_platform_idp_scorecard_check", err, &http.Response{StatusCode: http.StatusInternalServerError})
 	require.True(t, diags.HasError())
 	require.Contains(t, diags[0].Summary, "already created")
 	require.Contains(t, diags[0].Summary, "terraform import harness_platform_idp_scorecard_check.<name> tf_sanity_readme_exists")
@@ -363,12 +355,7 @@ func TestHandleIDPWriteApiErrorScorecardAlreadyExists(t *testing.T) {
 		`{"message":"A scorecard with identifier 'tf_sanity_gold_standard' already exists. Please use a different identifier."}`,
 	)}
 
-	diags := handleIDPWriteApiError(
-		"harness_platform_idp_scorecard",
-		err,
-		data,
-		&http.Response{StatusCode: http.StatusInternalServerError},
-	)
+	diags := idpHandleWrite(context.Background(), data, "harness_platform_idp_scorecard", err, &http.Response{StatusCode: http.StatusInternalServerError})
 	require.True(t, diags.HasError())
 	require.Contains(t, diags[0].Summary, "already exists")
 	require.Contains(t, diags[0].Summary,
@@ -383,7 +370,7 @@ func TestHandleIDPApiErrorReferencedCheck(t *testing.T) {
 	})
 	err := idpErrorWithBody{body: []byte(`{"message":"Could not delete the check [tf_sanity_readme_exists] as it is referenced by other scorecards"}`)}
 
-	diags := handleIDPApiError(err, data, &http.Response{StatusCode: http.StatusInternalServerError})
+	diags := idpHandleDelete(context.Background(), data, err, &http.Response{StatusCode: http.StatusInternalServerError})
 	require.True(t, diags.HasError())
 	require.Contains(t, diags[0].Summary, "referenced by other scorecards")
 	require.Contains(t, diags[0].Summary, "Remove the check from those scorecards first")

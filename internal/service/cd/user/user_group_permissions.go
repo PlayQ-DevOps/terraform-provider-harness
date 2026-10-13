@@ -80,7 +80,7 @@ func resourceUserGroupPermissionsRead(ctx context.Context, d *schema.ResourceDat
 
 	userGroup, err := c.UserClient.GetUserGroupById(id)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 
 	if userGroup == nil {
@@ -113,7 +113,7 @@ func resourceUserGroupPermissionsDelete(ctx context.Context, d *schema.ResourceD
 
 	ug, err := c.UserClient.GetUserGroupById(id)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	if ug == nil {
@@ -126,7 +126,7 @@ func resourceUserGroupPermissionsDelete(ctx context.Context, d *schema.ResourceD
 
 	updatedUg, err := c.UserClient.UpdateUserGroup(ug)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 
 	if len(updatedUg.Permissions.AccountPermissions.AccountPermissionTypes) > 0 {

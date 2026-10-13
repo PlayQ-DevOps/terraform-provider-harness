@@ -103,9 +103,8 @@ func dataSourceCCMFiltersRead(ctx context.Context, d *schema.ResourceData, meta 
 	}
 
 	if filter == nil {
-		d.SetId("")
+		return diag.Errorf("ccm filters not found: no object matched the given arguments")
 
-		return nil
 	}
 
 	readCCMFilter(d, filter)

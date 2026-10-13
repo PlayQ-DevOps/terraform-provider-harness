@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sort"
 
+	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -127,7 +128,7 @@ func resourceFMEEnvironmentSegmentKeysRead(ctx context.Context, d *schema.Resour
 	segName := d.Get("segment_name").(string)
 	keys, err := client.Environments.GetSegmentKeysAll(wsID, envID, segName)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	sort.Strings(keys)
 	interf := make([]interface{}, len(keys))
@@ -135,7 +136,7 @@ func resourceFMEEnvironmentSegmentKeysRead(ctx context.Context, d *schema.Resour
 		interf[i] = k
 	}
 	if err := d.Set("keys", schema.NewSet(schema.HashString, interf)); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	}
 	return nil
 }
@@ -171,11 +172,11 @@ func resourceFMEEnvironmentSegmentKeysDelete(ctx context.Context, d *schema.Reso
 	segName := d.Get("segment_name").(string)
 	keys, err := client.Environments.GetSegmentKeysAll(wsID, envID, segName)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleDelete(ctx, d, err, nil)
 	}
 	if len(keys) > 0 {
 		if err := client.Environments.RemoveSegmentKeys(wsID, envID, segName, keys); err != nil {
-			return diag.FromErr(err)
+			return helpers.HandleDelete(ctx, d, err, nil)
 		}
 	}
 	return nil

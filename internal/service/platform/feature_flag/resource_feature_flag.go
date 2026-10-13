@@ -279,7 +279,7 @@ func resourceFeatureFlagUpdate(ctx context.Context, d *schema.ResourceData, meta
 		httpResp, err := c.FeatureFlagsApi.PutFeatureFlag(ctx, id, c.AccountId, qp.OrganizationId, qp.ProjectId, opts)
 
 		if err != nil {
-			return HandleCFApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 	}
 	if archivedChanged && d.Get("archived").(bool) {
@@ -319,12 +319,7 @@ func resourceFeatureFlagRead(ctx context.Context, d *schema.ResourceData, meta i
 		resp, httpResp, err := c.FeatureFlagsApi.GetFeatureFlag(ctx, id, c.AccountId, qp.OrganizationId, qp.ProjectId, opts)
 
 		if err != nil {
-			if httpResp != nil && httpResp.StatusCode == 404 {
-
-				d.SetId("")
-				return nil
-			}
-			return HandleCFApiError(err, d, httpResp)
+			return helpers.HandleRead(ctx, d, err, httpResp)
 		}
 
 		readFeatureFlag(d, &resp, qp, env)
@@ -355,7 +350,7 @@ func resourceFeatureFlagCreate(ctx context.Context, d *schema.ResourceData, meta
 		if httpResp != nil && httpResp.StatusCode == 409 {
 			return diag.Errorf("A feature flag with identifier [%s] orgIdentifier [%s] project [%s] already exists", d.Get("identifier").(string), qp.OrganizationId, qp.ProjectId)
 		}
-		return HandleCFApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	// make updates for anything that can't be configured with initial create request
@@ -365,7 +360,7 @@ func resourceFeatureFlagCreate(ctx context.Context, d *schema.ResourceData, meta
 		httpResp, err = c.FeatureFlagsApi.PutFeatureFlag(ctx, id, c.AccountId, qp.OrganizationId, qp.ProjectId, putOpts)
 
 		if err != nil {
-			return HandleCFApiError(err, d, httpResp)
+			return helpers.HandleWrite(ctx, d, err, httpResp)
 		}
 	}
 
@@ -397,7 +392,7 @@ func deleteFlag(ctx context.Context, d *schema.ResourceData, meta interface{}, f
 
 	httpResp, err := c.FeatureFlagsApi.DeleteFeatureFlag(ctx, d.Id(), c.AccountId, qp.OrganizationId, qp.ProjectId, &nextgen.FeatureFlagsApiDeleteFeatureFlagOpts{CommitMsg: optional.EmptyString(), ForceDelete: optional.NewBool(forceDelete)})
 	if err != nil {
-		return HandleCFApiError(err, d, httpResp)
+		return helpers.HandleDelete(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -422,7 +417,7 @@ func restoreFlag(ctx context.Context, d *schema.ResourceData, meta interface{}) 
 
 	httpResp, err := c.FeatureFlagsApi.RestoreFeatureFlag(ctx, c.AccountId, qp.OrganizationId, qp.ProjectId, firstEnv, d.Id(), &nextgen.FeatureFlagsApiRestoreFeatureFlagOpts{CommitMsg: optional.EmptyString()})
 	if err != nil {
-		return HandleCFApiError(err, d, httpResp)
+		return helpers.HandleWrite(ctx, d, err, httpResp)
 	}
 
 	return nil
@@ -672,17 +667,4 @@ func buildFFReadOpts(d *schema.ResourceData, env string) *nextgen.FeatureFlagsAp
 		EnvironmentIdentifier: optional.NewString(env),
 	}
 
-}
-
-// HandleCFApiError - parses the error as type cfError and returns the error message
-// if it can't parse as cf error it falls back to the generic error handling helper
-func HandleCFApiError(err error, d *schema.ResourceData, httpResp *http.Response) diag.Diagnostics {
-	erro, ok := err.(nextgen.GenericSwaggerError)
-	if ok {
-		cfError, ok := erro.Model().(nextgen.CfError)
-		if ok {
-			return diag.Errorf("%s", cfError.Message)
-		}
-	}
-	return helpers.HandleError(context.TODO(), d, err, httpResp)
 }

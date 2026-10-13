@@ -98,9 +98,8 @@ func dataSourceDelegateTokenRead(ctx context.Context, d *schema.ResourceData, me
 		}
 
 		if delegateToken == nil {
-			d.SetId("")
+			return diag.Errorf("delegate token not found: no object matched the given arguments")
 
-			return nil
 		}
 	} else {
 		return diag.FromErr(errors.New("Name must be specified"))

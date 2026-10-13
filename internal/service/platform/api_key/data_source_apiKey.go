@@ -70,9 +70,8 @@ func dataSourceApiKeyRead(ctx context.Context, d *schema.ResourceData, meta inte
 		apiKey = resp.Data.ApiKey
 
 		if apiKey == nil {
-			d.SetId("")
+			return diag.Errorf("api key not found: no object matched the given arguments")
 
-			return nil
 		}
 	} else {
 		return diag.FromErr(errors.New("Identifier must be specified"))

@@ -58,8 +58,8 @@ func resourceRuleReadDataSource(ctx context.Context, d *schema.ResourceData, met
 	if resp.Data != nil {
 		// Check if the rule was deleted externally
 		if len(resp.Data.Rules) == 0 {
-			d.SetId("")
-			return nil
+			return diag.Errorf("governance rule not found: no object matched the given arguments")
+
 		}
 
 		err := readRuleResponse(d, resp.Data)

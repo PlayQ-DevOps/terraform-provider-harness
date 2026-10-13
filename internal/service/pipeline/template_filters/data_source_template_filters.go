@@ -105,9 +105,8 @@ func dataSourceTemplateFiltersRead(ctx context.Context, d *schema.ResourceData, 
 	}
 
 	if filter == nil {
-		d.SetId("")
+		return diag.Errorf("template filters not found: no object matched the given arguments")
 
-		return nil
 	}
 
 	readTemplateFilter(d, filter)

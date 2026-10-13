@@ -36,9 +36,8 @@ func dataSourceProviderRead(ctx context.Context, d *schema.ResourceData, meta in
 	}
 
 	if resp.Data == nil {
-		d.SetId("")
+		return diag.Errorf("provider not found: no object matched the given arguments")
 
-		return nil
 	}
 
 	readProvider(d, resp.Data)

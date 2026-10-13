@@ -70,7 +70,7 @@ func resourceCloudProviderAzureRead(ctx context.Context, d *schema.ResourceData,
 	}
 	cp := &cac.AzureCloudProvider{}
 	if err := c.ConfigAsCodeClient.GetCloudProviderById(d.Id(), cp); err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(ctx, d, err, nil)
 	} else if cp.IsEmpty() {
 		d.SetId("")
 
@@ -139,7 +139,7 @@ func readCloudProviderAzure(c *cd.ApiClient, d *schema.ResourceData, cp *cac.Azu
 
 	scope, err := usagescope.FlattenUsageRestrictions(c, cp.UsageRestrictions)
 	if err != nil {
-		return diag.FromErr(err)
+		return helpers.HandleRead(context.TODO(), d, err, nil)
 	}
 
 	if len(scope) > 0 {

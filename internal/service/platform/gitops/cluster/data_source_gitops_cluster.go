@@ -392,9 +392,8 @@ func dataSourceGitopsClusterRead(ctx context.Context, d *schema.ResourceData, me
 	// Soft delete lookup error handling
 	// https://harness.atlassian.net/browse/PL-23765
 	if resp.Cluster == nil {
-		d.SetId("")
+		return diag.Errorf("gitops cluster not found: no object matched the given arguments")
 
-		return nil
 	}
 	setClusterDetails(d, &resp)
 	return nil
