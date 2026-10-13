@@ -2,9 +2,9 @@ package gnupg
 
 import (
 	"context"
+
 	"github.com/antihax/optional"
 
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -108,7 +108,6 @@ func DataSourceGitopsGnupg() *schema.Resource {
 
 func dataSourceGitopsGnupgRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var agentIdentifier, orgIdentifier, projectIdentifier string
 	keyId := d.Get("identifier").(string)
 	if attr, ok := d.GetOk("agent_id"); ok {

@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/harness/harness-go-sdk/harness/chaos"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -202,7 +201,6 @@ func resourceChaosInfrastructureCreate(ctx context.Context, d *schema.ResourceDa
 	c, ctx := meta.(*internal.Session).GetChaosClientWithContext(ctx)
 	log.Printf("Debugging message: %v", c)
 
-	ctx = context.WithValue(ctx, chaos.ContextAccessToken, hh.EnvVars.BearerToken.Get()) // do we need it
 	var accountIdentifier, orgIdentifier, projectIdentifier string
 	createInfraRequest := buildInfraCreateRequest(d)
 	identifiers := chaos.InfraV2Identifiers{}

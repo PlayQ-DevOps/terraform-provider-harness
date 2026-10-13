@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -138,7 +137,6 @@ func ResourceSloService() *schema.Resource {
 
 func resourceSloCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier, orgIdentifier, projectIdentifier, identifier string
 	accountIdentifier = c.AccountId
 	if attr, ok := d.GetOk("org_id"); ok {
@@ -166,7 +164,6 @@ func resourceSloCreate(ctx context.Context, d *schema.ResourceData, meta interfa
 
 func resourceSloRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier, orgIdentifier, projectIdentifier string
 	identifier := d.Get("identifier").(string)
 	accountIdentifier = c.AccountId
@@ -201,7 +198,6 @@ func resourceSloRead(ctx context.Context, d *schema.ResourceData, meta interface
 
 func resourceSloUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier, orgIdentifier, projectIdentifier, identifier string
 	accountIdentifier = c.AccountId
 	if attr, ok := d.GetOk("org_id"); ok {
@@ -229,7 +225,6 @@ func resourceSloUpdate(ctx context.Context, d *schema.ResourceData, meta interfa
 
 func resourceSloDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier, orgIdentifier, projectIdentifier string
 	identifier := d.Get("identifier").(string)
 	accountIdentifier = c.AccountId

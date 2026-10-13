@@ -1,7 +1,6 @@
 package gnupg_test
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"strings"
@@ -9,7 +8,6 @@ import (
 
 	"github.com/antihax/optional"
 
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
@@ -50,7 +48,6 @@ func TestAccResourceGitopsGnupg(t *testing.T) {
 func testAccGetGnupg(resourceName string, state *terraform.State) (*nextgen.GpgkeysGnuPgPublicKey, error) {
 	r := acctest.TestAccGetResource(resourceName, state)
 	c, ctx := acctest.TestAccGetPlatformClientWithContext()
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := r.Primary.Attributes["agent_id"]
 
 	resp, _, err := c.GnuPGPKeysApi.AgentGPGKeyServiceGet(ctx, agentIdentifier, r.Primary.ID, c.AccountId, &nextgen.GnuPGPKeysApiAgentGPGKeyServiceGetOpts{

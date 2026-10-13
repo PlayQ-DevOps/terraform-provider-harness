@@ -23,7 +23,7 @@ func ResourcePipeline() *schema.Resource {
 		UpdateContext: resourcePipelineCreateOrUpdate,
 		DeleteContext: resourcePipelineDelete,
 		CreateContext: resourcePipelineCreateOrUpdate,
-		Importer:      helpers.ProjectResourceImporter,
+		Importer:      helpers.ProjectResourceWithBranchImporter,
 
 		Schema: map[string]*schema.Schema{
 			"yaml": {

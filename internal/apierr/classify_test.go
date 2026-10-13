@@ -54,6 +54,8 @@ func TestClassify(t *testing.T) {
 		{name: "url error is transport", err: &url.Error{Op: "Get", URL: "https://app.harness.io/gateway/x", Err: errors.New("dial tcp: connection refused")}, kind: Transient, transport: true, message: "could not reach the Harness API"},
 		{name: "net timeout is transport", err: fakeNetErr{}, kind: Transient, transport: true},
 		{name: "context cancelled", err: fmt.Errorf("Get x: %w", context.Canceled), kind: Unknown, message: "cancelled"},
+		{name: "client timeout", err: &url.Error{Op: "Post", URL: "https://x", Err: context.DeadlineExceeded}, kind: Transient, transport: true, message: "timed out"},
+		{name: "bare deadline exceeded", err: fmt.Errorf("Get x: %w", context.DeadlineExceeded), kind: Transient, transport: true, message: "timed out"},
 		{name: "retry budget exhausted", err: errors.New("GET https://app.harness.io/gateway/x giving up after 11 attempt(s)"), kind: Transient, message: "retry budget"},
 
 		{name: "404 entity not found envelope", kind: NotFound, status: 404, code: "ENTITY_NOT_FOUND", message: "Connector x not found"},

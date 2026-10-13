@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -76,7 +75,6 @@ func ResourceGitopsAppProjectMapping() *schema.Resource {
 
 func resourceGitopsAppProjectMappingCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	createAppProjectMappingRequest := buildCreateAppProjectMappingRequest(c.AccountId, d)
 	agentIdentifier := d.Get("agent_id").(string)
 	resp, httpResp, err := c.ProjectMappingsApi.AppProjectMappingServiceCreateV2(ctx, *createAppProjectMappingRequest, agentIdentifier)
@@ -96,7 +94,6 @@ func resourceGitopsAppProjectMappingCreate(ctx context.Context, d *schema.Resour
 
 func resourceGitopsAppProjectMappingRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := d.Get("agent_id").(string)
 	identifier := d.Get("identifier").(string)
 	argo_proj_name := d.Get("argo_project_name").(string)
@@ -128,7 +125,6 @@ func resourceGitopsAppProjectMappingRead(ctx context.Context, d *schema.Resource
 
 func resourceGitopsAppProjectMappingUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	updateAppProjectMappingRequest := buildUpdateAppProjectMappingRequest(c.AccountId, d)
 	agentIdentifier := d.Get("agent_id").(string)
 	identifier := d.Get("identifier").(string)
@@ -149,7 +145,6 @@ func resourceGitopsAppProjectMappingUpdate(ctx context.Context, d *schema.Resour
 
 func resourceGitopsAppProjectMappingDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := d.Get("agent_id").(string)
 	identifier := d.Get("identifier").(string)
 	_, httpResp, err := c.ProjectMappingsApi.AppProjectMappingServiceDeleteV2(ctx, agentIdentifier, identifier, &nextgen.ProjectMappingsApiAppProjectMappingServiceDeleteV2Opts{

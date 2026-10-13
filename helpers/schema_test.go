@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"context"
 	"testing"
 
 	"github.com/antihax/optional"
@@ -107,7 +108,7 @@ func TestMultiLevelTemplateImporter(t *testing.T) {
 			d := schema.TestResourceDataRaw(t, templateResource.Schema, map[string]interface{}{})
 			d.SetId(tc.id)
 
-			results, err := MultiLevelTemplateImporter.State(d, nil)
+			results, err := MultiLevelTemplateImporter.StateContext(context.Background(), d, nil)
 			if tc.wantErr {
 				require.Error(t, err)
 				return

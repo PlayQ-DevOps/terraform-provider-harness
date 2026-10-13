@@ -1,14 +1,12 @@
 package app_project_test
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"strings"
 	"testing"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
@@ -80,7 +78,6 @@ func TestAccResourceGitopsAppProjectMapping(t *testing.T) {
 func testAccGetAppProjectMapping(resourceName string, state *terraform.State, agentId string) (*nextgen.V1AppProjectMappingV2, error) {
 	r := acctest.TestAccGetResource(resourceName, state)
 	c, ctx := acctest.TestAccGetPlatformClientWithContext()
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	projectMappingId := r.Primary.Attributes["identifier"]
 
 	resp, _, err := c.ProjectMappingsApi.AppProjectMappingServiceGetAppProjectMappingV2(ctx, agentId, projectMappingId, &nextgen.ProjectMappingsApiAppProjectMappingServiceGetAppProjectMappingV2Opts{

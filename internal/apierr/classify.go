@@ -96,12 +96,14 @@ func Classify(err error, resp *http.Response) Classified {
 	}
 
 	if resp == nil && c.Status == 0 && c.Body == nil {
-		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+		if errors.Is(err, context.Canceled) {
 			c.Kind = Unknown
 			c.Message = "operation cancelled before the Harness API responded: " + text
 			return c
 		}
-		if isTransportError(err) {
+		// A client timeout unwraps to context.DeadlineExceeded, so transport failures are
+		// recognised before deadlines; both are transient.
+		if isTransportError(err) || errors.Is(err, context.DeadlineExceeded) {
 			c.Kind = Transient
 			c.Transport = true
 			c.Message = transportMessage(err)
@@ -148,11 +150,19 @@ func isTransportError(err error) bool {
 }
 
 func transportMessage(err error) string {
+	var netErr net.Error
+	timedOut := errors.Is(err, context.DeadlineExceeded) || (errors.As(err, &netErr) && netErr.Timeout())
 	var urlErr *url.Error
-	if errors.As(err, &urlErr) {
+	switch {
+	case timedOut && errors.As(err, &urlErr):
+		return fmt.Sprintf("timed out waiting for the Harness API (%s %s): %v", urlErr.Op, urlErr.URL, urlErr.Err)
+	case timedOut:
+		return "timed out waiting for the Harness API: " + err.Error()
+	case errors.As(err, &urlErr):
 		return fmt.Sprintf("could not reach the Harness API (%s %s): %v", urlErr.Op, urlErr.URL, urlErr.Err)
+	default:
+		return "could not reach the Harness API: " + err.Error()
 	}
-	return "could not reach the Harness API: " + err.Error()
 }
 
 func statusFromText(text string) int {

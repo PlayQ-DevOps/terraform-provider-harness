@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -115,7 +114,6 @@ func ResourceCentralNotificationChannel() *schema.Resource {
 
 func resourceCentralNotificationChannelCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	accountID := c.AccountId
 	id := d.Id()
 	if id == "" {
@@ -193,7 +191,6 @@ func resourceCentralNotificationChannelRead(ctx context.Context, d *schema.Resou
 
 func resourceCentralNotificationChannelUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	accountID := c.AccountId
 	identifier := d.Get("identifier").(string)
 	scope := getScope(d)
@@ -231,7 +228,6 @@ func resourceCentralNotificationChannelUpdate(ctx context.Context, d *schema.Res
 
 func resourceCentralNotificationChannelDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	accountID := c.AccountId
 	identifier := d.Get("identifier").(string)
 	scope := getScope(d)

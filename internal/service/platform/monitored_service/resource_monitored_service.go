@@ -2,14 +2,14 @@ package monitored_service
 
 import (
 	"context"
+	"strings"
+
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"strings"
 )
 
 func ResourceMonitoredService() *schema.Resource {
@@ -228,7 +228,6 @@ func ResourceMonitoredService() *schema.Resource {
 
 func resourceMonitoredServiceCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier string
 	accountIdentifier = c.AccountId
 	createMonitoredServiceRequest := buildMonitoredServiceRequest(d)
@@ -246,7 +245,6 @@ func resourceMonitoredServiceCreate(ctx context.Context, d *schema.ResourceData,
 
 func resourceMonitoredServiceRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier, orgIdentifier, projectIdentifier string
 	identifier := d.Get("identifier").(string)
 	accountIdentifier = c.AccountId
@@ -276,7 +274,6 @@ func resourceMonitoredServiceRead(ctx context.Context, d *schema.ResourceData, m
 
 func resourceMonitoredServiceUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier string
 	accountIdentifier = c.AccountId
 	identifier := d.Get("identifier").(string)
@@ -296,7 +293,6 @@ func resourceMonitoredServiceUpdate(ctx context.Context, d *schema.ResourceData,
 
 func resourceMonitoredServiceDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier, orgIdentifier, projectIdentifier string
 	identifier := d.Get("identifier").(string)
 	accountIdentifier = c.AccountId

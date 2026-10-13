@@ -1,0 +1,12 @@
+```release-note:breaking-change
+provider: the undocumented `HARNESS_BEARER_TOKEN` environment variable is no longer read. GitOps, SLO, monitored service, notification and chaos infrastructure resources used it to send an `Authorization: Bearer` header (an empty one when it was unset); authenticate with `platform_api_key` / `HARNESS_PLATFORM_API_KEY` instead.
+```
+```release-note:enhancement
+provider: new `max_retries` (default 5, env `HARNESS_MAX_RETRIES`) and `request_timeout` (seconds, default 120, env `HARNESS_REQUEST_TIMEOUT`) settings apply to every Harness API client, including the DBOps, Chaos and Service Discovery clients that previously had no retries and no timeout at all.
+```
+```release-note:bug
+provider: POST/PUT requests are no longer retried after a 5xx response, which could create duplicate objects when the first attempt had actually succeeded; 429 and 503-with-Retry-After responses are still retried for every request, and other 5xx and network failures for idempotent requests.
+```
+```release-note:note
+provider: `api_key` and `platform_api_key` are now marked sensitive. Debug logs (`TF_LOG=DEBUG`) redact credential headers, secret-looking JSON fields and the configured API keys instead of dumping request and response bodies verbatim.
+```

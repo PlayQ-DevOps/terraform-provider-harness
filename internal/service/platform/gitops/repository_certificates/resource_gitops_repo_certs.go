@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -145,7 +144,6 @@ func ResourceGitopsRepoCerts() *schema.Resource {
 
 func resourceGitopsRepoCertsCreateOrUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 
 	var agentIdentifier, accountIdentifier, orgIdentifier, projectIdentifier string
 	accountIdentifier = c.AccountId
@@ -184,7 +182,6 @@ func resourceGitopsRepoCertsCreateOrUpdate(ctx context.Context, d *schema.Resour
 
 func resourceGitopsRepoCertsRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 
 	agentIdentifier := d.Get("agent_id").(string)
 
@@ -210,7 +207,6 @@ func resourceGitopsRepoCertsRead(ctx context.Context, d *schema.ResourceData, me
 
 func resourceGitopsRepoCertsDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := d.Get("agent_id").(string)
 
 	_, httpResp, err := c.RepositoryCertificatesApi.AgentCertificateServiceDelete(ctx, agentIdentifier, &nextgen.RepositoryCertificatesApiAgentCertificateServiceDeleteOpts{

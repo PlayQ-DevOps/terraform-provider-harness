@@ -2,8 +2,7 @@ package monitored_service
 
 import (
 	"context"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
-	"github.com/harness/harness-go-sdk/harness/nextgen"
+
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -40,7 +39,6 @@ func DataSourceMonitoredService() *schema.Resource {
 
 func dataSourceMonitoredServiceRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var accountIdentifier, orgIdentifier, projectIdentifier string
 	identifier := d.Get("identifier").(string)
 	accountIdentifier = c.AccountId

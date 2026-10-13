@@ -1,14 +1,12 @@
 package repository_certificates_test
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"strings"
 	"testing"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/harness-go-sdk/harness/utils"
 	"github.com/harness/terraform-provider-harness/internal/acctest"
@@ -48,7 +46,6 @@ func TestAccResourceGitopsRepoCerts(t *testing.T) {
 func testAccGetRepoCert(resourceName string, state *terraform.State) (*nextgen.CertificatesRepositoryCertificateList, error) {
 	r := acctest.TestAccGetResource(resourceName, state)
 	c, ctx := acctest.TestAccGetPlatformClientWithContext()
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	agentIdentifier := r.Primary.Attributes["agent_id"]
 
 	resp, _, err := c.RepositoryCertificatesApi.AgentCertificateServiceList(ctx, agentIdentifier, c.AccountId, &nextgen.RepositoryCertificatesApiAgentCertificateServiceListOpts{

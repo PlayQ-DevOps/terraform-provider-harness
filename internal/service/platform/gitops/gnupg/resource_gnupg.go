@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/antihax/optional"
-	hh "github.com/harness/harness-go-sdk/harness/helpers"
 	"github.com/harness/harness-go-sdk/harness/nextgen"
 	"github.com/harness/terraform-provider-harness/helpers"
 	"github.com/harness/terraform-provider-harness/internal"
@@ -113,7 +112,6 @@ func ResourceGitopsGnupg() *schema.Resource {
 
 func resourceGitopsGnupgCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var agentIdentifier, accountIdentifier, orgIdentifier, projectIdentifier string
 	accountIdentifier = c.AccountId
 	if attr, ok := d.GetOk("agent_id"); ok {
@@ -151,7 +149,6 @@ func resourceGitopsGnupgCreate(ctx context.Context, d *schema.ResourceData, meta
 
 func resourceGitopsGnupgRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var agentIdentifier, orgIdentifier, projectIdentifier string
 	keyId := d.Get("identifier").(string)
 	if attr, ok := d.GetOk("agent_id"); ok {
@@ -185,7 +182,6 @@ func resourceGitopsGnupgRead(ctx context.Context, d *schema.ResourceData, meta i
 
 func resourceGitopsGnupgDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c, ctx := meta.(*internal.Session).GetPlatformClientWithContext(ctx)
-	ctx = context.WithValue(ctx, nextgen.ContextAccessToken, hh.EnvVars.BearerToken.Get())
 	var agentIdentifier, orgIdentifier, projectIdentifier string
 	keyId := d.Get("identifier").(string)
 	if attr, ok := d.GetOk("agent_id"); ok {
